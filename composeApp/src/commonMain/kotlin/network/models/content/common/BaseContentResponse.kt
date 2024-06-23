@@ -1,6 +1,6 @@
 package network.models.content.common
 
-import domain.models.util.MediaType
+import common.domain.models.util.MediaType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
