@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CineTracker" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">
+            @color/primary_black
+        </item>
+        <item name="android:backgroundTint">
+            @color/primary_black
+        </item>
+        <item name="android:navigationBarColor">
+            @color/primary_grey
+        </item>
+        <item name="android:windowBackground">
+            @color/primary_black
+        </item>
+    </style>
+</resources>
