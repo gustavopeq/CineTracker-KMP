@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import common.domain.models.util.MediaType
+import koinViewModel
 
 @Composable
 fun Home(
@@ -15,12 +16,7 @@ fun Home(
     goToBrowse: () -> Unit,
     goToErrorScreen: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(text = "Home")
-    }
+    Home()
 
 //    Home(
 //        viewModel = koinViewModel(),
@@ -31,6 +27,19 @@ fun Home(
 //        goToErrorScreen = goToErrorScreen
 //    )
 }
+
+@Composable
+private fun Home(
+    viewModel: HomeViewModel = koinViewModel(),
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(text = "Home")
+    }
+}
+
 //
 // @Composable
 // private fun Home(
