@@ -15,6 +15,7 @@ kotlin = "2.0.0"
 
 androidx-lifecycle = "2.8.0"
 androidx-navigation = "2.8.0-alpha02"
+build-konfig = "0.15.1"
 koin = "3.5.6"
 koin-compose-multiplatform = "1.1.5"
 kotlinx-coroutines = "1.9.0-RC"
@@ -55,3 +56,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig" }
