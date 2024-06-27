@@ -1,5 +1,8 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +10,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildKonfig)
 }
 
 kotlin {
@@ -107,4 +111,22 @@ android {
     dependencies {
         debugImplementation(compose.uiTooling)
     }
+}
+
+buildkonfig {
+    packageName = "com.projects.cinetracker"
+
+    defaultConfigs {
+        buildConfigField(STRING, "API_KEY", getApiKeyLocalProperties())
+    }
+}
+
+fun getApiKeyLocalProperties(): String {
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
+    return localProperties["API_KEY"] as? String ?: ""
 }
