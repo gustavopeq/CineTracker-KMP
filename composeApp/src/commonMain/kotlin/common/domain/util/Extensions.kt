@@ -1,8 +1,14 @@
 package common.domain.util
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
+import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.undefined_ratings
+import common.domain.util.UiConstants.EMPTY_RATINGS
+import common.ui.util.DecimalFormat
+import org.jetbrains.compose.resources.stringResource
 
 // TODO Fix Extensions
 fun String.formatDate(): String {
@@ -43,21 +49,13 @@ fun String.formatDate(): String {
 //    }
 }
 
+@Composable
 fun Double?.formatRating(): String {
-    return "FixFormat"
-//    if (this == null || this == EMPTY_RATINGS) {
-//        return context.resources.getString(R.string.undefined_ratings)
-//    }
-//
-//    val symbols = DecimalFormatSymbols.getInstance().apply {
-//        decimalSeparator = '.'
-//    }
-//    var formattedRating = DecimalFormat("#.#", symbols).format(this)
-//    if (formattedRating.length == 1) {
-//        formattedRating += "${symbols.decimalSeparator}0"
-//    }
-//
-//    return formattedRating
+    if (this == null || this == EMPTY_RATINGS) {
+        return stringResource(resource = Res.string.undefined_ratings)
+    }
+
+    return DecimalFormat().format(this)
 }
 
 fun Modifier.removeParentPadding(
