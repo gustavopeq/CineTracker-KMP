@@ -17,7 +17,7 @@
     <string name="person_featured_card_role_header">Role</string>
     <string name="person_featured_card_known_for_header">Known for</string>
     <string name="coming_soon_header">Coming Soon</string>
-    <string name="home_bottom_screen_message">Looks like you\'ve caught up with everything here!</string>
+    <string name="home_bottom_screen_message">Looks like you've caught up with everything here!</string>
     <string name="home_discover_more_button">Discover More</string>
     <string name="app_logo_image_description">CineTracker app logo</string>
 
@@ -55,7 +55,7 @@
     <string name="move_to_other_list_item">Move to other list</string>
     <string name="move_to_other_list_header">Move to</string>
     <string name="delete_list_display_title">Delete List</string>
-    <string name="delete_list_display_body">Are you sure you\'d like to delete this list? It can\'t be undone.</string>
+    <string name="delete_list_display_body">Are you sure you'd like to delete this list? It can't be undone.</string>
     <string name="delete_list_display_confirm_btn">Delete List</string>
     <string name="delete_list_display_dismiss_btn">Cancel</string>
 

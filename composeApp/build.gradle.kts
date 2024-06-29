@@ -53,6 +53,10 @@ kotlin {
             implementation(libs.androidx.navigation)
             implementation(libs.androidx.lifecycle)
 
+            implementation(libs.coil.compose.core)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.mp)
+            implementation(libs.coil.network.ktor)
             implementation(libs.kotlinx.coroutines)
             implementation(libs.kotlinx.serialization)
             implementation(libs.ktor.client.core)

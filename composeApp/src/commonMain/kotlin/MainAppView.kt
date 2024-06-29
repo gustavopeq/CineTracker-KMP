@@ -15,7 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.setSingletonImageLoaderFactory
 import common.ui.theme.CineTrackerTheme
+import core.getAsyncImageLoader
 import navigation.MainNavGraph
 import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
@@ -23,11 +26,16 @@ import navigation.components.TopNavBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
 fun MainAppView() {
     KoinContext {
         CineTrackerTheme {
+            setSingletonImageLoaderFactory { context ->
+                getAsyncImageLoader(context)
+            }
+
             val navController = rememberNavController()
             val navItems = mainNavBarItems
             val currentBackStackEntry by navController.currentBackStackEntryAsState()
