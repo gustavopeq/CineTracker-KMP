@@ -1,9 +1,9 @@
-package common.ui.util
+package common.util
 
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 
-actual class DecimalFormat {
+actual object DecimalFormat {
     actual fun format(number: Double): String {
         val symbols = DecimalFormatSymbols.getInstance().apply {
             decimalSeparator = '.'

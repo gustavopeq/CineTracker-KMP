@@ -3,6 +3,7 @@ package features.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import common.domain.models.content.GenericContent
+import common.domain.models.person.PersonDetails
 import common.domain.models.util.DataLoadStatus
 import features.home.ui.domain.HomeInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,16 @@ class HomeViewModel(
     )
     val trendingMulti: StateFlow<List<GenericContent>> get() = _trendingMulti
 
+    private val _trendingPerson: MutableStateFlow<List<PersonDetails>> = MutableStateFlow(
+        emptyList(),
+    )
+    val trendingPerson: StateFlow<List<PersonDetails>> get() = _trendingPerson
+
+    private val _moviesComingSoon: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
+        emptyList(),
+    )
+    val moviesComingSoon: StateFlow<List<GenericContent>> get() = _moviesComingSoon
+
     init {
         loadHomeScreen()
     }
@@ -38,8 +49,8 @@ class HomeViewModel(
             }
 
 //            loadWatchlist()
-//            _trendingPerson.value = homeInteractor.getTrendingPerson()
-//            _moviesComingSoon.value = homeInteractor.getMoviesComingSoon()
+            _trendingPerson.value = homeInteractor.getTrendingPerson()
+            _moviesComingSoon.value = homeInteractor.getMoviesComingSoon()
             _loadState.value = DataLoadStatus.Success
         }
     }
