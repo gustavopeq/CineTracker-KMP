@@ -34,7 +34,7 @@ import common.domain.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.ui.components.ClassicLoadingIndicator
 import common.ui.components.button.GenericButton
-import common.ui.util.getScreenSizeInfo
+import common.util.getScreenSizeInfo
 import di.koinViewModel
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
@@ -74,8 +74,8 @@ private fun Home(
     val loadState by viewModel.loadState.collectAsState()
     val trendingMultiList by viewModel.trendingMulti.collectAsState()
     // val myWatchlist by viewModel.myWatchlist.collectAsState()
-    // val trendingPersonList by viewModel.trendingPerson.collectAsState()
-    // val moviesComingSoonList by viewModel.moviesComingSoon.collectAsState()
+    val trendingPersonList by viewModel.trendingPerson.collectAsState()
+    val moviesComingSoonList by viewModel.moviesComingSoon.collectAsState()
 
     LaunchedEffect(Unit) {
         // mainViewModel.updateCurrentScreen(HomeScreen.route())
@@ -115,10 +115,8 @@ private fun Home(
                         trendingMultiList = trendingMultiList,
 //                         myWatchlist,
                         myWatchlist = emptyList(),
-//                         trendingPersonList,
-                        trendingPersonList = emptyList(),
-//                         moviesComingSoonList,
-                        moviesComingSoonList = emptyList(),
+                        trendingPersonList = trendingPersonList,
+                        moviesComingSoonList = moviesComingSoonList,
                         goToDetails = goToDetails,
                         goToWatchlist = goToWatchlist,
                         goToBrowse = goToBrowse,
@@ -150,10 +148,9 @@ private fun HomeBody(
         }
         expectedMediaType && !it.backdropPath.isNullOrEmpty()
     }
-    val trendingPerson = null
-//        trendingPersonList.firstOrNull {
-//        it.knownForDepartment?.isNotEmpty() == true && it.knownFor.size >= 3
-//    }
+    val trendingPerson = trendingPersonList.firstOrNull {
+        it.knownForDepartment?.isNotEmpty() == true && it.knownFor.size >= 3
+    }
     val bgOffset = posterHeight * HOME_BACKGROUND_OFFSET_PERCENT
 
     LazyColumn {

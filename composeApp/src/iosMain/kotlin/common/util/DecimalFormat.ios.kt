@@ -1,9 +1,9 @@
-package common.ui.util
+package common.util
 
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 
-actual class DecimalFormat {
+actual object DecimalFormat {
     actual fun format(number: Double): String {
         val formatter = NSNumberFormatter()
         formatter.minimumFractionDigits = 1u

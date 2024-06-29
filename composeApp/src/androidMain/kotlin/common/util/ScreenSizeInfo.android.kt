@@ -1,4 +1,4 @@
-package common.ui.util
+package common.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

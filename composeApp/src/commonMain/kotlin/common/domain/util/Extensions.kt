@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.Dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.undefined_ratings
 import common.domain.util.UiConstants.EMPTY_RATINGS
-import common.ui.util.DecimalFormat
+import common.util.DecimalFormat
 import org.jetbrains.compose.resources.stringResource
 
 // TODO Fix Extensions
@@ -55,7 +55,7 @@ fun Double?.formatRating(): String {
         return stringResource(resource = Res.string.undefined_ratings)
     }
 
-    return DecimalFormat().format(this)
+    return DecimalFormat.format(this)
 }
 
 fun Modifier.removeParentPadding(
