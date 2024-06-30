@@ -8,10 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import features.browse.BrowseScreen
+import features.details.DetailsScreen
 import features.home.HomeScreen
 import features.search.SearchScreen
 import features.watchlist.WatchlistScreen
 import navigation.screens.BrowseScreenUI
+import navigation.screens.DetailsScreenUI
 import navigation.screens.HomeScreenUI
 import navigation.screens.SearchScreenUI
 import navigation.screens.WatchlistScreenUI
@@ -21,6 +23,7 @@ private val mainNavDestinations: Map<Screen, ScreenUI> = mapOf(
     BrowseScreen to BrowseScreenUI(),
     WatchlistScreen to WatchlistScreenUI(),
     SearchScreen to SearchScreenUI(),
+    DetailsScreen to DetailsScreenUI(),
 )
 
 @Composable
