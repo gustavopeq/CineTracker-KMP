@@ -35,7 +35,9 @@ import common.domain.util.SortTypeItem
 import common.domain.util.UiConstants.BROWSE_CARD_PADDING_HORIZONTAL
 import common.domain.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
 import common.domain.util.UiConstants.BROWSE_MIN_CARD_WIDTH
+import common.domain.util.UiConstants.BROWSE_SCAFFOLD_EXTRA_HEIGHT
 import common.domain.util.UiConstants.BROWSE_SCAFFOLD_HEIGHT_OFFSET
+import common.domain.util.UiConstants.BROWSE_SCAFFOLD_HEIGHT_OFFSET_IOS
 import common.domain.util.UiConstants.DEFAULT_MARGIN
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.domain.util.UiConstants.SMALL_MARGIN
@@ -46,6 +48,7 @@ import common.domain.util.pxToDp
 import common.ui.components.ComponentPlaceholder
 import common.ui.components.card.DefaultContentCard
 import common.ui.theme.RoundCornerShapes
+import common.util.PlatformUtils
 import common.util.getScreenSizeInfo
 import features.browse.events.BrowseEvent
 import features.browse.ui.components.CollapsingTabRow
@@ -76,6 +79,11 @@ private fun Browse(
 
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val scaffoldOffset = if (PlatformUtils.isIOS) {
+        BROWSE_SCAFFOLD_HEIGHT_OFFSET_IOS
+    } else {
+        BROWSE_SCAFFOLD_HEIGHT_OFFSET
+    }
 //    val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
     val pagerState = rememberPagerState(
         initialPage = 0, // currentMediaTypeSelected.ordinal,
@@ -101,7 +109,7 @@ private fun Browse(
 
     Scaffold(
         modifier = Modifier
-            .offset(y = (-BROWSE_SCAFFOLD_HEIGHT_OFFSET).dp)
+            .offset(y = (-scaffoldOffset).dp)
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .then(
@@ -109,18 +117,19 @@ private fun Browse(
                 the scaffold height */
                 Modifier.layout { measurable, constraints ->
                     val fixedContentConstraints = constraints.copy(
-                        maxHeight = constraints.maxHeight +
-                            BROWSE_SCAFFOLD_HEIGHT_OFFSET.dp.roundToPx(),
+                        maxHeight = constraints.maxHeight + scaffoldOffset.dp.roundToPx() +
+                            BROWSE_SCAFFOLD_EXTRA_HEIGHT,
                     )
                     val placeable = measurable.measure(fixedContentConstraints)
 
                     layout(
                         width = placeable.width,
-                        height = placeable.height + BROWSE_SCAFFOLD_HEIGHT_OFFSET.dp.roundToPx(),
+                        height = placeable.height + scaffoldOffset.dp.roundToPx() +
+                            BROWSE_SCAFFOLD_EXTRA_HEIGHT,
                     ) {
                         placeable.placeRelative(
                             x = 0,
-                            y = BROWSE_SCAFFOLD_HEIGHT_OFFSET.dp.roundToPx(),
+                            y = scaffoldOffset.dp.roundToPx() + BROWSE_SCAFFOLD_EXTRA_HEIGHT,
                         )
                     }
                 },
@@ -206,7 +215,7 @@ private fun BrowseBody(
                     columns = GridCells.Fixed(numCardsPerRow),
                     modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp),
                 ) {
-                    items(pagingData.itemCount) { index ->
+                    items(20) { index ->
                         val content = pagingData[index]
                         content?.let {
                             DefaultContentCard(
