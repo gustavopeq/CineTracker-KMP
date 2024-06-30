@@ -69,5 +69,5 @@ object UiConstants {
     const val CAROUSEL_RATING_STAR_SIZE = 18
 
     // IOS
-    const val SYSTEM_BAR_HEIGHT = 100
+    const val SYSTEM_BAR_HEIGHT = 150
 }

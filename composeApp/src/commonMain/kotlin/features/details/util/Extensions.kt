@@ -1,6 +1,7 @@
 package features.details.util
 
 import androidx.compose.runtime.Composable
+import common.util.StringFormat.toFormattedCurrency
 
 @Composable
 fun Int.formatRuntime(): String {
@@ -31,13 +32,5 @@ fun Long?.isValidValue(): Boolean {
 }
 
 fun Long.toFormattedCurrency(): String {
-    return "TODO-FORMAT"
-//    return try {
-//        val decimalFormat = (NumberFormat.getCurrencyInstance(Locale.US)).apply {
-//            maximumFractionDigits = 0
-//        }
-//        decimalFormat.format(this)
-//    } catch (e: IllegalArgumentException) {
-//        ""
-//    }
+    return this.toFormattedCurrency()
 }
