@@ -35,7 +35,6 @@ import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.ui.components.ClassicLoadingIndicator
 import common.ui.components.button.GenericButton
 import common.util.getScreenSizeInfo
-import di.koinViewModel
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
 import features.home.ui.components.carousel.WatchlistCarousel
@@ -44,6 +43,7 @@ import features.home.ui.components.featured.FeaturedInfo
 import features.home.ui.components.featured.PersonFeaturedInfo
 import features.home.ui.components.featured.SecondaryFeaturedInfo
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Home(

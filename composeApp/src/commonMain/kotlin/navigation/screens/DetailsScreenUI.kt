@@ -2,35 +2,32 @@ package navigation.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import features.details.DetailsScreen
-import features.home.ui.Home
+import features.details.ui.Details
 import navigation.ScreenUI
 
-class HomeScreenUI : ScreenUI {
+class DetailsScreenUI : ScreenUI {
     @Composable
     override fun UI(navController: NavController) {
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val currentScreen = currentBackStackEntry?.destination?.route
 
-        Home(
-            goToDetails = { contentId, mediaType ->
+        val backStackEntry = remember {
+            navController.getBackStackEntry(DetailsScreen.route())
+        }
+
+        Details(
+            navBackStackEntry = backStackEntry,
+            onBackPress = {
+                navController.popBackStack()
+            },
+            goToDetails = { id, type ->
                 navController.navigate(
-                    DetailsScreen.routeWithArguments(contentId, mediaType.name),
+                    DetailsScreen.routeWithArguments(id, type.name),
                 )
-            },
-            goToWatchlist = {
-//                navigateToTopLevelDestination(
-//                    navController = navController,
-//                    destination = WatchlistScreen.route()
-//                )
-            },
-            goToBrowse = {
-//                navigateToTopLevelDestination(
-//                    navController = navController,
-//                    destination = BrowseScreen.route()
-//                )
             },
             goToErrorScreen = {
 //                if (currentScreen != ErrorScreen.route()) {

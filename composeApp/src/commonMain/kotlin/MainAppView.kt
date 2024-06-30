@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -19,6 +20,7 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import common.ui.theme.CineTrackerTheme
 import core.getAsyncImageLoader
+import features.details.DetailsScreen
 import navigation.MainNavGraph
 import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
@@ -41,7 +43,13 @@ fun MainAppView() {
             val currentBackStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = currentBackStackEntry?.destination?.route
 
+            var topBarState by rememberSaveable { mutableStateOf(true) }
             var mainBarState by rememberSaveable { mutableStateOf(true) }
+
+            LaunchedEffect(currentScreen) {
+                topBarState = !standaloneScreens.contains(currentScreen)
+                mainBarState = !standaloneScreens.contains(currentScreen)
+            }
 
             Scaffold(
                 topBar = {
@@ -79,4 +87,9 @@ val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
     MainNavBarItem.Search,
+)
+
+val standaloneScreens = listOf(
+    DetailsScreen.route(),
+//    ErrorScreen.route()
 )

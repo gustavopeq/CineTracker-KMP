@@ -18,7 +18,7 @@ androidx-navigation = "2.8.0-alpha02"
 build-konfig = "0.15.1"
 coil3 = "3.0.0-alpha06"
 koin = "3.5.6"
-koin-compose-multiplatform = "1.1.5"
+koin-compose-multiplatform = "1.2.0-Beta4"
 kotlinx-coroutines = "1.9.0-RC"
 kotlinx-serialization = "1.7.0"
 ktor = "2.3.12"
@@ -45,6 +45,7 @@ coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil3" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose-multiplatform" }
+koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose-multiplatform" }
 
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }

@@ -64,6 +64,7 @@ kotlin {
             implementation(libs.ktor.client.serialization)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.composeVM)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -67,4 +67,7 @@ object UiConstants {
     const val PERSON_FEATURED_IMAGE_WIDTH = 150
     const val PERSON_FEATURED_TITLE_MAX_LINES = 2
     const val CAROUSEL_RATING_STAR_SIZE = 18
+
+    // IOS
+    const val SYSTEM_BAR_HEIGHT = 100
 }
