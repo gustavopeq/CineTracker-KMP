@@ -52,6 +52,7 @@ fun CollapsingTabRow(
         scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
+            scrolledContainerColor = MaterialTheme.colorScheme.primary,
         ),
     )
 }
@@ -111,6 +112,7 @@ private fun BrowseTypeTab(
         onClick = { onClick(tabIndex) },
     ) {
         Text(
+            modifier = Modifier.offset(y = (-4).dp),
             text = text,
             color = if (isSelected) {
                 MaterialTheme.colorScheme.onPrimary
