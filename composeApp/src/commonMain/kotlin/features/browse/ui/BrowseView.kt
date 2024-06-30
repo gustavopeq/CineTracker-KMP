@@ -4,6 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -24,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -84,6 +87,8 @@ private fun Browse(
     } else {
         BROWSE_SCAFFOLD_HEIGHT_OFFSET
     }
+    val layoutDirection = LocalLayoutDirection.current
+
 //    val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
     val pagerState = rememberPagerState(
         initialPage = 0, // currentMediaTypeSelected.ordinal,
@@ -142,7 +147,14 @@ private fun Browse(
             )
         },
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(
+            modifier = Modifier.padding(
+                top = innerPadding.calculateTopPadding() * 0.95f,
+                bottom = innerPadding.calculateBottomPadding(),
+                start = innerPadding.calculateStartPadding(layoutDirection),
+                end = innerPadding.calculateEndPadding(layoutDirection),
+            ),
+        ) {
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
                     0 -> {
