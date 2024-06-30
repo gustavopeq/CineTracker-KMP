@@ -49,6 +49,7 @@ import features.details.ui.components.DetailsDescriptionHeader
 import features.details.ui.components.DetailsTopBar
 import features.details.ui.components.moreoptions.MoreOptionsTab
 import features.details.ui.components.moreoptions.PersonMoreOptionsTab
+import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -163,12 +164,12 @@ private fun Details(
 //    }
 
     if (loadState is DataLoadStatus.Success && showAllScreen) {
-//        ShowAllContentList(
-//            showAllMediaType = showAllMediaType,
-//            contentList = personContentList,
-//            goToDetails = goToDetails,
-//            onBackBtnPress = { updateShowAllFlag(false, MediaType.UNKNOWN) },
-//        )
+        ShowAllContentList(
+            showAllMediaType = showAllMediaType,
+            contentList = personContentList,
+            goToDetails = goToDetails,
+            onBackBtnPress = { updateShowAllFlag(false, MediaType.UNKNOWN) },
+        )
     } else {
         DetailsTopBar(
             contentTitle = contentDetails?.name.orEmpty(),
