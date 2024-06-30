@@ -1,7 +1,7 @@
 package com.projects.cinetracker.core
 
 import android.app.Application
-import di.KoinInitializer
+import core.di.KoinInitializer
 
 class CoreApplication : Application() {
     override fun onCreate() {

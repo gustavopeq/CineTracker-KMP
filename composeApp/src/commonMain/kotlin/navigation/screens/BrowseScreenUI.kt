@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import features.browse.ui.Browse
+import features.details.DetailsScreen
 import navigation.ScreenUI
 
 class BrowseScreenUI : ScreenUI {
@@ -15,9 +16,9 @@ class BrowseScreenUI : ScreenUI {
 
         Browse(
             goToDetails = { contentId, mediaType ->
-//                navController.navigate(
-//                    DetailsScreen.routeWithArguments(contentId, mediaType.name)
-//                )
+                navController.navigate(
+                    DetailsScreen.routeWithArguments(contentId, mediaType.name),
+                )
             },
             goToErrorScreen = {
 //                if (currentScreen != ErrorScreen.route()) {
