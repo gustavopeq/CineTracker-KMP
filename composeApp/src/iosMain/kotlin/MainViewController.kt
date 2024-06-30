@@ -1,5 +1,5 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import di.KoinInitializer
+import core.di.KoinInitializer
 
 fun MainViewController() = ComposeUIViewController(
     configure = {

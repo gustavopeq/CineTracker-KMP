@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import features.browse.BrowseScreen
 import features.details.DetailsScreen
 import features.home.ui.Home
 import navigation.ScreenUI
+import navigation.components.navigateToTopLevelDestination
 
 class HomeScreenUI : ScreenUI {
     @Composable
@@ -27,10 +29,10 @@ class HomeScreenUI : ScreenUI {
 //                )
             },
             goToBrowse = {
-//                navigateToTopLevelDestination(
-//                    navController = navController,
-//                    destination = BrowseScreen.route()
-//                )
+                navigateToTopLevelDestination(
+                    navController = navController,
+                    destination = BrowseScreen.route(),
+                )
             },
             goToErrorScreen = {
 //                if (currentScreen != ErrorScreen.route()) {
