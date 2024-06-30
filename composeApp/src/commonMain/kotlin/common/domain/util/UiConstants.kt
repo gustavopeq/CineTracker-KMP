@@ -49,6 +49,7 @@ object UiConstants {
     const val DETAILS_OVERVIEW_MAX_LINES = 6
     const val MAX_COUNT_PERSON_ADDITIONAL_CONTENT = 20
     const val STREAM_PROVIDER_ICON_SIZE = 60
+    const val VIDEOS_PLAY_ICON_SIZE = 48
 
     // Watchlist
     const val WATCHLIST_IMAGE_WIDTH = 100

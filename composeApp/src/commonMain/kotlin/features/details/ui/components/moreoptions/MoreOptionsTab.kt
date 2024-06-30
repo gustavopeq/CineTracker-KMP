@@ -34,7 +34,7 @@ fun MoreOptionsTab(
 
             when (tabList[selectedTabIndex.value].tabIndex) {
                 VideosTab.tabIndex -> {
-//                    VideoList(videoList)
+                    VideoList(videoList)
                 }
 
                 MoreLikeThisTab.tabIndex -> {
