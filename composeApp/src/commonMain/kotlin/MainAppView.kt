@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -18,6 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
+import common.ui.MainViewModel
+import common.ui.components.bottomsheet.ModalComponents
 import common.ui.theme.CineTrackerTheme
 import core.getAsyncImageLoader
 import features.details.DetailsScreen
@@ -27,8 +30,10 @@ import navigation.components.MainNavBarItem
 import navigation.components.TopNavBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, KoinExperimentalAPI::class)
 @Composable
 @Preview
 fun MainAppView() {
@@ -38,10 +43,17 @@ fun MainAppView() {
                 getAsyncImageLoader(context)
             }
 
+            val mainViewModel: MainViewModel = koinViewModel()
             val navController = rememberNavController()
             val navItems = mainNavBarItems
             val currentBackStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = currentBackStackEntry?.destination?.route
+
+            var showSortBottomSheet by remember { mutableStateOf(false) }
+
+            val displaySortScreen: (Boolean) -> Unit = {
+                showSortBottomSheet = it
+            }
 
             var topBarState by rememberSaveable { mutableStateOf(true) }
             var mainBarState by rememberSaveable { mutableStateOf(true) }
@@ -55,8 +67,8 @@ fun MainAppView() {
                 topBar = {
                     TopNavBar(
                         currentScreen = currentScreen,
-                        // mainViewModel = mainViewModel,
-                        // displaySortScreen = displaySortScreen,
+                        mainViewModel = mainViewModel,
+                        displaySortScreen = displaySortScreen,
                     )
                 },
                 bottomBar = {
@@ -67,7 +79,7 @@ fun MainAppView() {
                     ) {
                         MainNavBar(
                             navController = navController,
-                            // mainViewModel = mainViewModel,
+                            mainViewModel = mainViewModel,
                             navBarItems = navItems,
                         )
                     }
@@ -77,6 +89,12 @@ fun MainAppView() {
                         MainNavGraph(navController)
                     }
                 },
+            )
+
+            ModalComponents(
+                mainViewModel = mainViewModel,
+                showSortBottomSheet = showSortBottomSheet,
+                displaySortScreen = displaySortScreen,
             )
         }
     }
