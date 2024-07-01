@@ -12,6 +12,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -19,13 +23,22 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.add_option_popup_menu
 import cinetracker_kmp.composeapp.generated.resources.back_arrow_description
 import cinetracker_kmp.composeapp.generated.resources.ic_back_arrow
+import cinetracker_kmp.composeapp.generated.resources.ic_watchlist
+import cinetracker_kmp.composeapp.generated.resources.manage_other_lists_popup_menu
+import cinetracker_kmp.composeapp.generated.resources.remove_option_popup_menu
+import cinetracker_kmp.composeapp.generated.resources.watched_tab
+import cinetracker_kmp.composeapp.generated.resources.watchlist_tab
 import common.domain.util.UiConstants
 import common.domain.util.UiConstants.RETURN_TOP_BAR_HEIGHT
 import common.domain.util.dpToPx
 import common.ui.components.classicVerticalGradientBrush
+import common.ui.components.popup.GenericPopupMenu
+import common.ui.components.popup.PopupMenuItem
 import features.details.util.mapValueToRange
+import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -93,114 +106,114 @@ fun DetailsTopBar(
             }
         }
 
-//        if (showWatchlistButton) {
-//            WatchlistButtonIcon(
-//                contentInWatchlistStatus = contentInWatchlistStatus,
-//                toggleWatchlist = toggleWatchlist,
-//                showOtherListsPanel = showOtherListsPanel,
-//            )
-//        }
+        if (showWatchlistButton) {
+            WatchlistButtonIcon(
+                contentInWatchlistStatus = contentInWatchlistStatus,
+                toggleWatchlist = toggleWatchlist,
+                showOtherListsPanel = showOtherListsPanel,
+            )
+        }
     }
 }
 
-// @Composable
-// private fun WatchlistButtonIcon(
-//    contentInWatchlistStatus: Map<Int, Boolean>,
-//    toggleWatchlist: (Int) -> Unit,
-//    showOtherListsPanel: (Boolean) -> Unit,
-// ) {
-//    var showPopupMenu by remember { mutableStateOf(false) }
-//    val color = if (contentInWatchlistStatus.values.contains(true)) {
-//        MaterialTheme.colorScheme.secondary
-//    } else {
-//        MaterialTheme.colorScheme.onPrimary
-//    }
-//
-//    IconButton(
-//        onClick = {
-//            showPopupMenu = true
-//        },
-//    ) {
-//        Icon(
-//            painter = painterResource(resource = Res.drawable.ic_watchlist),
-//            contentDescription = null,
-//            tint = color,
-//        )
-//        WatchlistPopUpMenu(
-//            showMenu = showPopupMenu,
-//            contentInWatchlistStatus = contentInWatchlistStatus,
-//            onDismissRequest = {
-//                showPopupMenu = false
-//            },
-//            toggleWatchlist = toggleWatchlist,
-//            showCustomLists = { showOtherListsPanel(true) },
-//        )
-//    }
-// }
+@Composable
+private fun WatchlistButtonIcon(
+    contentInWatchlistStatus: Map<Int, Boolean>,
+    toggleWatchlist: (Int) -> Unit,
+    showOtherListsPanel: (Boolean) -> Unit,
+) {
+    var showPopupMenu by remember { mutableStateOf(false) }
+    val color = if (contentInWatchlistStatus.values.contains(true)) {
+        MaterialTheme.colorScheme.secondary
+    } else {
+        MaterialTheme.colorScheme.onPrimary
+    }
 
-// @Composable
-// fun WatchlistPopUpMenu(
-//    showMenu: Boolean,
-//    contentInWatchlistStatus: Map<Int, Boolean>,
-//    onDismissRequest: () -> Unit,
-//    toggleWatchlist: (Int) -> Unit,
-//    showCustomLists: () -> Unit,
-// ) {
-//    val watchlist = stringResource(resource = Res.string.watchlist_tab)
-//    val watchlistMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHLIST.listId] == true) {
-//        stringResource(
-//            resource = Res.string.remove_option_popup_menu,
-//            watchlist,
-//        )
-//    } else {
-//        stringResource(
-//            resource = Res.string.add_option_popup_menu,
-//            watchlist,
-//        )
-//    }
-//
-//    val watched = stringResource(id = R.string.watched_tab)
-//    val watchedMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHED.listId] == true) {
-//        stringResource(
-//            id = R.string.remove_option_popup_menu,
-//            watched,
-//        )
-//    } else {
-//        stringResource(
-//            id = R.string.add_option_popup_menu,
-//            watched,
-//        )
-//    }
-//
-//    val menuItems = mutableListOf(
-//        PopupMenuItem(
-//            title = watchlistMenuTitle,
-//            onClick = {
-//                toggleWatchlist(DefaultLists.WATCHLIST.listId)
-//            },
-//        ),
-//        PopupMenuItem(
-//            title = watchedMenuTitle,
-//            onClick = {
-//                toggleWatchlist(DefaultLists.WATCHED.listId)
-//            },
-//        ),
-//    )
-//
-//    if (contentInWatchlistStatus.size > 2) {
-//        menuItems.add(
-//            PopupMenuItem(
-//                title = stringResource(id = R.string.manage_other_lists_popup_menu),
-//                onClick = {
-//                    showCustomLists()
-//                },
-//            ),
-//        )
-//    }
-//
-//    GenericPopupMenu(
-//        showMenu = showMenu,
-//        onDismissRequest = onDismissRequest,
-//        menuItems = menuItems,
-//    )
-// }
+    IconButton(
+        onClick = {
+            showPopupMenu = true
+        },
+    ) {
+        Icon(
+            painter = painterResource(resource = Res.drawable.ic_watchlist),
+            contentDescription = null,
+            tint = color,
+        )
+        WatchlistPopUpMenu(
+            showMenu = showPopupMenu,
+            contentInWatchlistStatus = contentInWatchlistStatus,
+            onDismissRequest = {
+                showPopupMenu = false
+            },
+            toggleWatchlist = toggleWatchlist,
+            showCustomLists = { showOtherListsPanel(true) },
+        )
+    }
+}
+
+@Composable
+fun WatchlistPopUpMenu(
+    showMenu: Boolean,
+    contentInWatchlistStatus: Map<Int, Boolean>,
+    onDismissRequest: () -> Unit,
+    toggleWatchlist: (Int) -> Unit,
+    showCustomLists: () -> Unit,
+) {
+    val watchlist = stringResource(resource = Res.string.watchlist_tab)
+    val watchlistMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHLIST.listId] == true) {
+        stringResource(
+            resource = Res.string.remove_option_popup_menu,
+            watchlist,
+        )
+    } else {
+        stringResource(
+            resource = Res.string.add_option_popup_menu,
+            watchlist,
+        )
+    }
+
+    val watched = stringResource(resource = Res.string.watched_tab)
+    val watchedMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHED.listId] == true) {
+        stringResource(
+            resource = Res.string.remove_option_popup_menu,
+            watched,
+        )
+    } else {
+        stringResource(
+            resource = Res.string.add_option_popup_menu,
+            watched,
+        )
+    }
+
+    val menuItems = mutableListOf(
+        PopupMenuItem(
+            title = watchlistMenuTitle,
+            onClick = {
+                toggleWatchlist(DefaultLists.WATCHLIST.listId)
+            },
+        ),
+        PopupMenuItem(
+            title = watchedMenuTitle,
+            onClick = {
+                toggleWatchlist(DefaultLists.WATCHED.listId)
+            },
+        ),
+    )
+
+    if (contentInWatchlistStatus.size > 2) {
+        menuItems.add(
+            PopupMenuItem(
+                title = stringResource(resource = Res.string.manage_other_lists_popup_menu),
+                onClick = {
+                    showCustomLists()
+                },
+            ),
+        )
+    }
+
+    GenericPopupMenu(
+        showMenu = showMenu,
+        onDismissRequest = onDismissRequest,
+        menuItems = menuItems,
+    )
+}

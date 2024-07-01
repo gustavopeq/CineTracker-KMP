@@ -32,9 +32,12 @@ import common.domain.util.UiConstants.DEFAULT_MARGIN
 import common.domain.util.UiConstants.HOME_BACKGROUND_OFFSET_PERCENT
 import common.domain.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
+import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
 import common.ui.components.button.GenericButton
 import common.util.getScreenSizeInfo
+import features.home.HomeScreen
+import features.home.events.HomeEvent
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
 import features.home.ui.components.carousel.WatchlistCarousel
@@ -44,7 +47,9 @@ import features.home.ui.components.featured.PersonFeaturedInfo
 import features.home.ui.components.featured.SecondaryFeaturedInfo
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Home(
     goToDetails: (Int, MediaType) -> Unit,
@@ -54,7 +59,7 @@ fun Home(
 ) {
     Home(
         viewModel = koinViewModel(),
-        // mainViewModel = koinViewModel(),
+        mainViewModel = koinViewModel(),
         goToDetails = goToDetails,
         goToWatchlist = goToWatchlist,
         goToBrowse = goToBrowse,
@@ -65,7 +70,7 @@ fun Home(
 @Composable
 private fun Home(
     viewModel: HomeViewModel,
-    // mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     goToDetails: (Int, MediaType) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
@@ -73,16 +78,16 @@ private fun Home(
 ) {
     val loadState by viewModel.loadState.collectAsState()
     val trendingMultiList by viewModel.trendingMulti.collectAsState()
-    // val myWatchlist by viewModel.myWatchlist.collectAsState()
+    val myWatchlist by viewModel.myWatchlist.collectAsState()
     val trendingPersonList by viewModel.trendingPerson.collectAsState()
     val moviesComingSoonList by viewModel.moviesComingSoon.collectAsState()
 
     LaunchedEffect(Unit) {
-        // mainViewModel.updateCurrentScreen(HomeScreen.route())
-//        when (loadState) {
-//            is DataLoadStatus.Success -> viewModel.onEvent(HomeEvent.ReloadWatchlist)
-//            else -> viewModel.onEvent(HomeEvent.LoadHome)
-//        }
+        mainViewModel.updateCurrentScreen(HomeScreen.route())
+        when (loadState) {
+            is DataLoadStatus.Success -> viewModel.onEvent(HomeEvent.ReloadWatchlist)
+            else -> viewModel.onEvent(HomeEvent.LoadHome)
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -99,7 +104,7 @@ private fun Home(
                 }
             }
             is DataLoadStatus.Failed -> {
-                // viewModel.onEvent(HomeEvent.OnError)
+                viewModel.onEvent(HomeEvent.OnError)
                 goToErrorScreen()
             }
             else -> {
@@ -113,8 +118,7 @@ private fun Home(
                         posterHeight = posterHeight,
                         currentScreenWidth = posterWidth,
                         trendingMultiList = trendingMultiList,
-//                         myWatchlist,
-                        myWatchlist = emptyList(),
+                        myWatchlist = myWatchlist,
                         trendingPersonList = trendingPersonList,
                         moviesComingSoonList = moviesComingSoonList,
                         goToDetails = goToDetails,

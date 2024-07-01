@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-actual object DateUtils : DateUtility {
-    override fun getComingSoonDates(
+actual object DateUtils {
+    actual fun getComingSoonDates(
         monthPeriod: Int,
     ): Pair<String, String> {
         val calendar = Calendar.getInstance()
@@ -16,4 +16,6 @@ actual object DateUtils : DateUtility {
         val releaseDateLte = dateFormat.format(calendar.time)
         return Pair(releaseDateGte, releaseDateLte)
     }
+
+    actual fun getCurrentTimeMillis(): Long = System.currentTimeMillis()
 }
