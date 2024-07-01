@@ -6,6 +6,8 @@ import network.repository.movie.MovieRepository
 import network.repository.movie.MovieRepositoryImpl
 import network.repository.person.PersonRepository
 import network.repository.person.PersonRepositoryImpl
+import network.repository.search.SearchRepository
+import network.repository.search.SearchRepositoryImpl
 import network.repository.show.ShowRepository
 import network.repository.show.ShowRepositoryImpl
 import org.koin.dsl.module
@@ -14,5 +16,6 @@ val repositoryModule = module {
     single<MovieRepository> { MovieRepositoryImpl(get()) }
     single<ShowRepository> { ShowRepositoryImpl(get()) }
     single<PersonRepository> { PersonRepositoryImpl(get()) }
+    single<SearchRepository> { SearchRepositoryImpl(get()) }
     single<HomeRepository> { HomeRepositoryImpl(get()) }
 }

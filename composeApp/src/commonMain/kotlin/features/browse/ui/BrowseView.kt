@@ -227,7 +227,7 @@ private fun BrowseBody(
                     columns = GridCells.Fixed(numCardsPerRow),
                     modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp),
                 ) {
-                    items(20) { index ->
+                    items(pagingData.itemCount) { index ->
                         val content = pagingData[index]
                         content?.let {
                             DefaultContentCard(

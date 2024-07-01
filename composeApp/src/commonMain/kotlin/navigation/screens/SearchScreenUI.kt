@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import features.details.DetailsScreen
 import features.search.ui.Search
 import navigation.ScreenUI
 
@@ -15,9 +16,9 @@ class SearchScreenUI : ScreenUI {
 
         Search(
             goToDetails = { contentId, mediaType ->
-//                navController.navigate(
-//                    DetailsScreen.routeWithArguments(contentId, mediaType.name)
-//                )
+                navController.navigate(
+                    DetailsScreen.routeWithArguments(contentId, mediaType.name),
+                )
             },
             goToErrorScreen = {
 //                if (currentScreen != ErrorScreen.route()) {
