@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import common.domain.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
+import common.ui.MainViewModel
 import common.ui.theme.MainBarGreyColor
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -25,7 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun MainNavBar(
     navController: NavController,
-    // mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     navBarItems: List<MainNavBarItem>,
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -41,7 +42,7 @@ fun MainNavBar(
             NavigationBarItem(
                 selected = currentScreen == item.screen.route(),
                 onClick = {
-                    // mainViewModel.updateCurrentScreen(item.screen.route())
+                    mainViewModel.updateCurrentScreen(item.screen.route())
                     navigateToTopLevelDestination(
                         navController = navController,
                         destination = item.screen.route(),

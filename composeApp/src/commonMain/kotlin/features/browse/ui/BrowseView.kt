@@ -21,6 +21,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -48,11 +50,13 @@ import common.domain.util.UiConstants.SMALL_PADDING
 import common.domain.util.calculateCardsPerRow
 import common.domain.util.dpToPx
 import common.domain.util.pxToDp
+import common.ui.MainViewModel
 import common.ui.components.ComponentPlaceholder
 import common.ui.components.card.DefaultContentCard
 import common.ui.theme.RoundCornerShapes
 import common.util.PlatformUtils
 import common.util.getScreenSizeInfo
+import features.browse.BrowseScreen
 import features.browse.events.BrowseEvent
 import features.browse.ui.components.CollapsingTabRow
 import org.koin.compose.viewmodel.koinViewModel
@@ -66,7 +70,7 @@ fun Browse(
 ) {
     Browse(
         viewModel = koinViewModel(),
-//        mainViewModel = koinViewModel(),
+        mainViewModel = koinViewModel(),
         goToDetails = goToDetails,
         goToErrorScreen = goToErrorScreen,
     )
@@ -76,10 +80,9 @@ fun Browse(
 @Composable
 private fun Browse(
     viewModel: BrowseViewModel,
-//    mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit,
-
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val scaffoldOffset = if (PlatformUtils.isIOS) {
@@ -89,28 +92,28 @@ private fun Browse(
     }
     val layoutDirection = LocalLayoutDirection.current
 
-//    val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
+    val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
     val pagerState = rememberPagerState(
-        initialPage = 0, // currentMediaTypeSelected.ordinal,
+        initialPage = currentMediaTypeSelected.ordinal,
         pageCount = { 2 },
     )
 
     val listOfMovies = viewModel.moviePager.collectAsLazyPagingItems()
-//    val movieSortType by mainViewModel.movieSortType.collectAsState()
+    val movieSortType by mainViewModel.movieSortType.collectAsState()
 
     val listOfShows = viewModel.showPager.collectAsLazyPagingItems()
-//    val showSortType by mainViewModel.showSortType.collectAsState()
+    val showSortType by mainViewModel.showSortType.collectAsState()
 
     LaunchedEffect(Unit) {
-//        mainViewModel.updateCurrentScreen(BrowseScreen.route())
+        mainViewModel.updateCurrentScreen(BrowseScreen.route())
     }
 
-//    LaunchedEffect(pagerState.currentPage) {
-//        when (pagerState.currentPage) {
-//            0 -> mainViewModel.updateMediaType(MediaType.MOVIE)
-//            1 -> mainViewModel.updateMediaType(MediaType.SHOW)
-//        }
-//    }
+    LaunchedEffect(pagerState.currentPage) {
+        when (pagerState.currentPage) {
+            0 -> mainViewModel.updateMediaType(MediaType.MOVIE)
+            1 -> mainViewModel.updateMediaType(MediaType.SHOW)
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -162,7 +165,7 @@ private fun Browse(
                             viewModel = viewModel,
                             mediaType = MediaType.MOVIE,
                             pagingData = listOfMovies,
-                            sortTypeItem = SortTypeItem.NowPlaying, // movieSortType,
+                            sortTypeItem = movieSortType,
                             goToDetails = goToDetails,
                             goToErrorScreen = goToErrorScreen,
                         )
@@ -172,7 +175,7 @@ private fun Browse(
                             viewModel = viewModel,
                             mediaType = MediaType.SHOW,
                             pagingData = listOfShows,
-                            sortTypeItem = SortTypeItem.AiringToday, // showSortType,
+                            sortTypeItem = showSortType,
                             goToDetails = goToDetails,
                             goToErrorScreen = goToErrorScreen,
                         )

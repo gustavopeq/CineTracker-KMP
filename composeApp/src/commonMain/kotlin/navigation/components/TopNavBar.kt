@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.app_logo_image_description
 import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
+import common.ui.MainViewModel
+import common.ui.components.button.SortIconButton
 import features.browse.BrowseScreen
 import features.home.HomeScreen
 import features.search.SearchScreen
@@ -22,8 +24,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun TopNavBar(
     currentScreen: String?,
-    // mainViewModel: MainViewModel,
-    // displaySortScreen: (Boolean) -> Unit,
+    mainViewModel: MainViewModel,
+    displaySortScreen: (Boolean) -> Unit,
 ) {
     val title = currentScreen.getScreenNameRes()?.let { stringResource(resource = it) }
     val showTopBar = screensWithTopBar.contains(currentScreen)
@@ -47,11 +49,11 @@ fun TopNavBar(
             },
             actions = {
                 if (screensWithSortIcon.contains(currentScreen)) {
-//                    SortIconButton(
-//                        mainViewModel = mainViewModel,
-//                        currentScreen = currentScreen.orEmpty(),
-//                        displaySortScreen = displaySortScreen
-//                    )
+                    SortIconButton(
+                        mainViewModel = mainViewModel,
+                        currentScreen = currentScreen.orEmpty(),
+                        displaySortScreen = displaySortScreen,
+                    )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
