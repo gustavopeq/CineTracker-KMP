@@ -28,6 +28,7 @@ import common.domain.util.dpToPx
 import common.domain.util.pxToDp
 import common.ui.components.ClassicLoadingIndicator
 import common.util.PlatformUtils
+import common.util.SetStatusBarColor
 import common.util.getScreenSizeInfo
 import features.search.events.SearchEvent
 import features.search.ui.components.NoResultsFound
@@ -69,7 +70,7 @@ private fun Search(
         )
     }
 
-//    SetStatusBarColor()
+    SetStatusBarColor()
 
     LaunchedEffect(Unit) {
         if (searchQuery.isNotEmpty() && searchResults.itemCount == 0) {
