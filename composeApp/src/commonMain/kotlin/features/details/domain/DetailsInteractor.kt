@@ -9,10 +9,13 @@ import common.domain.models.content.toGenericContent
 import common.domain.models.content.toGenericContentList
 import common.domain.models.content.toStreamProvider
 import common.domain.models.content.toVideos
+import common.domain.models.list.ListItem
+import common.domain.models.list.toListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
 import core.LanguageManager.getUserCountryCode
+import database.repository.DatabaseRepository
 import features.details.state.DetailsState
 import network.models.content.common.BaseContentResponse
 import network.models.content.common.MovieResponse
@@ -29,7 +32,7 @@ class DetailsInteractor(
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository,
     private val personRepository: PersonRepository,
-//    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
 ) {
     suspend fun getContentDetailsById(
         contentId: Int,
@@ -272,70 +275,75 @@ class DetailsInteractor(
         return imageList
     }
 
-//    suspend fun verifyContentInLists(
-//        contentId: Int,
-//        mediaType: MediaType,
-//    ): Map<Int, Boolean> {
-//        val allLists = databaseRepository.getAllLists()
-//        val contentInListMap = allLists.associate { list ->
-//            list.listId to false
-//        }.toMutableMap()
-//
-//        val result = databaseRepository.searchItems(
-//            contentId = contentId,
-//            mediaType = mediaType,
-//        )
-//
-//        result.forEach { content ->
-//            contentInListMap[content.listId] = true
-//        }
-//
-//        return contentInListMap
-//    }
-//
-//    suspend fun toggleWatchlist(
-//        currentStatus: Boolean,
-//        contentId: Int,
-//        mediaType: MediaType,
-//        listId: Int,
-//    ) {
-//        when (currentStatus) {
-//            true -> {
-//                removeFromWatchlist(contentId, mediaType, listId)
-//            }
-//            false -> {
-//                addToWatchlist(contentId, mediaType, listId)
-//            }
-//        }
-//    }
-//
-//    private suspend fun addToWatchlist(
-//        contentId: Int,
-//        mediaType: MediaType,
-//        listId: Int,
-//    ) {
-//        databaseRepository.insertItem(
-//            contentId = contentId,
-//            mediaType = mediaType,
-//            listId = listId,
-//        )
-//    }
-//
-//    private suspend fun removeFromWatchlist(
-//        contentId: Int,
-//        mediaType: MediaType,
-//        listId: Int,
-//    ) {
-//        databaseRepository.deleteItem(
-//            contentId = contentId,
-//            mediaType = mediaType,
-//            listId = listId,
-//        )
-//    }
-//
-//    suspend fun getAllLists(): List<ListItem> {
-//        return databaseRepository.getAllLists().map { listEntity ->
-//            listEntity.toListItem()
-//        }
-//    }
+    suspend fun verifyContentInLists(
+        contentId: Int,
+        mediaType: MediaType,
+    ): Map<Int, Boolean> {
+        val allLists = databaseRepository.getAllLists()
+        val contentInListMap = allLists.associate { list ->
+            list.listId to false
+        }.toMutableMap()
+
+        val result = databaseRepository.searchItems(
+            contentId = contentId,
+            mediaType = mediaType,
+        )
+
+        result.forEach { content ->
+            contentInListMap[content.listId] = true
+        }
+
+        return contentInListMap
+    }
+
+    suspend fun toggleWatchlist(
+        currentStatus: Boolean,
+        contentId: Int,
+        mediaType: MediaType,
+        listId: Int,
+    ) {
+        when (currentStatus) {
+            true -> {
+                removeFromWatchlist(contentId, mediaType, listId)
+            }
+            false -> {
+                addToWatchlist(contentId, mediaType, listId)
+            }
+        }
+    }
+
+    private suspend fun addToWatchlist(
+        contentId: Int,
+        mediaType: MediaType,
+        listId: Int,
+    ) {
+        databaseRepository.insertItem(
+            contentId = contentId,
+            mediaType = mediaType,
+            listId = listId,
+        )
+    }
+
+    private suspend fun removeFromWatchlist(
+        contentId: Int,
+        mediaType: MediaType,
+        listId: Int,
+    ) {
+        databaseRepository.deleteItem(
+            contentId = contentId,
+            mediaType = mediaType,
+            listId = listId,
+        )
+    }
+
+    suspend fun getAllLists(): List<ListItem> {
+        return databaseRepository.getAllLists().map { listEntity ->
+            listEntity.toListItem()
+        }
+    }
+
+    suspend fun addList() {
+        databaseRepository.addNewList("watchlist")
+        databaseRepository.addNewList("watched")
+    }
 }

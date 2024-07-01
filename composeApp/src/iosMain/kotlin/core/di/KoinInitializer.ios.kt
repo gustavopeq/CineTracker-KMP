@@ -2,6 +2,7 @@ package core.di
 
 import core.di.modules.interactorModule
 import core.di.modules.viewModelModule
+import database.di.databaseModule
 import network.di.apiModule
 import network.di.repositoryModule
 import network.di.serviceModule
@@ -13,6 +14,7 @@ actual class KoinInitializer {
             modules(
                 interactorModule,
                 viewModelModule,
+                databaseModule(),
                 apiModule,
                 serviceModule,
                 repositoryModule,

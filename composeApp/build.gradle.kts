@@ -11,9 +11,15 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.buildKonfig)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -38,6 +44,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.room.android)
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.androidx.compose)
@@ -52,6 +59,7 @@ kotlin {
             implementation(compose.material3)
             implementation(libs.androidx.navigation)
             implementation(libs.androidx.lifecycle)
+            implementation(libs.androidx.room.runtime)
 
             implementation(libs.coil.compose.core)
             implementation(libs.coil.compose)
@@ -67,6 +75,7 @@ kotlin {
             implementation(libs.koin.composeVM)
             implementation(libs.paging.common)
             implementation(libs.paging.compose)
+            implementation(libs.sqlite.bundled)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -117,6 +126,20 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies {
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
     }
 }
 

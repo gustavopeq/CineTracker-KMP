@@ -6,9 +6,10 @@ import platform.Foundation.NSDate
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
+import platform.Foundation.timeIntervalSince1970
 
-actual object DateUtils : DateUtility {
-    override fun getComingSoonDates(
+actual object DateUtils {
+    actual fun getComingSoonDates(
         monthPeriod: Int,
     ): Pair<String, String> {
         val calendar = NSCalendar.currentCalendar
@@ -25,4 +26,6 @@ actual object DateUtils : DateUtility {
         } ?: releaseDateGte
         return Pair(releaseDateGte, releaseDateLte)
     }
+
+    actual fun getCurrentTimeMillis(): Long = (NSDate().timeIntervalSince1970 * 1000).toLong()
 }

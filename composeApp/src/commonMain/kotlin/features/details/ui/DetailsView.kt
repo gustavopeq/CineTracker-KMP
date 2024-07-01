@@ -36,9 +36,11 @@ import common.domain.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.domain.util.UiConstants.SECTION_PADDING
+import common.ui.MainViewModel
 import common.ui.components.NetworkImage
 import common.ui.components.popup.ClassicSnackbar
 import common.util.getScreenSizeInfo
+import features.details.DetailsScreen
 import features.details.DetailsScreen.ARG_CONTENT_ID
 import features.details.DetailsScreen.ARG_MEDIA_TYPE
 import features.details.events.DetailsEvents
@@ -69,7 +71,7 @@ fun Details(
     Box(modifier = Modifier.fillMaxSize()) {
         Details(
             viewModel = koinViewModel { parametersOf(contentId, mediaType) },
-            //            mainViewModel = koinViewModel(),
+            mainViewModel = koinViewModel(),
             onBackPress = onBackPress,
             goToDetails = goToDetails,
             goToErrorScreen = goToErrorScreen,
@@ -80,13 +82,13 @@ fun Details(
 @Composable
 private fun Details(
     viewModel: DetailsViewModel,
-    //    mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit,
 ) {
     val contentDetails by viewModel.contentDetails.collectAsState()
-//    val contentInListStatus by viewModel.contentInListStatus.collectAsState()
+    val contentInListStatus by viewModel.contentInListStatus.collectAsState()
     val loadState by viewModel.loadState.collectAsState()
     val detailsFailedLoading by viewModel.detailsFailedLoading
 //    val snackbarState by viewModel.snackbarState
@@ -131,7 +133,7 @@ private fun Details(
     }
 
     LaunchedEffect(Unit) {
-//        mainViewModel.updateCurrentScreen(DetailsScreen.route())
+        mainViewModel.updateCurrentScreen(DetailsScreen.route())
 
         if (detailsFailedLoading) {
             viewModel.onEvent(
@@ -176,7 +178,7 @@ private fun Details(
             currentHeaderPosY = currentTitlePosY,
             initialHeaderPosY = initialTitlePosY,
             showWatchlistButton = contentDetails?.mediaType != MediaType.PERSON,
-            contentInWatchlistStatus = mapOf(0 to false), // contentInListStatus,
+            contentInWatchlistStatus = contentInListStatus,
             onBackBtnPress = onBackPress,
             toggleWatchlist = onToggleWatchlist,
             showOtherListsPanel = updateShowOtherListsPanel,

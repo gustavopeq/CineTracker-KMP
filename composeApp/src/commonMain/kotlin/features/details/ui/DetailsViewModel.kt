@@ -8,13 +8,17 @@ import common.domain.models.content.ContentCast
 import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.content.Videos
+import common.domain.models.list.ListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
+import common.domain.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
+import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -53,13 +57,13 @@ class DetailsViewModel(
     private val _personImages: MutableStateFlow<List<PersonImage>> = MutableStateFlow(emptyList())
     val personImages: StateFlow<List<PersonImage>> get() = _personImages
 
-//    private val _contentInListStatus = MutableStateFlow(
-//        mapOf(
-//            Pair(DefaultLists.WATCHLIST.listId, false),
-//            Pair(DefaultLists.WATCHED.listId, false),
-//        ),
-//    )
-//    val contentInListStatus: StateFlow<Map<Int, Boolean>> get() = _contentInListStatus
+    private val _contentInListStatus = MutableStateFlow(
+        mapOf(
+            Pair(DefaultLists.WATCHLIST.listId, false),
+            Pair(DefaultLists.WATCHED.listId, false),
+        ),
+    )
+    val contentInListStatus: StateFlow<Map<Int, Boolean>> get() = _contentInListStatus
 
     private val _detailsFailedLoading: MutableState<Boolean> = mutableStateOf(false)
     val detailsFailedLoading: MutableState<Boolean> get() = _detailsFailedLoading
@@ -69,11 +73,15 @@ class DetailsViewModel(
 //    )
 //    val snackbarState: MutableState<DetailsSnackbarState> get() = _snackbarState
 
-//    private lateinit var allLists: List<ListItem>
+    private lateinit var allLists: List<ListItem>
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-//            allLists = detailsInteractor.getAllLists()
+            detailsInteractor.addList()
+
+            allLists = detailsInteractor.getAllLists()
+
+            println("printlog - $allLists")
         }
         initFetchDetails()
     }
@@ -84,9 +92,9 @@ class DetailsViewModel(
         when (event) {
             is DetailsEvents.FetchDetails -> initFetchDetails()
             is DetailsEvents.ToggleContentFromList -> {
-//                toggleContentFromList(
-//                    listId = event.listId,
-//                )
+                toggleContentFromList(
+                    listId = event.listId,
+                )
             }
             is DetailsEvents.OnError -> resetDetails()
             is DetailsEvents.OnSnackbarDismiss -> {
@@ -113,7 +121,7 @@ class DetailsViewModel(
             _loadState.value = DataLoadStatus.Failed
         } else {
             _contentDetails.value = detailsState.detailsInfo.value
-//            verifyContentInLists()
+            verifyContentInLists()
             fetchCastDetails()
         }
     }
@@ -147,46 +155,46 @@ class DetailsViewModel(
             else -> {}
         }
     }
-//
-//    /**
-//     * Verify if content is present in any of the database list.
-//     */
-//    private fun verifyContentInLists() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _contentInListStatus.value = detailsInteractor.verifyContentInLists(
-//                contentId = contentId,
-//                mediaType = mediaType,
-//            )
-//        }
-//    }
-//
-//    /**
-//     * Function to Add or Remove content from database list. If the item is currently in the list,
-//     * it'll be removed. If it's not, it'll be added.
-//     */
-//    private fun toggleContentFromList(listId: Int) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val currentStatus = _contentInListStatus.value[listId] ?: false
-//            val updatedWatchlistStatus = _contentInListStatus.value.toMutableMap()
-//
-//            detailsInteractor.toggleWatchlist(
-//                currentStatus = currentStatus,
-//                contentId = contentId,
-//                mediaType = mediaType,
-//                listId = listId,
-//            )
+
+    /**
+     * Verify if content is present in any of the database list.
+     */
+    private fun verifyContentInLists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _contentInListStatus.value = detailsInteractor.verifyContentInLists(
+                contentId = contentId,
+                mediaType = mediaType,
+            )
+        }
+    }
+
+    /**
+     * Function to Add or Remove content from database list. If the item is currently in the list,
+     * it'll be removed. If it's not, it'll be added.
+     */
+    private fun toggleContentFromList(listId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentStatus = _contentInListStatus.value[listId] ?: false
+            val updatedWatchlistStatus = _contentInListStatus.value.toMutableMap()
+
+            detailsInteractor.toggleWatchlist(
+                currentStatus = currentStatus,
+                contentId = contentId,
+                mediaType = mediaType,
+                listId = listId,
+            )
 //            _snackbarState.value = DetailsSnackbarState(
 //                listId = listId,
 //                addedItem = !currentStatus,
 //            ).apply {
 //                setSnackbarVisible()
 //            }
-//            delay(DELAY_UPDATE_POPUP_TEXT_MS)
-//            updatedWatchlistStatus[listId] = !currentStatus
-//
-//            _contentInListStatus.value = updatedWatchlistStatus
-//        }
-//    }
+            delay(DELAY_UPDATE_POPUP_TEXT_MS)
+            updatedWatchlistStatus[listId] = !currentStatus
+
+            _contentInListStatus.value = updatedWatchlistStatus
+        }
+    }
 //
 //    private fun snackbarDismiss() {
 //        _snackbarState.value.setSnackbarGone()
@@ -197,7 +205,7 @@ class DetailsViewModel(
         _detailsFailedLoading.value = true
     }
 
-//    fun getAllLists(): List<ListItem> {
-//        return allLists
-//    }
+    fun getAllLists(): List<ListItem> {
+        return allLists
+    }
 }
