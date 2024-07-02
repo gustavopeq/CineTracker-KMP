@@ -104,8 +104,7 @@ private fun createMenuItems(
     val removeItem = PopupMenuItem(
         title = stringResource(
             resource = Res.string.remove_option_popup_menu,
-            selectedListName.capitalized(),
-        ),
+        ) + selectedListName.capitalized(),
         textColor = MaterialTheme.colorScheme.error,
         onClick = onRemoveClick,
     )
@@ -116,8 +115,7 @@ private fun createMenuItems(
             PopupMenuItem(
                 title = stringResource(
                     resource = Res.string.move_to_list_option_popup_menu,
-                    secondaryListName,
-                ),
+                ) + secondaryListName,
                 onClick = onMoveItemToSecondaryList,
             ),
         )
