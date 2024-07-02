@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import database.AppDatabase
+import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -24,7 +24,6 @@ private fun createRoomDatabase(
         context,
         dbFile.absolutePath,
     )
-        .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .addCallback(roomCallback)
         .fallbackToDestructiveMigration(true)
@@ -34,24 +33,24 @@ private fun createRoomDatabase(
 val roomCallback = object : RoomDatabase.Callback() {
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
-        println("printlog - onCreate")
         createDefaultLists(db)
     }
 
     override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
         super.onDestructiveMigration(db)
-        println("printlog - onDestructive")
         createDefaultLists(db)
     }
 
     override fun onOpen(db: SupportSQLiteDatabase) {
         super.onOpen(db)
-        println("printlog - onOpen")
     }
 
     private fun createDefaultLists(db: SupportSQLiteDatabase) {
         // Execute the SQL to insert the default lists
-        val defaultLists = listOf("watchlist", "watched")
+        val defaultLists = listOf(
+            DefaultLists.WATCHLIST.toString().lowercase(),
+            DefaultLists.WATCHED.toString().lowercase(),
+        )
         defaultLists.forEach { listName ->
             db.execSQL(
                 """

@@ -341,9 +341,4 @@ class DetailsInteractor(
             listEntity.toListItem()
         }
     }
-
-    suspend fun addList() {
-        databaseRepository.addNewList("watchlist")
-        databaseRepository.addNewList("watched")
-    }
 }

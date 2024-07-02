@@ -39,9 +39,9 @@
     <string name="watched_tab">Watched</string>
     <string name="movie_tag">Movie</string>
     <string name="show_tag">Show</string>
-    <string name="remove_option_popup_menu">Remove from %s</string>
+    <string name="remove_option_popup_menu">Remove from </string>
     <string name="move_to_list_option_popup_menu">Move to %s</string>
-    <string name="add_option_popup_menu">Add to %s</string>
+    <string name="add_option_popup_menu">Add to </string>
     <string name="watchlist_sort_button">%s only</string>
     <string name="empty_list_header">Your list is Empty</string>
     <string name="empty_list_message">Add to this list by searching for a movie or show.</string>
@@ -82,12 +82,12 @@
     <string name="movie_details_release_date_label">Release Date</string>
     <string name="show_details_duration_label">Duration</string>
     <plurals name="seasons">
-        <item quantity="one">%d Season</item>
-        <item quantity="other">%d Seasons</item>
+        <item quantity="one"> Season</item>
+        <item quantity="other"> Seasons</item>
     </plurals>
     <plurals name="episodes">
-        <item quantity="one">%d Episode</item>
-        <item quantity="other">%d Episodes</item>
+        <item quantity="one"> Episode</item>
+        <item quantity="other"> Episodes</item>
     </plurals>
     <string name="show_details_first_air_date_label">First Air Date</string>
     <string name="show_details_last_air_date_label">Last Air Date</string>
