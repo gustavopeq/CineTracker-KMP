@@ -5,12 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import common.domain.models.util.MediaType
 import common.domain.util.SortTypeItem
+import database.repository.DatabaseRepository
 import features.home.HomeScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class MainViewModel(
-//    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
 
     private val _movieSortType = MutableStateFlow<SortTypeItem>(SortTypeItem.NowPlaying)
@@ -86,19 +87,19 @@ class MainViewModel(
         }
     }
 
-//    suspend fun createNewList(
-//        closeSheet: suspend () -> Unit
-//    ) {
-//        val listCreated = databaseRepository.addNewList(
-//            listName = _newListTextFieldValue.value
-//        )
-//
-//        if (listCreated) {
-//            closeSheet()
-//        } else {
-//            _isDuplicatedListName.value = true
-//        }
-//    }
+    suspend fun createNewList(
+        closeSheet: suspend () -> Unit,
+    ) {
+        val listCreated = databaseRepository.addNewList(
+            listName = _newListTextFieldValue.value,
+        )
+
+        if (listCreated) {
+            closeSheet()
+        } else {
+            _isDuplicatedListName.value = true
+        }
+    }
 
     fun setRefreshLists(
         shouldRefresh: Boolean,
