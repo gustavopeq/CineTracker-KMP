@@ -77,11 +77,7 @@ class DetailsViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            detailsInteractor.addList()
-
             allLists = detailsInteractor.getAllLists()
-
-            println("printlog - $allLists")
         }
         initFetchDetails()
     }

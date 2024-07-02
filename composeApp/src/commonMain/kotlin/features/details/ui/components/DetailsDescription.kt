@@ -315,12 +315,12 @@ private fun ShowDurationInfo(
         DetailDescriptionLabel(
             stringResource(resource = Res.string.show_details_duration_label),
         )
-        val seasonString = pluralStringResource(
+        val seasonString = seasonNumber.toString() + pluralStringResource(
             Res.plurals.seasons,
             seasonNumber,
             seasonNumber,
         )
-        val episodeString = pluralStringResource(
+        val episodeString = episodeNumber.toString() + pluralStringResource(
             Res.plurals.episodes,
             episodeNumber,
             episodeNumber,
