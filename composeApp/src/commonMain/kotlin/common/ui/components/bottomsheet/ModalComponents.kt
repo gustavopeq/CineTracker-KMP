@@ -7,6 +7,7 @@ import common.ui.MainViewModel
 import features.browse.BrowseScreen
 import features.browse.ui.components.BrowseSortBottomSheet
 import features.watchlist.WatchlistScreen
+import features.watchlist.ui.components.WatchlistSortBottomSheet
 
 @Composable
 fun ModalComponents(
@@ -32,11 +33,11 @@ fun ModalComponents(
                 )
             }
             WatchlistScreen.route() -> {
-//                WatchlistSortBottomSheet(
-//                    mainViewModel = mainViewModel,
-//                    selectedWatchlistSortType = selectedWatchlistSortType,
-//                    displaySortScreen = displaySortScreen
-//                )
+                WatchlistSortBottomSheet(
+                    mainViewModel = mainViewModel,
+                    selectedWatchlistSortType = selectedWatchlistSortType,
+                    displaySortScreen = displaySortScreen,
+                )
             }
         }
     }

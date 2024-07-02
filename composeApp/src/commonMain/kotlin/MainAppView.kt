@@ -24,6 +24,7 @@ import common.ui.components.bottomsheet.ModalComponents
 import common.ui.theme.CineTrackerTheme
 import core.getAsyncImageLoader
 import features.details.DetailsScreen
+import features.watchlist.ui.components.CreateListBottomSheet
 import navigation.MainNavGraph
 import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
@@ -95,6 +96,10 @@ fun MainAppView() {
                 mainViewModel = mainViewModel,
                 showSortBottomSheet = showSortBottomSheet,
                 displaySortScreen = displaySortScreen,
+            )
+
+            CreateListBottomSheet(
+                mainViewModel = mainViewModel,
             )
         }
     }
