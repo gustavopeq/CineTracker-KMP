@@ -51,6 +51,7 @@ import features.details.ui.components.DetailsDescriptionHeader
 import features.details.ui.components.DetailsTopBar
 import features.details.ui.components.moreoptions.MoreOptionsTab
 import features.details.ui.components.moreoptions.PersonMoreOptionsTab
+import features.details.ui.components.otherlists.OtherListsBottomSheet
 import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
 import org.koin.compose.viewmodel.koinViewModel
@@ -213,16 +214,16 @@ private fun Details(
             }
         }
 
-//        if (showOtherListsPanel) {
-//            OtherListsBottomSheet(
-//                allLists = viewModel.getAllLists(),
-//                contentInListStatus = contentInListStatus,
-//                onToggleList = onToggleWatchlist,
-//                onClosePanel = {
-//                    updateShowOtherListsPanel(false)
-//                },
-//            )
-//        }
+        if (showOtherListsPanel) {
+            OtherListsBottomSheet(
+                allLists = viewModel.getAllLists(),
+                contentInListStatus = contentInListStatus,
+                onToggleList = onToggleWatchlist,
+                onClosePanel = {
+                    updateShowOtherListsPanel(false)
+                },
+            )
+        }
     }
 }
 

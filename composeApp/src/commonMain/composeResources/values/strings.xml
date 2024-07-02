@@ -40,9 +40,9 @@
     <string name="movie_tag">Movie</string>
     <string name="show_tag">Show</string>
     <string name="remove_option_popup_menu">Remove from </string>
-    <string name="move_to_list_option_popup_menu">Move to %s</string>
+    <string name="move_to_list_option_popup_menu">Move to </string>
     <string name="add_option_popup_menu">Add to </string>
-    <string name="watchlist_sort_button">%s only</string>
+    <string name="watchlist_sort_button"> only</string>
     <string name="empty_list_header">Your list is Empty</string>
     <string name="empty_list_message">Add to this list by searching for a movie or show.</string>
     <string name="empty_movie_list_message">Add to this list by searching for movie.</string>
