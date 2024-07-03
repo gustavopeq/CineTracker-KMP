@@ -39,10 +39,10 @@
     <string name="watched_tab">Watched</string>
     <string name="movie_tag">Movie</string>
     <string name="show_tag">Show</string>
-    <string name="remove_option_popup_menu">Remove from </string>
-    <string name="move_to_list_option_popup_menu">Move to </string>
-    <string name="add_option_popup_menu">Add to </string>
-    <string name="watchlist_sort_button"> only</string>
+    <string name="remove_option_popup_menu">Remove from %1$s</string>
+    <string name="move_to_list_option_popup_menu">Move to %1$s</string>
+    <string name="add_option_popup_menu">Add to %1$s</string>
+    <string name="watchlist_sort_button">%1$s only</string>
     <string name="empty_list_header">Your list is Empty</string>
     <string name="empty_list_message">Add to this list by searching for a movie or show.</string>
     <string name="empty_movie_list_message">Add to this list by searching for movie.</string>
@@ -82,12 +82,12 @@
     <string name="movie_details_release_date_label">Release Date</string>
     <string name="show_details_duration_label">Duration</string>
     <plurals name="seasons">
-        <item quantity="one"> Season</item>
-        <item quantity="other"> Seasons</item>
+        <item quantity="one">%1$d Season</item>
+        <item quantity="other">%1$d Seasons</item>
     </plurals>
     <plurals name="episodes">
-        <item quantity="one"> Episode</item>
-        <item quantity="other"> Episodes</item>
+        <item quantity="one">%1$d Episode</item>
+        <item quantity="other">%1$d Episodes</item>
     </plurals>
     <string name="show_details_first_air_date_label">First Air Date</string>
     <string name="show_details_last_air_date_label">Last Air Date</string>
@@ -118,9 +118,9 @@
     <!-- Common -->
     <string name="generic_error_message">Sorry, something went wrong…</string>
     <string name="try_again_button">Try Again</string>
-    <string name="snackbar_item_added_in_list">Added to %s</string>
-    <string name="snackbar_item_removed_from_list">Removed from %s</string>
-    <string name="snackbar_item_moved_to_list">Moved to %s</string>
+    <string name="snackbar_item_added_in_list">Added to %1$s</string>
+    <string name="snackbar_item_removed_from_list">Removed from %1$s</string>
+    <string name="snackbar_item_moved_to_list">Moved to %1$s</string>
     <string name="snackbar_undo_text">Undo</string>
     <string name="undefined_ratings">N/A</string>
     <string name="notification_request_dialog_title">Keep your lists up-to-date!</string>

@@ -29,12 +29,15 @@ import cinetracker_kmp.composeapp.generated.resources.empty_list_header
 import cinetracker_kmp.composeapp.generated.resources.empty_list_message
 import cinetracker_kmp.composeapp.generated.resources.empty_movie_list_message
 import cinetracker_kmp.composeapp.generated.resources.empty_show_list_message
+import cinetracker_kmp.composeapp.generated.resources.snackbar_item_moved_to_list
+import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.domain.util.Constants.UNSELECTED_OPTION_INDEX
 import common.domain.util.UiConstants.DEFAULT_PADDING
 import common.domain.util.UiConstants.SMALL_MARGIN
+import common.domain.util.capitalized
 import common.ui.MainViewModel
 import common.ui.components.popup.ClassicSnackbar
 import common.ui.components.tab.GenericTabRow
@@ -45,7 +48,11 @@ import features.watchlist.ui.components.ListRemovePopUpMenu
 import features.watchlist.ui.components.WatchlistBodyPlaceholder
 import features.watchlist.ui.components.WatchlistCard
 import features.watchlist.ui.components.WatchlistTabItem
+import features.watchlist.ui.model.DefaultLists
+import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
+import features.watchlist.ui.model.WatchlistItemAction
 import features.watchlist.ui.state.WatchlistSnackbarState
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -160,7 +167,7 @@ private fun AllListsLoadedState(
         }
     }
 
-//    SnackbarLaunchedEffect(snackbarState, snackbarHostState, viewModel, tabList)
+    SnackbarLaunchedEffect(snackbarState, snackbarHostState, viewModel, tabList)
 
     ClassicSnackbar(
         snackbarHostState = snackbarHostState,
@@ -237,43 +244,42 @@ private fun AllListsLoadedState(
     )
 }
 
-// @Composable
-// private fun SnackbarLaunchedEffect(
-//    snackbarState: WatchlistSnackbarState,
-//    snackbarHostState: SnackbarHostState,
-//    viewModel: WatchlistViewModel,
-//    tabList: List<WatchlistTabItem>,
-// ) {
-//    val context = LocalContext.current
-//    LaunchedEffect(snackbarState) {
-//        if (snackbarState.displaySnackbar.value) {
-//            val watchlistTabItem = tabList.find { it.listId == snackbarState.listId }
-//            val tabName = if (watchlistTabItem?.tabName.isNullOrEmpty()) {
-//                context.resources.getString(
-//                    getListLocalizedName(DefaultLists.getListById(snackbarState.listId ?: 0)),
-//                )
-//            } else {
-//                watchlistTabItem?.tabName
-//            }
-//
-//            tabName?.let {
-//                val message = if (snackbarState.itemAction == WatchlistItemAction.ITEM_REMOVED) {
-//                    context.resources.getString(
-//                        R.string.snackbar_item_removed_from_list,
-//                        it.capitalized(),
-//                    )
-//                } else {
-//                    context.resources.getString(
-//                        R.string.snackbar_item_moved_to_list,
-//                        it.capitalized(),
-//                    )
-//                }
-//                snackbarHostState.showSnackbar(message)
-//                viewModel.onEvent(WatchlistEvent.OnSnackbarDismiss)
-//            }
-//        }
-//    }
-// }
+@Composable
+private fun SnackbarLaunchedEffect(
+    snackbarState: WatchlistSnackbarState,
+    snackbarHostState: SnackbarHostState,
+    viewModel: WatchlistViewModel,
+    tabList: List<WatchlistTabItem>,
+) {
+    LaunchedEffect(snackbarState) {
+        if (snackbarState.displaySnackbar.value) {
+            val watchlistTabItem = tabList.find { it.listId == snackbarState.listId }
+            val tabName = if (watchlistTabItem?.tabName.isNullOrEmpty()) {
+                getString(
+                    getListLocalizedName(DefaultLists.getListById(snackbarState.listId ?: 0)),
+                )
+            } else {
+                watchlistTabItem?.tabName
+            }
+
+            tabName?.let {
+                val message = if (snackbarState.itemAction == WatchlistItemAction.ITEM_REMOVED) {
+                    getString(
+                        Res.string.snackbar_item_removed_from_list,
+                        it.capitalized(),
+                    )
+                } else {
+                    getString(
+                        Res.string.snackbar_item_moved_to_list,
+                        it.capitalized(),
+                    )
+                }
+                snackbarHostState.showSnackbar(message)
+                viewModel.onEvent(WatchlistEvent.OnSnackbarDismiss)
+            }
+        }
+    }
+}
 
 @Composable
 private fun WatchlistBody(

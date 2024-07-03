@@ -6,6 +6,6 @@ import core.di.KoinInitializer
 class CoreApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        KoinInitializer(applicationContext).init()
+        KoinInitializer(this@CoreApplication).init()
     }
 }
