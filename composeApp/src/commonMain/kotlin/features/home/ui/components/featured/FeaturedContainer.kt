@@ -74,6 +74,7 @@ fun FeaturedInfo(
 fun FeaturedBackgroundImage(
     imageUrl: String,
     posterHeight: Float,
+    showBackgroundImage: Boolean,
 ) {
     Box {
         NetworkImage(
@@ -88,7 +89,11 @@ fun FeaturedBackgroundImage(
             modifier = Modifier
                 .matchParentSize()
                 .background(
-                    MaterialTheme.colorScheme.primary.copy(HOME_BACKGROUND_ALPHA),
+                    if (showBackgroundImage) {
+                        MaterialTheme.colorScheme.primary.copy(HOME_BACKGROUND_ALPHA)
+                    } else {
+                        MaterialTheme.colorScheme.primary
+                    },
                 ),
         )
     }

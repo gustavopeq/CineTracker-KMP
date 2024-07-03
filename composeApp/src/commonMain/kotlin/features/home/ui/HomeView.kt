@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -29,12 +32,14 @@ import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.domain.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.domain.util.UiConstants.DEFAULT_MARGIN
+import common.domain.util.UiConstants.HOME_BACKGROUND_HIDE_OFFSET
 import common.domain.util.UiConstants.HOME_BACKGROUND_OFFSET_PERCENT
 import common.domain.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
 import common.ui.components.button.GenericButton
+import common.util.PlatformUtils
 import common.util.getScreenSizeInfo
 import features.home.HomeScreen
 import features.home.events.HomeEvent
@@ -109,11 +114,6 @@ private fun Home(
             }
             else -> {
                 if (trendingMultiList.isNotEmpty()) {
-                    val homePosterUrl = BASE_ORIGINAL_IMAGE_URL + trendingMultiList[0].posterPath
-                    FeaturedBackgroundImage(
-                        imageUrl = homePosterUrl,
-                        posterHeight = posterHeight,
-                    )
                     HomeBody(
                         posterHeight = posterHeight,
                         currentScreenWidth = posterWidth,
@@ -143,6 +143,7 @@ private fun HomeBody(
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
 ) {
+    val homePosterUrl = BASE_ORIGINAL_IMAGE_URL + trendingMultiList[0].posterPath
     val featuredItem = trendingMultiList.firstOrNull()
     val secondaryTrendingItems = trendingMultiList.drop(1)
     val secondaryFeaturedItem = trendingMultiList.firstOrNull {
@@ -150,60 +151,84 @@ private fun HomeBody(
             MediaType.MOVIE -> it.mediaType == MediaType.SHOW
             else -> it.mediaType == MediaType.MOVIE
         }
-        expectedMediaType && !it.backdropPath.isNullOrEmpty()
+        expectedMediaType && it.backdropPath.isNotEmpty()
     }
     val trendingPerson = trendingPersonList.firstOrNull {
         it.knownForDepartment?.isNotEmpty() == true && it.knownFor.size >= 3
     }
     val bgOffset = posterHeight * HOME_BACKGROUND_OFFSET_PERCENT
 
-    LazyColumn {
-        item {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(bgOffset.dp),
+    val scrollState = rememberLazyListState()
+    val showBackgroundImage = remember { mutableStateOf(true) }
+    val updateBackgroundImageState: (Boolean) -> Unit = {
+        showBackgroundImage.value = it
+    }
+
+    if (PlatformUtils.isIOS) {
+        LaunchedEffect(scrollState.firstVisibleItemScrollOffset) {
+            updateBackgroundImageState(
+                scrollState.firstVisibleItemScrollOffset < HOME_BACKGROUND_HIDE_OFFSET,
             )
         }
-        item {
-            FeaturedInfo(
-                featuredContent = featuredItem,
-                goToDetails = goToDetails,
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary),
-            ) {
-                TrendingCarousel(
-                    trendingItems = secondaryTrendingItems,
-                    currentScreenWidth = currentScreenWidth,
+    }
+
+    Box {
+        FeaturedBackgroundImage(
+            imageUrl = homePosterUrl,
+            posterHeight = posterHeight,
+            showBackgroundImage = showBackgroundImage.value,
+        )
+
+        LazyColumn(
+            state = scrollState,
+        ) {
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(bgOffset.dp),
+                )
+            }
+            item {
+                FeaturedInfo(
+                    featuredContent = featuredItem,
                     goToDetails = goToDetails,
                 )
-                WatchlistCarousel(
-                    watchlist = myWatchlist,
-                    currentScreenWidth = currentScreenWidth,
-                    goToDetails = goToDetails,
-                    goToWatchlist = goToWatchlist,
-                )
-                SecondaryFeaturedInfo(
-                    featuredItem = secondaryFeaturedItem,
-                    goToDetails = goToDetails,
-                )
-                ComingSoonCarousel(
-                    carouselHeaderRes = Res.string.coming_soon_header,
-                    comingSoonList = moviesComingSoonList,
-                    currentScreenWidth = currentScreenWidth,
-                    goToDetails = goToDetails,
-                )
-                PersonFeaturedInfo(
-                    trendingPerson = trendingPerson,
-                    goToDetails = goToDetails,
-                )
-                HomeBrowseButton(
-                    goToBrowse = goToBrowse,
-                )
-                Spacer(modifier = Modifier.height(HOME_BOTTOM_END_MARGIN.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primary),
+                ) {
+                    TrendingCarousel(
+                        trendingItems = secondaryTrendingItems,
+                        currentScreenWidth = currentScreenWidth,
+                        goToDetails = goToDetails,
+                    )
+                    WatchlistCarousel(
+                        watchlist = myWatchlist,
+                        currentScreenWidth = currentScreenWidth,
+                        goToDetails = goToDetails,
+                        goToWatchlist = goToWatchlist,
+                    )
+                    SecondaryFeaturedInfo(
+                        featuredItem = secondaryFeaturedItem,
+                        goToDetails = goToDetails,
+                    )
+                    ComingSoonCarousel(
+                        carouselHeaderRes = Res.string.coming_soon_header,
+                        comingSoonList = moviesComingSoonList,
+                        currentScreenWidth = currentScreenWidth,
+                        goToDetails = goToDetails,
+                    )
+                    PersonFeaturedInfo(
+                        trendingPerson = trendingPerson,
+                        goToDetails = goToDetails,
+                    )
+                    HomeBrowseButton(
+                        goToBrowse = goToBrowse,
+                    )
+                    Spacer(modifier = Modifier.height(HOME_BOTTOM_END_MARGIN.dp))
+                }
             }
         }
     }

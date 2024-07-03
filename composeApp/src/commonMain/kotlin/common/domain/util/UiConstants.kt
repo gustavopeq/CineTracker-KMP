@@ -29,6 +29,7 @@ object UiConstants {
     // Home
     const val WATCHLIST_CAROUSEL_MAX_COUNT = 10
     const val HOME_BOTTOM_END_MARGIN = 60
+    const val HOME_BACKGROUND_HIDE_OFFSET = 2000
 
     // Browse
     const val BROWSE_MIN_CARD_WIDTH = 450
