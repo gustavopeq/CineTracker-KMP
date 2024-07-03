@@ -27,7 +27,6 @@ import common.domain.util.calculateCardsPerRow
 import common.domain.util.dpToPx
 import common.domain.util.pxToDp
 import common.ui.components.ClassicLoadingIndicator
-import common.util.PlatformUtils
 import common.util.SetStatusBarColor
 import common.util.getScreenSizeInfo
 import features.search.events.SearchEvent
@@ -95,7 +94,6 @@ private fun Search(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(
-                    enabled = PlatformUtils.isIOS,
                     onClick = {
                         keyboardController?.hide()
                     },

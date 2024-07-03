@@ -62,8 +62,10 @@ fun WatchlistSortBottomSheet(
         sortOptions.forEachIndexed { index, sortItem ->
             val isButtonSelected = index == selectedIndex
             SortButton(
-                text = stringResource(resource = sortItem.titleRes) +
-                    stringResource(resource = Res.string.watchlist_sort_button),
+                text = stringResource(
+                    resource = Res.string.watchlist_sort_button,
+                    stringResource(resource = sortItem.titleRes),
+                ),
                 textColor = MaterialTheme.colorScheme.onPrimary,
                 isSelected = isButtonSelected,
                 onClick = {

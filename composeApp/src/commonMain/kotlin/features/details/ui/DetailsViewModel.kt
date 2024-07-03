@@ -15,6 +15,7 @@ import common.domain.models.util.MediaType
 import common.domain.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
+import features.details.state.DetailsSnackbarState
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -68,10 +69,10 @@ class DetailsViewModel(
     private val _detailsFailedLoading: MutableState<Boolean> = mutableStateOf(false)
     val detailsFailedLoading: MutableState<Boolean> get() = _detailsFailedLoading
 
-//    private val _snackbarState: MutableState<DetailsSnackbarState> = mutableStateOf(
-//        DetailsSnackbarState(),
-//    )
-//    val snackbarState: MutableState<DetailsSnackbarState> get() = _snackbarState
+    private val _snackbarState: MutableState<DetailsSnackbarState> = mutableStateOf(
+        DetailsSnackbarState(),
+    )
+    val snackbarState: MutableState<DetailsSnackbarState> get() = _snackbarState
 
     private lateinit var allLists: List<ListItem>
 
@@ -94,7 +95,7 @@ class DetailsViewModel(
             }
             is DetailsEvents.OnError -> resetDetails()
             is DetailsEvents.OnSnackbarDismiss -> {
-//                snackbarDismiss()
+                snackbarDismiss()
             }
         }
     }
@@ -179,22 +180,22 @@ class DetailsViewModel(
                 mediaType = mediaType,
                 listId = listId,
             )
-//            _snackbarState.value = DetailsSnackbarState(
-//                listId = listId,
-//                addedItem = !currentStatus,
-//            ).apply {
-//                setSnackbarVisible()
-//            }
+            _snackbarState.value = DetailsSnackbarState(
+                listId = listId,
+                addedItem = !currentStatus,
+            ).apply {
+                setSnackbarVisible()
+            }
             delay(DELAY_UPDATE_POPUP_TEXT_MS)
             updatedWatchlistStatus[listId] = !currentStatus
 
             _contentInListStatus.value = updatedWatchlistStatus
         }
     }
-//
-//    private fun snackbarDismiss() {
-//        _snackbarState.value.setSnackbarGone()
-//    }
+
+    private fun snackbarDismiss() {
+        _snackbarState.value.setSnackbarGone()
+    }
 
     private fun resetDetails() {
         _loadState.value = DataLoadStatus.Loading

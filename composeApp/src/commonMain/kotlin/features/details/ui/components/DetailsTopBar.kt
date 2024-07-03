@@ -161,16 +161,16 @@ fun WatchlistPopUpMenu(
 ) {
     val watchlist = stringResource(resource = Res.string.watchlist_tab)
     val watchlistMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHLIST.listId] == true) {
-        stringResource(resource = Res.string.remove_option_popup_menu) + watchlist
+        stringResource(resource = Res.string.remove_option_popup_menu, watchlist)
     } else {
-        stringResource(resource = Res.string.add_option_popup_menu) + watchlist
+        stringResource(resource = Res.string.add_option_popup_menu, watchlist)
     }
 
     val watched = stringResource(resource = Res.string.watched_tab)
     val watchedMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHED.listId] == true) {
-        stringResource(resource = Res.string.remove_option_popup_menu) + watched
+        stringResource(resource = Res.string.remove_option_popup_menu, watched)
     } else {
-        stringResource(resource = Res.string.add_option_popup_menu) + watched
+        stringResource(resource = Res.string.add_option_popup_menu, watched)
     }
 
     val menuItems = mutableListOf(

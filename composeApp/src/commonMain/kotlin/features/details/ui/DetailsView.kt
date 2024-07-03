@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavBackStackEntry
+import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.snackbar_item_added_in_list
+import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
 import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
@@ -54,6 +57,9 @@ import features.details.ui.components.moreoptions.PersonMoreOptionsTab
 import features.details.ui.components.otherlists.OtherListsBottomSheet
 import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
+import features.watchlist.ui.model.DefaultLists
+import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
@@ -92,7 +98,7 @@ private fun Details(
     val contentInListStatus by viewModel.contentInListStatus.collectAsState()
     val loadState by viewModel.loadState.collectAsState()
     val detailsFailedLoading by viewModel.detailsFailedLoading
-//    val snackbarState by viewModel.snackbarState
+    val snackbarState by viewModel.snackbarState
     val snackbarHostState = remember { SnackbarHostState() }
     val posterWidth = getScreenSizeInfo().widthDp.value
     val posterHeight = posterWidth * POSTER_ASPECT_RATIO_MULTIPLY
@@ -143,28 +149,28 @@ private fun Details(
         }
     }
 
-//    LaunchedEffect(snackbarState.displaySnackbar.value) {
-//        if (snackbarState.displaySnackbar.value && !showOtherListsPanel) {
-//            val itemAdded = snackbarState.addedItem
-//            val listName = DefaultLists.getListById(snackbarState.listId)
-//            listName?.let {
-//                val listLocalizedName = context.resources.getString(getListLocalizedName(listName))
-//                val message = if (itemAdded) {
-//                    context.resources.getString(
-//                        R.string.snackbar_item_added_in_list,
-//                        listLocalizedName,
-//                    )
-//                } else {
-//                    context.resources.getString(
-//                        R.string.snackbar_item_removed_from_list,
-//                        listLocalizedName,
-//                    )
-//                }
-//                snackbarHostState.showSnackbar(message)
-//                viewModel.onEvent(DetailsEvents.OnSnackbarDismiss)
-//            }
-//        }
-//    }
+    LaunchedEffect(snackbarState.displaySnackbar.value) {
+        if (snackbarState.displaySnackbar.value && !showOtherListsPanel) {
+            val itemAdded = snackbarState.addedItem
+            val listName = DefaultLists.getListById(snackbarState.listId)
+            listName?.let {
+                val listLocalizedName = getString(getListLocalizedName(listName))
+                val message = if (itemAdded) {
+                    getString(
+                        Res.string.snackbar_item_added_in_list,
+                        listLocalizedName,
+                    )
+                } else {
+                    getString(
+                        Res.string.snackbar_item_removed_from_list,
+                        listLocalizedName,
+                    )
+                }
+                snackbarHostState.showSnackbar(message)
+                viewModel.onEvent(DetailsEvents.OnSnackbarDismiss)
+            }
+        }
+    }
 
     if (loadState is DataLoadStatus.Success && showAllScreen) {
         ShowAllContentList(
