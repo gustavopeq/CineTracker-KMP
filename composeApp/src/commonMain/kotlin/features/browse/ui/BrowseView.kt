@@ -42,7 +42,6 @@ import common.domain.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
 import common.domain.util.UiConstants.BROWSE_MIN_CARD_WIDTH
 import common.domain.util.UiConstants.BROWSE_SCAFFOLD_EXTRA_HEIGHT
 import common.domain.util.UiConstants.BROWSE_SCAFFOLD_HEIGHT_OFFSET
-import common.domain.util.UiConstants.BROWSE_SCAFFOLD_HEIGHT_OFFSET_IOS
 import common.domain.util.UiConstants.DEFAULT_MARGIN
 import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.domain.util.UiConstants.SMALL_MARGIN
@@ -54,7 +53,6 @@ import common.ui.MainViewModel
 import common.ui.components.ComponentPlaceholder
 import common.ui.components.card.DefaultContentCard
 import common.ui.theme.RoundCornerShapes
-import common.util.PlatformUtils
 import common.util.getScreenSizeInfo
 import features.browse.BrowseScreen
 import features.browse.events.BrowseEvent
@@ -85,11 +83,7 @@ private fun Browse(
     goToErrorScreen: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val scaffoldOffset = if (PlatformUtils.isIOS) {
-        BROWSE_SCAFFOLD_HEIGHT_OFFSET_IOS
-    } else {
-        BROWSE_SCAFFOLD_HEIGHT_OFFSET
-    }
+    val scaffoldOffset = BROWSE_SCAFFOLD_HEIGHT_OFFSET
     val layoutDirection = LocalLayoutDirection.current
 
     val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
