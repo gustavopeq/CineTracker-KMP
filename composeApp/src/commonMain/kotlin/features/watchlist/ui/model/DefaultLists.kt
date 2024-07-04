@@ -4,8 +4,8 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.unknown
 import cinetracker_kmp.composeapp.generated.resources.watched_tab
 import cinetracker_kmp.composeapp.generated.resources.watchlist_tab
-import common.domain.util.Constants.ADD_NEW_TAB_ID
-import common.domain.util.capitalized
+import common.util.Constants.ADD_NEW_TAB_ID
+import common.util.capitalized
 import org.jetbrains.compose.resources.StringResource
 
 enum class DefaultLists(val listId: Int) {

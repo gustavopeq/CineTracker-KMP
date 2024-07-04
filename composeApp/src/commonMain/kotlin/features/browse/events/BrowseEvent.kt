@@ -1,7 +1,7 @@
 package features.browse.events
 
 import common.domain.models.util.MediaType
-import common.domain.util.SortTypeItem
+import common.domain.models.util.SortTypeItem
 
 sealed class BrowseEvent {
     data class UpdateSortType(

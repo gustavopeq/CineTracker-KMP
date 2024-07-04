@@ -14,14 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.CARD_ROUND_CORNER
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
-import common.domain.util.UiConstants.SMALL_MARGIN
-import common.domain.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
-import common.domain.util.UiConstants.WATCHLIST_IMAGE_WIDTH
 import common.ui.components.ComponentPlaceholder
+import common.util.UiConstants.CARD_ROUND_CORNER
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
+import common.util.UiConstants.SMALL_MARGIN
+import common.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
+import common.util.UiConstants.WATCHLIST_IMAGE_WIDTH
 
 @Composable
 fun WatchlistBodyPlaceholder() {

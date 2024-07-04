@@ -21,8 +21,8 @@ import cinetracker_kmp.composeapp.generated.resources.search_error_description_m
 import cinetracker_kmp.composeapp.generated.resources.search_error_title_message
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.rememberNestedScrollConnection
 import common.ui.components.card.ImageContentCard
+import common.util.rememberNestedScrollConnection
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

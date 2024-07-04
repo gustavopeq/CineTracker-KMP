@@ -21,16 +21,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.BASE_ORIGINAL_IMAGE_URL
-import common.domain.util.UiConstants
-import common.domain.util.UiConstants.BACKDROP_ASPECT_RATIO
-import common.domain.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
 import common.ui.components.NetworkImage
 import common.ui.components.RatingComponent
 import common.ui.components.card.MediaTypeTag
 import common.ui.theme.MainBarGreyColor
+import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
+import common.util.UiConstants
+import common.util.UiConstants.BACKDROP_ASPECT_RATIO
+import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
 
 @Composable
 fun SecondaryFeaturedInfo(

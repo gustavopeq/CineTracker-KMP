@@ -1,4 +1,4 @@
-package common.domain.util
+package common.util
 
 object UiConstants {
     // Common

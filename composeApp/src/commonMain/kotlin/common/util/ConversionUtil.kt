@@ -1,4 +1,4 @@
-package common.domain.util
+package common.util
 
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp

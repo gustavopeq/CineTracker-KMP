@@ -3,7 +3,7 @@ package database.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import common.util.DateUtils
+import common.util.platform.DateUtils
 
 @Entity(
     tableName = "content_entity",

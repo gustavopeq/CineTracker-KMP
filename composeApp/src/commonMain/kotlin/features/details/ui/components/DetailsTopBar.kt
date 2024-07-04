@@ -31,12 +31,12 @@ import cinetracker_kmp.composeapp.generated.resources.manage_other_lists_popup_m
 import cinetracker_kmp.composeapp.generated.resources.remove_option_popup_menu
 import cinetracker_kmp.composeapp.generated.resources.watched_tab
 import cinetracker_kmp.composeapp.generated.resources.watchlist_tab
-import common.domain.util.UiConstants
-import common.domain.util.UiConstants.RETURN_TOP_BAR_HEIGHT
-import common.domain.util.dpToPx
 import common.ui.components.classicVerticalGradientBrush
 import common.ui.components.popup.GenericPopupMenu
 import common.ui.components.popup.PopupMenuItem
+import common.util.UiConstants
+import common.util.UiConstants.RETURN_TOP_BAR_HEIGHT
+import common.util.dpToPx
 import features.details.util.mapValueToRange
 import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.painterResource

@@ -3,7 +3,7 @@ package common.ui.theme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.CARD_ROUND_CORNER
+import common.util.UiConstants.CARD_ROUND_CORNER
 
 val RoundCornerShapes = Shapes(
     // Extra small = round on bottom

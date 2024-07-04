@@ -26,15 +26,15 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_play_video
 import common.domain.models.content.Videos
-import common.domain.util.Constants.BASE_URL_YOUTUBE_VIDEO
-import common.domain.util.Constants.BASE_YOUTUBE_THUMBAIL_URL
-import common.domain.util.Constants.YOUTUBE_THUMBAIL_RESOLUTION
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.SMALL_PADDING
-import common.domain.util.UiConstants.VIDEOS_BORDER_SIZE
-import common.domain.util.UiConstants.VIDEOS_PLAY_ICON_SIZE
 import common.ui.components.NetworkImage
 import common.ui.theme.MainBarGreyColor
+import common.util.Constants.BASE_URL_YOUTUBE_VIDEO
+import common.util.Constants.BASE_YOUTUBE_THUMBAIL_URL
+import common.util.Constants.YOUTUBE_THUMBAIL_RESOLUTION
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SMALL_PADDING
+import common.util.UiConstants.VIDEOS_BORDER_SIZE
+import common.util.UiConstants.VIDEOS_PLAY_ICON_SIZE
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

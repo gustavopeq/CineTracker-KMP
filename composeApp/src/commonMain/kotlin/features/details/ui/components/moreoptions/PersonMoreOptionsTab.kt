@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import common.domain.models.content.GenericContent
 import common.domain.models.person.PersonImage
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.MAX_COUNT_PERSON_ADDITIONAL_CONTENT
 import common.ui.components.GridContentList
 import common.ui.components.GridImageList
 import common.ui.components.tab.GenericTabRow
 import common.ui.components.tab.setupGenericTabs
+import common.util.UiConstants.MAX_COUNT_PERSON_ADDITIONAL_CONTENT
 
 @Composable
 fun PersonMoreOptionsTab(

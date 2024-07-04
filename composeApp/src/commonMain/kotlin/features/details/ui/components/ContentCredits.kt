@@ -23,15 +23,15 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.movie_details_cast_label
 import common.domain.models.content.ContentCast
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.BASE_500_IMAGE_URL
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.DETAILS_CAST_CARD_HEIGHT
-import common.domain.util.UiConstants.DETAILS_CAST_PICTURE_SIZE
-import common.domain.util.UiConstants.SMALL_PADDING
-import common.domain.util.removeParentPadding
 import common.ui.components.NetworkImage
-import common.util.getScreenSizeInfo
+import common.util.Constants.BASE_500_IMAGE_URL
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.DETAILS_CAST_CARD_HEIGHT
+import common.util.UiConstants.DETAILS_CAST_PICTURE_SIZE
+import common.util.UiConstants.SMALL_PADDING
+import common.util.platform.getScreenSizeInfo
+import common.util.removeParentPadding
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

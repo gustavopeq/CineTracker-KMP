@@ -1,4 +1,4 @@
-package common.domain.util
+package common.domain.models.util
 
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.now_playing
@@ -9,7 +9,6 @@ import cinetracker_kmp.composeapp.generated.resources.show_popular
 import cinetracker_kmp.composeapp.generated.resources.show_top_rated
 import cinetracker_kmp.composeapp.generated.resources.top_rated_movies
 import cinetracker_kmp.composeapp.generated.resources.upcoming_movies
-import common.domain.models.util.ContentListType
 import org.jetbrains.compose.resources.StringResource
 
 sealed class SortTypeItem(

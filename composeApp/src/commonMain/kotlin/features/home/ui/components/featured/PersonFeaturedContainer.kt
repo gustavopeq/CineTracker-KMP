@@ -23,17 +23,17 @@ import cinetracker_kmp.composeapp.generated.resources.person_featured_card_known
 import cinetracker_kmp.composeapp.generated.resources.person_featured_card_role_header
 import common.domain.models.person.PersonDetails
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.BASE_ORIGINAL_IMAGE_URL
-import common.domain.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
-import common.domain.util.UiConstants.CARD_ROUND_CORNER
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.PERSON_FEATURED_IMAGE_WIDTH
-import common.domain.util.UiConstants.PERSON_FEATURED_TITLE_MAX_LINES
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
-import common.domain.util.UiConstants.SMALL_PADDING
 import common.ui.components.NetworkImage
 import common.ui.theme.MainBarGreyColor
+import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
+import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
+import common.util.UiConstants.CARD_ROUND_CORNER
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.PERSON_FEATURED_IMAGE_WIDTH
+import common.util.UiConstants.PERSON_FEATURED_TITLE_MAX_LINES
+import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
+import common.util.UiConstants.SMALL_PADDING
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 

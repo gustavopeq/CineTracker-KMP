@@ -1,8 +1,8 @@
 package core
 
-import common.util.PlatformUtils.getLocale
-import common.util.PlatformUtils.getUserCountry
-import common.util.PlatformUtils.getUserLanguage
+import common.util.platform.PlatformUtils.getLocale
+import common.util.platform.PlatformUtils.getUserCountry
+import common.util.platform.PlatformUtils.getUserLanguage
 
 object LanguageManager {
     private val supportedLanguages = listOf(
@@ -27,7 +27,6 @@ object LanguageManager {
     fun getUserLanguageTag(): String {
         val languageTag = getLocale()
         val language = getUserLanguage()
-        println("languageTag: $languageTag - $language")
 
         return when {
             languageTag.isSupported() -> languageTag

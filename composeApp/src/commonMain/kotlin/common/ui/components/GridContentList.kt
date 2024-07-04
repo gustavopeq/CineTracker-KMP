@@ -16,18 +16,18 @@ import cinetracker_kmp.composeapp.generated.resources.see_all_button_label
 import common.domain.models.content.GenericContent
 import common.domain.models.person.PersonImage
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.BROWSE_CARD_PADDING_HORIZONTAL
-import common.domain.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
-import common.domain.util.UiConstants.BROWSE_MIN_CARD_WIDTH
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.calculateCardsPerRow
-import common.domain.util.dpToPx
-import common.domain.util.pxToDp
-import common.domain.util.removeParentPadding
 import common.ui.components.button.GenericButton
 import common.ui.components.card.DefaultContentCard
 import common.ui.components.card.PersonImages
-import common.util.getScreenSizeInfo
+import common.util.UiConstants.BROWSE_CARD_PADDING_HORIZONTAL
+import common.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
+import common.util.UiConstants.BROWSE_MIN_CARD_WIDTH
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.calculateCardsPerRow
+import common.util.dpToPx
+import common.util.platform.getScreenSizeInfo
+import common.util.pxToDp
+import common.util.removeParentPadding
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

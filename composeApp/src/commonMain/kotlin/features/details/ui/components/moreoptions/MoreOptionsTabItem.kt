@@ -6,8 +6,8 @@ import cinetracker_kmp.composeapp.generated.resources.more_options_similar
 import cinetracker_kmp.composeapp.generated.resources.more_options_videos
 import cinetracker_kmp.composeapp.generated.resources.movies_tab
 import cinetracker_kmp.composeapp.generated.resources.shows_tab
-import common.domain.util.Constants.UNSELECTED_OPTION_INDEX
 import common.ui.components.tab.TabItem
+import common.util.Constants.UNSELECTED_OPTION_INDEX
 import org.jetbrains.compose.resources.StringResource
 
 sealed class MoreOptionsTabItem(

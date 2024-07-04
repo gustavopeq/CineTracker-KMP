@@ -1,6 +1,6 @@
 package network
 
-import common.domain.util.Constants.BASE_URL_MOVIEDB
+import common.util.Constants.BASE_URL_MOVIEDB
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

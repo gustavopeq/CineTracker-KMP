@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.BROWSE_TAB_ROW_OFFSET_HEIGHT
+import common.util.UiConstants.BROWSE_TAB_ROW_OFFSET_HEIGHT
 import features.browse.events.BrowseEvent
 import features.browse.ui.BrowseViewModel
 import kotlinx.coroutines.launch

@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.generic_error_message
 import cinetracker_kmp.composeapp.generated.resources.try_again_button
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.ERROR_ANIMATION_SIZE
-import common.domain.util.UiConstants.SECTION_PADDING
 import common.ui.components.button.GenericButton
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.ERROR_ANIMATION_SIZE
+import common.util.UiConstants.SECTION_PADDING
 import kottieComposition.KottieCompositionSpec
 import kottieComposition.animateKottieCompositionAsState
 import kottieComposition.rememberKottieComposition

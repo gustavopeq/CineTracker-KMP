@@ -5,7 +5,7 @@ import common.domain.models.content.toGenericContent
 import common.domain.models.person.PersonDetails
 import common.domain.models.person.toPersonDetails
 import common.domain.models.util.MediaType
-import common.util.DateUtils
+import common.util.platform.DateUtils
 import database.repository.DatabaseRepository
 import features.home.ui.state.HomeState
 import features.watchlist.ui.model.DefaultLists

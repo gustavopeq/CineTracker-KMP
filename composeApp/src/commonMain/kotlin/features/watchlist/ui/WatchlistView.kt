@@ -34,13 +34,13 @@ import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.UNSELECTED_OPTION_INDEX
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.SMALL_MARGIN
-import common.domain.util.capitalized
 import common.ui.MainViewModel
 import common.ui.components.popup.ClassicSnackbar
 import common.ui.components.tab.GenericTabRow
+import common.util.Constants.UNSELECTED_OPTION_INDEX
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SMALL_MARGIN
+import common.util.capitalized
 import features.watchlist.WatchlistScreen
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.DeleteListDialog

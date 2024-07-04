@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import common.domain.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
 import common.ui.MainViewModel
 import common.ui.theme.MainBarGreyColor
+import common.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

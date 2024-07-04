@@ -1,4 +1,4 @@
-package common.util
+package common.util.platform
 
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols

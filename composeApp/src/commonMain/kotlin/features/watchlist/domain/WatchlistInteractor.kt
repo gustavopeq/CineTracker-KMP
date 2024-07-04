@@ -3,7 +3,7 @@ package features.watchlist.domain
 import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.Constants
+import common.util.Constants
 import database.model.ContentEntity
 import database.repository.DatabaseRepository
 import features.watchlist.ui.components.WatchlistTabItem
