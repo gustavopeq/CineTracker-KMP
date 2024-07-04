@@ -56,10 +56,6 @@ internal fun buildUrl(
 
     path.forEach {
         it?.let {
-            if (it.isNotEmpty() && !it.startsWith("/")) {
-                result.append('/')
-            }
-
             if (it.contains("?")) {
                 val urlSplit = it.split("?")
                 result.append(urlSplit[0])
