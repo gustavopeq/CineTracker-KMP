@@ -12,11 +12,6 @@ import network.util.getResult
 class PersonServiceImpl(
     private val client: HttpClient,
 ) : PersonService {
-
-    companion object {
-        const val PERSON_PATH = "/person/"
-    }
-
     override suspend fun getPersonDetailsById(
         personId: Int,
         language: String,

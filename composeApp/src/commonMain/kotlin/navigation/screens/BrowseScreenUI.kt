@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import common.ui.screen.ErrorScreen
 import features.browse.ui.Browse
 import features.details.DetailsScreen
 import navigation.ScreenUI
@@ -21,9 +22,9 @@ class BrowseScreenUI : ScreenUI {
                 )
             },
             goToErrorScreen = {
-//                if (currentScreen != ErrorScreen.route()) {
-//                    navController.navigate(ErrorScreen.route())
-//                }
+                if (currentScreen != ErrorScreen.route()) {
+                    navController.navigate(ErrorScreen.route())
+                }
             },
         )
     }

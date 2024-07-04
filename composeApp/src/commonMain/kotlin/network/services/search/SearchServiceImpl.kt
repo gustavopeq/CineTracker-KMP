@@ -19,10 +19,10 @@ class SearchServiceImpl(
 ) : SearchService {
 
     companion object {
-        const val SEARCH_MULTI = "/search/multi"
-        const val SEARCH_MOVIE = "/search/movie"
-        const val SEARCH_TV = "/search/tv"
-        const val SEARCH_PERSON = "/search/person"
+        const val SEARCH_MULTI = "search/multi"
+        const val SEARCH_MOVIE = "search/movie"
+        const val SEARCH_TV = "search/tv"
+        const val SEARCH_PERSON = "search/person"
     }
 
     override suspend fun searchMultiByQuery(

@@ -73,6 +73,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.composeVM)
+            implementation(libs.kottie)
             implementation(libs.paging.common)
             implementation(libs.paging.compose)
             implementation(libs.sqlite.bundled)

@@ -17,9 +17,9 @@ class HomeServiceImpl(
 ) : HomeService {
 
     companion object {
-        const val MULTI_DAY_TRENDING = "/trending/all/day"
-        const val PERSON_DAY_TRENDING = "/trending/person/day"
-        const val MOVIES_COMING_SOON = "/discover/movie"
+        const val MULTI_DAY_TRENDING = "trending/all/day"
+        const val PERSON_DAY_TRENDING = "trending/person/day"
+        const val MOVIES_COMING_SOON = "discover/movie"
     }
 
     override suspend fun getDayTrendingMulti(

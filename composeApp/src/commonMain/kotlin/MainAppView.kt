@@ -21,6 +21,7 @@ import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import common.ui.MainViewModel
 import common.ui.components.bottomsheet.ModalComponents
+import common.ui.screen.ErrorScreen
 import common.ui.theme.CineTrackerTheme
 import core.getAsyncImageLoader
 import features.details.DetailsScreen
@@ -114,5 +115,5 @@ val mainNavBarItems = listOf<MainNavBarItem>(
 
 val standaloneScreens = listOf(
     DetailsScreen.route(),
-//    ErrorScreen.route()
+    ErrorScreen.route(),
 )
