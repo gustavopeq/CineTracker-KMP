@@ -1,0 +1,132 @@
+<resources>
+    <string name="app_name">CineTracker</string>
+
+    <!-- Main Navigation -->
+    <string name="main_nav_home">Inicio</string>
+    <string name="main_nav_browse">Explorar</string>
+    <string name="main_nav_watchlist">Listas</string>
+    <string name="main_nav_search">Buscar</string>
+
+    <!-- Home screen -->
+    <string name="see_details_button_text">Ver Detalles</string>
+    <string name="trending_today_header">Tendencias Hoy</string>
+    <string name="home_my_watchlist_header">Tus Favoritos</string>
+    <string name="carousel_see_all_button">Ver Todo</string>
+    <string name="watchlist_carousel_empty_message">¿Ves algo que te gusta? Mantén un seguimiento de todo lo que quieres ver agregándolo a tu Lista.</string>
+    <string name="person_featured_card_role_header">Rol</string>
+    <string name="person_featured_card_known_for_header">Conocido por</string>
+    <string name="coming_soon_header">Próximamente</string>
+    <string name="home_bottom_screen_message">¡Parece que ya has visto todo aquí!</string>
+    <string name="home_discover_more_button">Descubre Más</string>
+    <string name="app_logo_image_description">Logotipo de la app CineTracker</string>
+
+    <!-- Browse screen -->
+    <string name="movies_tab">Películas</string>
+    <string name="shows_tab">Series</string>
+    <string name="sort_by_header">Ordenar por</string>
+    <string name="now_playing">En Cartelera</string>
+    <string name="upcoming_movies">Próximas</string>
+    <string name="popular_movies">Populares</string>
+    <string name="top_rated_movies">Más Valoradas</string>
+    <string name="show_airing_today">Transmitiendo Hoy</string>
+    <string name="show_popular">Populares</string>
+    <string name="show_top_rated">Más Valoradas</string>
+    <string name="show_on_the_air">Al Aire</string>
+
+    <!-- Watchlist screen -->
+    <string name="watchlist_tab">Favoritos</string>
+    <string name="watched_tab">Vistos</string>
+    <string name="movie_tag">Película</string>
+    <string name="show_tag">Serie</string>
+    <string name="remove_option_popup_menu">Eliminar de %1$s</string>
+    <string name="move_to_list_option_popup_menu">Mover a %1$s</string>
+    <string name="add_option_popup_menu">Agregar a %1$s</string>
+    <string name="watchlist_sort_button">Solo %1$s</string>
+    <string name="empty_list_header">Tu lista está vacía</string>
+    <string name="empty_list_message">Agrega a esta lista buscando una película o serie.</string>
+    <string name="empty_movie_list_message">Agrega a esta lista buscando una película.</string>
+    <string name="empty_show_list_message">Agrega a esta lista buscando una serie.</string>
+    <string name="add_new_tab_description">Crear nueva Lista</string>
+    <string name="create_new_list_header">Crear una nueva Lista</string>
+    <string name="create_new_list_placeholder">NOMBRE DE LA NUEVA LISTA</string>
+    <string name="create_new_list_button">Crear</string>
+    <string name="delete_list_pop_up_item">Eliminar</string>
+    <string name="move_to_other_list_item">Mover a otra lista</string>
+    <string name="move_to_other_list_header">Mover a</string>
+    <string name="delete_list_display_title">Eliminar Lista</string>
+    <string name="delete_list_display_body">¿Estás seguro de que deseas eliminar esta lista? No se puede deshacer.</string>
+    <string name="delete_list_display_confirm_btn">Eliminar Lista</string>
+    <string name="delete_list_display_dismiss_btn">Cancelar</string>
+
+    <!-- Search screen -->
+    <string name="search_bar_placeholder">Buscar películas, series o personas…</string>
+    <string name="search_top_results_tab">Resultados Principales</string>
+    <string name="search_movies_tab">Películas</string>
+    <string name="search_shows_tab">Series</string>
+    <string name="search_person_tab">Personas</string>
+    <string name="search_error_title_message">Lo siento… No se encontraron resultados :(</string>
+    <string name="search_error_description_message">Intenta buscar otra película, serie o persona.</string>
+
+    <!-- Details screen -->
+    <string name="back_arrow_description">Regreso</string>
+    <string name="more_options_videos">Videos</string>
+    <string name="more_options_similar">Recomendaciones</string>
+    <string name="images_tab">Imágenes</string>
+    <string name="unknown">Desconocido</string>
+    <string name="read_more_text">Leer más</string>
+    <string name="see_all_button_label">Ver Todo</string>
+    <string name="see_all_movies_label">Todas las Películas</string>
+    <string name="see_all_shows_label">Todas las Series</string>
+    <string name="movie_details_production_country_title">País de Producción</string>
+    <string name="movie_details_release_date_label">Fecha de Lanzamiento</string>
+    <string name="show_details_duration_label">Duración</string>
+    <plurals name="seasons">
+        <item quantity="one">%1$d Temporada</item>
+        <item quantity="other">%1$d Temporadas</item>
+        <item quantity="many">%1$d Temporadas</item>
+    </plurals>
+    <plurals name="episodes">
+        <item quantity="one">%1$d Episódio</item>
+        <item quantity="other">%1$d Episódios</item>
+        <item quantity="many">%1$d Episódios</item>
+    </plurals>
+    <string name="show_details_first_air_date_label">Primera fecha de emisión</string>
+    <string name="show_details_last_air_date_label">Última fecha de emisión</string>
+    <string name="movie_details_genres_label">Géneros</string>
+    <string name="movie_details_runtime_label">Duración</string>
+    <string name="movie_details_budget_label">Presupuesto</string>
+    <string name="movie_details_revenue_label">Ingresos</string>
+    <string name="content_details_stream_label">Stream</string>
+    <string name="movie_details_cast_label">Elenco</string>
+    <string name="person_details_born_label">Fecha de Nacimiento</string>
+    <string name="person_details_born_in_label">Lugar de Nacimiento</string>
+    <string name="person_details_death_label">Día de la muerte</string>
+    <string name="january">Enero</string>
+    <string name="february">Febrero</string>
+    <string name="march">Marzo</string>
+    <string name="april">Abril</string>
+    <string name="may">Mayo</string>
+    <string name="june">Junio</string>
+    <string name="july">Julio</string>
+    <string name="august">Agosto</string>
+    <string name="september">Septiembre</string>
+    <string name="october">Octubre</string>
+    <string name="november">Noviembre</string>
+    <string name="december">Diciembre</string>
+    <string name="manage_other_lists_popup_menu">Administrar otras listas</string>
+    <string name="manage_other_lists_header">Agregar o Quitar de las listas</string>
+
+    <!-- Common -->
+    <string name="generic_error_message">Lo siento, algo salió mal…</string>
+    <string name="try_again_button">Intentar nuevamente</string>
+    <string name="snackbar_item_added_in_list">Agregado a %1$s</string>
+    <string name="snackbar_item_removed_from_list">Removido de %1$s</string>
+    <string name="snackbar_item_moved_to_list">Movido a %1$s</string>
+    <string name="snackbar_undo_text">Deshacer</string>
+    <string name="undefined_ratings">N/D</string>
+    <string name="notification_request_dialog_title">¡Mantén tus listas actualizadas!</string>
+    <string name="notification_request_dialog_message">Permite notificaciones para recordarte actualizar tu lista de vistos.</string>
+    <string name="notification_request_dialog_allow">Sí</string>
+    <string name="notification_request_dialog_deny">No, gracias</string>
+
+</resources>
