@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -42,6 +43,7 @@ import common.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
 import common.util.UiConstants.POSTER_ASPECT_RATIO
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING
+import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
 import features.details.DetailsScreen
 import features.details.DetailsScreen.ARG_CONTENT_ID
@@ -355,13 +357,31 @@ private fun BackgroundPoster(
         1f
     }
 
-    NetworkImage(
-        imageUrl = contentPosterUrl,
-        modifier = Modifier
+    // Scale modifier needed for Ios as the user is able to keep scrolling on top of the screen.
+    val scaleModifier = if (PlatformUtils.isIOS &&
+        initialTitlePosY != null && titlePositionY > initialTitlePosY
+    ) {
+        val scaleMultiplier = if (titlePositionY > initialTitlePosY) {
+            1f + (titlePositionY - initialTitlePosY) / 1000
+        } else {
+            1f
+        }
+        val posterWidth = getScreenSizeInfo().widthDp
+        val scaledHeight = posterHeight * scaleMultiplier
+        Modifier
+            .width(posterWidth * scaleMultiplier)
+            .height(scaledHeight.dp)
+            .zIndex(BACKGROUND_INDEX)
+    } else {
+        Modifier
             .fillMaxWidth()
             .height(posterHeight.dp)
             .zIndex(BACKGROUND_INDEX)
-            .aspectRatio(POSTER_ASPECT_RATIO),
+            .aspectRatio(POSTER_ASPECT_RATIO)
+    }
+    NetworkImage(
+        imageUrl = contentPosterUrl,
+        modifier = scaleModifier,
         alpha = alpha,
     )
 }
