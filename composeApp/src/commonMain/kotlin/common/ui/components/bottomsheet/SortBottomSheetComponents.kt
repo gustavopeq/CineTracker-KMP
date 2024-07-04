@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_check
-import common.domain.util.UiConstants.SMALL_MARGIN
+import common.util.UiConstants.SMALL_MARGIN
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

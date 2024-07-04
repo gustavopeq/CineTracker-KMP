@@ -1,4 +1,4 @@
-package common.util
+package common.util.platform
 
 expect object StringFormat {
     fun formatRating(number: Double): String

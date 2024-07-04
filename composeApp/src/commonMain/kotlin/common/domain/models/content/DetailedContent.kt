@@ -1,7 +1,7 @@
 package common.domain.models.content
 
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.EMPTY_RATINGS
+import common.util.UiConstants.EMPTY_RATINGS
 import network.models.content.common.ContentGenre
 import network.models.content.common.MovieResponse
 import network.models.content.common.PersonResponse

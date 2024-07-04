@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_sort
-import common.domain.util.UiConstants.BROWSE_SORT_ICON_SIZE
 import common.ui.MainViewModel
+import common.util.UiConstants.BROWSE_SORT_ICON_SIZE
 import features.watchlist.WatchlistScreen
 import org.jetbrains.compose.resources.painterResource
 

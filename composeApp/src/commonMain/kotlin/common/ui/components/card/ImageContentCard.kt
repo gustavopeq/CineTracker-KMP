@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.BASE_300_IMAGE_URL
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.ui.components.NetworkImage
+import common.util.Constants.BASE_300_IMAGE_URL
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 
 @Composable
 fun ImageContentCard(

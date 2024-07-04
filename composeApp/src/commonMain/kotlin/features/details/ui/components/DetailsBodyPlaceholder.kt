@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.LARGE_MARGIN
-import common.domain.util.UiConstants.SECTION_PADDING
-import common.domain.util.UiConstants.SMALL_PADDING
-import common.domain.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
 import common.ui.components.ComponentPlaceholder
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.LARGE_MARGIN
+import common.util.UiConstants.SECTION_PADDING
+import common.util.UiConstants.SMALL_PADDING
+import common.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
 
 @Composable
 fun DetailBodyPlaceholder(posterHeight: Float) {

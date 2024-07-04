@@ -24,11 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.LARGE_PADDING
-import common.domain.util.UiConstants.SEARCH_FILTER_BUTTON_HEIGHT
 import common.ui.theme.SecondaryGreyColor
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.LARGE_PADDING
+import common.util.UiConstants.SEARCH_FILTER_BUTTON_HEIGHT
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

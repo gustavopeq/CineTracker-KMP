@@ -1,4 +1,4 @@
-package common.util
+package common.util.platform
 
 import android.app.Activity
 import androidx.compose.runtime.Composable

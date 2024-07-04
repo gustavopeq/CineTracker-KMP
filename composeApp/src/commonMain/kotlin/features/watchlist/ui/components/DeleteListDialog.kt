@@ -15,10 +15,10 @@ import cinetracker_kmp.composeapp.generated.resources.delete_list_display_body
 import cinetracker_kmp.composeapp.generated.resources.delete_list_display_confirm_btn
 import cinetracker_kmp.composeapp.generated.resources.delete_list_display_dismiss_btn
 import cinetracker_kmp.composeapp.generated.resources.delete_list_display_title
-import common.domain.util.Constants.UNSELECTED_OPTION_INDEX
-import common.domain.util.UiConstants.CARD_ROUND_CORNER
 import common.ui.components.button.SimpleButton
 import common.ui.theme.MainBarGreyColor
+import common.util.Constants.UNSELECTED_OPTION_INDEX
+import common.util.UiConstants.CARD_ROUND_CORNER
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.WatchlistViewModel
 import org.jetbrains.compose.resources.stringResource

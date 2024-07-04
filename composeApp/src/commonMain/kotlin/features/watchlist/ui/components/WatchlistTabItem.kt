@@ -3,9 +3,9 @@ package features.watchlist.ui.components
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.watched_tab
 import cinetracker_kmp.composeapp.generated.resources.watchlist_tab
-import common.domain.util.Constants.ADD_NEW_TAB_ID
-import common.domain.util.Constants.UNSELECTED_OPTION_INDEX
 import common.ui.components.tab.TabItem
+import common.util.Constants.ADD_NEW_TAB_ID
+import common.util.Constants.UNSELECTED_OPTION_INDEX
 import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.StringResource
 

@@ -20,13 +20,13 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.trending_today_header
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.CAROUSEL_CARDS_WIDTH
-import common.domain.util.UiConstants.CAROUSEL_RATING_STAR_SIZE
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.SMALL_MARGIN
-import common.domain.util.removeParentPadding
 import common.ui.components.card.DefaultContentCard
+import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
+import common.util.UiConstants.CAROUSEL_RATING_STAR_SIZE
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SMALL_MARGIN
+import common.util.removeParentPadding
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 

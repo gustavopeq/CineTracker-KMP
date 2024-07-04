@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.sort_by_header
 import common.domain.models.util.MediaType
-import common.domain.util.SortTypeItem
+import common.domain.models.util.SortTypeItem
 import common.ui.MainViewModel
 import common.ui.components.bottomsheet.GenericBottomSheet
 import common.ui.components.bottomsheet.SortButton

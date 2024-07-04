@@ -1,7 +1,7 @@
 package features.details.util
 
 import androidx.compose.runtime.Composable
-import common.util.StringFormat.toFormattedCurrency
+import common.util.platform.StringFormat.toFormattedCurrency
 
 @Composable
 fun Int.formatRuntime(): String {

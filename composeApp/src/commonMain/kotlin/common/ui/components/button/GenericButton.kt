@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.CLASSIC_BUTTON_BORDER_SIZE
+import common.util.UiConstants.CLASSIC_BUTTON_BORDER_SIZE
 
 @Composable
 fun GenericButton(

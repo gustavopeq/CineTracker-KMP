@@ -16,10 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import common.domain.util.UiConstants.SMALL_MARGIN
-import common.domain.util.UiConstants.SMALL_PADDING
 import common.ui.components.SystemNavBarSpacer
 import common.ui.theme.MainBarGreyColor
+import common.util.UiConstants.SMALL_MARGIN
+import common.util.UiConstants.SMALL_PADDING
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

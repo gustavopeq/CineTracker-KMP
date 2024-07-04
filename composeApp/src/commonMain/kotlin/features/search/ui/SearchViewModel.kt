@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.SEARCH_DEBOUNCE_TIME_MS
+import common.util.UiConstants.SEARCH_DEBOUNCE_TIME_MS
 import features.search.domain.SearchInteractor
 import features.search.events.SearchEvent
 import features.search.ui.components.SearchTypeFilterItem

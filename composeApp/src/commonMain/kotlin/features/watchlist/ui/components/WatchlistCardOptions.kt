@@ -24,14 +24,14 @@ import cinetracker_kmp.composeapp.generated.resources.move_to_list_option_popup_
 import cinetracker_kmp.composeapp.generated.resources.move_to_other_list_header
 import cinetracker_kmp.composeapp.generated.resources.move_to_other_list_item
 import cinetracker_kmp.composeapp.generated.resources.remove_option_popup_menu
-import common.domain.util.Constants.DEFAULT_LISTS_SIZE
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.LARGE_MARGIN
-import common.domain.util.UiConstants.LARGE_PADDING
-import common.domain.util.capitalized
 import common.ui.components.bottomsheet.GenericBottomSheet
 import common.ui.components.popup.GenericPopupMenu
 import common.ui.components.popup.PopupMenuItem
+import common.util.Constants.DEFAULT_LISTS_SIZE
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.LARGE_MARGIN
+import common.util.UiConstants.LARGE_PADDING
+import common.util.capitalized
 import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.stringResource
 

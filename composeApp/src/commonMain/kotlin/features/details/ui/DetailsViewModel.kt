@@ -12,7 +12,7 @@ import common.domain.models.list.ListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
+import common.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
 import features.details.state.DetailsSnackbarState

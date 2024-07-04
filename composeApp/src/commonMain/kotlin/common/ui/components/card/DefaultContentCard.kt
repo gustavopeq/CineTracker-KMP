@@ -17,14 +17,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import common.domain.util.Constants.BASE_500_IMAGE_URL
-import common.domain.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
-import common.domain.util.UiConstants.SMALL_PADDING
 import common.ui.components.NetworkImage
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.RoundCornerShapes
+import common.util.Constants.BASE_500_IMAGE_URL
+import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
+import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
+import common.util.UiConstants.SMALL_PADDING
 
 @Composable
 fun DefaultContentCard(

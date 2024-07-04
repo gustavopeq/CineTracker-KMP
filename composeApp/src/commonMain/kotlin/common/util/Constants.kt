@@ -1,4 +1,4 @@
-package common.domain.util
+package common.util
 
 object Constants {
     const val BASE_URL_MOVIEDB = "https://api.themoviedb.org/3/"
@@ -17,5 +17,4 @@ object Constants {
     const val MAX_WATCHLIST_LIST_NUMBER = 12
     const val DEFAULT_LISTS_SIZE = 2
     const val MONTH_PERIOD_COMING_SOON = 1
-    const val DEFAULT_LANGUAGE_TAG = "en-US"
 }

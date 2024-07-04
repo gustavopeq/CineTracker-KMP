@@ -32,17 +32,17 @@ import cinetracker_kmp.composeapp.generated.resources.ic_more_options
 import cinetracker_kmp.composeapp.generated.resources.movie_tag
 import cinetracker_kmp.composeapp.generated.resources.show_tag
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.BASE_300_IMAGE_URL
-import common.domain.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.MEDIA_TYPE_TAG_CORNER_SIZE
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
-import common.domain.util.UiConstants.SMALL_PADDING
-import common.domain.util.UiConstants.WATCHLIST_IMAGE_WIDTH
 import common.ui.components.NetworkImage
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryYellowColor_90
+import common.util.Constants.BASE_300_IMAGE_URL
+import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.MEDIA_TYPE_TAG_CORNER_SIZE
+import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
+import common.util.UiConstants.SMALL_PADDING
+import common.util.UiConstants.WATCHLIST_IMAGE_WIDTH
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

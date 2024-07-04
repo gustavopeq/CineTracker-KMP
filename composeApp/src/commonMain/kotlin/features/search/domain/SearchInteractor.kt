@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.Constants
+import common.util.Constants
 import features.search.ui.paging.SearchPagingSource
 import kotlinx.coroutines.flow.Flow
 import network.repository.search.SearchRepository

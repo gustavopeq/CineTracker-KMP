@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import common.domain.models.content.GenericContent
 import common.domain.models.content.Videos
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.MAX_COUNT_MORE_LIKE_THIS_CARDS
 import common.ui.components.GridContentList
 import common.ui.components.tab.GenericTabRow
 import common.ui.components.tab.setupGenericTabs
+import common.util.UiConstants.MAX_COUNT_MORE_LIKE_THIS_CARDS
 import features.details.ui.components.moreoptions.MoreOptionsTabItem.MoreLikeThisTab
 import features.details.ui.components.moreoptions.MoreOptionsTabItem.VideosTab
 

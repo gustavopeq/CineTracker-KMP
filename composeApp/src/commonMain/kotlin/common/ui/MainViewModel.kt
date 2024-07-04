@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import common.domain.models.util.MediaType
-import common.domain.util.SortTypeItem
+import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
 import features.home.HomeScreen
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import common.domain.models.content.GenericContent
 import common.domain.models.util.ContentListType
 import common.domain.models.util.MediaType
-import common.domain.util.Constants.PAGE_SIZE
+import common.util.Constants.PAGE_SIZE
 import features.browse.ui.paging.MediaContentPagingSource
 import kotlinx.coroutines.flow.Flow
 import network.repository.movie.MovieRepository

@@ -19,15 +19,15 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.see_details_button_text
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.BACKGROUND_INDEX
-import common.domain.util.UiConstants.DEFAULT_MARGIN
-import common.domain.util.UiConstants.DEFAULT_PADDING
-import common.domain.util.UiConstants.HOME_BACKGROUND_ALPHA
-import common.domain.util.UiConstants.POSTER_ASPECT_RATIO
 import common.ui.components.GradientDirections
 import common.ui.components.NetworkImage
 import common.ui.components.button.GenericButton
 import common.ui.components.classicVerticalGradientBrush
+import common.util.UiConstants.BACKGROUND_INDEX
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.HOME_BACKGROUND_ALPHA
+import common.util.UiConstants.POSTER_ASPECT_RATIO
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

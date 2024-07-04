@@ -13,8 +13,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_star
-import common.domain.util.UiConstants.RATING_STAR_DEFAULT_SIZE
-import common.domain.util.formatRating
+import common.util.UiConstants.RATING_STAR_DEFAULT_SIZE
+import common.util.formatRating
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

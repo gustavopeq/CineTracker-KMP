@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.domain.util.UiConstants.CAROUSEL_CARDS_WIDTH
-import common.domain.util.UiConstants.DEFAULT_PADDING
 import common.ui.components.card.ImageContentCard
+import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
+import common.util.UiConstants.DEFAULT_PADDING
 import org.jetbrains.compose.resources.StringResource
 
 @Composable

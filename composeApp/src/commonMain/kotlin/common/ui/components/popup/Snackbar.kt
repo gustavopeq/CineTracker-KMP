@@ -17,8 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.snackbar_undo_text
-import common.domain.util.UiConstants.CARD_ROUND_CORNER
-import common.domain.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.CARD_ROUND_CORNER
+import common.util.UiConstants.DEFAULT_PADDING
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

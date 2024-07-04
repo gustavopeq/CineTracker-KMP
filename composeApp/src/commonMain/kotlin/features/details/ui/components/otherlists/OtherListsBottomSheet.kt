@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.manage_other_lists_header
 import common.domain.models.list.ListItem
-import common.domain.util.UiConstants.LARGE_MARGIN
-import common.domain.util.capitalized
 import common.ui.components.SystemNavBarSpacer
 import common.ui.components.bottomsheet.GenericBottomSheet
+import common.util.UiConstants.LARGE_MARGIN
+import common.util.capitalized
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

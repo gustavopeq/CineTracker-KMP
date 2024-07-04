@@ -7,7 +7,7 @@ import androidx.paging.cachedIn
 import common.domain.models.content.GenericContent
 import common.domain.models.util.ContentListType
 import common.domain.models.util.MediaType
-import common.domain.util.SortTypeItem
+import common.domain.models.util.SortTypeItem
 import features.browse.domain.BrowseInteractor
 import features.browse.events.BrowseEvent
 import kotlinx.coroutines.flow.MutableStateFlow

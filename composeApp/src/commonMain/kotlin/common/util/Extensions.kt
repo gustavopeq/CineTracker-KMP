@@ -1,4 +1,4 @@
-package common.domain.util
+package common.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,8 +19,8 @@ import cinetracker_kmp.composeapp.generated.resources.october
 import cinetracker_kmp.composeapp.generated.resources.september
 import cinetracker_kmp.composeapp.generated.resources.undefined_ratings
 import cinetracker_kmp.composeapp.generated.resources.unknown
-import common.domain.util.UiConstants.EMPTY_RATINGS
-import common.util.StringFormat
+import common.util.UiConstants.EMPTY_RATINGS
+import common.util.platform.StringFormat
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

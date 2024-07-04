@@ -1,4 +1,4 @@
-package common.util
+package common.util.platform
 
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarUnitMonth
