@@ -36,15 +36,6 @@ val roomCallback = object : RoomDatabase.Callback() {
         createDefaultLists(db)
     }
 
-    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-        super.onDestructiveMigration(db)
-        createDefaultLists(db)
-    }
-
-    override fun onOpen(db: SupportSQLiteDatabase) {
-        super.onOpen(db)
-    }
-
     private fun createDefaultLists(db: SupportSQLiteDatabase) {
         // Execute the SQL to insert the default lists
         val defaultLists = listOf(

@@ -9,7 +9,7 @@ import database.model.ListEntity
 
 @Database(
     entities = [ContentEntity::class, ListEntity::class],
-    version = 1,
+    version = 5,
 )
 abstract class AppDatabase : RoomDatabase(), DB {
     abstract fun contentEntityDao(): ContentEntityDao
