@@ -60,6 +60,9 @@ proguard/
 # Android Studio captures folder
 captures/
 
+# release
+composeApp/release/
+
 # IntelliJ
 .idea/
 
