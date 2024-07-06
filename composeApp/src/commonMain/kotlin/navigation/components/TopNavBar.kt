@@ -1,17 +1,22 @@
 package navigation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.app_logo_image_description
 import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
 import common.ui.MainViewModel
 import common.ui.components.button.SortIconButton
+import common.util.UiConstants.SMALLER_DEVICES_WIDTH
+import common.util.platform.getScreenSizeInfo
 import features.browse.BrowseScreen
 import features.home.HomeScreen
 import features.search.SearchScreen
@@ -29,12 +34,19 @@ fun TopNavBar(
 ) {
     val title = currentScreen.getScreenNameRes()?.let { stringResource(resource = it) }
     val showTopBar = screensWithTopBar.contains(currentScreen)
+    val logoModifier = if (getScreenSizeInfo().widthDp < SMALLER_DEVICES_WIDTH.dp) {
+        Modifier.fillMaxWidth(0.5f)
+    } else {
+        Modifier
+    }
 
+    println("width: ${getScreenSizeInfo().widthDp} - ${getScreenSizeInfo().widthPx}")
     if (showTopBar) {
         TopAppBar(
             title = {
                 if (currentScreen == HomeScreen.route()) {
                     Image(
+                        modifier = logoModifier,
                         painter = painterResource(resource = Res.drawable.cinetracker_name_logo),
                         contentDescription = stringResource(
                             resource = Res.string.app_logo_image_description,
