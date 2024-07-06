@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.buildKonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 kotlin {
@@ -77,6 +79,7 @@ kotlin {
             implementation(libs.paging.common)
             implementation(libs.paging.compose)
             implementation(libs.sqlite.bundled)
+            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

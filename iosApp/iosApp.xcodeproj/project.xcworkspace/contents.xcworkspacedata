@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/gustavop/Documents/Personal/CineTracker-KMP/iosApp/iosApp.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>
