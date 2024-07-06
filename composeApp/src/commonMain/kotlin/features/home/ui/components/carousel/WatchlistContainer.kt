@@ -92,6 +92,7 @@ private fun WatchlistEmptyCarousel(
         )
         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
         Column(
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(

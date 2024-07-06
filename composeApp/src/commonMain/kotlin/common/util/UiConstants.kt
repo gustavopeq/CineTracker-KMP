@@ -25,6 +25,7 @@ object UiConstants {
     const val MEDIA_TYPE_TAG_CORNER_SIZE = 2
     const val TEXT_PLACEHOLDER_CORNER_PERCENTAGE = 30
     const val GENERIC_TAB_MAX_WIDTH = 160
+    const val SMALLER_DEVICES_WIDTH = 380
 
     // Home
     const val WATCHLIST_CAROUSEL_MAX_COUNT = 10
