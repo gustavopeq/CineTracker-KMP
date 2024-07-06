@@ -40,7 +40,6 @@ fun TopNavBar(
         Modifier
     }
 
-    println("width: ${getScreenSizeInfo().widthDp} - ${getScreenSizeInfo().widthPx}")
     if (showTopBar) {
         TopAppBar(
             title = {
