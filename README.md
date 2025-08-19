@@ -26,6 +26,11 @@ Integrated with [The Movie DB](https://developer.themoviedb.org/docs/getting-sta
 
 ## 🎨 Screenshots <img alt="Android" width="30px" src="https://github.com/devicons/devicon/blob/master/icons/android/android-original.svg"/> <img alt="Apple" width="30px" src="https://github.com/devicons/devicon/blob/master/icons/apple/apple-original.svg"/>
 
+https://github.com/user-attachments/assets/bb2f0bfe-0705-4df3-a0cb-222fdd794395
+
+https://github.com/user-attachments/assets/08c017ed-bd7b-46e0-ac39-405c0b569c22
+
+
 <img src="https://github.com/gustavopeq/CineTracker-KMP/assets/7833709/644d012b-0f20-41ad-9d5e-3a5d2e1a4a55" alt="home_ss" width="500px">
 <img src="https://github.com/gustavopeq/CineTracker-KMP/assets/7833709/9c0e6c69-f6d9-4abf-af2d-9fe3d566ec2f" alt="browse_ss" width="500px">
 <img src="https://github.com/gustavopeq/CineTracker-KMP/assets/7833709/02cc6081-3df7-4521-a21f-2a28fa7dda8e" alt="watchlist_ss" width="500px">
