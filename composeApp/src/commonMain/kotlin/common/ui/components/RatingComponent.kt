@@ -1,6 +1,7 @@
 package common.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -9,10 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.ic_outlined_star
 import cinetracker_kmp.composeapp.generated.resources.ic_star
+import common.ui.theme.PrimaryBlueColor
 import common.util.UiConstants.RATING_STAR_DEFAULT_SIZE
 import common.util.formatRating
 import org.jetbrains.compose.resources.painterResource
@@ -35,6 +40,38 @@ fun RatingComponent(
         )
         Text(
             text = rating.formatRating(),
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = textStyle,
+        )
+    }
+}
+
+@Composable
+fun PersonalRatingComponent(
+    modifier: Modifier = Modifier,
+    rating: String,
+    ratingIconSize: Int? = RATING_STAR_DEFAULT_SIZE,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    starColor: Color = PrimaryBlueColor,
+    onRatingClick: () -> Unit = {},
+) {
+    val isRatingSet = rating.toDoubleOrNull() != null
+    val starIcon = if (isRatingSet) Res.drawable.ic_star else Res.drawable.ic_outlined_star
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .offset(x = (-0.5).dp)
+            .clickable { onRatingClick() },
+    ) {
+        Image(
+            modifier = Modifier.size((ratingIconSize ?: RATING_STAR_DEFAULT_SIZE).dp),
+            painter = painterResource(resource = starIcon),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(starColor),
+        )
+        Text(
+            text = rating,
             color = MaterialTheme.colorScheme.onPrimary,
             style = textStyle,
         )

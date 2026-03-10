@@ -127,5 +127,8 @@
     <string name="notification_request_dialog_message">Allow notifications to remind you to update your watched list.</string>
     <string name="notification_request_dialog_allow">Yes</string>
     <string name="notification_request_dialog_deny">No, thanks</string>
+    <string name="rating_bottom_sheet_header">Rate this content</string>
+    <string name="rating_bottom_sheet_save_button">Save Rating</string>
+    <string name="personal_ratings_add_rating">Add Rating</string>
 
 </resources>
