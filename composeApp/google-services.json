@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:824837098950:android:5db2048021a3956ad4b6c7",
         "android_client_info": {
-          "package_name": "gustavo.projects.restapi"
+          "package_name": "gustavo.projects.restapi.debug"
         }
       },
       "oauth_client": [],
