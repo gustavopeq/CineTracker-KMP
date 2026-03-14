@@ -130,5 +130,6 @@
     <string name="rating_bottom_sheet_header">Rate this content</string>
     <string name="rating_bottom_sheet_save_button">Save Rating</string>
     <string name="personal_ratings_add_rating">Add Rating</string>
+    <string name="personal_ratings_clear">Clear Rating</string>
 
 </resources>

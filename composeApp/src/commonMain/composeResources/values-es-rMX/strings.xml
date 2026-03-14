@@ -131,5 +131,6 @@
     <string name="rating_bottom_sheet_header">Califica este contenido</string>
     <string name="rating_bottom_sheet_save_button">Guardar calificación</string>
     <string name="personal_ratings_add_rating">Agregar calificación</string>
+    <string name="personal_ratings_clear">Borrar calificación</string>
 
 </resources>
