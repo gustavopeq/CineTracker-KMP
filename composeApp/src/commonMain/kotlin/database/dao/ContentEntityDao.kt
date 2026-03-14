@@ -11,7 +11,7 @@ interface ContentEntityDao {
     @Query("SELECT * FROM content_entity WHERE listId = :listId ORDER BY createdAt DESC")
     suspend fun getAllItems(listId: Int): List<ContentEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(contentEntity: ContentEntity)
 
     @Query(

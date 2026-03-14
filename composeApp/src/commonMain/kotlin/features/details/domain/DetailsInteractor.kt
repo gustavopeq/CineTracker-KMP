@@ -16,6 +16,7 @@ import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
 import core.LanguageManager.getUserCountryCode
 import database.repository.DatabaseRepository
+import database.repository.PersonalRatingRepository
 import features.details.state.DetailsState
 import network.models.content.common.BaseContentResponse
 import network.models.content.common.MovieResponse
@@ -33,6 +34,7 @@ class DetailsInteractor(
     private val showRepository: ShowRepository,
     private val personRepository: PersonRepository,
     private val databaseRepository: DatabaseRepository,
+    private val personalRatingRepository: PersonalRatingRepository,
 ) {
     suspend fun getContentDetailsById(
         contentId: Int,
@@ -86,7 +88,7 @@ class DetailsInteractor(
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieCreditsById(contentId)
             MediaType.SHOW -> showRepository.getShowCreditsById(contentId)
-            else -> return detailsState
+            else -> return return detailsState
         }
 
         result.collect { response ->
@@ -340,5 +342,17 @@ class DetailsInteractor(
         return databaseRepository.getAllLists().map { listEntity ->
             listEntity.toListItem()
         }
+    }
+
+    suspend fun getPersonalRating(contentId: Int): Float? {
+        return personalRatingRepository.getRating(contentId)
+    }
+
+    suspend fun setPersonalRating(contentId: Int, mediaType: MediaType, rating: Float) {
+        personalRatingRepository.setRating(contentId, mediaType, rating)
+    }
+
+    suspend fun removePersonalRating(contentId: Int, mediaType: MediaType) {
+        personalRatingRepository.setRating(contentId, mediaType, null)
     }
 }
