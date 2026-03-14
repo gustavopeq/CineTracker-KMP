@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,25 +29,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_star
+import cinetracker_kmp.composeapp.generated.resources.personal_ratings_clear
 import cinetracker_kmp.composeapp.generated.resources.rating_bottom_sheet_header
 import cinetracker_kmp.composeapp.generated.resources.rating_bottom_sheet_save_button
 import common.ui.components.button.GenericButton
 import common.ui.theme.PrimaryBlueColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.LARGE_MARGIN
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.round
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RatingBottomSheet(
-    initialRating: Float = 0f,
+    initialRating: Float? = null,
     dismissBottomSheet: () -> Unit,
     onRatingSave: (Float) -> Unit,
+    onRatingClear: (() -> Unit)? = null,
 ) {
     var rating by remember { mutableStateOf(initialRating) }
-    val displayRating = round(rating * 10) / 10
+    val displayRating = rating?.let { round(it * 10) / 10 }
 
     GenericBottomSheet(
         dismissBottomSheet = dismissBottomSheet,
@@ -69,9 +75,14 @@ fun RatingBottomSheet(
                         .padding(bottom = 8.dp),
                     colorFilter = ColorFilter.tint(PrimaryBlueColor)
                 )
-                Spacer(modifier = Modifier.size(DEFAULT_MARGIN.dp))
+                Spacer(modifier = Modifier.size(DEFAULT_PADDING.dp))
+                
+                val ratingText = displayRating?.let {
+                    if (it >= 10f) "10" else displayRating.toString()
+                }
+                
                 Text(
-                    text = displayRating.toString(),
+                    text = ratingText ?: "0",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 56.sp
@@ -89,7 +100,7 @@ fun RatingBottomSheet(
             Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
 
             Slider(
-                value = rating,
+                value = rating ?: 0f,
                 onValueChange = { rating = it },
                 valueRange = 0f..10f,
                 steps = 99,
@@ -109,10 +120,29 @@ fun RatingBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(Res.string.rating_bottom_sheet_save_button),
                 onClick = {
-                    onRatingSave(displayRating)
+                    onRatingSave(displayRating ?: 0f)
                     dismissBottomSheet()
                 }
             )
+
+            if (initialRating != null && onRatingClear != null) {
+                Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+                TextButton(
+                    onClick = {
+                        onRatingClear()
+                        dismissBottomSheet()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(Res.string.personal_ratings_clear),
+                        color = SecondaryGreyColor,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Medium
+                        )
+                    )
+                }
+            }
         }
     }
 }

@@ -158,10 +158,13 @@ fun DetailsDescriptionHeader(
     }
     if (showRatingSheet) {
         RatingBottomSheet(
-            initialRating = personalRating ?: 0f,
+            initialRating = personalRating,
             dismissBottomSheet = { showRatingSheet = false },
             onRatingSave = { newRating ->
                 viewModel.setPersonalRating(newRating)
+            },
+            onRatingClear = {
+                viewModel.removePersonalRating()
             }
         )
     }
