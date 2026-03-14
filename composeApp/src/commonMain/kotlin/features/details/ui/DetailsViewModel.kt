@@ -9,6 +9,7 @@ import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.content.Videos
 import common.domain.models.list.ListItem
+import common.domain.models.list.toListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
@@ -66,6 +67,9 @@ class DetailsViewModel(
     )
     val contentInListStatus: StateFlow<Map<Int, Boolean>> get() = _contentInListStatus
 
+    private val _personalRating = MutableStateFlow<Float?>(null)
+    val personalRating: StateFlow<Float?> get() = _personalRating
+
     private val _detailsFailedLoading: MutableState<Boolean> = mutableStateOf(false)
     val detailsFailedLoading: MutableState<Boolean> get() = _detailsFailedLoading
 
@@ -80,7 +84,14 @@ class DetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             allLists = detailsInteractor.getAllLists()
         }
+        fetchPersonalRating()
         initFetchDetails()
+    }
+
+    private fun fetchPersonalRating() {
+        viewModelScope.launch {
+            _personalRating.value = detailsInteractor.getPersonalRating(contentId)
+        }
     }
 
     fun onEvent(
@@ -97,6 +108,20 @@ class DetailsViewModel(
             is DetailsEvents.OnSnackbarDismiss -> {
                 snackbarDismiss()
             }
+        }
+    }
+
+    fun setPersonalRating(rating: Float) {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailsInteractor.setPersonalRating(contentId, mediaType, rating)
+            _personalRating.value = rating
+        }
+    }
+
+    fun removePersonalRating() {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailsInteractor.removePersonalRating(contentId, mediaType)
+            _personalRating.value = null
         }
     }
 

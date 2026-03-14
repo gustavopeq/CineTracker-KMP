@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +72,7 @@ import common.util.UiConstants.SYSTEM_BAR_HEIGHT
 import common.util.formatDate
 import common.util.platform.PlatformUtils
 import common.util.platform.StringFormat
+import features.details.ui.DetailsViewModel
 import features.details.util.formatRuntime
 import features.details.util.isValidValue
 import features.details.util.toFormattedCurrency
@@ -82,11 +84,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DetailsDescriptionHeader(
     contentDetails: DetailedContent?,
+    viewModel: DetailsViewModel,
     updateTitlePosition: (Float) -> Unit,
 ) {
     var showRatingSheet by remember { mutableStateOf(false) }
+    val personalRating by viewModel.personalRating.collectAsState()
     val addRatingLabel = stringResource(Res.string.personal_ratings_add_rating)
-    var personalRating by remember { mutableStateOf(addRatingLabel) }
+
+    val personalRatingText = personalRating?.let {
+        StringFormat.formatRating(it.toDouble())
+    } ?: addRatingLabel
 
     Column(
         modifier = Modifier
@@ -133,7 +140,7 @@ fun DetailsDescriptionHeader(
                         )
 
                         PersonalRatingComponent(
-                            rating = personalRating,
+                            rating = personalRatingText,
                             onRatingClick = { showRatingSheet = true }
                         )
                         Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
@@ -151,11 +158,10 @@ fun DetailsDescriptionHeader(
     }
     if (showRatingSheet) {
         RatingBottomSheet(
-            initialRating = personalRating.toDoubleOrNull()?.toFloat() ?: 0f,
+            initialRating = personalRating ?: 0f,
             dismissBottomSheet = { showRatingSheet = false },
             onRatingSave = { newRating ->
-                personalRating = StringFormat.formatRating(newRating.toDouble())
-                // TODO: Save to your ViewModel/Repository
+                viewModel.setPersonalRating(newRating)
             }
         )
     }

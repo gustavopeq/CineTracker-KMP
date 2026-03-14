@@ -9,8 +9,8 @@ import org.koin.dsl.module
 
 val interactorModule = module {
     single<BrowseInteractor> { BrowseInteractor(get(), get()) }
-    single<DetailsInteractor> { DetailsInteractor(get(), get(), get(), get()) }
-    single<WatchlistInteractor> { WatchlistInteractor(get(), get(), get()) }
+    single<DetailsInteractor> { DetailsInteractor(get(), get(), get(), get(), get()) }
+    single<WatchlistInteractor> { WatchlistInteractor(get(), get(), get(), get()) }
     single<SearchInteractor> { SearchInteractor(get()) }
     single { HomeInteractor(get(), get(), get(), get()) }
 }
