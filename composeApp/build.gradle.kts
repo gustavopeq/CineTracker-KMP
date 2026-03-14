@@ -147,13 +147,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach
     }
 }
 
-// TODO remove this once navigation crash on release has been fixed
-configurations.all {
-    resolutionStrategy {
-        force("androidx.compose.material:material-ripple:1.7.0-alpha05")
-    }
-}
-
 buildkonfig {
     packageName = "com.projects.cinetracker"
 
