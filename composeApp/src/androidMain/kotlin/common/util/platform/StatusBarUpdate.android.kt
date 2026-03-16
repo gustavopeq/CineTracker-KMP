@@ -1,6 +1,7 @@
 package common.util.platform
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.Color
@@ -10,14 +11,16 @@ import common.ui.theme.PrimaryBlackColor
 
 @Composable
 actual fun SetStatusBarColor(newColor: Color) {
-    val context = LocalContext.current
-    val window = (context as? Activity)?.window
+    if (Build.VERSION.SDK_INT < 35) {
+        val context = LocalContext.current
+        val window = (context as? Activity)?.window
 
-    DisposableEffect(Unit) {
-        window?.statusBarColor = newColor.toArgb()
+        DisposableEffect(Unit) {
+            window?.statusBarColor = newColor.toArgb()
 
-        onDispose {
-            window?.statusBarColor = PrimaryBlackColor.toArgb()
+            onDispose {
+                window?.statusBarColor = PrimaryBlackColor.toArgb()
+            }
         }
     }
 }

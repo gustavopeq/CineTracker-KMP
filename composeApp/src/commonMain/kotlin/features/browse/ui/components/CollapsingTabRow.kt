@@ -35,7 +35,7 @@ import features.browse.ui.BrowseViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollapsingTabRow(
     scrollBehavior: TopAppBarScrollBehavior,
@@ -57,7 +57,6 @@ fun CollapsingTabRow(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun BrowseTypeTabRow(
     viewModel: BrowseViewModel,
@@ -123,7 +122,6 @@ private fun BrowseTypeTab(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TabIndicator(
     width: Dp,
