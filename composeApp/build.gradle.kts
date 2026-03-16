@@ -99,8 +99,8 @@ android {
         applicationId = "gustavo.projects.restapi"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 391
-        versionName = "3.9.1"
+        versionCode = 320
+        versionName = "3.2.0"
     }
     packaging {
         resources {
