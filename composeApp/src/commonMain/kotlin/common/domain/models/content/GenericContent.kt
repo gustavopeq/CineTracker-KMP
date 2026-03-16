@@ -17,6 +17,7 @@ data class GenericContent(
     val posterPath: String,
     val backdropPath: String,
     val mediaType: MediaType,
+    val personalRating: Float? = null,
 )
 
 fun BaseContentResponse.toGenericContent(): GenericContent? {

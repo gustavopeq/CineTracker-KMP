@@ -330,6 +330,7 @@ private fun WatchlistContentLazyList(
                 WatchlistCard(
                     title = mediaInfo.name,
                     rating = mediaInfo.rating,
+                    personalRating = mediaInfo.personalRating,
                     posterUrl = mediaInfo.posterPath,
                     mediaType = mediaInfo.mediaType,
                     selectedList = selectedList,

@@ -296,7 +296,11 @@ private fun DetailsComponent(
             )
         }
         item {
-            DetailsDescriptionHeader(mediaInfo, updateTitlePosition)
+            DetailsDescriptionHeader(
+                contentDetails = mediaInfo,
+                viewModel = viewModel,
+                updateTitlePosition = updateTitlePosition
+            )
         }
         item {
             Column(
