@@ -1,9 +1,12 @@
 package features.details.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,6 +42,7 @@ import cinetracker_kmp.composeapp.generated.resources.movie_details_production_c
 import cinetracker_kmp.composeapp.generated.resources.movie_details_release_date_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_revenue_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_runtime_label
+import cinetracker_kmp.composeapp.generated.resources.personal_ratings_add_rating
 import cinetracker_kmp.composeapp.generated.resources.person_details_born_in_label
 import cinetracker_kmp.composeapp.generated.resources.person_details_born_label
 import cinetracker_kmp.composeapp.generated.resources.person_details_death_label
@@ -50,7 +56,9 @@ import common.domain.models.content.StreamProvider
 import common.domain.models.util.MediaType
 import common.ui.components.GradientDirections
 import common.ui.components.NetworkImage
+import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
+import common.ui.components.bottomsheet.RatingBottomSheet
 import common.ui.components.card.MediaTypeTag
 import common.ui.components.classicVerticalGradientBrush
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
@@ -63,6 +71,8 @@ import common.util.UiConstants.STREAM_PROVIDER_ICON_SIZE
 import common.util.UiConstants.SYSTEM_BAR_HEIGHT
 import common.util.formatDate
 import common.util.platform.PlatformUtils
+import common.util.platform.StringFormat
+import features.details.ui.DetailsViewModel
 import features.details.util.formatRuntime
 import features.details.util.isValidValue
 import features.details.util.toFormattedCurrency
@@ -74,8 +84,17 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun DetailsDescriptionHeader(
     contentDetails: DetailedContent?,
+    viewModel: DetailsViewModel,
     updateTitlePosition: (Float) -> Unit,
 ) {
+    var showRatingSheet by remember { mutableStateOf(false) }
+    val personalRating by viewModel.personalRating.collectAsState()
+    val addRatingLabel = stringResource(Res.string.personal_ratings_add_rating)
+
+    val personalRatingText = personalRating?.let {
+        StringFormat.formatRating(it.toDouble())
+    } ?: addRatingLabel
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,9 +126,23 @@ fun DetailsDescriptionHeader(
             when (contentDetails?.mediaType) {
                 MediaType.MOVIE, MediaType.SHOW -> {
                     Row(
+                        modifier = Modifier.height(24.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RatingComponent(rating = contentDetails.rating)
+                        
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = DEFAULT_PADDING.dp)
+                                .fillMaxHeight(0.6f)
+                                .width(1.dp)
+                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f))
+                        )
+
+                        PersonalRatingComponent(
+                            rating = personalRatingText,
+                            onRatingClick = { showRatingSheet = true }
+                        )
                         Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
                         MediaTypeTag(
                             modifier = Modifier.clip(
@@ -122,6 +155,18 @@ fun DetailsDescriptionHeader(
                 else -> {}
             }
         }
+    }
+    if (showRatingSheet) {
+        RatingBottomSheet(
+            initialRating = personalRating,
+            dismissBottomSheet = { showRatingSheet = false },
+            onRatingSave = { newRating ->
+                viewModel.setPersonalRating(newRating)
+            },
+            onRatingClear = {
+                viewModel.removePersonalRating()
+            }
+        )
     }
 }
 

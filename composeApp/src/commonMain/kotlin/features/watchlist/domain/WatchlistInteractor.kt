@@ -6,6 +6,7 @@ import common.domain.models.util.MediaType
 import common.util.Constants
 import database.model.ContentEntity
 import database.repository.DatabaseRepository
+import database.repository.PersonalRatingRepository
 import features.watchlist.ui.components.WatchlistTabItem
 import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.state.WatchlistState
@@ -20,6 +21,7 @@ class WatchlistInteractor(
     private val databaseRepository: DatabaseRepository,
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository,
+    private val personalRatingRepository: PersonalRatingRepository,
 ) {
     private var lastRemovedItem: ContentEntity? = null
     private var lastMovedListId: Int? = null
@@ -34,9 +36,11 @@ class WatchlistInteractor(
         val watchlistState = WatchlistState()
         try {
             val detailedWatchlist = entityList.mapNotNull { entity ->
+                val personalRating = personalRatingRepository.getRating(entity.contentId)
                 getContentDetailsById(
                     contentId = entity.contentId,
                     mediaType = MediaType.getType(entity.mediaType),
+                    personalRating = personalRating
                 )
             }
             watchlistState.listItems.value = detailedWatchlist
@@ -51,6 +55,7 @@ class WatchlistInteractor(
     private suspend fun getContentDetailsById(
         contentId: Int,
         mediaType: MediaType,
+        personalRating: Float? = null
     ): GenericContent? {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
@@ -73,7 +78,7 @@ class WatchlistInteractor(
                         MediaType.MOVIE -> (response.value as MovieResponse).toGenericContent()
                         MediaType.SHOW -> (response.value as ShowResponse).toGenericContent()
                         else -> return@collect
-                    }
+                    }?.copy(personalRating = personalRating)
                 }
             }
         }

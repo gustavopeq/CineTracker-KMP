@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,6 +35,7 @@ import cinetracker_kmp.composeapp.generated.resources.movie_tag
 import cinetracker_kmp.composeapp.generated.resources.show_tag
 import common.domain.models.util.MediaType
 import common.ui.components.NetworkImage
+import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryYellowColor_90
@@ -43,6 +46,7 @@ import common.util.UiConstants.MEDIA_TYPE_TAG_CORNER_SIZE
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SMALL_PADDING
 import common.util.UiConstants.WATCHLIST_IMAGE_WIDTH
+import common.util.platform.StringFormat
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -50,6 +54,7 @@ import org.jetbrains.compose.resources.stringResource
 fun WatchlistCard(
     title: String,
     rating: Double,
+    personalRating: Float?,
     posterUrl: String?,
     mediaType: MediaType,
     selectedList: Int,
@@ -99,7 +104,26 @@ fun WatchlistCard(
                     maxLines = 2,
                 )
                 Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
-                RatingComponent(rating = rating)
+                Row(
+                    modifier = Modifier.height(20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RatingComponent(rating = rating)
+                    
+                    if (personalRating != null) {
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = SMALL_PADDING.dp)
+                                .fillMaxHeight(0.6f)
+                                .width(1.dp)
+                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f))
+                        )
+
+                        PersonalRatingComponent(
+                            rating = StringFormat.formatRating(personalRating.toDouble()),
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 MediaTypeTag(
                     modifier = Modifier.clip(RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp)),

@@ -128,5 +128,9 @@
     <string name="notification_request_dialog_message">Permite notificaciones para recordarte actualizar tu lista de vistos.</string>
     <string name="notification_request_dialog_allow">Sí</string>
     <string name="notification_request_dialog_deny">No, gracias</string>
+    <string name="rating_bottom_sheet_header">Califica este contenido</string>
+    <string name="rating_bottom_sheet_save_button">Guardar calificación</string>
+    <string name="personal_ratings_add_rating">Agregar calificación</string>
+    <string name="personal_ratings_clear">Borrar calificación</string>
 
 </resources>
