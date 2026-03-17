@@ -5,6 +5,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import database.AppDatabase
+import database.migration.MIGRATION_1_2
+import database.migration.MIGRATION_2_3
+import database.migration.MIGRATION_3_4
+import database.migration.MIGRATION_4_5
+import database.migration.MIGRATION_5_6
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
@@ -19,14 +24,17 @@ actual fun databaseModule(): Module {
 private fun createRoomDatabase(
     context: Context,
 ): AppDatabase {
-    val dbFile = context.getDatabasePath("movie_manager_database")
-    return Room.databaseBuilder<AppDatabase>(
-        context,
-        dbFile.absolutePath,
-    )
+    return Room
+        .databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "movie_manager_database"
+        )
+        .addMigrations(
+            MIGRATION_5_6
+        )
         .setQueryCoroutineContext(Dispatchers.IO)
         .addCallback(roomCallback)
-        .fallbackToDestructiveMigration(true)
         .build()
 }
 
