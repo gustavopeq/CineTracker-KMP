@@ -23,11 +23,16 @@ fun SortIconButton(
     displaySortScreen: (Boolean) -> Unit,
 ) {
     val watchlistSortSelected by mainViewModel.watchlistSort.collectAsState()
-    val iconColor = if (currentScreen == WatchlistScreen.route() && watchlistSortSelected != null) {
+    
+    val isWatchlistSortActive = watchlistSortSelected.mediaType != null || 
+                                watchlistSortSelected.ratingSort != null
+
+    val iconColor = if (currentScreen == WatchlistScreen.route() && isWatchlistSortActive) {
         MaterialTheme.colorScheme.secondary
     } else {
         MaterialTheme.colorScheme.onPrimary
     }
+    
     IconButton(
         onClick = { displaySortScreen(true) },
     ) {

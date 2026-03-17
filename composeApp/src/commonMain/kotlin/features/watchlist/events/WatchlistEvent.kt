@@ -1,6 +1,7 @@
 package features.watchlist.events
 
 import common.domain.models.util.MediaType
+import common.ui.WatchlistSort
 import features.watchlist.ui.components.WatchlistTabItem
 
 sealed class WatchlistEvent {
@@ -15,7 +16,7 @@ sealed class WatchlistEvent {
         val tabItem: WatchlistTabItem,
     ) : WatchlistEvent()
     data class UpdateSortType(
-        val mediaType: MediaType?,
+        val watchlistSort: WatchlistSort,
     ) : WatchlistEvent()
     data class UpdateItemListId(
         val contentId: Int,

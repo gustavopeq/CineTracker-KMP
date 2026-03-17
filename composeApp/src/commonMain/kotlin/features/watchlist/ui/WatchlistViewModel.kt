@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
+import common.ui.WatchlistSort
 import features.watchlist.domain.WatchlistInteractor
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.WatchlistTabItem
@@ -37,7 +38,7 @@ class WatchlistViewModel(
 
     val selectedList = mutableStateOf(DefaultLists.WATCHLIST.listId)
 
-    private val sortType: MutableState<MediaType?> = mutableStateOf(null)
+    private val sortType: MutableState<WatchlistSort> = mutableStateOf(WatchlistSort())
 
     private val _snackbarState: MutableState<WatchlistSnackbarState> = mutableStateOf(
         WatchlistSnackbarState(),
@@ -64,7 +65,7 @@ class WatchlistViewModel(
             is WatchlistEvent.LoadWatchlistData -> loadWatchlistData(showLoadingState = true)
             is WatchlistEvent.RemoveItem -> removeListItem(event.contentId, event.mediaType)
             is WatchlistEvent.SelectList -> updateSelectedTab(event.tabItem)
-            is WatchlistEvent.UpdateSortType -> sortType.value = event.mediaType
+            is WatchlistEvent.UpdateSortType -> sortType.value = event.watchlistSort
             is WatchlistEvent.UpdateItemListId -> {
                 updateItemListId(event.contentId, event.mediaType, event.listId)
             }
