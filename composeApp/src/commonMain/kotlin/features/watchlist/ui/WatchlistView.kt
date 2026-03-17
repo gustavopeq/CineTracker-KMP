@@ -35,6 +35,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
+import common.ui.WatchlistSort
 import common.ui.components.popup.ClassicSnackbar
 import common.ui.components.tab.GenericTabRow
 import common.util.Constants.UNSELECTED_OPTION_INDEX
@@ -51,6 +52,7 @@ import features.watchlist.ui.components.WatchlistTabItem
 import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
 import features.watchlist.ui.model.WatchlistItemAction
+import features.watchlist.ui.model.WatchlistRatingSort
 import features.watchlist.ui.state.WatchlistSnackbarState
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -82,7 +84,7 @@ private fun Watchlist(
     val allLists by viewModel.allLists.collectAsState()
     val listContent by viewModel.listContent.collectAsState()
     val selectedList by viewModel.selectedList
-    val sortType by mainViewModel.watchlistSort.collectAsState()
+    val watchlistSort by mainViewModel.watchlistSort.collectAsState()
     val snackbarState by viewModel.snackbarState
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -90,7 +92,7 @@ private fun Watchlist(
         AllListsLoadedState(
             allLists,
             viewModel,
-            sortType,
+            watchlistSort,
             mainViewModel,
             snackbarState,
             snackbarHostState,
@@ -107,7 +109,7 @@ private fun Watchlist(
 private fun AllListsLoadedState(
     tabList: List<WatchlistTabItem>,
     viewModel: WatchlistViewModel,
-    sortType: MediaType?,
+    watchlistSort: WatchlistSort,
     mainViewModel: MainViewModel,
     snackbarState: WatchlistSnackbarState,
     snackbarHostState: SnackbarHostState,
@@ -146,9 +148,9 @@ private fun AllListsLoadedState(
         )
     }
 
-    LaunchedEffect(sortType) {
+    LaunchedEffect(watchlistSort) {
         viewModel.onEvent(
-            WatchlistEvent.UpdateSortType(sortType),
+            WatchlistEvent.UpdateSortType(watchlistSort),
         )
     }
 
@@ -206,7 +208,7 @@ private fun AllListsLoadedState(
 
                     WatchlistBody(
                         contentList = contentList.orEmpty(),
-                        sortType = sortType,
+                        watchlistSort = watchlistSort,
                         selectedList = selectedList,
                         allLists = tabList,
                         goToDetails = goToDetails,
@@ -284,7 +286,7 @@ private fun SnackbarLaunchedEffect(
 @Composable
 private fun WatchlistBody(
     contentList: List<GenericContent>,
-    sortType: MediaType?,
+    watchlistSort: WatchlistSort,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
     goToDetails: (Int, MediaType) -> Unit,
@@ -293,7 +295,7 @@ private fun WatchlistBody(
 ) {
     if (contentList.isNotEmpty()) {
         WatchlistContentLazyList(
-            sortType = sortType,
+            watchlistSort = watchlistSort,
             contentList = contentList,
             selectedList = selectedList,
             allLists = allLists,
@@ -308,7 +310,7 @@ private fun WatchlistBody(
 
 @Composable
 private fun WatchlistContentLazyList(
-    sortType: MediaType?,
+    watchlistSort: WatchlistSort,
     contentList: List<GenericContent>,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
@@ -316,10 +318,16 @@ private fun WatchlistContentLazyList(
     removeItem: (Int, MediaType) -> Unit,
     moveItemToList: (Int, MediaType, Int) -> Unit,
 ) {
-    val sortedItems = if (sortType != null) {
-        contentList.filter { it.mediaType == sortType }
+    val filteredItems = if (watchlistSort.mediaType != null) {
+        contentList.filter { it.mediaType == watchlistSort.mediaType }
     } else {
         contentList
+    }
+
+    val sortedItems = when (watchlistSort.ratingSort) {
+        WatchlistRatingSort.PublicRating -> filteredItems.sortedByDescending { it.rating }
+        WatchlistRatingSort.PersonalRating -> filteredItems.sortedByDescending { it.personalRating ?: 0f }
+        null -> filteredItems
     }
 
     if (sortedItems.isNotEmpty()) {
@@ -349,7 +357,7 @@ private fun WatchlistContentLazyList(
             }
         }
     } else {
-        EmptyListMessage(mediaType = sortType)
+        EmptyListMessage(mediaType = watchlistSort.mediaType)
     }
 }
 

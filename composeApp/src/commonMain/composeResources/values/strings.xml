@@ -25,6 +25,7 @@
     <string name="movies_tab">Movies</string>
     <string name="shows_tab">Shows</string>
     <string name="sort_by_header">Sort by</string>
+    <string name="filter_by_header">Filter by</string>
     <string name="now_playing">Now Playing</string>
     <string name="upcoming_movies">Upcoming</string>
     <string name="popular_movies">Popular</string>
@@ -37,8 +38,11 @@
     <!-- Watchlist screen -->
     <string name="watchlist_tab">Watchlist</string>
     <string name="watched_tab">Watched</string>
+    <string name="all_tag">All</string>
     <string name="movie_tag">Movie</string>
+    <string name="movie_only_tag">Movie only</string>
     <string name="show_tag">Show</string>
+    <string name="show_only_tag">Show only</string>
     <string name="remove_option_popup_menu">Remove from %1$s</string>
     <string name="move_to_list_option_popup_menu">Move to %1$s</string>
     <string name="add_option_popup_menu">Add to %1$s</string>
@@ -58,6 +62,9 @@
     <string name="delete_list_display_body">Are you sure you'd like to delete this list? It can't be undone.</string>
     <string name="delete_list_display_confirm_btn">Delete List</string>
     <string name="delete_list_display_dismiss_btn">Cancel</string>
+    <string name="watchlist_sort_public_rating">Public Rating</string>
+    <string name="watchlist_sort_personal_rating">Personal Rating</string>
+    <string name="watchlist_sort_options_header">Filter &amp; Sort</string>
 
     <!-- Search screen -->
     <string name="search_bar_placeholder">Search movies, shows or people…</string>

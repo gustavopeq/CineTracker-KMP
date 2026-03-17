@@ -7,8 +7,14 @@ import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
 import features.home.HomeScreen
+import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+data class WatchlistSort(
+    val mediaType: MediaType? = null,
+    val ratingSort: WatchlistRatingSort? = null,
+)
 
 class MainViewModel(
     private val databaseRepository: DatabaseRepository,
@@ -26,8 +32,8 @@ class MainViewModel(
     private val _currentScreen = MutableStateFlow(HomeScreen.route())
     val currentScreen: StateFlow<String> get() = _currentScreen
 
-    private val _watchlistSort = MutableStateFlow<MediaType?>(null)
-    val watchlistSort: StateFlow<MediaType?> get() = _watchlistSort
+    private val _watchlistSort = MutableStateFlow(WatchlistSort())
+    val watchlistSort: StateFlow<WatchlistSort> get() = _watchlistSort
 
     /* Create New List  */
     private val _displayCreateNewList = MutableStateFlow(false)
@@ -67,7 +73,13 @@ class MainViewModel(
     fun updateWatchlistSort(
         mediaType: MediaType?,
     ) {
-        _watchlistSort.value = mediaType
+        _watchlistSort.value = _watchlistSort.value.copy(mediaType = mediaType)
+    }
+
+    fun updateWatchlistRatingSort(
+        ratingSort: WatchlistRatingSort?,
+    ) {
+        _watchlistSort.value = _watchlistSort.value.copy(ratingSort = ratingSort)
     }
 
     fun updateDisplayCreateNewList(

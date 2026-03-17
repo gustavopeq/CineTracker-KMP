@@ -24,6 +24,7 @@
     <string name="movies_tab">Películas</string>
     <string name="shows_tab">Series</string>
     <string name="sort_by_header">Ordenar por</string>
+    <string name="filter_by_header">Filtrar por</string>
     <string name="now_playing">En Cartelera</string>
     <string name="upcoming_movies">Próximas</string>
     <string name="popular_movies">Populares</string>
@@ -36,8 +37,11 @@
     <!-- Watchlist screen -->
     <string name="watchlist_tab">Favoritos</string>
     <string name="watched_tab">Vistos</string>
+    <string name="all_tag">Todo</string>
     <string name="movie_tag">Película</string>
+    <string name="movie_only_tag">Solo Película</string>
     <string name="show_tag">Serie</string>
+    <string name="show_only_tag">Solo Serie</string>
     <string name="remove_option_popup_menu">Eliminar de %1$s</string>
     <string name="move_to_list_option_popup_menu">Mover a %1$s</string>
     <string name="add_option_popup_menu">Agregar a %1$s</string>
@@ -57,6 +61,9 @@
     <string name="delete_list_display_body">¿Estás seguro de que deseas eliminar esta lista? No se puede deshacer.</string>
     <string name="delete_list_display_confirm_btn">Eliminar Lista</string>
     <string name="delete_list_display_dismiss_btn">Cancelar</string>
+    <string name="watchlist_sort_public_rating">Calificación Pública</string>
+    <string name="watchlist_sort_personal_rating">Calificación Personal</string>
+    <string name="watchlist_sort_options_header">Filtrar y Ordenar</string>
 
     <!-- Search screen -->
     <string name="search_bar_placeholder">Buscar películas, series o personas…</string>

@@ -19,7 +19,6 @@ fun ModalComponents(
     val selectedShowSortType by mainViewModel.showSortType.collectAsState()
     val selectedMediaType by mainViewModel.currentMediaTypeSelected.collectAsState()
     val currentScreen by mainViewModel.currentScreen.collectAsState()
-    val selectedWatchlistSortType by mainViewModel.watchlistSort.collectAsState()
 
     if (showSortBottomSheet) {
         when (currentScreen) {
@@ -35,7 +34,6 @@ fun ModalComponents(
             WatchlistScreen.route() -> {
                 WatchlistSortBottomSheet(
                     mainViewModel = mainViewModel,
-                    selectedWatchlistSortType = selectedWatchlistSortType,
                     displaySortScreen = displaySortScreen,
                 )
             }
