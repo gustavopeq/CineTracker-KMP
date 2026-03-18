@@ -50,6 +50,8 @@ CineTracker-KMP/
 ├── gradlew.bat
 ├── CLAUDE.md
 ├── README.md
+├── knowledgeBackup/
+│   └── InstructionsForFutureRefactor.md
 │
 ├── composeApp/
 │   ├── build.gradle.kts
