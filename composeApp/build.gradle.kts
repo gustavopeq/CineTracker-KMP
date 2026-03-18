@@ -99,7 +99,7 @@ android {
         applicationId = "gustavo.projects.restapi"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 400
+        versionCode = 404
         versionName = "4.0.0"
     }
     packaging {
