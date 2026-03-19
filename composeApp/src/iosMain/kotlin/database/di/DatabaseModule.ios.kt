@@ -6,7 +6,6 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import database.AppDatabase
-import database.instantiateImpl
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +27,6 @@ private fun createRoomDatabase(): AppDatabase {
     val dbFilePath = "${fileDirectory()}/movie_manager_database"
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
-        factory = { AppDatabase::class.instantiateImpl() },
     )
         .addCallback(roomCallback)
         .setDriver(BundledSQLiteDriver())
