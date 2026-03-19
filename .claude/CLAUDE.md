@@ -13,6 +13,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Never add `Co-Authored-By` trailers** to commits.
 - **When asked to commit, stage all changed files** (unless said otherwise) — do not selectively exclude files.
 
+## Dependency Rules
+
+- **Always upgrade to stable versions.** Never upgrade to alpha, beta, or RC unless explicitly asked.
+- **If no stable version is available** for a requested upgrade, inform the user before making any changes.
+
 ## Kotlin Coding Rules
 
 - **Never use fully-qualified references in code bodies.** Always add a proper `import` at the top of the file and use the short name (e.g., `mockk()` not `io.mockk.mockk()`).
