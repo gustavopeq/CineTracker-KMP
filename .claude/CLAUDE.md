@@ -48,7 +48,8 @@ CineTracker-KMP/
 ├── .claude/
 │   ├── CLAUDE.md
 │   └── rules/
-│       └── style.md
+│       ├── style.md
+│       └── features_details.md
 ├── build.gradle.kts
 ├── settings.gradle.kts
 ├── gradle.properties
@@ -482,7 +483,7 @@ CineTracker-KMP/
 
 ### Layer Structure (all under `composeApp/src/commonMain/kotlin/`)
 
-- **`features/`** — Feature modules (home, browse, watchlist, search, details), each containing:
+- **`features/`** — Feature modules (home, browse, watchlist, search, details) — see [`.claude/rules/features_details.md`](rules/features_details.md) for a full breakdown of each feature's state, events, data flow, and special behaviors. Each feature contains:
   - `*Screen.kt` — Navigation route definition
   - `domain/` — Interactor (business logic)
   - `ui/` — ViewModel, composables, state classes, components
