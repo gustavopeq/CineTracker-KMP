@@ -22,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Never use fully-qualified references in code bodies.** Always add a proper `import` at the top of the file and use the short name (e.g., `mockk()` not `io.mockk.mockk()`).
 - **Never use wildcard imports** (`import foo.bar.*`). Import each symbol explicitly.
+- **Never add `@Suppress` annotations** without explicit user approval. If a suppression seems necessary, explain why and ask before adding it.
 
 ## Project Overview
 

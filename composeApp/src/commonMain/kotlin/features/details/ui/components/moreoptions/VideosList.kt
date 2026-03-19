@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -72,6 +74,7 @@ fun VideoList(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
+                            .aspectRatio(16f / 9f)
                             .clip(
                                 RoundedCornerShape(
                                     topStart = VIDEOS_BORDER_SIZE.dp,
@@ -81,8 +84,8 @@ fun VideoList(
                     ) {
                         NetworkImage(
                             imageUrl = imagePath,
-                            modifier = Modifier,
-                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
                         )
                         Image(
                             modifier = Modifier
