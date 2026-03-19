@@ -44,51 +44,26 @@ val MIGRATION_3_4: Migration = object : Migration(3, 4) {
     }
 }
 
-val MIGRATION_4_5: (Map<String, String>) -> Migration = { localizedListNamesMap ->
-    object : Migration(4, 5) {
-        override fun migrate(db: SupportSQLiteDatabase) {
-            // Create a temporary table for ListEntity
-            db.execSQL(
-                """
+val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        val watchlistName = DefaultLists.WATCHLIST.name.lowercase()
+        val watchedName = DefaultLists.WATCHED.name.lowercase()
+
+        // Create list_entity with canonical lowercase names
+        db.execSQL(
+            """
             CREATE TABLE IF NOT EXISTS new_list_entity (
                 listId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 listName TEXT NOT NULL
             )
             """
-            )
+        )
+        db.execSQL("INSERT INTO new_list_entity (listName) VALUES (?)", arrayOf(watchlistName))
+        db.execSQL("INSERT INTO new_list_entity (listName) VALUES (?)", arrayOf(watchedName))
 
-            // Create a temporary table for mapping old list names to new list names
-            db.execSQL(
-                """
-            CREATE TABLE IF NOT EXISTS list_name_mapping (
-                oldListName TEXT NOT NULL,
-                newListName TEXT NOT NULL
-            )
+        // Create content_entity with integer FK replacing the old text-based listId
+        db.execSQL(
             """
-            )
-
-            // Populate the mapping table with old and new list names
-            localizedListNamesMap.forEach { (oldName, localizedName) ->
-                db.execSQL(
-                    """
-                INSERT INTO list_name_mapping (oldListName, newListName)
-                VALUES (?, ?)
-                """,
-                    arrayOf(oldName, localizedName)
-                )
-            }
-
-            // Populate the new_list_entity table with localized list names from the mapping table
-            db.execSQL(
-                """
-            INSERT INTO new_list_entity (listName)
-            SELECT DISTINCT newListName FROM list_name_mapping
-            """
-            )
-
-            // Create a temporary table for ContentEntity
-            db.execSQL(
-                """
             CREATE TABLE IF NOT EXISTS new_content_entity (
                 contentEntityDbId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 contentId INTEGER NOT NULL,
@@ -98,40 +73,21 @@ val MIGRATION_4_5: (Map<String, String>) -> Migration = { localizedListNamesMap 
                 FOREIGN KEY(listId) REFERENCES list_entity(listId) ON DELETE CASCADE
             )
             """
-            )
+        )
 
-            // Copy and convert the listId in content_entity to integer referencing new_list_entity
-            db.execSQL(
-                """
+        // Map old text listId values to new integer listIds
+        db.execSQL(
+            """
             INSERT INTO new_content_entity (contentEntityDbId, contentId, mediaType, listId, createdAt)
             SELECT CE.contentEntityDbId, CE.contentId, CE.mediaType, LE.listId, CE.createdAt
             FROM content_entity AS CE
-            JOIN list_name_mapping AS LNM ON CE.listId = LNM.oldListName
-            JOIN new_list_entity AS LE ON LNM.newListName = LE.listName
+            JOIN new_list_entity AS LE ON LOWER(CE.listId) = LE.listName
             """
-            )
+        )
 
-            // Drop the old tables
-            db.execSQL("DROP TABLE content_entity")
-            db.execSQL("DROP TABLE list_name_mapping")
-
-            // Rename new tables to the official table names
-            db.execSQL("ALTER TABLE new_list_entity RENAME TO list_entity")
-            db.execSQL("ALTER TABLE new_content_entity RENAME TO content_entity")
-
-            // Insert default lists if they do not exist
-            localizedListNamesMap.values.forEach { localizedName ->
-                db.execSQL(
-                    """
-                INSERT INTO list_entity (listName)
-                SELECT ? WHERE NOT EXISTS (
-                    SELECT 1 FROM list_entity WHERE listName = ?
-                )
-                """,
-                    arrayOf(localizedName, localizedName)
-                )
-            }
-        }
+        db.execSQL("DROP TABLE content_entity")
+        db.execSQL("ALTER TABLE new_list_entity RENAME TO list_entity")
+        db.execSQL("ALTER TABLE new_content_entity RENAME TO content_entity")
     }
 }
 
@@ -145,6 +101,15 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
                 rating REAL NOT NULL
             )
             """
+        )
+    }
+}
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE list_entity ADD COLUMN isDefault INTEGER NOT NULL DEFAULT 0")
+        db.execSQL(
+            "UPDATE list_entity SET isDefault = 1 WHERE listName IN ('watchlist', 'watched')"
         )
     }
 }
