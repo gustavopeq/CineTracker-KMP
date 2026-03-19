@@ -87,6 +87,13 @@ kotlin {
                 implementation(libs.turbine)
             }
         }
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.androidx.room.testing)
+                implementation(libs.androidx.test.junit)
+                implementation(libs.androidx.test.runner)
+            }
+        }
     }
 }
 
@@ -97,6 +104,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets["androidTest"].assets.srcDirs("$projectDir/schemas")
 
     defaultConfig {
         applicationId = "gustavo.projects.restapi"
@@ -104,6 +112,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 404
         versionName = "4.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -138,6 +147,14 @@ android {
 
 room {
     schemaDirectory("$projectDir/schemas")
+}
+
+// Firebase KTX artifacts have unresolved versions in the androidTest classpath
+// because the gitlive SDK relies on a BOM that isn't applied to the test variant.
+// Migration tests don't need Firebase, so exclude it from the test configuration.
+configurations.matching { it.name.contains("AndroidTest") }.configureEach {
+    exclude(group = "com.google.firebase")
+    exclude(group = "dev.gitlive")
 }
 
 dependencies {
