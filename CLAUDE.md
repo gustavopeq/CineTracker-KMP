@@ -7,6 +7,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Whenever a file or folder is added, removed, or moved in this project, update the Folder Tree section below to keep it in sync.**
 - **When moving/renaming a file, use `git mv` instead of deleting and re-creating it, so that git preserves the file's commit history.**
 
+## Git Rules
+
+- **Commit messages must be short** — a single concise line. No multi-line descriptions.
+- **Never add `Co-Authored-By` trailers** to commits.
+- **When asked to commit, stage all changed files** (unless said otherwise) — do not selectively exclude files.
+
 ## Kotlin Coding Rules
 
 - **Never use fully-qualified references in code bodies.** Always add a proper `import` at the top of the file and use the short name (e.g., `mockk()` not `io.mockk.mockk()`).

@@ -45,11 +45,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.appcompat)
             implementation(libs.androidx.room.android)
 
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.koin.androidx.compose)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
