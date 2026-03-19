@@ -4,34 +4,32 @@ android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
 androidx-activityCompose = "1.9.0"
-androidx-appcompat = "1.7.0"
-compose-plugin = "1.7.0"
-kotlin = "2.0.20"
+compose-plugin = "1.9.3"
+kotlin = "2.1.21"
 
-androidx-lifecycle = "2.8.0"
-androidx-navigation = "2.8.0-alpha02"
-androidx-room = "2.7.0-alpha02"
-build-konfig = "0.15.1"
-coil3 = "3.0.0-alpha06"
+androidx-lifecycle = "2.9.6"
+androidx-navigation = "2.9.1"
+androidx-room = "2.7.2"
+build-konfig = "0.17.1"
+coil3 = "3.2.0"
 koin = "3.5.6"
 koin-compose-multiplatform = "1.2.0-Beta4"
-kotlinx-coroutines = "1.9.0-RC"
-kotlinx-serialization = "1.7.0"
+kotlinx-coroutines = "1.9.0"
+kotlinx-serialization = "1.7.3"
 kottie = "1.9.6-alpha02"
-ksp = "2.0.20-1.0.25"
+ksp = "2.1.21-2.0.2"
 ktor = "2.3.12"
 paging = "3.3.0-alpha02-0.5.1"
-sqlite = "2.5.0-SNAPSHOT"
+sqlite = "2.5.0"
 
-mockk   = "1.13.12"
-turbine = "1.2.0"
+mockk   = "1.13.16"
+turbine = "1.2.1"
 
 gradlePlugins-crashlytics = "2.9.9"
-gradlePlugins-google-services = "4.4.1"
+gradlePlugins-google-services = "4.4.4"
 firebase-gitlive-sdk = "1.12.0"
 
 [libraries]
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 
@@ -42,13 +40,13 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil3" }
-coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil3" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil3" }
 coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil3" }
 
 gitlive-firebase-kotlin-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-gitlive-sdk" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose-multiplatform" }
 koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose-multiplatform" }
 
