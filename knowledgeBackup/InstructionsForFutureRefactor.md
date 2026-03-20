@@ -124,3 +124,18 @@ This goes to stdout (invisible in production). The error is either silently swal
 | 6 | `println()` error handling | **LOW** | 30 min | Replace with structured logging |
 
 **Recommendation:** Fix #1, #2, and #3 immediately — they're all 5-minute fixes that prevent real crashes or data corruption. Items #4-#6 are worth tracking but not urgent.
+
+---
+
+## 7. ~~DONE~~ — `isDefault` field wired up (localization fix)
+
+**Context:** DB v7 added `isDefault: Boolean` to `ListEntity` to replace the pattern of identifying default lists by hardcoded IDs (`DefaultLists.WATCHLIST.listId = 1`, `DefaultLists.WATCHED.listId = 2`) or by name (which caused localization complexity).
+
+**What's done:** The column exists in the schema, migrations mark existing lists correctly, and `onCreate` inserts default lists with `isDefault = 1`.
+
+**What's missing:**
+- `ListEntityDao` has no query for `isDefault` (e.g., `getDefaultLists(): List<ListEntity>`)
+- `DatabaseRepository` doesn't expose default list lookups via flag
+- App logic still uses `DefaultLists.listId` hardcoded integers to identify defaults
+
+**Recommended fix:** Add a `getDefaultLists()` DAO query, expose it through `DatabaseRepository`, then replace hardcoded `DefaultLists.listId` references in `WatchlistViewModel`, `DetailsViewModel`, and `DatabaseRepositoryImpl` with a flag-based lookup. The `DefaultLists` enum can then be scoped to UI labels only, removing its role as a source of truth for DB identity.

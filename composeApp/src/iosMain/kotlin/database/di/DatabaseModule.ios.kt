@@ -31,7 +31,6 @@ private fun createRoomDatabase(): AppDatabase {
         .addCallback(roomCallback)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
-        .fallbackToDestructiveMigration(true)
         .build()
 }
 
@@ -55,15 +54,14 @@ val roomCallback = object : RoomDatabase.Callback() {
 }
 
 private fun createDefaultLists(connection: SQLiteConnection) {
-    // Execute the SQL to insert the default lists
     val defaultLists = listOf(
         DefaultLists.WATCHLIST.name.lowercase(),
         DefaultLists.WATCHED.name.lowercase(),
     )
-    val query = """
-        INSERT INTO list_entity (listName) VALUES
-        ('${defaultLists[0]}'),
-        ('${defaultLists[1]}')
-    """.trimIndent()
-    connection.execSQL(query)
+    defaultLists.forEach { listName ->
+        val stmt = connection.prepare("INSERT INTO list_entity (listName, isDefault) VALUES (?, 1)")
+        stmt.bindText(1, listName)
+        stmt.step()
+        stmt.close()
+    }
 }

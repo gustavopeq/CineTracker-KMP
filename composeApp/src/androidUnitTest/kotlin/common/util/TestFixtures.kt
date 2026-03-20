@@ -86,9 +86,10 @@ fun fakeShowPagingResponse(vararg shows: ShowResponse) = ContentPagingResponse(
 
 // ── Database entity factories ─────────────────────────────────────────────────
 
-fun fakeListEntity(listId: Int, name: String = "List $listId") = ListEntity(
+fun fakeListEntity(listId: Int, name: String = "List $listId", isDefault: Boolean = false) = ListEntity(
     listId = listId,
     listName = name,
+    isDefault = isDefault,
 )
 
 fun fakeContentEntity(
