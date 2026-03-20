@@ -50,7 +50,7 @@ fun ShowAllContentList(
     showAllMediaType: MediaType,
     contentList: List<GenericContent>,
     goToDetails: (Int, MediaType) -> Unit,
-    onBackBtnPress: () -> Unit,
+    onBackBtnPress: () -> Unit
 ) {
     val filteredItems = contentList.filter { it.mediaType == showAllMediaType }
 
@@ -61,20 +61,17 @@ fun ShowAllContentList(
     Column {
         TopBar(
             mediaType = showAllMediaType,
-            onBackBtnPress = onBackBtnPress,
+            onBackBtnPress = onBackBtnPress
         )
         AllContentGrid(
             itemList = filteredItems,
-            goToDetails = goToDetails,
+            goToDetails = goToDetails
         )
     }
 }
 
 @Composable
-private fun AllContentGrid(
-    itemList: List<GenericContent>,
-    goToDetails: (Int, MediaType) -> Unit,
-) {
+private fun AllContentGrid(itemList: List<GenericContent>, goToDetails: (Int, MediaType) -> Unit) {
     val lazyGridState = rememberLazyGridState()
     val density = LocalDensity.current
     val screenWidth = density.run { getScreenSizeInfo().widthPx }
@@ -85,7 +82,7 @@ private fun AllContentGrid(
         screenWidth,
         dpToPx(minCardSize, density),
         spacing,
-        density,
+        density
     )
 
     LaunchedEffect(Unit) {
@@ -97,7 +94,7 @@ private fun AllContentGrid(
             .fillMaxWidth()
             .padding(horizontal = SMALL_PADDING.dp),
         state = lazyGridState,
-        columns = GridCells.Fixed(numCardsPerRow),
+        columns = GridCells.Fixed(numCardsPerRow)
     ) {
         items(itemList) { content ->
             DefaultContentCard(
@@ -105,7 +102,7 @@ private fun AllContentGrid(
                     .width(adjustedCardSize)
                     .padding(
                         horizontal = BROWSE_CARD_PADDING_HORIZONTAL.dp,
-                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp,
+                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp
                     ),
                 cardWidth = adjustedCardSize,
                 imageUrl = content.posterPath,
@@ -113,17 +110,14 @@ private fun AllContentGrid(
                 rating = content.rating,
                 goToDetails = {
                     goToDetails(content.id, content.mediaType)
-                },
+                }
             )
         }
     }
 }
 
 @Composable
-private fun TopBar(
-    mediaType: MediaType,
-    onBackBtnPress: () -> Unit,
-) {
+private fun TopBar(mediaType: MediaType, onBackBtnPress: () -> Unit) {
     val title = if (mediaType == MediaType.SHOW) {
         stringResource(resource = Res.string.see_all_shows_label)
     } else {
@@ -135,22 +129,22 @@ private fun TopBar(
             .fillMaxWidth()
             .height(RETURN_TOP_BAR_HEIGHT.dp)
             .background(
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primary
             )
             .zIndex(FOREGROUND_INDEX),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { onBackBtnPress() },
+            onClick = { onBackBtnPress() }
         ) {
             Icon(
                 painter = painterResource(resource = Res.drawable.ic_back_arrow),
-                contentDescription = stringResource(resource = Res.string.back_arrow_description),
+                contentDescription = stringResource(resource = Res.string.back_arrow_description)
             )
         }
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge
         )
     }
 }

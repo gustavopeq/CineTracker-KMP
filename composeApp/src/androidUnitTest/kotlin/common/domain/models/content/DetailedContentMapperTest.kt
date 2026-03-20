@@ -3,11 +3,11 @@ package common.domain.models.content
 import common.domain.models.util.MediaType
 import common.util.fakeMovieResponse
 import common.util.fakeShowResponse
+import kotlin.test.assertEquals
 import network.models.content.common.CastRoles
 import network.models.content.common.ContentCastResponse
 import network.models.content.common.PersonResponse
 import org.junit.Test
-import kotlin.test.assertEquals
 
 class DetailedContentMapperTest {
 
@@ -19,7 +19,7 @@ class DetailedContentMapperTest {
             runtime = 148,
             release_date = "2010-07-16",
             budget = 160000000L,
-            revenue = 836800000L,
+            revenue = 836800000L
         )
 
         val result = movie.toDetailedContent()
@@ -41,7 +41,7 @@ class DetailedContentMapperTest {
             first_air_date = "2008-01-20",
             last_air_date = "2013-09-29",
             number_of_seasons = 5,
-            number_of_episodes = 62,
+            number_of_episodes = 62
         )
 
         val result = show.toDetailedContent()
@@ -65,7 +65,7 @@ class DetailedContentMapperTest {
             biography = "A famous actor",
             birthday = "1990-01-01",
             deathday = null,
-            place_of_birth = "Los Angeles",
+            place_of_birth = "Los Angeles"
         )
 
         val result = person.toDetailedContent()
@@ -86,7 +86,7 @@ class DetailedContentMapperTest {
             overview = null,
             poster_path = null,
             backdrop_path = null,
-            release_date = null,
+            release_date = null
         )
 
         val result = movie.toDetailedContent()
@@ -107,7 +107,7 @@ class DetailedContentMapperTest {
             name = "Actor",
             character = null,
             profile_path = "/pic.jpg",
-            roles = listOf(CastRoles(character = "Walter White")),
+            roles = listOf(CastRoles(character = "Walter White"))
         )
 
         val result = response.toContentCast()
@@ -121,7 +121,7 @@ class DetailedContentMapperTest {
             id = 1,
             name = "Actor",
             character = "Jesse Pinkman",
-            profile_path = "/pic.jpg",
+            profile_path = "/pic.jpg"
         )
 
         val result = response.toContentCast()
@@ -135,7 +135,7 @@ class DetailedContentMapperTest {
             id = 1,
             name = "Actor",
             character = null,
-            roles = null,
+            roles = null
         )
 
         val result = response.toContentCast()

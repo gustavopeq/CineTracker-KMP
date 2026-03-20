@@ -4,11 +4,11 @@ import common.domain.models.util.MediaType
 import common.util.fakeMovieResponse
 import common.util.fakeMultiResponse
 import common.util.fakeShowResponse
-import network.models.content.common.PersonResponse
-import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import network.models.content.common.PersonResponse
+import org.junit.Test
 
 class GenericContentMapperTest {
 

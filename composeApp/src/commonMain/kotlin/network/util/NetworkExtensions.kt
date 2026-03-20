@@ -10,9 +10,7 @@ import io.ktor.http.formUrlEncodeTo
 import io.ktor.http.isSuccess
 import network.models.ApiError
 
-internal suspend inline fun <reified T> HttpClient.getResult(
-    path: String,
-): ApiResult<T> {
+internal suspend inline fun <reified T> HttpClient.getResult(path: String): ApiResult<T> {
     return try {
         this.get {
             url {
@@ -23,34 +21,29 @@ internal suspend inline fun <reified T> HttpClient.getResult(
         return ApiResult.Error(
             data = ApiError(
                 code = e.message,
-                exception = e.cause,
-            ),
+                exception = e.cause
+            )
         )
     }
 }
 
-internal suspend inline fun <reified T> HttpResponse.asResult(): ApiResult<T> {
-    return runCatching<ApiResult<T>> {
-        if (this.status.isSuccess()) {
-            ApiResult.Success(this.call.response.body(), this.status.value)
-        } else {
-            val apiError = this.call.body() as ApiError
-            ApiResult.Error(apiError, this.status.value)
-        }
-    }.getOrElse {
-        ApiResult.Error(
-            ApiError(
-                code = it.message,
-                exception = it.cause,
-            ),
-        )
+internal suspend inline fun <reified T> HttpResponse.asResult(): ApiResult<T> = runCatching<ApiResult<T>> {
+    if (this.status.isSuccess()) {
+        ApiResult.Success(this.call.response.body(), this.status.value)
+    } else {
+        val apiError = this.call.body() as ApiError
+        ApiResult.Error(apiError, this.status.value)
     }
+}.getOrElse {
+    ApiResult.Error(
+        ApiError(
+            code = it.message,
+            exception = it.cause
+        )
+    )
 }
 
-internal fun buildUrl(
-    vararg path: String?,
-    parameterMap: () -> Map<String, String?> = { mapOf() },
-): String {
+internal fun buildUrl(vararg path: String?, parameterMap: () -> Map<String, String?> = { mapOf() }): String {
     val result = StringBuilder()
     val existingMap = mutableMapOf<String, String>()
 

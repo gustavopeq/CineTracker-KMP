@@ -10,19 +10,13 @@ import features.search.ui.paging.SearchPagingSource
 import kotlinx.coroutines.flow.Flow
 import network.repository.search.SearchRepository
 
-class SearchInteractor(
-    private val searchRepository: SearchRepository,
-) {
-    fun onSearchQuery(
-        query: String,
-        mediaType: MediaType?,
-    ): Flow<PagingData<GenericContent>> {
-        return Pager(PagingConfig(pageSize = Constants.PAGE_SIZE)) {
+class SearchInteractor(private val searchRepository: SearchRepository) {
+    fun onSearchQuery(query: String, mediaType: MediaType?): Flow<PagingData<GenericContent>> =
+        Pager(PagingConfig(pageSize = Constants.PAGE_SIZE)) {
             SearchPagingSource(
                 searchRepository,
                 query,
-                mediaType,
+                mediaType
             )
         }.flow
-    }
 }

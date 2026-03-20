@@ -17,30 +17,25 @@ import common.util.UiConstants.SMALL_MARGIN
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SortButton(
-    text: String,
-    isSelected: Boolean = false,
-    textColor: Color,
-    onClick: () -> Unit,
-) {
+fun SortButton(text: String, isSelected: Boolean = false, textColor: Color, onClick: () -> Unit) {
     Button(
         contentPadding = PaddingValues(horizontal = SMALL_MARGIN.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
+            containerColor = Color.Transparent
         ),
-        onClick = onClick,
+        onClick = onClick
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) MaterialTheme.colorScheme.onSurfaceVariant else textColor,
+            color = if (isSelected) MaterialTheme.colorScheme.onSurfaceVariant else textColor
         )
         Spacer(modifier = Modifier.weight(1f))
         if (isSelected) {
             Icon(
                 painter = painterResource(resource = Res.drawable.ic_check),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
+                tint = MaterialTheme.colorScheme.secondary
             )
         }
     }

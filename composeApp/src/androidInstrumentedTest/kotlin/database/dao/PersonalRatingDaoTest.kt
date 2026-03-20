@@ -89,7 +89,7 @@ class PersonalRatingDaoTest {
     @Test
     fun deleteRating_doesNotAffectOtherRatings() = runBlocking {
         dao.insertRating(PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 7.0f))
-        dao.insertRating(PersonalRatingEntity(contentId = 2, mediaType = "SHOW",  rating = 5.0f))
+        dao.insertRating(PersonalRatingEntity(contentId = 2, mediaType = "SHOW", rating = 5.0f))
 
         dao.deleteRating(1)
 
@@ -102,7 +102,7 @@ class PersonalRatingDaoTest {
     @Test
     fun getAllRatings_returnsAllInsertedRatings() = runBlocking {
         dao.insertRating(PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 7.0f))
-        dao.insertRating(PersonalRatingEntity(contentId = 2, mediaType = "SHOW",  rating = 5.0f))
+        dao.insertRating(PersonalRatingEntity(contentId = 2, mediaType = "SHOW", rating = 5.0f))
         dao.insertRating(PersonalRatingEntity(contentId = 3, mediaType = "MOVIE", rating = 9.0f))
 
         val result = dao.getAllRatings()

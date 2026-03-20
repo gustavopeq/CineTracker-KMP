@@ -14,9 +14,7 @@ import network.util.ApiResult
 import network.util.buildUrl
 import network.util.getResult
 
-class SearchServiceImpl(
-    private val client: HttpClient,
-) : SearchService {
+class SearchServiceImpl(private val client: HttpClient) : SearchService {
 
     companion object {
         const val SEARCH_MULTI = "search/multi"
@@ -29,14 +27,14 @@ class SearchServiceImpl(
         query: String,
         matureEnabled: Boolean,
         language: String,
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<MultiResponse>> {
         val url = buildUrl(SEARCH_MULTI) {
             mapOf(
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
-                PAGE_INDEX to pageIndex.toString(),
+                PAGE_INDEX to pageIndex.toString()
             )
         }
 
@@ -47,14 +45,14 @@ class SearchServiceImpl(
         query: String,
         matureEnabled: Boolean,
         language: String,
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<MovieResponse>> {
         val url = buildUrl(SEARCH_MOVIE) {
             mapOf(
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
-                PAGE_INDEX to pageIndex.toString(),
+                PAGE_INDEX to pageIndex.toString()
             )
         }
 
@@ -65,14 +63,14 @@ class SearchServiceImpl(
         query: String,
         matureEnabled: Boolean,
         language: String,
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<ShowResponse>> {
         val url = buildUrl(SEARCH_TV) {
             mapOf(
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
-                PAGE_INDEX to pageIndex.toString(),
+                PAGE_INDEX to pageIndex.toString()
             )
         }
 
@@ -83,14 +81,14 @@ class SearchServiceImpl(
         query: String,
         matureEnabled: Boolean,
         language: String,
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<PersonResponse>> {
         val url = buildUrl(SEARCH_PERSON) {
             mapOf(
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
-                PAGE_INDEX to pageIndex.toString(),
+                PAGE_INDEX to pageIndex.toString()
             )
         }
 

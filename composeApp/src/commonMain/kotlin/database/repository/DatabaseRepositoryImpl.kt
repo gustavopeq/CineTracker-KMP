@@ -6,79 +6,63 @@ import database.dao.ListEntityDao
 import database.model.ContentEntity
 import database.model.ListEntity
 
-class DatabaseRepositoryImpl(
-    private val contentEntityDao: ContentEntityDao,
-    private val listEntityDao: ListEntityDao,
-) : DatabaseRepository {
+class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, private val listEntityDao: ListEntityDao) :
+    DatabaseRepository {
 
-    override suspend fun insertItem(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ) {
+    override suspend fun insertItem(contentId: Int, mediaType: MediaType, listId: Int) {
         val item = ContentEntity(
             contentId = contentId,
             mediaType = mediaType.name,
-            listId = listId,
+            listId = listId
         )
 
         contentEntityDao.insert(item)
     }
 
-    override suspend fun deleteItem(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ): ContentEntity? {
+    override suspend fun deleteItem(contentId: Int, mediaType: MediaType, listId: Int): ContentEntity? {
         val itemRemoved = contentEntityDao.getItem(
             contentId = contentId,
             mediaType = mediaType.name,
-            listId = listId,
+            listId = listId
         )
         if (itemRemoved != null) {
             contentEntityDao.delete(
                 contentId = contentId,
                 mediaType = mediaType.name,
-                listId = listId,
+                listId = listId
             )
         }
         return itemRemoved
     }
 
-    override suspend fun getAllItemsByListId(listId: Int): List<ContentEntity> {
-        return contentEntityDao.getAllItems(listId)
-    }
+    override suspend fun getAllItemsByListId(listId: Int): List<ContentEntity> = contentEntityDao.getAllItems(listId)
 
-    override suspend fun searchItems(
-        contentId: Int,
-        mediaType: MediaType,
-    ): List<ContentEntity> {
-        return contentEntityDao.searchItems(
+    override suspend fun searchItems(contentId: Int, mediaType: MediaType): List<ContentEntity> =
+        contentEntityDao.searchItems(
             contentId = contentId,
-            mediaType = mediaType.name,
+            mediaType = mediaType.name
         )
-    }
 
     override suspend fun moveItemToList(
         contentId: Int,
         mediaType: MediaType,
         currentListId: Int,
-        newListId: Int,
+        newListId: Int
     ): ContentEntity? {
         deleteItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = newListId,
+            listId = newListId
         )
         insertItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = newListId,
+            listId = newListId
         )
         return deleteItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = currentListId,
+            listId = currentListId
         )
     }
 
@@ -86,9 +70,7 @@ class DatabaseRepositoryImpl(
         contentEntityDao.insert(contentEntity)
     }
 
-    override suspend fun getAllLists(): List<ListEntity> {
-        return listEntityDao.getAllLists()
-    }
+    override suspend fun getAllLists(): List<ListEntity> = listEntityDao.getAllLists()
 
     /**
      * @return Return true when list is created or false if new list couldn't be created
@@ -102,8 +84,8 @@ class DatabaseRepositoryImpl(
         } else {
             listEntityDao.insertList(
                 listEntity = ListEntity(
-                    listName = newListName,
-                ),
+                    listName = newListName
+                )
             )
             true
         }

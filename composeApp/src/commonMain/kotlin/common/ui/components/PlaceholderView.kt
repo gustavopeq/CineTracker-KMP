@@ -28,8 +28,8 @@ fun ComponentPlaceholder(
         placeholderGrey,
         placeholderGrey,
         placeholderGrey2,
-        placeholderGrey2,
-    ),
+        placeholderGrey2
+    )
 ) {
     val transition = rememberInfiniteTransition(label = "transition")
     val translateAnim by transition.animateFloat(
@@ -38,21 +38,21 @@ fun ComponentPlaceholder(
         animationSpec = infiniteRepeatable(
             tween(
                 durationMillis = durationMillis,
-                easing = LinearEasing,
+                easing = LinearEasing
             ),
-            repeatMode = RepeatMode.Restart,
+            repeatMode = RepeatMode.Restart
         ),
-        label = "placeholderAnimation",
+        label = "placeholderAnimation"
     )
 
     val brush = Brush.linearGradient(
         colors = shimmerColorShades,
         start = Offset.Zero,
-        end = Offset(translateAnim, translateAnim),
+        end = Offset(translateAnim, translateAnim)
     )
 
     Spacer(
         modifier = modifier
-            .background(brush),
+            .background(brush)
     )
 }

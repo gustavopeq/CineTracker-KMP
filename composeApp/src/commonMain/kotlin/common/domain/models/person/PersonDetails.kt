@@ -14,19 +14,18 @@ data class PersonDetails(
     val deathday: String?,
     val placeOfBirth: String?,
     val knownForDepartment: String?,
-    val knownFor: List<MultiResponse>,
+    val knownFor: List<MultiResponse>
 )
 
-fun PersonResponse.toPersonDetails(): PersonDetails =
-    PersonDetails(
-        id = this.id,
-        title = this.name.orEmpty(),
-        overview = this.overview.orEmpty(),
-        posterPath = this.profile_path.orEmpty(),
-        mediaType = MediaType.PERSON,
-        birthday = null,
-        deathday = null,
-        placeOfBirth = null,
-        knownForDepartment = this.known_for_department,
-        knownFor = this.known_for.orEmpty(),
-    )
+fun PersonResponse.toPersonDetails(): PersonDetails = PersonDetails(
+    id = this.id,
+    title = this.name.orEmpty(),
+    overview = this.overview.orEmpty(),
+    posterPath = this.profile_path.orEmpty(),
+    mediaType = MediaType.PERSON,
+    birthday = null,
+    deathday = null,
+    placeOfBirth = null,
+    knownForDepartment = this.known_for_department,
+    knownFor = this.known_for.orEmpty()
+)

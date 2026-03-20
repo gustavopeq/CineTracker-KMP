@@ -39,53 +39,50 @@ data class DetailedContent(
     val placeOfBirth: String = "",
     val numberOfSeasons: Int = 0,
     val numberOfEpisodes: Int = 0,
-    val streamProviders: List<StreamProvider> = emptyList(),
+    val streamProviders: List<StreamProvider> = emptyList()
 ) : GenericContentInterface
 
-fun MovieResponse.toDetailedContent(): DetailedContent =
-    DetailedContent(
-        id = this.id,
-        name = this.title.orEmpty(),
-        overview = this.overview.orEmpty(),
-        posterPath = this.poster_path.orEmpty(),
-        backdropPath = this.backdrop_path.orEmpty(),
-        mediaType = MediaType.MOVIE,
-        rating = this.vote_average ?: EMPTY_RATINGS,
-        productionCountries = this.production_countries ?: emptyList(),
-        genres = this.genres ?: emptyList(),
-        runtime = this.runtime ?: 0,
-        releaseDate = this.release_date.orEmpty(),
-        budget = this.budget ?: 0,
-        revenue = this.revenue ?: 0,
-    )
+fun MovieResponse.toDetailedContent(): DetailedContent = DetailedContent(
+    id = this.id,
+    name = this.title.orEmpty(),
+    overview = this.overview.orEmpty(),
+    posterPath = this.poster_path.orEmpty(),
+    backdropPath = this.backdrop_path.orEmpty(),
+    mediaType = MediaType.MOVIE,
+    rating = this.vote_average ?: EMPTY_RATINGS,
+    productionCountries = this.production_countries ?: emptyList(),
+    genres = this.genres ?: emptyList(),
+    runtime = this.runtime ?: 0,
+    releaseDate = this.release_date.orEmpty(),
+    budget = this.budget ?: 0,
+    revenue = this.revenue ?: 0
+)
 
-fun ShowResponse.toDetailedContent(): DetailedContent =
-    DetailedContent(
-        id = this.id,
-        name = this.name.orEmpty(),
-        overview = this.overview.orEmpty(),
-        posterPath = this.poster_path.orEmpty(),
-        backdropPath = this.backdrop_path.orEmpty(),
-        mediaType = MediaType.SHOW,
-        rating = this.vote_average ?: EMPTY_RATINGS,
-        productionCountries = this.production_countries ?: emptyList(),
-        genres = this.genres ?: emptyList(),
-        firstAirDate = this.first_air_date.orEmpty(),
-        lastAirDate = this.last_air_date.orEmpty(),
-        numberOfSeasons = this.number_of_seasons ?: 0,
-        numberOfEpisodes = this.number_of_episodes ?: 0,
-    )
+fun ShowResponse.toDetailedContent(): DetailedContent = DetailedContent(
+    id = this.id,
+    name = this.name.orEmpty(),
+    overview = this.overview.orEmpty(),
+    posterPath = this.poster_path.orEmpty(),
+    backdropPath = this.backdrop_path.orEmpty(),
+    mediaType = MediaType.SHOW,
+    rating = this.vote_average ?: EMPTY_RATINGS,
+    productionCountries = this.production_countries ?: emptyList(),
+    genres = this.genres ?: emptyList(),
+    firstAirDate = this.first_air_date.orEmpty(),
+    lastAirDate = this.last_air_date.orEmpty(),
+    numberOfSeasons = this.number_of_seasons ?: 0,
+    numberOfEpisodes = this.number_of_episodes ?: 0
+)
 
-fun PersonResponse.toDetailedContent(): DetailedContent =
-    DetailedContent(
-        id = this.id,
-        name = this.name.orEmpty(),
-        overview = this.biography.orEmpty(),
-        posterPath = this.profile_path.orEmpty(),
-        backdropPath = this.backdrop_path.orEmpty(),
-        mediaType = MediaType.PERSON,
-        rating = this.vote_average ?: EMPTY_RATINGS,
-        birthday = this.birthday.orEmpty(),
-        deathday = this.deathday.orEmpty(),
-        placeOfBirth = this.place_of_birth.orEmpty(),
-    )
+fun PersonResponse.toDetailedContent(): DetailedContent = DetailedContent(
+    id = this.id,
+    name = this.name.orEmpty(),
+    overview = this.biography.orEmpty(),
+    posterPath = this.profile_path.orEmpty(),
+    backdropPath = this.backdrop_path.orEmpty(),
+    mediaType = MediaType.PERSON,
+    rating = this.vote_average ?: EMPTY_RATINGS,
+    birthday = this.birthday.orEmpty(),
+    deathday = this.deathday.orEmpty(),
+    placeOfBirth = this.place_of_birth.orEmpty()
+)

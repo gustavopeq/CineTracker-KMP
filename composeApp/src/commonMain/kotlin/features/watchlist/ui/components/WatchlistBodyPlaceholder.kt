@@ -28,7 +28,7 @@ fun WatchlistBodyPlaceholder() {
     val imageWidth = WATCHLIST_IMAGE_WIDTH.dp
     val imageHeight = imageWidth * POSTER_ASPECT_RATIO_MULTIPLY
     LazyColumn(
-        contentPadding = PaddingValues(all = SMALL_MARGIN.dp),
+        contentPadding = PaddingValues(all = SMALL_MARGIN.dp)
     ) {
         items(5) {
             // Card row
@@ -41,16 +41,16 @@ fun WatchlistBodyPlaceholder() {
                         .clip(
                             RoundedCornerShape(
                                 topStart = CARD_ROUND_CORNER.dp,
-                                bottomStart = CARD_ROUND_CORNER.dp,
-                            ),
-                        ),
+                                bottomStart = CARD_ROUND_CORNER.dp
+                            )
+                        )
                 )
                 // Content Description Column
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .height(imageHeight)
-                        .padding(all = DEFAULT_PADDING.dp),
+                        .padding(all = DEFAULT_PADDING.dp)
                 ) {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         // Title
@@ -58,7 +58,7 @@ fun WatchlistBodyPlaceholder() {
                             modifier = Modifier
                                 .weight(1f)
                                 .height(15.dp)
-                                .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+                                .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
                         )
                         Spacer(modifier = Modifier.width(DEFAULT_MARGIN.dp))
                     }
@@ -68,7 +68,7 @@ fun WatchlistBodyPlaceholder() {
                         modifier = Modifier
                             .width(50.dp)
                             .height(12.dp)
-                            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+                            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     // Content Type Tag
@@ -76,7 +76,7 @@ fun WatchlistBodyPlaceholder() {
                         modifier = Modifier
                             .width(50.dp)
                             .height(14.dp)
-                            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+                            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
                     )
                 }
             }

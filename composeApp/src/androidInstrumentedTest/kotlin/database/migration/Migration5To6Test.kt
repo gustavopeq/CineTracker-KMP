@@ -19,14 +19,14 @@ class Migration5To6Test {
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        AppDatabase::class.java,
+        AppDatabase::class.java
     )
 
     // Creates a v5 DB with the two default lists and seeds content into them
     private fun createV5DefaultDb() {
         helper.createDatabase(TEST_DB, 5).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")  // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")     // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (1, 'MOVIE', 1, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (2, 'SHOW', 2, 0)")
             close()
@@ -70,9 +70,9 @@ class Migration5To6Test {
     @Test
     fun migrate5To6_customListsAndTheirContentArePreserved() {
         helper.createDatabase(TEST_DB, 5).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")   // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")      // listId = 2
-            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')")    // listId = 3
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')") // listId = 3
             execSQL("INSERT INTO list_entity (listName) VALUES ('horror night')") // listId = 4
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (10, 'MOVIE', 3, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (11, 'MOVIE', 3, 0)")
@@ -100,8 +100,8 @@ class Migration5To6Test {
     @Test
     fun migrate5To6_emptyCustomListSurvivesMigration() {
         helper.createDatabase(TEST_DB, 5).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")  // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")    // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
             execSQL("INSERT INTO list_entity (listName) VALUES ('empty list')") // listId = 3, no content
             close()
         }
@@ -122,9 +122,9 @@ class Migration5To6Test {
     @Test
     fun migrate5To6_contentSpreadAcrossAllListsIsFullyPreserved() {
         helper.createDatabase(TEST_DB, 5).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")   // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")      // listId = 2
-            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')")    // listId = 3
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')") // listId = 3
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (1, 'MOVIE', 1, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (2, 'SHOW', 1, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (3, 'MOVIE', 2, 0)")

@@ -12,14 +12,8 @@ val daoModule = module {
     single { providePersonalRatingDao(get()) }
 }
 
-private fun provideContentEntityDao(appDatabase: AppDatabase): ContentEntityDao {
-    return appDatabase.contentEntityDao()
-}
+private fun provideContentEntityDao(appDatabase: AppDatabase): ContentEntityDao = appDatabase.contentEntityDao()
 
-private fun provideListEntityDao(appDatabase: AppDatabase): ListEntityDao {
-    return appDatabase.listEntityDao()
-}
+private fun provideListEntityDao(appDatabase: AppDatabase): ListEntityDao = appDatabase.listEntityDao()
 
-private fun providePersonalRatingDao(appDatabase: AppDatabase): PersonalRatingDao {
-    return appDatabase.personalRatingDao()
-}
+private fun providePersonalRatingDao(appDatabase: AppDatabase): PersonalRatingDao = appDatabase.personalRatingDao()

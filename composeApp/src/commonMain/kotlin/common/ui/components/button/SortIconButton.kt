@@ -17,30 +17,26 @@ import features.watchlist.WatchlistScreen
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SortIconButton(
-    mainViewModel: MainViewModel,
-    currentScreen: String,
-    displaySortScreen: (Boolean) -> Unit,
-) {
+fun SortIconButton(mainViewModel: MainViewModel, currentScreen: String, displaySortScreen: (Boolean) -> Unit) {
     val watchlistSortSelected by mainViewModel.watchlistSort.collectAsState()
-    
-    val isWatchlistSortActive = watchlistSortSelected.mediaType != null || 
-                                watchlistSortSelected.ratingSort != null
+
+    val isWatchlistSortActive = watchlistSortSelected.mediaType != null ||
+        watchlistSortSelected.ratingSort != null
 
     val iconColor = if (currentScreen == WatchlistScreen.route() && isWatchlistSortActive) {
         MaterialTheme.colorScheme.secondary
     } else {
         MaterialTheme.colorScheme.onPrimary
     }
-    
+
     IconButton(
-        onClick = { displaySortScreen(true) },
+        onClick = { displaySortScreen(true) }
     ) {
         Icon(
             modifier = Modifier.size(BROWSE_SORT_ICON_SIZE.dp),
             painter = painterResource(resource = Res.drawable.ic_sort),
             tint = iconColor,
-            contentDescription = null,
+            contentDescription = null
         )
     }
 }

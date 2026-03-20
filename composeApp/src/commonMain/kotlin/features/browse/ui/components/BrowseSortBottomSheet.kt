@@ -21,20 +21,20 @@ fun BrowseSortBottomSheet(
     selectedMovieSortType: SortTypeItem,
     selectedShowSortType: SortTypeItem,
     selectedMediaType: MediaType,
-    displaySortScreen: (Boolean) -> Unit,
+    displaySortScreen: (Boolean) -> Unit
 ) {
     val movieSortTypeList = listOf(
         SortTypeItem.NowPlaying,
         SortTypeItem.Popular,
         SortTypeItem.TopRated,
-        SortTypeItem.Upcoming,
+        SortTypeItem.Upcoming
     )
 
     val showSortTypeList = listOf(
         SortTypeItem.AiringToday,
         SortTypeItem.ShowPopular,
         SortTypeItem.ShowTopRated,
-        SortTypeItem.OnTheAir,
+        SortTypeItem.OnTheAir
     )
 
     var selectedMovieIndex by remember { mutableIntStateOf(selectedMovieSortType.itemIndex) }
@@ -48,7 +48,7 @@ fun BrowseSortBottomSheet(
 
     GenericBottomSheet(
         dismissBottomSheet = dismissBottomSheet,
-        headerText = stringResource(resource = Res.string.sort_by_header),
+        headerText = stringResource(resource = Res.string.sort_by_header)
     ) {
         when (selectedMediaType) {
             MediaType.MOVIE -> {
@@ -57,7 +57,7 @@ fun BrowseSortBottomSheet(
                     selectedIndex = selectedMovieIndex,
                     viewModel = mainViewModel,
                     updateIndex = { selectedMovieIndex = it },
-                    dismissBottomSheet = dismissBottomSheet,
+                    dismissBottomSheet = dismissBottomSheet
                 )
             }
             MediaType.SHOW -> {
@@ -66,7 +66,7 @@ fun BrowseSortBottomSheet(
                     selectedIndex = selectedShowIndex,
                     viewModel = mainViewModel,
                     updateIndex = { selectedShowIndex = it },
-                    dismissBottomSheet = dismissBottomSheet,
+                    dismissBottomSheet = dismissBottomSheet
                 )
             }
             else -> {}
@@ -80,7 +80,7 @@ private fun CreateBrowseSortButtons(
     selectedIndex: Int,
     viewModel: MainViewModel,
     updateIndex: (Int) -> Unit,
-    dismissBottomSheet: () -> Unit,
+    dismissBottomSheet: () -> Unit
 ) {
     list.forEachIndexed { index, sortTypeItem ->
         SortButton(
@@ -91,7 +91,7 @@ private fun CreateBrowseSortButtons(
                 viewModel.updateSortType(sortTypeItem)
                 updateIndex(index)
                 dismissBottomSheet()
-            },
+            }
         )
     }
 }

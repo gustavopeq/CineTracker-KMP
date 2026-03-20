@@ -39,7 +39,7 @@ fun WatchlistCarousel(
     watchlist: List<GenericContent>,
     currentScreenWidth: Float,
     goToDetails: (Int, MediaType) -> Unit,
-    goToWatchlist: () -> Unit,
+    goToWatchlist: () -> Unit
 ) {
     val carouselHeader = Res.string.home_my_watchlist_header
 
@@ -51,17 +51,17 @@ fun WatchlistCarousel(
             goToDetails = goToDetails,
             headerAdditionalAction = {
                 CarouselSeeAllOption(goToWatchlist)
-            },
+            }
         ) { item, goToDetails ->
             ImageContentCard(
                 modifier = Modifier.padding(
                     top = DEFAULT_PADDING.dp,
                     bottom = DEFAULT_PADDING.dp,
-                    end = DEFAULT_PADDING.dp,
+                    end = DEFAULT_PADDING.dp
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                goToDetails = goToDetails,
+                goToDetails = goToDetails
             )
         }
     } else {
@@ -69,7 +69,7 @@ fun WatchlistCarousel(
             carouselHeaderRes = carouselHeader,
             headerAdditionalAction = {
                 CarouselSeeAllOption(goToWatchlist)
-            },
+            }
         )
     }
 
@@ -79,33 +79,33 @@ fun WatchlistCarousel(
 @Composable
 private fun WatchlistEmptyCarousel(
     carouselHeaderRes: StringResource,
-    headerAdditionalAction: @Composable () -> Unit = {},
+    headerAdditionalAction: @Composable () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .padding(DEFAULT_MARGIN.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
     ) {
         CarouselHeaderRow(
             carouselHeaderRes = carouselHeaderRes,
-            headerAdditionalAction = headerAdditionalAction,
+            headerAdditionalAction = headerAdditionalAction
         )
         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(resource = Res.string.empty_list_header),
                 style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
             Text(
                 text = stringResource(resource = Res.string.watchlist_carousel_empty_message),
                 style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.surface,
+                color = MaterialTheme.colorScheme.surface
             )
         }
     }
@@ -115,17 +115,17 @@ private fun WatchlistEmptyCarousel(
 private fun CarouselSeeAllOption(goToWatchlist: () -> Unit) {
     Row(
         modifier = Modifier.clickable(
-            onClick = goToWatchlist,
+            onClick = goToWatchlist
         ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = stringResource(resource = Res.string.carousel_see_all_button),
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleSmall
         )
         Icon(
             painter = painterResource(resource = Res.drawable.ic_chevron_right),
-            contentDescription = null,
+            contentDescription = null
         )
     }
 }

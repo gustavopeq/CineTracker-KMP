@@ -60,7 +60,7 @@ fun Home(
     goToDetails: (Int, MediaType) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     Home(
         viewModel = koinViewModel(),
@@ -68,7 +68,7 @@ fun Home(
         goToDetails = goToDetails,
         goToWatchlist = goToWatchlist,
         goToBrowse = goToBrowse,
-        goToErrorScreen = goToErrorScreen,
+        goToErrorScreen = goToErrorScreen
     )
 }
 
@@ -79,7 +79,7 @@ private fun Home(
     goToDetails: (Int, MediaType) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
     val trendingMultiList by viewModel.trendingMulti.collectAsState()
@@ -103,7 +103,7 @@ private fun Home(
             is DataLoadStatus.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Alignment.Center
                 ) {
                     ClassicLoadingIndicator()
                 }
@@ -123,7 +123,7 @@ private fun Home(
                         moviesComingSoonList = moviesComingSoonList,
                         goToDetails = goToDetails,
                         goToWatchlist = goToWatchlist,
-                        goToBrowse = goToBrowse,
+                        goToBrowse = goToBrowse
                     )
                 }
             }
@@ -141,7 +141,7 @@ private fun HomeBody(
     moviesComingSoonList: List<GenericContent>,
     goToDetails: (Int, MediaType) -> Unit,
     goToWatchlist: () -> Unit,
-    goToBrowse: () -> Unit,
+    goToBrowse: () -> Unit
 ) {
     val homePosterUrl = BASE_ORIGINAL_IMAGE_URL + trendingMultiList[0].posterPath
     val featuredItem = trendingMultiList.firstOrNull()
@@ -167,7 +167,7 @@ private fun HomeBody(
     if (PlatformUtils.isIOS) {
         LaunchedEffect(scrollState.firstVisibleItemScrollOffset) {
             updateBackgroundImageState(
-                scrollState.firstVisibleItemScrollOffset < HOME_BACKGROUND_HIDE_OFFSET,
+                scrollState.firstVisibleItemScrollOffset < HOME_BACKGROUND_HIDE_OFFSET
             )
         }
     }
@@ -176,56 +176,56 @@ private fun HomeBody(
         FeaturedBackgroundImage(
             imageUrl = homePosterUrl,
             posterHeight = posterHeight,
-            showBackgroundImage = showBackgroundImage.value,
+            showBackgroundImage = showBackgroundImage.value
         )
 
         LazyColumn(
-            state = scrollState,
+            state = scrollState
         ) {
             item {
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(bgOffset.dp),
+                        .height(bgOffset.dp)
                 )
             }
             item {
                 FeaturedInfo(
                     featuredContent = featuredItem,
-                    goToDetails = goToDetails,
+                    goToDetails = goToDetails
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary),
+                        .background(MaterialTheme.colorScheme.primary)
                 ) {
                     TrendingCarousel(
                         trendingItems = secondaryTrendingItems,
                         currentScreenWidth = currentScreenWidth,
-                        goToDetails = goToDetails,
+                        goToDetails = goToDetails
                     )
                     WatchlistCarousel(
                         watchlist = myWatchlist,
                         currentScreenWidth = currentScreenWidth,
                         goToDetails = goToDetails,
-                        goToWatchlist = goToWatchlist,
+                        goToWatchlist = goToWatchlist
                     )
                     SecondaryFeaturedInfo(
                         featuredItem = secondaryFeaturedItem,
-                        goToDetails = goToDetails,
+                        goToDetails = goToDetails
                     )
                     ComingSoonCarousel(
                         carouselHeaderRes = Res.string.coming_soon_header,
                         comingSoonList = moviesComingSoonList,
                         currentScreenWidth = currentScreenWidth,
-                        goToDetails = goToDetails,
+                        goToDetails = goToDetails
                     )
                     PersonFeaturedInfo(
                         trendingPerson = trendingPerson,
-                        goToDetails = goToDetails,
+                        goToDetails = goToDetails
                     )
                     HomeBrowseButton(
-                        goToBrowse = goToBrowse,
+                        goToBrowse = goToBrowse
                     )
                     Spacer(modifier = Modifier.height(HOME_BOTTOM_END_MARGIN.dp))
                 }
@@ -235,26 +235,24 @@ private fun HomeBody(
 }
 
 @Composable
-fun HomeBrowseButton(
-    goToBrowse: () -> Unit,
-) {
+fun HomeBrowseButton(goToBrowse: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = DEFAULT_MARGIN.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
         Text(
             text = stringResource(resource = Res.string.home_bottom_screen_message),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimary,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
         GenericButton(
             buttonText = stringResource(resource = Res.string.home_discover_more_button),
-            onClick = goToBrowse,
+            onClick = goToBrowse
         )
     }
 }

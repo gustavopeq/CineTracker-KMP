@@ -14,16 +14,16 @@ fun SimpleButton(
     text: String,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     TextButton(
         modifier = modifier,
-        onClick = onClick,
+        onClick = onClick
     ) {
         Text(
             text = text,
             style = textStyle,
-            color = textColor,
+            color = textColor
         )
     }
 }

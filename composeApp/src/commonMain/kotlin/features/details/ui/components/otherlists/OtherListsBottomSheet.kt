@@ -32,7 +32,7 @@ fun OtherListsBottomSheet(
     allLists: List<ListItem>,
     contentInListStatus: Map<Int, Boolean>,
     onToggleList: (Int) -> Unit,
-    onClosePanel: () -> Unit,
+    onClosePanel: () -> Unit
 ) {
 //    BackHandler {
 //        onClosePanel()
@@ -42,10 +42,10 @@ fun OtherListsBottomSheet(
         dismissBottomSheet = {
             onClosePanel()
         },
-        headerText = stringResource(resource = Res.string.manage_other_lists_header),
+        headerText = stringResource(resource = Res.string.manage_other_lists_header)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
         ) {
             items(contentInListStatus.toList()) { mapItem ->
                 val listItem = allLists.find { it.id == mapItem.first }
@@ -62,7 +62,7 @@ fun OtherListsBottomSheet(
                     ListCheckboxRow(
                         isContentInList = isContentInList,
                         listName = listName,
-                        onToggleList = { onToggleList(mapItem.first) },
+                        onToggleList = { onToggleList(mapItem.first) }
                     )
                 }
             }
@@ -75,17 +75,13 @@ fun OtherListsBottomSheet(
 }
 
 @Composable
-private fun ListCheckboxRow(
-    isContentInList: Boolean,
-    listName: String,
-    onToggleList: () -> Unit,
-) {
+private fun ListCheckboxRow(isContentInList: Boolean, listName: String, onToggleList: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().clickable {
             onToggleList()
         },
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = isContentInList,
@@ -93,15 +89,15 @@ private fun ListCheckboxRow(
                 onToggleList()
             },
             colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.secondary,
-            ),
+                checkedColor = MaterialTheme.colorScheme.secondary
+            )
         )
         Text(
             text = listName.capitalized(),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

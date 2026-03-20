@@ -9,16 +9,16 @@ import network.util.ApiResult
 
 interface HomeService {
     suspend fun getDayTrendingMulti(
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentPagingResponse<MultiResponse>>
 
     suspend fun getDayTrendingPerson(
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentPagingResponse<PersonResponse>>
 
     suspend fun getMoviesComingSoon(
         language: String = getUserLanguageTag(),
         releaseDateGte: String,
-        releaseDateLte: String,
+        releaseDateLte: String
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 }

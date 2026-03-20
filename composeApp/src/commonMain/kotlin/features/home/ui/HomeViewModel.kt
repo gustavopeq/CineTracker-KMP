@@ -13,31 +13,29 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    private val homeInteractor: HomeInteractor,
-) : ViewModel() {
+class HomeViewModel(private val homeInteractor: HomeInteractor) : ViewModel() {
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
-        DataLoadStatus.Loading,
+        DataLoadStatus.Loading
     )
     val loadState: StateFlow<DataLoadStatus> get() = _loadState
 
     private val _trendingMulti: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val trendingMulti: StateFlow<List<GenericContent>> get() = _trendingMulti
 
     private val _myWatchlist: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val myWatchlist: StateFlow<List<GenericContent>> get() = _myWatchlist
 
     private val _trendingPerson: MutableStateFlow<List<PersonDetails>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val trendingPerson: StateFlow<List<PersonDetails>> get() = _trendingPerson
 
     private val _moviesComingSoon: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val moviesComingSoon: StateFlow<List<GenericContent>> get() = _moviesComingSoon
 

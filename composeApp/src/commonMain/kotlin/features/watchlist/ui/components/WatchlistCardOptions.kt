@@ -42,7 +42,7 @@ fun CardOptionsPopUpMenu(
     allLists: List<WatchlistTabItem>,
     onDismissRequest: () -> Unit,
     onRemoveClick: () -> Unit,
-    onMoveItemToList: (Int) -> Unit,
+    onMoveItemToList: (Int) -> Unit
 ) {
     val selectedListTabItem = allLists.find { it.listId == selectedListId }
     val selectedListName = if (selectedListTabItem?.tabResId != null) {
@@ -60,7 +60,7 @@ fun CardOptionsPopUpMenu(
     }
     val secondaryList = DefaultLists.getOtherList(selectedListId)
     val secondaryListName = DefaultLists.getListLocalizedName(
-        DefaultLists.getListById(secondaryList.listId),
+        DefaultLists.getListById(secondaryList.listId)
     )
 
     val menuItems = createMenuItems(
@@ -73,13 +73,13 @@ fun CardOptionsPopUpMenu(
         },
         onShowOtherListsPanel = {
             updateDisplayOtherListsPanel(true)
-        },
+        }
     )
 
     GenericPopupMenu(
         showMenu = showMenu,
         onDismissRequest = onDismissRequest,
-        menuItems = menuItems,
+        menuItems = menuItems
     )
 
     if (displayOtherListsPanel) {
@@ -87,7 +87,7 @@ fun CardOptionsPopUpMenu(
             allLists = allListsFiltered,
             updateDisplayOtherListsPanel = updateDisplayOtherListsPanel,
             onDismissRequest = onDismissRequest,
-            onMoveItemToList = onMoveItemToList,
+            onMoveItemToList = onMoveItemToList
         )
     }
 }
@@ -99,15 +99,15 @@ private fun createMenuItems(
     allLists: List<WatchlistTabItem>,
     onRemoveClick: () -> Unit,
     onMoveItemToSecondaryList: () -> Unit,
-    onShowOtherListsPanel: () -> Unit,
+    onShowOtherListsPanel: () -> Unit
 ): List<PopupMenuItem> {
     val removeItem = PopupMenuItem(
         title = stringResource(
             resource = Res.string.remove_option_popup_menu,
-            selectedListName.capitalized(),
+            selectedListName.capitalized()
         ),
         textColor = MaterialTheme.colorScheme.error,
-        onClick = onRemoveClick,
+        onClick = onRemoveClick
     )
 
     val menuItems = if (allLists.size < DEFAULT_LISTS_SIZE) {
@@ -116,18 +116,18 @@ private fun createMenuItems(
             PopupMenuItem(
                 title = stringResource(
                     resource = Res.string.move_to_list_option_popup_menu,
-                    secondaryListName,
+                    secondaryListName
                 ),
-                onClick = onMoveItemToSecondaryList,
-            ),
+                onClick = onMoveItemToSecondaryList
+            )
         )
     } else {
         listOf(
             removeItem,
             PopupMenuItem(
                 title = stringResource(resource = Res.string.move_to_other_list_item),
-                onClick = onShowOtherListsPanel,
-            ),
+                onClick = onShowOtherListsPanel
+            )
         )
     }
     return menuItems
@@ -138,7 +138,7 @@ private fun OtherListsPanel(
     allLists: List<WatchlistTabItem>,
     updateDisplayOtherListsPanel: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
-    onMoveItemToList: (Int) -> Unit,
+    onMoveItemToList: (Int) -> Unit
 ) {
     fun dismissBottomSheet() {
         updateDisplayOtherListsPanel(false)
@@ -149,7 +149,7 @@ private fun OtherListsPanel(
         dismissBottomSheet = {
             dismissBottomSheet()
         },
-        headerText = stringResource(resource = Res.string.move_to_other_list_header),
+        headerText = stringResource(resource = Res.string.move_to_other_list_header)
     ) {
         LazyColumn {
             items(allLists) { list ->
@@ -164,7 +164,7 @@ private fun OtherListsPanel(
                         .clickable {
                             onMoveItemToList(list.listId)
                             dismissBottomSheet()
-                        },
+                        }
                 ) {
                     Column {
                         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
@@ -173,7 +173,7 @@ private fun OtherListsPanel(
                             text = listName?.capitalized().orEmpty(),
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
                     }

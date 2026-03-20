@@ -4,16 +4,15 @@ enum class MediaType {
     MOVIE,
     SHOW,
     PERSON,
-    UNKNOWN,
+    UNKNOWN
     ;
 
     companion object {
-        fun getType(typeName: String?): MediaType =
-            when (typeName?.lowercase()) {
-                "movie" -> MOVIE
-                "show", "tv" -> SHOW
-                "person", "people" -> PERSON
-                else -> UNKNOWN
-            }
+        fun getType(typeName: String?): MediaType = when (typeName?.lowercase()) {
+            "movie" -> MOVIE
+            "show", "tv" -> SHOW
+            "person", "people" -> PERSON
+            else -> UNKNOWN
+        }
     }
 }
