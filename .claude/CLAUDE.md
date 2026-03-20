@@ -30,6 +30,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Always run tests after writing or modifying them** — compilation success is not enough. Unit tests: `./gradlew :composeApp:testDebugUnitTest`. Instrumented tests: `./gradlew :composeApp:connectedDebugAndroidTest`.
 - **Before running instrumented tests, check for a connected device** using `~/Library/Android/sdk/platform-tools/adb devices`. If a device or emulator is listed, run the tests. If none is found, explicitly tell the user no device is available — never silently skip.
 
+## String Resource Rules
+
+- **Never hardcode user-facing strings in code.** All strings must be defined in `composeResources/values/strings.xml`.
+- **Every new string added to `strings.xml` must also be added to all locale files:** `values-es-rES/strings.xml` (Spanish - Spain), `values-es-rMX/strings.xml` (Spanish - Mexico), and `values-pt/strings.xml` (Portuguese - Brazil). Provide best-effort translations for each.
+
 ## Kotlin Coding Rules
 
 - **Never use fully-qualified references in code bodies.** Always add a proper `import` at the top of the file and use the short name (e.g., `mockk()` not `io.mockk.mockk()`).
