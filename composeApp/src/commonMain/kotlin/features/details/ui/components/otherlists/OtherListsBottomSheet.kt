@@ -24,6 +24,7 @@ import common.ui.components.SystemNavBarSpacer
 import common.ui.components.bottomsheet.GenericBottomSheet
 import common.util.UiConstants.LARGE_MARGIN
 import common.util.capitalized
+import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -47,9 +48,13 @@ fun OtherListsBottomSheet(
             modifier = Modifier.fillMaxWidth(),
         ) {
             items(contentInListStatus.toList()) { mapItem ->
-                val listName = allLists.find {
-                    it.id == mapItem.first
-                }?.name
+                val listItem = allLists.find { it.id == mapItem.first }
+                val listName = when {
+                    listItem?.isDefault == true -> stringResource(
+                        DefaultLists.getListLocalizedName(DefaultLists.getListById(listItem.id))
+                    )
+                    else -> listItem?.name
+                }
 
                 val isContentInList = mapItem.second
 

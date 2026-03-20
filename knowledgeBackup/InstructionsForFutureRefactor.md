@@ -127,7 +127,7 @@ This goes to stdout (invisible in production). The error is either silently swal
 
 ---
 
-## 7. PENDING — `isDefault` field added but not yet wired up
+## 7. ~~DONE~~ — `isDefault` field wired up (localization fix)
 
 **Context:** DB v7 added `isDefault: Boolean` to `ListEntity` to replace the pattern of identifying default lists by hardcoded IDs (`DefaultLists.WATCHLIST.listId = 1`, `DefaultLists.WATCHED.listId = 2`) or by name (which caused localization complexity).
 
