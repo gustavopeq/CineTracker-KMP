@@ -10,6 +10,7 @@ import database.migration.MIGRATION_2_3
 import database.migration.MIGRATION_3_4
 import database.migration.MIGRATION_4_5
 import database.migration.MIGRATION_5_6
+import database.migration.MIGRATION_6_7
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
@@ -31,7 +32,12 @@ private fun createRoomDatabase(
             "movie_manager_database"
         )
         .addMigrations(
-            MIGRATION_5_6
+            MIGRATION_1_2,
+            MIGRATION_2_3,
+            MIGRATION_3_4,
+            MIGRATION_4_5,
+            MIGRATION_5_6,
+            MIGRATION_6_7,
         )
         .setQueryCoroutineContext(Dispatchers.IO)
         .addCallback(roomCallback)
@@ -47,15 +53,12 @@ val roomCallback = object : RoomDatabase.Callback() {
     private fun createDefaultLists(db: SupportSQLiteDatabase) {
         // Execute the SQL to insert the default lists
         val defaultLists = listOf(
-            DefaultLists.WATCHLIST.toString().lowercase(),
-            DefaultLists.WATCHED.toString().lowercase(),
+            DefaultLists.WATCHLIST.name.lowercase(),
+            DefaultLists.WATCHED.name.lowercase(),
         )
         defaultLists.forEach { listName ->
             db.execSQL(
-                """
-                    INSERT INTO list_entity (listName)
-                    VALUES (?)
-                    """,
+                "INSERT INTO list_entity (listName, isDefault) VALUES (?, 1)",
                 arrayOf(listName),
             )
         }

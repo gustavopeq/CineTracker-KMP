@@ -2,6 +2,7 @@ package database.repository
 
 import common.domain.models.util.MediaType
 import common.util.fakeContentEntity
+import common.util.fakeListEntity
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
 import database.model.ListEntity
@@ -127,5 +128,75 @@ class DatabaseRepositoryImplTest {
 
         assertNotNull(result)
         assertEquals(5, result.contentId)
+    }
+
+    // ── insertItem ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `insertItem inserts entity with correct contentId, mediaType and listId`() = runTest {
+        repository.insertItem(contentId = 10, mediaType = MediaType.MOVIE, listId = 1)
+
+        coVerify {
+            contentEntityDao.insert(
+                match { it.contentId == 10 && it.mediaType == "MOVIE" && it.listId == 1 }
+            )
+        }
+    }
+
+    // ── reinsertItem ──────────────────────────────────────────────────────────
+
+    @Test
+    fun `reinsertItem inserts the given entity as-is`() = runTest {
+        val entity = fakeContentEntity(contentId = 7, listId = 2)
+
+        repository.reinsertItem(entity)
+
+        coVerify { contentEntityDao.insert(entity) }
+    }
+
+    // ── getAllItemsByListId ────────────────────────────────────────────────────
+
+    @Test
+    fun `getAllItemsByListId returns items from DAO for given listId`() = runTest {
+        val items = listOf(fakeContentEntity(contentId = 1, listId = 3), fakeContentEntity(contentId = 2, listId = 3))
+        coEvery { contentEntityDao.getAllItems(3) } returns items
+
+        val result = repository.getAllItemsByListId(3)
+
+        assertEquals(items, result)
+    }
+
+    // ── searchItems ───────────────────────────────────────────────────────────
+
+    @Test
+    fun `searchItems passes contentId and mediaType name to DAO`() = runTest {
+        val items = listOf(fakeContentEntity(contentId = 5, listId = 1), fakeContentEntity(contentId = 5, listId = 2))
+        coEvery { contentEntityDao.searchItems(5, MediaType.SHOW.name) } returns items
+
+        val result = repository.searchItems(contentId = 5, mediaType = MediaType.SHOW)
+
+        assertEquals(items, result)
+        coVerify { contentEntityDao.searchItems(5, "SHOW") }
+    }
+
+    // ── getAllLists ───────────────────────────────────────────────────────────
+
+    @Test
+    fun `getAllLists returns all lists from DAO`() = runTest {
+        val lists = listOf(fakeListEntity(listId = 1, name = "watchlist"), fakeListEntity(listId = 2, name = "watched"))
+        coEvery { listEntityDao.getAllLists() } returns lists
+
+        val result = repository.getAllLists()
+
+        assertEquals(lists, result)
+    }
+
+    // ── deleteList ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `deleteList delegates to listEntityDao with given listId`() = runTest {
+        repository.deleteList(listId = 3)
+
+        coVerify { listEntityDao.deleteList(3) }
     }
 }
