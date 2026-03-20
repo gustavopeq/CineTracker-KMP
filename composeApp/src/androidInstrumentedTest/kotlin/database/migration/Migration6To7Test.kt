@@ -19,13 +19,13 @@ class Migration6To7Test {
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
-        AppDatabase::class.java,
+        AppDatabase::class.java
     )
 
     private fun createV6DefaultDb() {
         helper.createDatabase(TEST_DB, 6).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")  // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")     // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (1, 'MOVIE', 1, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (2, 'SHOW', 2, 0)")
             close()
@@ -56,9 +56,9 @@ class Migration6To7Test {
     @Test
     fun migrate6To7_customListsHaveIsDefaultFalse() {
         helper.createDatabase(TEST_DB, 6).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")   // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")      // listId = 2
-            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')")    // listId = 3
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')") // listId = 3
             close()
         }
 
@@ -91,9 +91,9 @@ class Migration6To7Test {
     @Test
     fun migrate6To7_customListsAndTheirContentArePreserved() {
         helper.createDatabase(TEST_DB, 6).apply {
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')")   // listId = 1
-            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')")      // listId = 2
-            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')")    // listId = 3
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watchlist')") // listId = 1
+            execSQL("INSERT INTO list_entity (listName) VALUES ('watched')") // listId = 2
+            execSQL("INSERT INTO list_entity (listName) VALUES ('favorites')") // listId = 3
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (10, 'MOVIE', 3, 0)")
             execSQL("INSERT INTO content_entity (contentId, mediaType, listId, createdAt) VALUES (11, 'SHOW', 3, 0)")
             close()

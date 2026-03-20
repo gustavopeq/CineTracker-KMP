@@ -12,14 +12,14 @@ import common.util.platform.DateUtils
             entity = ListEntity::class,
             parentColumns = ["listId"],
             childColumns = ["listId"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class ContentEntity(
     @PrimaryKey(autoGenerate = true) val contentEntityDbId: Int = 0,
     val contentId: Int,
     val mediaType: String,
     val listId: Int,
-    val createdAt: Long = DateUtils.getCurrentTimeMillis(),
+    val createdAt: Long = DateUtils.getCurrentTimeMillis()
 )

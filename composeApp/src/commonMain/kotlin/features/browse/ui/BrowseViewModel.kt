@@ -15,17 +15,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class BrowseViewModel(
-    private val interactor: BrowseInteractor,
-) : ViewModel() {
+class BrowseViewModel(private val interactor: BrowseInteractor) : ViewModel() {
 
     private val _moviePager: MutableStateFlow<PagingData<GenericContent>> = MutableStateFlow(
-        PagingData.empty(),
+        PagingData.empty()
     )
     val moviePager: StateFlow<PagingData<GenericContent>> get() = _moviePager
 
     private val _showPager: MutableStateFlow<PagingData<GenericContent>> = MutableStateFlow(
-        PagingData.empty(),
+        PagingData.empty()
     )
     val showPager: StateFlow<PagingData<GenericContent>> get() = _showPager
 
@@ -42,10 +40,7 @@ class BrowseViewModel(
         }
     }
 
-    private fun updateSortType(
-        sortTypeItem: SortTypeItem,
-        mediaType: MediaType,
-    ) {
+    private fun updateSortType(sortTypeItem: SortTypeItem, mediaType: MediaType) {
         val currentSortType = when (mediaType) {
             MediaType.MOVIE -> movieSortTypeSelected
             MediaType.SHOW -> showSortTypeSelected
@@ -56,7 +51,7 @@ class BrowseViewModel(
             viewModelScope.launch {
                 interactor.getMediaContentListPager(
                     sortTypeItem.listType,
-                    mediaType,
+                    mediaType
                 )
                     .distinctUntilChanged()
                     .cachedIn(viewModelScope)
@@ -77,9 +72,7 @@ class BrowseViewModel(
         }
     }
 
-    private fun updateMediaType(
-        mediaType: MediaType,
-    ) {
+    private fun updateMediaType(mediaType: MediaType) {
         _mediaTypeSelected.value = mediaType
     }
 

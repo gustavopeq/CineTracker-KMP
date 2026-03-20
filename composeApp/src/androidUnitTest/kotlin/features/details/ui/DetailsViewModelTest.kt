@@ -16,6 +16,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -26,11 +31,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 /**
  * Waits for IO-dispatched coroutines launched by the ViewModel to complete.
@@ -53,12 +53,12 @@ class DetailsViewModelTest {
         // Default stubs so init block never throws
         coEvery { detailsInteractor.getAllLists() } returns listOf(
             ListItem(DefaultLists.WATCHLIST.listId, "Watchlist"),
-            ListItem(DefaultLists.WATCHED.listId, "Watched"),
+            ListItem(DefaultLists.WATCHED.listId, "Watched")
         )
         coEvery { detailsInteractor.getPersonalRating(any()) } returns null
         coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
             DefaultLists.WATCHLIST.listId to false,
-            DefaultLists.WATCHED.listId to false,
+            DefaultLists.WATCHED.listId to false
         )
     }
 
@@ -68,35 +68,30 @@ class DetailsViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel(
-        contentId: Int = 1,
-        mediaType: MediaType = MediaType.MOVIE,
-    ): DetailsViewModel = DetailsViewModel(
-        contentId = contentId,
-        mediaType = mediaType,
-        detailsInteractor = detailsInteractor,
-    )
+    private fun createViewModel(contentId: Int = 1, mediaType: MediaType = MediaType.MOVIE): DetailsViewModel =
+        DetailsViewModel(
+            contentId = contentId,
+            mediaType = mediaType,
+            detailsInteractor = detailsInteractor
+        )
 
-    private fun fakeDetailedContent(
-        id: Int = 1,
-        name: String = "Test Movie",
-        mediaType: MediaType = MediaType.MOVIE,
-    ) = DetailedContent(
-        id = id,
-        name = name,
-        rating = 7.5,
-        overview = "Overview",
-        posterPath = "/poster.jpg",
-        backdropPath = "/backdrop.jpg",
-        mediaType = mediaType,
-    )
+    private fun fakeDetailedContent(id: Int = 1, name: String = "Test Movie", mediaType: MediaType = MediaType.MOVIE) =
+        DetailedContent(
+            id = id,
+            name = name,
+            rating = 7.5,
+            overview = "Overview",
+            posterPath = "/poster.jpg",
+            backdropPath = "/backdrop.jpg",
+            mediaType = mediaType
+        )
 
     private fun stubSuccessfulMovieDetails(
         contentId: Int = 1,
         detailsState: DetailsState = DetailsState().apply {
             detailsInfo.value = fakeDetailedContent(id = contentId)
         },
-        castState: DetailsState = DetailsState(),
+        castState: DetailsState = DetailsState()
     ) {
         coEvery { detailsInteractor.getContentDetailsById(contentId, MediaType.MOVIE) } returns detailsState
         coEvery { detailsInteractor.getContentCastById(contentId, MediaType.MOVIE) } returns castState
@@ -168,7 +163,7 @@ class DetailsViewModelTest {
         coEvery { detailsInteractor.getContentCastById(1, MediaType.MOVIE) } returns DetailsState()
         coEvery { detailsInteractor.getStreamingProviders(1, MediaType.MOVIE) } returns emptyList()
         coEvery { detailsInteractor.getContentVideosById(1, MediaType.MOVIE) } returns listOf(
-            Videos(key = "abc", name = "Trailer", publishedAt = "2024-01-01"),
+            Videos(key = "abc", name = "Trailer", publishedAt = "2024-01-01")
         )
         coEvery { detailsInteractor.getRecommendationsContentById(1, MediaType.MOVIE) } returns emptyList()
 
@@ -188,12 +183,17 @@ class DetailsViewModelTest {
         coEvery { detailsInteractor.getStreamingProviders(1, MediaType.PERSON) } returns emptyList()
         coEvery { detailsInteractor.getPersonCreditsById(1) } returns listOf(
             GenericContent(
-                id = 10, name = "Movie A", rating = 7.0,
-                overview = "", posterPath = "/p.jpg", backdropPath = "", mediaType = MediaType.MOVIE,
-            ),
+                id = 10,
+                name = "Movie A",
+                rating = 7.0,
+                overview = "",
+                posterPath = "/p.jpg",
+                backdropPath = "",
+                mediaType = MediaType.MOVIE
+            )
         )
         coEvery { detailsInteractor.getPersonImages(1) } returns listOf(
-            PersonImage(aspectRatio = 1.0, filePath = "/img.jpg", height = 100, width = 100),
+            PersonImage(aspectRatio = 1.0, filePath = "/img.jpg", height = 100, width = 100)
         )
 
         val viewModel = createViewModel(mediaType = MediaType.PERSON)
@@ -253,7 +253,7 @@ class DetailsViewModelTest {
         stubSuccessfulMovieDetails()
         coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
         coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
-            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHLIST.listId to false
         )
 
         val viewModel = createViewModel()
@@ -267,7 +267,7 @@ class DetailsViewModelTest {
                 currentStatus = false,
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHLIST.listId,
+                listId = DefaultLists.WATCHLIST.listId
             )
         }
     }
@@ -310,7 +310,7 @@ class DetailsViewModelTest {
         // Start with item already in list
         coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
             DefaultLists.WATCHLIST.listId to true,
-            DefaultLists.WATCHED.listId to false,
+            DefaultLists.WATCHED.listId to false
         )
         stubSuccessfulMovieDetails()
         coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit

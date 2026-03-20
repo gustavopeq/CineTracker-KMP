@@ -5,5 +5,5 @@ import features.watchlist.ui.model.WatchlistItemAction
 
 data class WatchlistSnackbarState(
     val listId: Int? = null,
-    val itemAction: WatchlistItemAction = WatchlistItemAction.ITEM_REMOVED,
+    val itemAction: WatchlistItemAction = WatchlistItemAction.ITEM_REMOVED
 ) : SnackbarState()

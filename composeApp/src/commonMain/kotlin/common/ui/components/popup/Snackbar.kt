@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ClassicSnackbar(
     snackbarHostState: SnackbarHostState,
     onActionClick: (() -> Unit)? = null,
-    screenContent: @Composable () -> Unit,
+    screenContent: @Composable () -> Unit
 ) {
     val textStyle = MaterialTheme.typography.bodyMedium
     Scaffold(
@@ -44,20 +44,20 @@ fun ClassicSnackbar(
                                         onActionClick()
                                         snackbarHostState.currentSnackbarData?.dismiss()
                                     },
-                                    textStyle = textStyle,
+                                    textStyle = textStyle
                                 )
                             }
-                        },
+                        }
                     ) {
                         Text(
                             text = snackbarData.visuals.message,
                             style = textStyle,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
-                },
+                }
             )
-        },
+        }
     ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
             screenContent()
@@ -66,16 +66,13 @@ fun ClassicSnackbar(
 }
 
 @Composable
-private fun UndoActionButton(
-    onActionClick: () -> Unit,
-    textStyle: TextStyle,
-) {
+private fun UndoActionButton(onActionClick: () -> Unit, textStyle: TextStyle) {
     TextButton(onClick = { onActionClick() }) {
         Text(
             text = stringResource(resource = Res.string.snackbar_undo_text),
             style = textStyle,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }

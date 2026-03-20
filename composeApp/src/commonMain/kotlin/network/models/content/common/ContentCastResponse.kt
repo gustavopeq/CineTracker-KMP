@@ -15,12 +15,8 @@ data class ContentCastResponse(
     val order: Int? = null,
     val original_name: String? = null,
     val popularity: Double? = null,
-    val roles: List<CastRoles>? = null,
+    val roles: List<CastRoles>? = null
 )
 
 @Serializable
-data class CastRoles(
-    val credit_id: String? = null,
-    val character: String? = null,
-    val episode_count: Int? = null,
-)
+data class CastRoles(val credit_id: String? = null, val character: String? = null, val episode_count: Int? = null)

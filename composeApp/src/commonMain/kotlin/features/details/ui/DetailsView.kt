@@ -72,7 +72,7 @@ fun Details(
     navBackStackEntry: NavBackStackEntry,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val contentId = navBackStackEntry.arguments?.getInt(ARG_CONTENT_ID) ?: -1
     val mediaType = MediaType.getType(navBackStackEntry.arguments?.getString(ARG_MEDIA_TYPE))
@@ -83,7 +83,7 @@ fun Details(
             mainViewModel = koinViewModel(),
             onBackPress = onBackPress,
             goToDetails = goToDetails,
-            goToErrorScreen = goToErrorScreen,
+            goToErrorScreen = goToErrorScreen
         )
     }
 }
@@ -94,7 +94,7 @@ private fun Details(
     mainViewModel: MainViewModel,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val contentDetails by viewModel.contentDetails.collectAsState()
     val contentInListStatus by viewModel.contentInListStatus.collectAsState()
@@ -130,8 +130,8 @@ private fun Details(
         contentDetails?.let {
             viewModel.onEvent(
                 DetailsEvents.ToggleContentFromList(
-                    listId = listId,
-                ),
+                    listId = listId
+                )
             )
         }
     }
@@ -146,7 +146,7 @@ private fun Details(
 
         if (detailsFailedLoading) {
             viewModel.onEvent(
-                DetailsEvents.FetchDetails,
+                DetailsEvents.FetchDetails
             )
         }
     }
@@ -160,12 +160,12 @@ private fun Details(
                 val message = if (itemAdded) {
                     getString(
                         Res.string.snackbar_item_added_in_list,
-                        listLocalizedName,
+                        listLocalizedName
                     )
                 } else {
                     getString(
                         Res.string.snackbar_item_removed_from_list,
-                        listLocalizedName,
+                        listLocalizedName
                     )
                 }
                 snackbarHostState.showSnackbar(message)
@@ -179,7 +179,7 @@ private fun Details(
             showAllMediaType = showAllMediaType,
             contentList = personContentList,
             goToDetails = goToDetails,
-            onBackBtnPress = { updateShowAllFlag(false, MediaType.UNKNOWN) },
+            onBackBtnPress = { updateShowAllFlag(false, MediaType.UNKNOWN) }
         )
     } else {
         DetailsTopBar(
@@ -190,11 +190,11 @@ private fun Details(
             contentInWatchlistStatus = contentInListStatus,
             onBackBtnPress = onBackPress,
             toggleWatchlist = onToggleWatchlist,
-            showOtherListsPanel = updateShowOtherListsPanel,
+            showOtherListsPanel = updateShowOtherListsPanel
         )
 
         ClassicSnackbar(
-            snackbarHostState = snackbarHostState,
+            snackbarHostState = snackbarHostState
         ) {
             when (loadState) {
                 is DataLoadStatus.Loading -> {
@@ -211,7 +211,7 @@ private fun Details(
                         currentTitlePosY = currentTitlePosY,
                         updateTitlePosition = updateTitlePosition,
                         goToDetails = goToDetails,
-                        updateShowAllFlag = updateShowAllFlag,
+                        updateShowAllFlag = updateShowAllFlag
                     )
                 }
 
@@ -229,7 +229,7 @@ private fun Details(
                 onToggleList = onToggleWatchlist,
                 onClosePanel = {
                     updateShowOtherListsPanel(false)
-                },
+                }
             )
         }
     }
@@ -245,7 +245,7 @@ private fun DetailsBody(
     initialTitlePosY: Float?,
     updateTitlePosition: (Float) -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
-    updateShowAllFlag: (Boolean, MediaType) -> Unit,
+    updateShowAllFlag: (Boolean, MediaType) -> Unit
 ) {
     val contentPosterUrl = BASE_ORIGINAL_IMAGE_URL + contentDetails?.posterPath
 
@@ -253,7 +253,7 @@ private fun DetailsBody(
         posterHeight = posterHeight,
         contentPosterUrl = contentPosterUrl,
         titlePositionY = currentTitlePosY,
-        initialTitlePosY = initialTitlePosY,
+        initialTitlePosY = initialTitlePosY
     )
     contentDetails?.let { details ->
         DetailsComponent(
@@ -263,7 +263,7 @@ private fun DetailsBody(
             personContentList = personContentList,
             updateTitlePosition = updateTitlePosition,
             goToDetails = goToDetails,
-            updateShowAllFlag = updateShowAllFlag,
+            updateShowAllFlag = updateShowAllFlag
         )
     }
 }
@@ -276,7 +276,7 @@ private fun DetailsComponent(
     personContentList: List<GenericContent>,
     updateTitlePosition: (Float) -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
-    updateShowAllFlag: (Boolean, MediaType) -> Unit,
+    updateShowAllFlag: (Boolean, MediaType) -> Unit
 ) {
     val contentCredits by viewModel.contentCredits.collectAsState()
     val videoList by viewModel.contentVideos.collectAsState()
@@ -286,13 +286,13 @@ private fun DetailsComponent(
     val titleScreenHeight = posterHeight * DETAILS_TITLE_IMAGE_OFFSET_PERCENT
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         item {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(titleScreenHeight.dp),
+                    .height(titleScreenHeight.dp)
             )
         }
         item {
@@ -306,20 +306,20 @@ private fun DetailsComponent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.primary),
+                    .background(color = MaterialTheme.colorScheme.primary)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = DEFAULT_MARGIN.dp, vertical = 0.dp),
+                        .padding(horizontal = DEFAULT_MARGIN.dp, vertical = 0.dp)
                 ) {
                     DetailsDescriptionBody(
-                        contentDetails = mediaInfo,
+                        contentDetails = mediaInfo
                     )
                     if (contentCredits.isNotEmpty()) {
                         CastCarousel(
                             contentCredits = contentCredits,
-                            goToDetails = goToDetails,
+                            goToDetails = goToDetails
                         )
                         Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
                     }
@@ -329,7 +329,7 @@ private fun DetailsComponent(
                             MoreOptionsTab(
                                 videoList = videoList,
                                 contentSimilarList = contentSimilarList,
-                                goToDetails = goToDetails,
+                                goToDetails = goToDetails
                             )
                         }
                         MediaType.PERSON -> {
@@ -337,7 +337,7 @@ private fun DetailsComponent(
                                 contentList = personContentList,
                                 personImageList = personImageList,
                                 goToDetails = goToDetails,
-                                updateShowAllFlag = updateShowAllFlag,
+                                updateShowAllFlag = updateShowAllFlag
                             )
                         }
                         else -> {}
@@ -353,7 +353,7 @@ private fun BackgroundPoster(
     posterHeight: Float,
     contentPosterUrl: String,
     titlePositionY: Float,
-    initialTitlePosY: Float?,
+    initialTitlePosY: Float?
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
@@ -363,7 +363,8 @@ private fun BackgroundPoster(
 
     // Scale modifier needed for Ios as the user is able to keep scrolling on top of the screen.
     val scaleModifier = if (PlatformUtils.isIOS &&
-        initialTitlePosY != null && titlePositionY > initialTitlePosY
+        initialTitlePosY != null &&
+        titlePositionY > initialTitlePosY
     ) {
         val scaleMultiplier = if (titlePositionY > initialTitlePosY) {
             1f + (titlePositionY - initialTitlePosY) / 1000
@@ -386,6 +387,6 @@ private fun BackgroundPoster(
     NetworkImage(
         imageUrl = contentPosterUrl,
         modifier = scaleModifier,
-        alpha = alpha,
+        alpha = alpha
     )
 }

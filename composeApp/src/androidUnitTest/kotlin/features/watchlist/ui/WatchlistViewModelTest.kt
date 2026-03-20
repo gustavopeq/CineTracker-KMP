@@ -16,19 +16,18 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 /**
  * Waits for Dispatchers.IO coroutines launched by the ViewModel to complete.
@@ -51,7 +50,7 @@ class WatchlistViewModelTest {
         // Default stubs so init block never throws
         coEvery { watchlistInteractor.getAllLists() } returns listOf(
             WatchlistTabItem.WatchlistTab,
-            WatchlistTabItem.WatchedTab,
+            WatchlistTabItem.WatchedTab
         )
         coEvery { watchlistInteractor.getAllItems(any()) } returns emptyList()
         coEvery { watchlistInteractor.fetchListDetails(any()) } returns WatchlistState()
@@ -106,7 +105,7 @@ class WatchlistViewModelTest {
     fun `LoadWatchlistData populates listContent map keyed by listId`() = runTest {
         val content = fakeGenericContent(id = 1)
         coEvery { watchlistInteractor.getAllItems(WatchlistTabItem.WatchlistTab.listId) } returns listOf(
-            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId),
+            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId)
         )
         coEvery { watchlistInteractor.fetchListDetails(any()) } returns successfulWatchlistState(content)
 
@@ -151,7 +150,7 @@ class WatchlistViewModelTest {
             watchlistInteractor.removeContentFromDatabase(
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHLIST.listId,
+                listId = DefaultLists.WATCHLIST.listId
             )
         }
     }
@@ -160,7 +159,7 @@ class WatchlistViewModelTest {
     fun `RemoveItem removes item from listContent map`() = runTest {
         val content = fakeGenericContent(id = 1, mediaType = MediaType.MOVIE)
         coEvery { watchlistInteractor.getAllItems(WatchlistTabItem.WatchlistTab.listId) } returns listOf(
-            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId),
+            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId)
         )
         coEvery { watchlistInteractor.fetchListDetails(any()) } returns successfulWatchlistState(content)
 
@@ -200,8 +199,8 @@ class WatchlistViewModelTest {
             WatchlistEvent.UpdateItemListId(
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHED.listId,
-            ),
+                listId = DefaultLists.WATCHED.listId
+            )
         )
         awaitIO()
 
@@ -210,7 +209,7 @@ class WatchlistViewModelTest {
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
                 currentListId = DefaultLists.WATCHLIST.listId,
-                newListId = DefaultLists.WATCHED.listId,
+                newListId = DefaultLists.WATCHED.listId
             )
         }
     }
@@ -224,8 +223,8 @@ class WatchlistViewModelTest {
             WatchlistEvent.UpdateItemListId(
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHED.listId,
-            ),
+                listId = DefaultLists.WATCHED.listId
+            )
         )
         awaitIO()
 
@@ -271,8 +270,8 @@ class WatchlistViewModelTest {
             WatchlistEvent.UpdateItemListId(
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHED.listId,
-            ),
+                listId = DefaultLists.WATCHED.listId
+            )
         )
         awaitIO()
 

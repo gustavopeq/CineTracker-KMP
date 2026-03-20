@@ -38,30 +38,27 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun PersonFeaturedInfo(
-    trendingPerson: PersonDetails?,
-    goToDetails: (Int, MediaType) -> Unit,
-) {
+fun PersonFeaturedInfo(trendingPerson: PersonDetails?, goToDetails: (Int, MediaType) -> Unit) {
     trendingPerson?.let {
         val fullImagePath = BASE_ORIGINAL_IMAGE_URL + trendingPerson.posterPath
         val imageWidth = PERSON_FEATURED_IMAGE_WIDTH.dp
         val imageHeight = imageWidth * POSTER_ASPECT_RATIO_MULTIPLY
 
         Box(
-            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp),
+            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
         ) {
             Card(
                 modifier = Modifier
                     .clickable(
-                        onClick = { goToDetails(trendingPerson.id, trendingPerson.mediaType) },
+                        onClick = { goToDetails(trendingPerson.id, trendingPerson.mediaType) }
                     )
                     .height(imageHeight),
                 colors = CardDefaults.cardColors(
-                    containerColor = MainBarGreyColor,
+                    containerColor = MainBarGreyColor
                 ),
                 elevation = CardDefaults.elevatedCardElevation(
-                    defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp,
-                ),
+                    defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
+                )
             ) {
                 Row {
                     PersonFeaturedInfo(trendingPerson)
@@ -69,12 +66,12 @@ fun PersonFeaturedInfo(
                         modifier = Modifier.clip(
                             RoundedCornerShape(
                                 topEnd = CARD_ROUND_CORNER.dp,
-                                bottomEnd = CARD_ROUND_CORNER.dp,
-                            ),
+                                bottomEnd = CARD_ROUND_CORNER.dp
+                            )
                         ),
                         imageUrl = fullImagePath,
                         widthDp = imageWidth,
-                        heightDp = imageHeight,
+                        heightDp = imageHeight
                     )
                 }
             }
@@ -87,16 +84,16 @@ private fun RowScope.PersonFeaturedInfo(trendingPerson: PersonDetails) {
     Column(
         modifier = Modifier
             .padding(DEFAULT_PADDING.dp)
-            .weight(1f),
+            .weight(1f)
     ) {
         HomeCardTitle(
             title = trendingPerson.title,
-            maxLines = PERSON_FEATURED_TITLE_MAX_LINES,
+            maxLines = PERSON_FEATURED_TITLE_MAX_LINES
         )
         Spacer(modifier = Modifier.weight(1f))
 
         CardHeader(
-            headerRes = Res.string.person_featured_card_role_header,
+            headerRes = Res.string.person_featured_card_role_header
         )
         Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
         Text(
@@ -104,13 +101,13 @@ private fun RowScope.PersonFeaturedInfo(trendingPerson: PersonDetails) {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            overflow = TextOverflow.Ellipsis
         )
 
         Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
 
         CardHeader(
-            headerRes = Res.string.person_featured_card_known_for_header,
+            headerRes = Res.string.person_featured_card_known_for_header
         )
         Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
         trendingPerson.knownFor.forEach {
@@ -119,7 +116,7 @@ private fun RowScope.PersonFeaturedInfo(trendingPerson: PersonDetails) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimary,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -127,28 +124,23 @@ private fun RowScope.PersonFeaturedInfo(trendingPerson: PersonDetails) {
 }
 
 @Composable
-fun HomeCardTitle(
-    title: String,
-    maxLines: Int = Int.MAX_VALUE,
-) {
+fun HomeCardTitle(title: String, maxLines: Int = Int.MAX_VALUE) {
     Column {
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimary,
             overflow = TextOverflow.Ellipsis,
-            maxLines = maxLines,
+            maxLines = maxLines
         )
     }
 }
 
 @Composable
-private fun CardHeader(
-    headerRes: StringResource,
-) {
+private fun CardHeader(headerRes: StringResource) {
     Text(
         text = stringResource(resource = headerRes),
         style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surface
     )
 }

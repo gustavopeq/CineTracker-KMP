@@ -22,7 +22,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertNotNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BrowseViewModelTest {

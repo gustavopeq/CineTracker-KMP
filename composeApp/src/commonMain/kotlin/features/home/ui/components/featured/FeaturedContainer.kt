@@ -31,38 +31,35 @@ import common.util.UiConstants.POSTER_ASPECT_RATIO
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FeaturedInfo(
-    featuredContent: GenericContent?,
-    goToDetails: (Int, MediaType) -> Unit,
-) {
+fun FeaturedInfo(featuredContent: GenericContent?, goToDetails: (Int, MediaType) -> Unit) {
     featuredContent?.let {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .classicVerticalGradientBrush(
-                    direction = GradientDirections.UP,
-                ),
+                    direction = GradientDirections.UP
+                )
         ) {
             Column(
-                modifier = Modifier.padding(DEFAULT_MARGIN.dp),
+                modifier = Modifier.padding(DEFAULT_MARGIN.dp)
             ) {
                 Text(
                     text = featuredContent.name.orEmpty(),
-                    style = MaterialTheme.typography.displayLarge,
+                    style = MaterialTheme.typography.displayLarge
                 )
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
                 Text(
                     text = featuredContent.overview,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
                 GenericButton(
                     buttonText = stringResource(resource = Res.string.see_details_button_text),
                     onClick = {
                         goToDetails(featuredContent.id, featuredContent.mediaType)
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
             }
@@ -71,11 +68,7 @@ fun FeaturedInfo(
 }
 
 @Composable
-fun FeaturedBackgroundImage(
-    imageUrl: String,
-    posterHeight: Float,
-    showBackgroundImage: Boolean,
-) {
+fun FeaturedBackgroundImage(imageUrl: String, posterHeight: Float, showBackgroundImage: Boolean) {
     Box {
         NetworkImage(
             imageUrl = imageUrl,
@@ -83,7 +76,7 @@ fun FeaturedBackgroundImage(
                 .fillMaxWidth()
                 .height(posterHeight.dp)
                 .zIndex(BACKGROUND_INDEX)
-                .aspectRatio(POSTER_ASPECT_RATIO),
+                .aspectRatio(POSTER_ASPECT_RATIO)
         )
         Box(
             modifier = Modifier
@@ -93,8 +86,8 @@ fun FeaturedBackgroundImage(
                         MaterialTheme.colorScheme.primary.copy(HOME_BACKGROUND_ALPHA)
                     } else {
                         MaterialTheme.colorScheme.primary
-                    },
-                ),
+                    }
+                )
         )
     }
 }

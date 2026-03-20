@@ -21,7 +21,7 @@ class HomeInteractor(
     private val homeRepository: HomeRepository,
     private val databaseRepository: DatabaseRepository,
     private val movieRepository: MovieRepository,
-    private val showRepository: ShowRepository,
+    private val showRepository: ShowRepository
 ) {
     suspend fun getTrendingMulti(): HomeState {
         val homeState = HomeState()
@@ -45,21 +45,18 @@ class HomeInteractor(
 
     suspend fun getAllWatchlist(): List<GenericContent> {
         val result = databaseRepository.getAllItemsByListId(
-            listId = DefaultLists.WATCHLIST.listId,
+            listId = DefaultLists.WATCHLIST.listId
         )
 
         return result.mapNotNull { contentEntity ->
             getContentDetailsById(
                 contentId = contentEntity.contentId,
-                mediaType = MediaType.getType(contentEntity.mediaType),
+                mediaType = MediaType.getType(contentEntity.mediaType)
             )
         }
     }
 
-    private suspend fun getContentDetailsById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): GenericContent? {
+    private suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): GenericContent? {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
             MediaType.SHOW -> showRepository.getShowDetailsById(contentId)
@@ -112,7 +109,7 @@ class HomeInteractor(
 
         val result = homeRepository.getMoviesComingSoon(
             releaseDateGte = releaseDateGte,
-            releaseDateLte = releaseDateLte,
+            releaseDateLte = releaseDateLte
         )
 
         var listResults: List<GenericContent> = emptyList()

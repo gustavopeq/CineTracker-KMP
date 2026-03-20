@@ -12,21 +12,16 @@ import kotlinx.coroutines.flow.Flow
 import network.repository.movie.MovieRepository
 import network.repository.show.ShowRepository
 
-class BrowseInteractor(
-    private val movieRepository: MovieRepository,
-    private val showRepository: ShowRepository,
-) {
+class BrowseInteractor(private val movieRepository: MovieRepository, private val showRepository: ShowRepository) {
     fun getMediaContentListPager(
         contentListType: ContentListType,
-        mediaType: MediaType,
-    ): Flow<PagingData<GenericContent>> {
-        return Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-            MediaContentPagingSource(
-                movieRepository,
-                showRepository,
-                contentListType,
-                mediaType,
-            )
-        }.flow
-    }
+        mediaType: MediaType
+    ): Flow<PagingData<GenericContent>> = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
+        MediaContentPagingSource(
+            movieRepository,
+            showRepository,
+            contentListType,
+            mediaType
+        )
+    }.flow
 }

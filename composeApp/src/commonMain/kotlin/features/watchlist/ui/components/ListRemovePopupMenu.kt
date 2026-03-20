@@ -14,27 +14,22 @@ import common.ui.theme.MainBarGreyColor
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ListRemovePopUpMenu(
-    showRemoveMenu: Boolean,
-    menuOffset: Offset,
-    onRemoveList: () -> Unit,
-    onDismiss: () -> Unit,
-) {
+fun ListRemovePopUpMenu(showRemoveMenu: Boolean, menuOffset: Offset, onRemoveList: () -> Unit, onDismiss: () -> Unit) {
     val menuItems = listOf(
         PopupMenuItem(
             stringResource(resource = Res.string.delete_list_pop_up_item),
-            onClick = onRemoveList,
-        ),
+            onClick = onRemoveList
+        )
     )
     Box(
         modifier = Modifier
-            .absoluteOffset(x = (menuOffset.x / 2).dp),
+            .absoluteOffset(x = (menuOffset.x / 2).dp)
     ) {
         GenericPopupMenu(
             showMenu = showRemoveMenu,
             backgroundColor = MainBarGreyColor,
             onDismissRequest = onDismiss,
-            menuItems = menuItems,
+            menuItems = menuItems
         )
     }
 }

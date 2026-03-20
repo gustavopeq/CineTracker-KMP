@@ -7,5 +7,5 @@ import network.models.content.common.CastResponse
 data class PersonCreditsResponse(
     val cast: List<CastResponse>? = null,
     val crew: List<CrewResponse?>? = null,
-    val id: Int? = null,
+    val id: Int? = null
 )

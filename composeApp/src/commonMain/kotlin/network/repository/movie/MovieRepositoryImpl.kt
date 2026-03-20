@@ -12,64 +12,44 @@ import network.services.movie.MovieService
 import network.util.Either
 import network.util.asFlow
 
-class MovieRepositoryImpl(
-    private val movieService: MovieService,
-) : MovieRepository {
+class MovieRepositoryImpl(private val movieService: MovieService) : MovieRepository {
     override suspend fun getMovieList(
         contentListType: ContentListType,
-        pageIndex: Int,
-    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> {
-        return movieService.getMovieList(
-            movieListType = contentListType.type,
-            pageIndex = pageIndex,
-        ).asFlow()
-    }
+        pageIndex: Int
+    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> = movieService.getMovieList(
+        movieListType = contentListType.type,
+        pageIndex = pageIndex
+    ).asFlow()
 
-    override suspend fun getMovieDetailsById(
-        movieId: Int,
-    ): Flow<Either<MovieResponse, ApiError>> {
-        return movieService.getMovieDetailsById(
-            movieId = movieId,
+    override suspend fun getMovieDetailsById(movieId: Int): Flow<Either<MovieResponse, ApiError>> =
+        movieService.getMovieDetailsById(
+            movieId = movieId
         ).asFlow()
-    }
 
-    override suspend fun getMovieCreditsById(
-        movieId: Int,
-    ): Flow<Either<ContentCreditsResponse, ApiError>> {
-        return movieService.getMovieCreditsById(
-            movieId = movieId,
+    override suspend fun getMovieCreditsById(movieId: Int): Flow<Either<ContentCreditsResponse, ApiError>> =
+        movieService.getMovieCreditsById(
+            movieId = movieId
         ).asFlow()
-    }
 
-    override suspend fun getMovieVideosById(
-        movieId: Int,
-    ): Flow<Either<VideosByIdResponse, ApiError>> {
-        return movieService.getMovieVideosById(
-            movieId = movieId,
+    override suspend fun getMovieVideosById(movieId: Int): Flow<Either<VideosByIdResponse, ApiError>> =
+        movieService.getMovieVideosById(
+            movieId = movieId
         ).asFlow()
-    }
 
     override suspend fun getRecommendationsMoviesById(
-        movieId: Int,
-    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> {
-        return movieService.getRecommendationsMoviesById(
-            movieId = movieId,
-        ).asFlow()
-    }
+        movieId: Int
+    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> = movieService.getRecommendationsMoviesById(
+        movieId = movieId
+    ).asFlow()
 
     override suspend fun getSimilarMoviesById(
-        movieId: Int,
-    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> {
-        return movieService.getSimilarMoviesById(
-            movieId = movieId,
-        ).asFlow()
-    }
+        movieId: Int
+    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> = movieService.getSimilarMoviesById(
+        movieId = movieId
+    ).asFlow()
 
-    override suspend fun getStreamingProviders(
-        movieId: Int,
-    ): Flow<Either<WatchProvidersResponse, ApiError>> {
-        return movieService.getStreamingProviders(
-            movieId = movieId,
+    override suspend fun getStreamingProviders(movieId: Int): Flow<Either<WatchProvidersResponse, ApiError>> =
+        movieService.getStreamingProviders(
+            movieId = movieId
         ).asFlow()
-    }
 }

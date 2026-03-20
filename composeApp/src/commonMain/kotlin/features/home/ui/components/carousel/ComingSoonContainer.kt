@@ -18,24 +18,24 @@ fun ComingSoonCarousel(
     carouselHeaderRes: StringResource,
     comingSoonList: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     if (comingSoonList.isNotEmpty()) {
         ClassicCarousel(
             carouselHeaderRes = carouselHeaderRes,
             itemList = comingSoonList,
             currentScreenWidth = currentScreenWidth,
-            goToDetails = goToDetails,
+            goToDetails = goToDetails
         ) { item, goToDetails ->
             ImageContentCard(
                 modifier = Modifier.padding(
                     top = DEFAULT_PADDING.dp,
                     bottom = DEFAULT_PADDING.dp,
-                    end = DEFAULT_PADDING.dp,
+                    end = DEFAULT_PADDING.dp
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                goToDetails = goToDetails,
+                goToDetails = goToDetails
             )
         }
         Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))

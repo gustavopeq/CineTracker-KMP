@@ -51,13 +51,13 @@ fun DetailsTopBar(
     contentInWatchlistStatus: Map<Int, Boolean>,
     onBackBtnPress: () -> Unit,
     toggleWatchlist: (Int) -> Unit,
-    showOtherListsPanel: (Boolean) -> Unit,
+    showOtherListsPanel: (Boolean) -> Unit
 ) {
     val barHeightFloat = dpToPx(RETURN_TOP_BAR_HEIGHT.dp, density = LocalDensity.current)
 
     val alphaLevel = if (initialHeaderPosY != null) {
         currentHeaderPosY.mapValueToRange(
-            initialHeaderPosY - barHeightFloat * 2,
+            initialHeaderPosY - barHeightFloat * 2
         )
     } else {
         1f
@@ -66,8 +66,8 @@ fun DetailsTopBar(
     val gradientColor = listOf(
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.primary.copy(
-            alpha = (1f - (alphaLevel * 2)).coerceIn(minimumValue = 0f, maximumValue = 1f),
-        ),
+            alpha = (1f - (alphaLevel * 2)).coerceIn(minimumValue = 0f, maximumValue = 1f)
+        )
     )
 
     Row(
@@ -75,33 +75,33 @@ fun DetailsTopBar(
             .fillMaxWidth()
             .height(RETURN_TOP_BAR_HEIGHT.dp)
             .classicVerticalGradientBrush(
-                colorList = gradientColor,
+                colorList = gradientColor
             )
             .zIndex(UiConstants.FOREGROUND_INDEX),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { onBackBtnPress() },
+            onClick = { onBackBtnPress() }
         ) {
             Icon(
                 painter = painterResource(resource = Res.drawable.ic_back_arrow),
-                contentDescription = stringResource(resource = Res.string.back_arrow_description),
+                contentDescription = stringResource(resource = Res.string.back_arrow_description)
             )
         }
 
         Box(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f)
         ) {
             this@Row.AnimatedVisibility(
                 visible = currentHeaderPosY < 0,
                 enter = fadeIn(),
-                exit = fadeOut(),
+                exit = fadeOut()
             ) {
                 Text(
                     text = contentTitle,
                     style = MaterialTheme.typography.displaySmall,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
+                    maxLines = 1
                 )
             }
         }
@@ -110,7 +110,7 @@ fun DetailsTopBar(
             WatchlistButtonIcon(
                 contentInWatchlistStatus = contentInWatchlistStatus,
                 toggleWatchlist = toggleWatchlist,
-                showOtherListsPanel = showOtherListsPanel,
+                showOtherListsPanel = showOtherListsPanel
             )
         }
     }
@@ -120,7 +120,7 @@ fun DetailsTopBar(
 private fun WatchlistButtonIcon(
     contentInWatchlistStatus: Map<Int, Boolean>,
     toggleWatchlist: (Int) -> Unit,
-    showOtherListsPanel: (Boolean) -> Unit,
+    showOtherListsPanel: (Boolean) -> Unit
 ) {
     var showPopupMenu by remember { mutableStateOf(false) }
     val color = if (contentInWatchlistStatus.values.contains(true)) {
@@ -132,12 +132,12 @@ private fun WatchlistButtonIcon(
     IconButton(
         onClick = {
             showPopupMenu = true
-        },
+        }
     ) {
         Icon(
             painter = painterResource(resource = Res.drawable.ic_watchlist),
             contentDescription = null,
-            tint = color,
+            tint = color
         )
         WatchlistPopUpMenu(
             showMenu = showPopupMenu,
@@ -146,7 +146,7 @@ private fun WatchlistButtonIcon(
                 showPopupMenu = false
             },
             toggleWatchlist = toggleWatchlist,
-            showCustomLists = { showOtherListsPanel(true) },
+            showCustomLists = { showOtherListsPanel(true) }
         )
     }
 }
@@ -157,7 +157,7 @@ fun WatchlistPopUpMenu(
     contentInWatchlistStatus: Map<Int, Boolean>,
     onDismissRequest: () -> Unit,
     toggleWatchlist: (Int) -> Unit,
-    showCustomLists: () -> Unit,
+    showCustomLists: () -> Unit
 ) {
     val watchlist = stringResource(resource = Res.string.watchlist_tab)
     val watchlistMenuTitle = if (contentInWatchlistStatus[DefaultLists.WATCHLIST.listId] == true) {
@@ -178,14 +178,14 @@ fun WatchlistPopUpMenu(
             title = watchlistMenuTitle,
             onClick = {
                 toggleWatchlist(DefaultLists.WATCHLIST.listId)
-            },
+            }
         ),
         PopupMenuItem(
             title = watchedMenuTitle,
             onClick = {
                 toggleWatchlist(DefaultLists.WATCHED.listId)
-            },
-        ),
+            }
+        )
     )
 
     if (contentInWatchlistStatus.size > 2) {
@@ -194,14 +194,14 @@ fun WatchlistPopUpMenu(
                 title = stringResource(resource = Res.string.manage_other_lists_popup_menu),
                 onClick = {
                     showCustomLists()
-                },
-            ),
+                }
+            )
         )
     }
 
     GenericPopupMenu(
         showMenu = showMenu,
         onDismissRequest = onDismissRequest,
-        menuItems = menuItems,
+        menuItems = menuItems
     )
 }

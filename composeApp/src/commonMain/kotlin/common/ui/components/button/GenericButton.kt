@@ -11,25 +11,20 @@ import androidx.compose.ui.unit.dp
 import common.util.UiConstants.CLASSIC_BUTTON_BORDER_SIZE
 
 @Composable
-fun GenericButton(
-    modifier: Modifier = Modifier,
-    buttonText: String,
-    enabled: Boolean = true,
-    onClick: () -> Unit,
-) {
+fun GenericButton(modifier: Modifier = Modifier, buttonText: String, enabled: Boolean = true, onClick: () -> Unit) {
     Button(
         modifier = modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.secondary
         ),
         shape = RoundedCornerShape(CLASSIC_BUTTON_BORDER_SIZE.dp),
-        enabled = enabled,
+        enabled = enabled
     ) {
         Text(
             text = buttonText,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }

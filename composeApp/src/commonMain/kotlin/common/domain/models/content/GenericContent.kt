@@ -17,7 +17,7 @@ data class GenericContent(
     val posterPath: String,
     val backdropPath: String,
     val mediaType: MediaType,
-    val personalRating: Float? = null,
+    val personalRating: Float? = null
 )
 
 fun BaseContentResponse.toGenericContent(): GenericContent? {
@@ -46,19 +46,18 @@ fun BaseContentResponse.toGenericContent(): GenericContent? {
         overview = this.overview.orEmpty(),
         posterPath = posterPath,
         backdropPath = backdropPath.orEmpty(),
-        mediaType = mediaType,
+        mediaType = mediaType
     )
 }
 
-fun List<CastResponse>?.toGenericContentList(): List<GenericContent> =
-    this?.map { castResponse ->
-        GenericContent(
-            id = castResponse.id,
-            name = castResponse.title,
-            posterPath = castResponse.poster_path.orEmpty(),
-            backdropPath = castResponse.backdrop_path.orEmpty(),
-            overview = castResponse.overview.orEmpty(),
-            mediaType = castResponse.mediaType,
-            rating = castResponse.vote_average ?: EMPTY_RATINGS,
-        )
-    } ?: emptyList()
+fun List<CastResponse>?.toGenericContentList(): List<GenericContent> = this?.map { castResponse ->
+    GenericContent(
+        id = castResponse.id,
+        name = castResponse.title,
+        posterPath = castResponse.poster_path.orEmpty(),
+        backdropPath = castResponse.backdrop_path.orEmpty(),
+        overview = castResponse.overview.orEmpty(),
+        mediaType = castResponse.mediaType,
+        rating = castResponse.vote_average ?: EMPTY_RATINGS
+    )
+} ?: emptyList()

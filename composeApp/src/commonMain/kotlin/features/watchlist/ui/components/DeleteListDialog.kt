@@ -29,7 +29,7 @@ fun DeleteListDialog(
     listToRemoveIndex: MutableIntState,
     viewModel: WatchlistViewModel,
     tabList: List<WatchlistTabItem>,
-    onDialogDismiss: () -> Unit,
+    onDialogDismiss: () -> Unit
 ) {
     if (displayDeleteDialog) {
         AlertDialog(
@@ -37,14 +37,14 @@ fun DeleteListDialog(
                 Text(
                     text = stringResource(resource = Res.string.delete_list_display_title),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             },
             text = {
                 Text(
                     text = stringResource(resource = Res.string.delete_list_display_body),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surface
                 )
             },
             confirmButton = {
@@ -55,12 +55,12 @@ fun DeleteListDialog(
                         if (listToRemoveIndex.intValue != UNSELECTED_OPTION_INDEX) {
                             viewModel.onEvent(
                                 WatchlistEvent.DeleteList(
-                                    tabList[listToRemoveIndex.intValue].listId,
-                                ),
+                                    tabList[listToRemoveIndex.intValue].listId
+                                )
                             )
                         }
                         onDialogDismiss()
-                    },
+                    }
                 )
             },
             dismissButton = {
@@ -69,28 +69,24 @@ fun DeleteListDialog(
                     textColor = MaterialTheme.colorScheme.onPrimary,
                     onClick = {
                         onDialogDismiss()
-                    },
+                    }
                 )
             },
             onDismissRequest = {
                 onDialogDismiss()
             },
             containerColor = MainBarGreyColor,
-            shape = RoundedCornerShape(CARD_ROUND_CORNER.dp),
+            shape = RoundedCornerShape(CARD_ROUND_CORNER.dp)
         )
     }
 }
 
 @Composable
-private fun RemoveDialogButton(
-    text: String,
-    textColor: Color,
-    onClick: () -> Unit,
-) {
+private fun RemoveDialogButton(text: String, textColor: Color, onClick: () -> Unit) {
     SimpleButton(
         modifier = Modifier.offset(y = 15.dp),
         text = text,
         textColor = textColor,
-        onClick = onClick,
+        onClick = onClick
     )
 }

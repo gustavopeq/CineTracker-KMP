@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
-    private val interactor: SearchInteractor,
-) : ViewModel() {
+class SearchViewModel(private val interactor: SearchInteractor) : ViewModel() {
 
     private val _searchQuery = mutableStateOf("")
     val searchQuery: MutableState<String> get() = _searchQuery
@@ -31,7 +29,7 @@ class SearchViewModel(
     val searchResults: StateFlow<PagingData<GenericContent>> get() = _searchResults
 
     private val _searchFilterSelected: MutableState<SearchTypeFilterItem> = mutableStateOf(
-        SearchTypeFilterItem.TopResults,
+        SearchTypeFilterItem.TopResults
     )
     val searchFilterSelected: MutableState<SearchTypeFilterItem> get() = _searchFilterSelected
 
@@ -55,9 +53,7 @@ class SearchViewModel(
         }
     }
 
-    private fun onStartDebounceSearch(
-        query: String,
-    ) {
+    private fun onStartDebounceSearch(query: String) {
         if (query.isEmpty()) {
             onClearSearchBar()
             return
@@ -73,21 +69,18 @@ class SearchViewModel(
             if (_searchQuery.value == query) {
                 onSearchQuery(
                     query = query,
-                    mediaType = _searchFilterSelected.value.mediaType,
+                    mediaType = _searchFilterSelected.value.mediaType
                 )
             }
         }
     }
 
-    private fun onSearchQuery(
-        query: String,
-        mediaType: MediaType? = null,
-    ) {
+    private fun onSearchQuery(query: String, mediaType: MediaType? = null) {
         if (query.isNotEmpty()) {
             viewModelScope.launch {
                 interactor.onSearchQuery(
                     query = query,
-                    mediaType = mediaType,
+                    mediaType = mediaType
                 )
                     .distinctUntilChanged()
                     .cachedIn(viewModelScope)
@@ -98,13 +91,11 @@ class SearchViewModel(
         }
     }
 
-    private fun onFilterTypeSelected(
-        searchFilter: SearchTypeFilterItem,
-    ) {
+    private fun onFilterTypeSelected(searchFilter: SearchTypeFilterItem) {
         _searchFilterSelected.value = searchFilter
         onSearchQuery(
             query = _searchQuery.value,
-            mediaType = searchFilter.mediaType,
+            mediaType = searchFilter.mediaType
         )
     }
 

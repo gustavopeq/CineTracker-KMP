@@ -32,15 +32,12 @@ import common.util.UiConstants.SEARCH_FILTER_BUTTON_HEIGHT
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SearchFiltersRow(
-    searchTypeSelected: SearchTypeFilterItem,
-    onFilterTypeSelected: (SearchTypeFilterItem) -> Unit,
-) {
+fun SearchFiltersRow(searchTypeSelected: SearchTypeFilterItem, onFilterTypeSelected: (SearchTypeFilterItem) -> Unit) {
     val searchFilters = listOf(
         SearchTypeFilterItem.TopResults,
         SearchTypeFilterItem.Movies,
         SearchTypeFilterItem.Shows,
-        SearchTypeFilterItem.Person,
+        SearchTypeFilterItem.Person
     )
     var selectedTabIndex by remember {
         mutableIntStateOf(searchFilters.indexOf(searchTypeSelected))
@@ -50,7 +47,7 @@ fun SearchFiltersRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = DEFAULT_PADDING.dp),
-        contentAlignment = Alignment.CenterStart,
+        contentAlignment = Alignment.CenterStart
     ) {
         ScrollableTabRow(
             selectedTabIndex = selectedTabIndex,
@@ -58,11 +55,11 @@ fun SearchFiltersRow(
             indicator = @Composable { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    color = Color.Transparent,
+                    color = Color.Transparent
                 )
             },
             edgePadding = DEFAULT_MARGIN.dp,
-            divider = { },
+            divider = { }
         ) {
             searchFilters.forEachIndexed { index, filterItem ->
                 SearchTypeButton(
@@ -71,7 +68,7 @@ fun SearchFiltersRow(
                     onFilterTypeSelected = {
                         onFilterTypeSelected(filterItem)
                         selectedTabIndex = index
-                    },
+                    }
                 )
             }
         }
@@ -82,7 +79,7 @@ fun SearchFiltersRow(
 private fun SearchTypeButton(
     isSelected: Boolean,
     searchTypeItem: SearchTypeFilterItem,
-    onFilterTypeSelected: (MediaType?) -> Unit,
+    onFilterTypeSelected: (MediaType?) -> Unit
 ) {
     val btnColor = if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent
     val textColor = if (isSelected) MaterialTheme.colorScheme.primary else SecondaryGreyColor
@@ -95,12 +92,12 @@ private fun SearchTypeButton(
             .clickable(
                 onClick = {
                     onFilterTypeSelected(searchTypeItem.mediaType)
-                },
-            ),
+                }
+            )
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = LARGE_PADDING.dp),
@@ -108,7 +105,7 @@ private fun SearchTypeButton(
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 textAlign = TextAlign.Center,
-                color = textColor,
+                color = textColor
             )
         }
     }

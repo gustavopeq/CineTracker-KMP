@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -23,21 +23,17 @@ import common.util.UiConstants.SMALL_PADDING
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun GenericBottomSheet(
-    dismissBottomSheet: () -> Unit,
-    headerText: String,
-    content: @Composable () -> Unit,
-) {
+fun GenericBottomSheet(dismissBottomSheet: () -> Unit, headerText: String, content: @Composable () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = { dismissBottomSheet() },
-        containerColor = MainBarGreyColor,
+        containerColor = MainBarGreyColor
     ) {
         BottomSheetHeader(
-            headerText = headerText,
+            headerText = headerText
         )
         HorizontalDivider(
             color = MaterialTheme.colorScheme.inverseSurface,
-            modifier = Modifier.padding(top = SMALL_PADDING.dp),
+            modifier = Modifier.padding(top = SMALL_PADDING.dp)
         )
         content()
         Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
@@ -46,11 +42,9 @@ fun GenericBottomSheet(
 }
 
 @Composable
-fun BottomSheetHeader(
-    headerText: String,
-) {
+fun BottomSheetHeader(headerText: String) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             modifier = Modifier
@@ -59,7 +53,7 @@ fun BottomSheetHeader(
             text = headerText,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

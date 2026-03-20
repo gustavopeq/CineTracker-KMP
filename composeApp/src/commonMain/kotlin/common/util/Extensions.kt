@@ -70,23 +70,17 @@ fun Double?.formatRating(): String {
     return StringFormat.formatRating(this)
 }
 
-fun Modifier.removeParentPadding(
-    paddingToRemove: Dp,
-): Modifier {
-    return this.layout { measurable, constraints ->
-        val placeable = measurable.measure(
-            constraints.copy(
-                maxWidth = constraints.maxWidth + (paddingToRemove.roundToPx() * 2),
-            ),
+fun Modifier.removeParentPadding(paddingToRemove: Dp): Modifier = this.layout { measurable, constraints ->
+    val placeable = measurable.measure(
+        constraints.copy(
+            maxWidth = constraints.maxWidth + (paddingToRemove.roundToPx() * 2)
         )
-        layout(placeable.width, placeable.height) {
-            placeable.place(0, 0)
-        }
+    )
+    layout(placeable.width, placeable.height) {
+        placeable.place(0, 0)
     }
 }
 
-fun String.capitalized(): String {
-    return this.replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase() else it.toString()
-    }
+fun String.capitalized(): String = this.replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase() else it.toString()
 }

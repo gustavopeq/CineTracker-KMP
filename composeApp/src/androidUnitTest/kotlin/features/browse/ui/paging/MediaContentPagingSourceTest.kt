@@ -13,15 +13,15 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlinx.coroutines.test.runTest
 import network.repository.movie.MovieRepository
 import network.repository.show.ShowRepository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
-import kotlin.test.assertNull
 
 class MediaContentPagingSourceTest {
 
@@ -31,12 +31,12 @@ class MediaContentPagingSourceTest {
     private val refreshParams = PagingSource.LoadParams.Refresh<Int>(
         key = null,
         loadSize = 20,
-        placeholdersEnabled = false,
+        placeholdersEnabled = false
     )
     private val page2Params = PagingSource.LoadParams.Refresh<Int>(
         key = 2,
         loadSize = 20,
-        placeholdersEnabled = false,
+        placeholdersEnabled = false
     )
 
     @Before
@@ -53,7 +53,7 @@ class MediaContentPagingSourceTest {
         movieRepository = movieRepository,
         showRepository = showRepository,
         contentListType = ContentListType.MOVIE_POPULAR,
-        mediaType = mediaType,
+        mediaType = mediaType
     )
 
     // ── MOVIE ─────────────────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ class MediaContentPagingSourceTest {
     @Test
     fun `load returns Page with mapped items for MOVIE`() = runTest {
         coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
-            fakeMoviePagingResponse(fakeMovieResponse(id = 1)),
+            fakeMoviePagingResponse(fakeMovieResponse(id = 1))
         )
 
         val result = buildSource(MediaType.MOVIE).load(refreshParams)
@@ -84,7 +84,7 @@ class MediaContentPagingSourceTest {
     @Test
     fun `load returns Page with mapped items for SHOW`() = runTest {
         coEvery { showRepository.getShowList(any(), any()) } returns successFlow(
-            fakeShowPagingResponse(fakeShowResponse(id = 1)),
+            fakeShowPagingResponse(fakeShowResponse(id = 1))
         )
 
         val result = buildSource(MediaType.SHOW).load(refreshParams)
@@ -116,7 +116,7 @@ class MediaContentPagingSourceTest {
     @Test
     fun `prevKey is null on first page`() = runTest {
         coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
-            fakeMoviePagingResponse(fakeMovieResponse()),
+            fakeMoviePagingResponse(fakeMovieResponse())
         )
 
         val result = buildSource(MediaType.MOVIE).load(refreshParams)
@@ -128,7 +128,7 @@ class MediaContentPagingSourceTest {
     @Test
     fun `prevKey and nextKey are correct on page 2`() = runTest {
         coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
-            fakeMoviePagingResponse(fakeMovieResponse()),
+            fakeMoviePagingResponse(fakeMovieResponse())
         )
 
         val result = buildSource(MediaType.MOVIE).load(page2Params)
