@@ -30,6 +30,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Always run tests after writing or modifying them** — compilation success is not enough. Unit tests: `./gradlew :composeApp:testDebugUnitTest`. Instrumented tests: `./gradlew :composeApp:connectedDebugAndroidTest`.
 - **Before running instrumented tests, check for a connected device** using `~/Library/Android/sdk/platform-tools/adb devices`. If a device or emulator is listed, run the tests. If none is found, explicitly tell the user no device is available — never silently skip.
 
+## Verification Rules
+
+- **After any significant app change** (dependency upgrades, architecture changes, new features, large refactors), run the full verification checklist before considering the work done:
+  1. **Android debug build:** `./gradlew :composeApp:assembleDebug`
+  2. **Android release build (ProGuard):** `./gradlew :composeApp:assembleRelease`
+  3. **iOS framework build:** `./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64`
+  4. **Unit tests:** `./gradlew :composeApp:testDebugUnitTest`
+  5. **Instrumented tests:** check for a device with `adb devices`, then `./gradlew :composeApp:connectedDebugAndroidTest`
+- **Report the result of each check** to the user in a summary table.
+
 ## String Resource Rules
 
 - **Never hardcode user-facing strings in code.** All strings must be defined in `composeResources/values/strings.xml`.

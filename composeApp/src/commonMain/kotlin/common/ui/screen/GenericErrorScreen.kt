@@ -1,6 +1,6 @@
 package common.ui.screen
 
-import KottieAnimation
+import kottie.KottieAnimation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +24,9 @@ import common.ui.components.button.GenericButton
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.ERROR_ANIMATION_SIZE
 import common.util.UiConstants.SECTION_PADDING
-import kottieComposition.KottieCompositionSpec
-import kottieComposition.animateKottieCompositionAsState
-import kottieComposition.rememberKottieComposition
+import kottie.KottieCompositionSpec
+import kottie.animateKottieCompositionAsState
+import kottie.rememberKottieComposition
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 

@@ -58,9 +58,7 @@ import features.browse.BrowseScreen
 import features.browse.events.BrowseEvent
 import features.browse.ui.components.CollapsingTabRow
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Browse(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Browse(

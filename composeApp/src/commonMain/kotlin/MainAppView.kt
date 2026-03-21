@@ -44,16 +44,13 @@ import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
 import navigation.components.TopNavBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalCoilApi::class, KoinExperimentalAPI::class)
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
 fun MainAppView() {
-    KoinContext {
-        CineTrackerTheme {
+    CineTrackerTheme {
             setSingletonImageLoaderFactory { context ->
                 getAsyncImageLoader(context)
             }
@@ -121,7 +118,6 @@ fun MainAppView() {
                 mainViewModel = mainViewModel
             )
         }
-    }
 }
 
 @Composable
