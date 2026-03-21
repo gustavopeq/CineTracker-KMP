@@ -1,6 +1,7 @@
 package features.details.ui
 
 import androidx.compose.foundation.background
+import androidx.savedstate.read
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -63,10 +64,8 @@ import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Details(
     navBackStackEntry: NavBackStackEntry,
@@ -74,8 +73,8 @@ fun Details(
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
-    val contentId = navBackStackEntry.arguments?.getInt(ARG_CONTENT_ID) ?: -1
-    val mediaType = MediaType.getType(navBackStackEntry.arguments?.getString(ARG_MEDIA_TYPE))
+    val contentId = navBackStackEntry.arguments?.read { getInt(ARG_CONTENT_ID) } ?: -1
+    val mediaType = MediaType.getType(navBackStackEntry.arguments?.read { getStringOrNull(ARG_MEDIA_TYPE) })
 
     Box(modifier = Modifier.fillMaxSize()) {
         Details(

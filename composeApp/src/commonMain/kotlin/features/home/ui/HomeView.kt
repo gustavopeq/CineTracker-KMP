@@ -52,9 +52,7 @@ import features.home.ui.components.featured.PersonFeaturedInfo
 import features.home.ui.components.featured.SecondaryFeaturedInfo
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Home(
     goToDetails: (Int, MediaType) -> Unit,

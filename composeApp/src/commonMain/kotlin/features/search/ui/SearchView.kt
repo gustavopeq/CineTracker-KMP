@@ -36,9 +36,7 @@ import features.search.ui.components.SearchFiltersRow
 import features.search.ui.components.SearchResultsGrid
 import features.search.ui.components.SearchTypeFilterItem
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Search(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Search(
