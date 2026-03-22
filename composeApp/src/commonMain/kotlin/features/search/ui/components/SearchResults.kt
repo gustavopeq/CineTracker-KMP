@@ -31,7 +31,7 @@ fun SearchResultsGrid(
     searchResults: LazyPagingItems<GenericContent>,
     adjustedCardSize: Dp,
     keyboardController: SoftwareKeyboardController?,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -39,10 +39,10 @@ fun SearchResultsGrid(
             .nestedScroll(
                 rememberNestedScrollConnection {
                     keyboardController?.hide()
-                },
+                }
             ),
         columns = GridCells.Fixed(numCardsPerRow),
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.Center
     ) {
         items(searchResults.itemCount) { index ->
             val item = searchResults[index]
@@ -50,7 +50,7 @@ fun SearchResultsGrid(
                 ImageContentCard(
                     item = item,
                     adjustedCardSize = adjustedCardSize,
-                    goToDetails = goToDetails,
+                    goToDetails = goToDetails
                 )
             }
         }
@@ -61,20 +61,20 @@ fun SearchResultsGrid(
 fun NoResultsFound() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(0.3f))
         Text(
             text = stringResource(resource = Res.string.search_error_title_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             text = stringResource(resource = Res.string.search_error_description_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surface
         )
         Spacer(modifier = Modifier.weight(0.7f))
     }

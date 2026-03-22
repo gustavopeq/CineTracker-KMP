@@ -12,9 +12,7 @@ import network.util.ApiResult
 import network.util.buildUrl
 import network.util.getResult
 
-class HomeServiceImpl(
-    private val client: HttpClient,
-) : HomeService {
+class HomeServiceImpl(private val client: HttpClient) : HomeService {
 
     companion object {
         const val MULTI_DAY_TRENDING = "trending/all/day"
@@ -22,23 +20,19 @@ class HomeServiceImpl(
         const val MOVIES_COMING_SOON = "discover/movie"
     }
 
-    override suspend fun getDayTrendingMulti(
-        language: String,
-    ): ApiResult<ContentPagingResponse<MultiResponse>> {
+    override suspend fun getDayTrendingMulti(language: String): ApiResult<ContentPagingResponse<MultiResponse>> {
         val url = buildUrl(MULTI_DAY_TRENDING) {
             mapOf(
-                LANGUAGE to language,
+                LANGUAGE to language
             )
         }
         return client.getResult(url)
     }
 
-    override suspend fun getDayTrendingPerson(
-        language: String,
-    ): ApiResult<ContentPagingResponse<PersonResponse>> {
+    override suspend fun getDayTrendingPerson(language: String): ApiResult<ContentPagingResponse<PersonResponse>> {
         val url = buildUrl(PERSON_DAY_TRENDING) {
             mapOf(
-                LANGUAGE to language,
+                LANGUAGE to language
             )
         }
 
@@ -48,13 +42,13 @@ class HomeServiceImpl(
     override suspend fun getMoviesComingSoon(
         language: String,
         releaseDateGte: String,
-        releaseDateLte: String,
+        releaseDateLte: String
     ): ApiResult<ContentPagingResponse<MovieResponse>> {
         val url = buildUrl(MOVIES_COMING_SOON) {
             mapOf(
                 LANGUAGE to language,
                 RELEASE_DATE_GTE to releaseDateGte,
-                RELEASE_DATE_LTE to releaseDateLte,
+                RELEASE_DATE_LTE to releaseDateLte
             )
         }
 

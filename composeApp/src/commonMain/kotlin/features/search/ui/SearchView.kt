@@ -36,27 +36,18 @@ import features.search.ui.components.SearchFiltersRow
 import features.search.ui.components.SearchResultsGrid
 import features.search.ui.components.SearchTypeFilterItem
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun Search(
-    goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
-) {
+fun Search(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Search(
         viewModel = koinViewModel(),
         goToDetails = goToDetails,
-        goToErrorScreen = goToErrorScreen,
+        goToErrorScreen = goToErrorScreen
     )
 }
 
 @Composable
-private fun Search(
-    viewModel: SearchViewModel,
-    goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
-) {
+private fun Search(viewModel: SearchViewModel, goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val searchQuery by viewModel.searchQuery
     val searchTypeSelected by viewModel.searchFilterSelected
@@ -65,7 +56,7 @@ private fun Search(
 
     val onFilterTypeSelected: (SearchTypeFilterItem) -> Unit = {
         viewModel.onEvent(
-            SearchEvent.FilterTypeSelected(it),
+            SearchEvent.FilterTypeSelected(it)
         )
     }
 
@@ -78,15 +69,15 @@ private fun Search(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         SearchBar(
-            viewModel = viewModel,
+            viewModel = viewModel
         )
         if (searchQuery.isNotEmpty()) {
             SearchFiltersRow(
                 searchTypeSelected = searchTypeSelected,
-                onFilterTypeSelected = onFilterTypeSelected,
+                onFilterTypeSelected = onFilterTypeSelected
             )
         }
 
@@ -98,8 +89,8 @@ private fun Search(
                         keyboardController?.hide()
                     },
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ),
+                    indication = null
+                )
         ) {
             when {
                 searchResults.loadState.refresh is LoadState.Loading && searchQuery.isNotEmpty() -> {
@@ -117,7 +108,7 @@ private fun Search(
                         searchResults = searchResults,
                         isDebounceActive = isDebounceActive,
                         keyboardController = keyboardController,
-                        goToDetails = goToDetails,
+                        goToDetails = goToDetails
                     )
                 }
             }
@@ -131,7 +122,7 @@ private fun SearchBody(
     searchResults: LazyPagingItems<GenericContent>,
     isDebounceActive: Boolean,
     keyboardController: SoftwareKeyboardController?,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     val density = LocalDensity.current
     val screenWidth = density.run { getScreenSizeInfo().widthPx }
@@ -142,7 +133,7 @@ private fun SearchBody(
         screenWidth,
         dpToPx(minCardSize, density),
         spacing,
-        density,
+        density
     )
 
     if (searchResults.itemCount > 0) {
@@ -151,7 +142,7 @@ private fun SearchBody(
             searchResults = searchResults,
             adjustedCardSize = adjustedCardSize,
             keyboardController = keyboardController,
-            goToDetails = goToDetails,
+            goToDetails = goToDetails
         )
     } else if (searchQuery.isNotEmpty() && !isDebounceActive) {
         NoResultsFound()
@@ -162,7 +153,7 @@ private fun SearchBody(
 private fun SearchLoadingIndicator() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(0.3f))
         ClassicLoadingIndicator()

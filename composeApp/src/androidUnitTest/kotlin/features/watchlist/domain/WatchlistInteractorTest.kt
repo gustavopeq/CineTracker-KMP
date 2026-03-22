@@ -16,16 +16,16 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 import network.repository.movie.MovieRepository
 import network.repository.show.ShowRepository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class WatchlistInteractorTest {
 
@@ -43,7 +43,7 @@ class WatchlistInteractorTest {
             databaseRepository = databaseRepository,
             movieRepository = movieRepository,
             showRepository = showRepository,
-            personalRatingRepository = personalRatingRepository,
+            personalRatingRepository = personalRatingRepository
         )
     }
 
@@ -58,7 +58,7 @@ class WatchlistInteractorTest {
     fun `getAllItems returns list of entities for given listId`() = runTest {
         coEvery { databaseRepository.getAllItemsByListId(1) } returns listOf(
             fakeContentEntity(contentId = 1, listId = 1),
-            fakeContentEntity(contentId = 2, listId = 1),
+            fakeContentEntity(contentId = 2, listId = 1)
         )
 
         val result = interactor.getAllItems(1)
@@ -207,7 +207,7 @@ class WatchlistInteractorTest {
     @Test
     fun `getAllLists maps WATCHLIST listId to WatchlistTab`() = runTest {
         coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist"),
+            fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist")
         )
 
         val result = interactor.getAllLists()
@@ -218,7 +218,7 @@ class WatchlistInteractorTest {
     @Test
     fun `getAllLists maps WATCHED listId to WatchedTab`() = runTest {
         coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHED.listId, "Watched"),
+            fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
         )
 
         val result = interactor.getAllLists()
@@ -229,7 +229,7 @@ class WatchlistInteractorTest {
     @Test
     fun `getAllLists maps other listId to CustomTab with correct name and id`() = runTest {
         coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(99, "My Favs"),
+            fakeListEntity(99, "My Favs")
         )
 
         val result = interactor.getAllLists()
@@ -244,7 +244,7 @@ class WatchlistInteractorTest {
     fun `getAllLists appends AddNewTab when list count is below maximum`() = runTest {
         coEvery { databaseRepository.getAllLists() } returns listOf(
             fakeListEntity(DefaultLists.WATCHLIST.listId),
-            fakeListEntity(DefaultLists.WATCHED.listId),
+            fakeListEntity(DefaultLists.WATCHED.listId)
         )
 
         val result = interactor.getAllLists()
@@ -266,7 +266,7 @@ class WatchlistInteractorTest {
     fun `getAllLists assigns ascending tabIndex to all items`() = runTest {
         coEvery { databaseRepository.getAllLists() } returns listOf(
             fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist"),
-            fakeListEntity(DefaultLists.WATCHED.listId, "Watched"),
+            fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
         )
 
         val result = interactor.getAllLists()

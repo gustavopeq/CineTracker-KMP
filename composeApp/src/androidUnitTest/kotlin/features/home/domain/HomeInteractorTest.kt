@@ -16,6 +16,9 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 import network.repository.home.HomeRepository
 import network.repository.movie.MovieRepository
@@ -23,9 +26,6 @@ import network.repository.show.ShowRepository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class HomeInteractorTest {
 
@@ -43,7 +43,7 @@ class HomeInteractorTest {
             homeRepository = homeRepository,
             databaseRepository = databaseRepository,
             movieRepository = movieRepository,
-            showRepository = showRepository,
+            showRepository = showRepository
         )
     }
 
@@ -57,7 +57,7 @@ class HomeInteractorTest {
     @Test
     fun `getTrendingMulti returns HomeState with populated trendingList on success`() = runTest {
         coEvery { homeRepository.getTrendingMulti() } returns successFlow(
-            fakeMultiPagingResponse(fakeMultiResponse(id = 1)),
+            fakeMultiPagingResponse(fakeMultiResponse(id = 1))
         )
 
         val result = interactor.getTrendingMulti()
@@ -80,7 +80,7 @@ class HomeInteractorTest {
         val withPoster = fakeMultiResponse(id = 1)
         val noPoster = fakeMultiResponse(id = 2).copy(poster_path = null)
         coEvery { homeRepository.getTrendingMulti() } returns successFlow(
-            fakeMultiPagingResponse(withPoster, noPoster),
+            fakeMultiPagingResponse(withPoster, noPoster)
         )
 
         val result = interactor.getTrendingMulti()
@@ -93,7 +93,7 @@ class HomeInteractorTest {
     @Test
     fun `getAllWatchlist returns GenericContent list for MOVIE entities`() = runTest {
         coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
         )
         coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse(id = 1))
 
@@ -106,7 +106,7 @@ class HomeInteractorTest {
     @Test
     fun `getAllWatchlist returns GenericContent list for SHOW entities`() = runTest {
         coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.SHOW.name),
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.SHOW.name)
         )
         coEvery { showRepository.getShowDetailsById(1) } returns successFlow(fakeShowResponse(id = 1))
 
@@ -119,7 +119,7 @@ class HomeInteractorTest {
     @Test
     fun `getAllWatchlist skips PERSON entities`() = runTest {
         coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.PERSON.name),
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.PERSON.name)
         )
 
         val result = interactor.getAllWatchlist()
@@ -141,7 +141,7 @@ class HomeInteractorTest {
     @Test
     fun `getTrendingPerson returns list of PersonDetails on success`() = runTest {
         coEvery { homeRepository.getTrendingPerson() } returns successFlow(
-            fakePersonPagingResponse(fakePersonResponse(id = 1, name = "Actor A")),
+            fakePersonPagingResponse(fakePersonResponse(id = 1, name = "Actor A"))
         )
 
         val result = interactor.getTrendingPerson()
@@ -164,7 +164,7 @@ class HomeInteractorTest {
     @Test
     fun `getMoviesComingSoon returns list of GenericContent on success`() = runTest {
         coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns successFlow(
-            fakeMoviePagingResponse(fakeMovieResponse(id = 1)),
+            fakeMoviePagingResponse(fakeMovieResponse(id = 1))
         )
 
         val result = interactor.getMoviesComingSoon()
@@ -186,7 +186,7 @@ class HomeInteractorTest {
         val withPoster = fakeMovieResponse(id = 1)
         val noPoster = fakeMovieResponse(id = 2).copy(poster_path = null)
         coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns successFlow(
-            fakeMoviePagingResponse(withPoster, noPoster),
+            fakeMoviePagingResponse(withPoster, noPoster)
         )
 
         val result = interactor.getMoviesComingSoon()

@@ -8,12 +8,12 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class PersonalRatingRepositoryImplTest {
 
@@ -38,7 +38,7 @@ class PersonalRatingRepositoryImplTest {
 
         coVerify {
             personalRatingDao.insertRating(
-                match { it.contentId == 1 && it.rating == 8.5f && it.mediaType == "MOVIE" },
+                match { it.contentId == 1 && it.rating == 8.5f && it.mediaType == "MOVIE" }
             )
         }
         coVerify(exactly = 0) { personalRatingDao.deleteRating(any()) }
@@ -57,7 +57,7 @@ class PersonalRatingRepositoryImplTest {
         coEvery { personalRatingDao.getRating(1) } returns PersonalRatingEntity(
             contentId = 1,
             mediaType = "MOVIE",
-            rating = 7.5f,
+            rating = 7.5f
         )
 
         val result = repository.getRating(1)

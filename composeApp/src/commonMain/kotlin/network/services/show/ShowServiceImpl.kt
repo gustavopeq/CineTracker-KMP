@@ -11,62 +11,51 @@ import network.util.ApiResult
 import network.util.buildUrl
 import network.util.getResult
 
-class ShowServiceImpl(
-    private val client: HttpClient,
-) : ShowService {
+class ShowServiceImpl(private val client: HttpClient) : ShowService {
 
     override suspend fun getShowList(
         contentListType: String,
         pageIndex: Int,
-        language: String,
+        language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>> {
         val path = "tv/$contentListType"
         val url = buildUrl(path) {
             mapOf(
                 Parameters.PAGE_INDEX to pageIndex.toString(),
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
         return client.getResult(url)
     }
 
-    override suspend fun getShowDetailsById(
-        showId: Int,
-        language: String,
-    ): ApiResult<ShowResponse> {
+    override suspend fun getShowDetailsById(showId: Int, language: String): ApiResult<ShowResponse> {
         val path = "tv/$showId"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
         return client.getResult(url)
     }
 
-    override suspend fun getShowCreditsById(
-        showId: Int,
-        language: String,
-    ): ApiResult<ContentCreditsResponse> {
+    override suspend fun getShowCreditsById(showId: Int, language: String): ApiResult<ContentCreditsResponse> {
         val path = "tv/$showId/aggregate_credits"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
         return client.getResult(url)
     }
 
-    override suspend fun getShowVideosById(
-        showId: Int,
-        language: String,
-    ): ApiResult<VideosByIdResponse> {
+    override suspend fun getShowVideosById(showId: Int, language: String): ApiResult<VideosByIdResponse> {
         val path = "tv/$showId/videos"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
@@ -75,12 +64,12 @@ class ShowServiceImpl(
 
     override suspend fun getRecommendationsShowsById(
         showId: Int,
-        language: String,
+        language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>> {
         val path = "tv/$showId/recommendations"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
@@ -89,26 +78,23 @@ class ShowServiceImpl(
 
     override suspend fun getSimilarShowsById(
         showId: Int,
-        language: String,
+        language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>> {
         val path = "tv/$showId/similar"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 
         return client.getResult(url)
     }
 
-    override suspend fun getStreamingProviders(
-        showId: Int,
-        language: String,
-    ): ApiResult<WatchProvidersResponse> {
+    override suspend fun getStreamingProviders(showId: Int, language: String): ApiResult<WatchProvidersResponse> {
         val path = "tv/$showId/watch/providers"
         val url = buildUrl(path) {
             mapOf(
-                Parameters.LANGUAGE to language,
+                Parameters.LANGUAGE to language
             )
         }
 

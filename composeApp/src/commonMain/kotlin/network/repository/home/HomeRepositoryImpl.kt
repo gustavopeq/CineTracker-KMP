@@ -10,24 +10,18 @@ import network.services.home.HomeService
 import network.util.Either
 import network.util.asFlow
 
-class HomeRepositoryImpl(
-    private val homeService: HomeService,
-) : HomeRepository {
-    override suspend fun getTrendingMulti(): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>> {
-        return homeService.getDayTrendingMulti().asFlow()
-    }
+class HomeRepositoryImpl(private val homeService: HomeService) : HomeRepository {
+    override suspend fun getTrendingMulti(): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>> =
+        homeService.getDayTrendingMulti().asFlow()
 
-    override suspend fun getTrendingPerson(): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>> {
-        return homeService.getDayTrendingPerson().asFlow()
-    }
+    override suspend fun getTrendingPerson(): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>> =
+        homeService.getDayTrendingPerson().asFlow()
 
     override suspend fun getMoviesComingSoon(
         releaseDateGte: String,
-        releaseDateLte: String,
-    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> {
-        return homeService.getMoviesComingSoon(
-            releaseDateGte = releaseDateGte,
-            releaseDateLte = releaseDateLte,
-        ).asFlow()
-    }
+        releaseDateLte: String
+    ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> = homeService.getMoviesComingSoon(
+        releaseDateGte = releaseDateGte,
+        releaseDateLte = releaseDateLte
+    ).asFlow()
 }

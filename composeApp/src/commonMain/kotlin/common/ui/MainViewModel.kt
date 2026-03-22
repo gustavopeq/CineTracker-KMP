@@ -11,14 +11,9 @@ import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-data class WatchlistSort(
-    val mediaType: MediaType? = null,
-    val ratingSort: WatchlistRatingSort? = null,
-)
+data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
-class MainViewModel(
-    private val databaseRepository: DatabaseRepository,
-) : ViewModel() {
+class MainViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
     private val _movieSortType = MutableStateFlow<SortTypeItem>(SortTypeItem.NowPlaying)
     val movieSortType: StateFlow<SortTypeItem> get() = _movieSortType
@@ -48,9 +43,7 @@ class MainViewModel(
     private val _refreshLists = MutableStateFlow(false)
     val refreshLists: StateFlow<Boolean> get() = _refreshLists
 
-    fun updateSortType(
-        sortTypeItem: SortTypeItem,
-    ) {
+    fun updateSortType(sortTypeItem: SortTypeItem) {
         when (_currentMediaTypeSelected.value) {
             MediaType.MOVIE -> _movieSortType.value = sortTypeItem
             MediaType.SHOW -> _showSortType.value = sortTypeItem
@@ -58,52 +51,38 @@ class MainViewModel(
         }
     }
 
-    fun updateMediaType(
-        mediaType: MediaType,
-    ) {
+    fun updateMediaType(mediaType: MediaType) {
         _currentMediaTypeSelected.value = mediaType
     }
 
-    fun updateCurrentScreen(
-        screen: String,
-    ) {
+    fun updateCurrentScreen(screen: String) {
         _currentScreen.value = screen
     }
 
-    fun updateWatchlistSort(
-        mediaType: MediaType?,
-    ) {
+    fun updateWatchlistSort(mediaType: MediaType?) {
         _watchlistSort.value = _watchlistSort.value.copy(mediaType = mediaType)
     }
 
-    fun updateWatchlistRatingSort(
-        ratingSort: WatchlistRatingSort?,
-    ) {
+    fun updateWatchlistRatingSort(ratingSort: WatchlistRatingSort?) {
         _watchlistSort.value = _watchlistSort.value.copy(ratingSort = ratingSort)
     }
 
-    fun updateDisplayCreateNewList(
-        open: Boolean,
-    ) {
+    fun updateDisplayCreateNewList(open: Boolean) {
         _newListTextFieldValue.value = ""
         _isDuplicatedListName.value = false
         _displayCreateNewList.value = open
     }
 
-    fun updateCreateNewListTextField(
-        listName: String,
-    ) {
+    fun updateCreateNewListTextField(listName: String) {
         _newListTextFieldValue.value = listName
         if (_isDuplicatedListName.value) {
             _isDuplicatedListName.value = false
         }
     }
 
-    suspend fun createNewList(
-        closeSheet: suspend () -> Unit,
-    ) {
+    suspend fun createNewList(closeSheet: suspend () -> Unit) {
         val listCreated = databaseRepository.addNewList(
-            listName = _newListTextFieldValue.value,
+            listName = _newListTextFieldValue.value
         )
 
         if (listCreated) {
@@ -113,9 +92,7 @@ class MainViewModel(
         }
     }
 
-    fun setRefreshLists(
-        shouldRefresh: Boolean,
-    ) {
+    fun setRefreshLists(shouldRefresh: Boolean) {
         _refreshLists.value = shouldRefresh
     }
 }

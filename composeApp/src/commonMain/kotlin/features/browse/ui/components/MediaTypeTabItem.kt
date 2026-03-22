@@ -6,16 +6,13 @@ import cinetracker_kmp.composeapp.generated.resources.shows_tab
 import common.domain.models.util.MediaType
 import org.jetbrains.compose.resources.StringResource
 
-sealed class MediaTypeTabItem(
-    val tabResId: StringResource,
-    val mediaType: MediaType,
-) {
+sealed class MediaTypeTabItem(val tabResId: StringResource, val mediaType: MediaType) {
     data object Movies : MediaTypeTabItem(
         tabResId = Res.string.movies_tab,
-        mediaType = MediaType.MOVIE,
+        mediaType = MediaType.MOVIE
     )
     data object Shows : MediaTypeTabItem(
         tabResId = Res.string.shows_tab,
-        mediaType = MediaType.SHOW,
+        mediaType = MediaType.SHOW
     )
 }

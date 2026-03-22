@@ -40,9 +40,7 @@ import common.util.UiConstants.VIDEOS_PLAY_ICON_SIZE
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun VideoList(
-    videoList: List<Videos>,
-) {
+fun VideoList(videoList: List<Videos>) {
     val uriHandler = LocalUriHandler.current
 
     val launchVideo: (String) -> Unit = { videoKey ->
@@ -55,20 +53,20 @@ fun VideoList(
         val imagePath = "${BASE_YOUTUBE_THUMBAIL_URL}${video.key}$YOUTUBE_THUMBAIL_RESOLUTION"
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
         ) {
             Card(
                 onClick = {
                     launchVideo(video.key)
                 },
                 colors = CardDefaults.cardColors(
-                    containerColor = MainBarGreyColor,
+                    containerColor = MainBarGreyColor
                 ),
                 modifier = Modifier
                     .padding(
-                        vertical = DEFAULT_PADDING.dp,
+                        vertical = DEFAULT_PADDING.dp
                     )
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
             ) {
                 Row {
                     Box(
@@ -78,32 +76,32 @@ fun VideoList(
                             .clip(
                                 RoundedCornerShape(
                                     topStart = VIDEOS_BORDER_SIZE.dp,
-                                    bottomStart = VIDEOS_BORDER_SIZE.dp,
-                                ),
-                            ),
+                                    bottomStart = VIDEOS_BORDER_SIZE.dp
+                                )
+                            )
                     ) {
                         NetworkImage(
                             imageUrl = imagePath,
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
+                            contentScale = ContentScale.Crop
                         )
                         Image(
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .size(VIDEOS_PLAY_ICON_SIZE.dp),
                             painter = painterResource(resource = Res.drawable.ic_play_video),
-                            contentDescription = null,
+                            contentDescription = null
                         )
                     }
                     Spacer(modifier = Modifier.width(SMALL_PADDING.dp))
                     Column(
                         verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxHeight(),
+                        modifier = Modifier.fillMaxHeight()
                     ) {
                         Text(
                             text = video.name,
                             color = MaterialTheme.colorScheme.onPrimary,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }

@@ -16,18 +16,18 @@ interface ContentEntityDao {
 
     @Query(
         "DELETE FROM content_entity " +
-            "WHERE contentId=:contentId AND mediaType = :mediaType AND listId = :listId",
+            "WHERE contentId=:contentId AND mediaType = :mediaType AND listId = :listId"
     )
     suspend fun delete(contentId: Int, mediaType: String, listId: Int)
 
     @Query(
-        "SELECT * FROM content_entity WHERE contentId = :contentId AND mediaType = :mediaType",
+        "SELECT * FROM content_entity WHERE contentId = :contentId AND mediaType = :mediaType"
     )
     suspend fun searchItems(contentId: Int, mediaType: String): List<ContentEntity>
 
     @Query(
         "SELECT * FROM content_entity WHERE " +
-            "contentId = :contentId AND mediaType = :mediaType AND listId = :listId",
+            "contentId = :contentId AND mediaType = :mediaType AND listId = :listId"
     )
     suspend fun getItem(contentId: Int, mediaType: String, listId: Int): ContentEntity?
 }

@@ -7,7 +7,7 @@ import features.details.ui.DetailsViewModel
 import features.home.ui.HomeViewModel
 import features.search.ui.SearchViewModel
 import features.watchlist.ui.WatchlistViewModel
-import org.koin.compose.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
@@ -16,8 +16,7 @@ val viewModelModule = module {
     viewModel { BrowseViewModel(get()) }
     viewModel { WatchlistViewModel(get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel {
-            (contentId: Int, mediaType: MediaType) ->
+    viewModel { (contentId: Int, mediaType: MediaType) ->
         DetailsViewModel(contentId, mediaType, get())
     }
 }

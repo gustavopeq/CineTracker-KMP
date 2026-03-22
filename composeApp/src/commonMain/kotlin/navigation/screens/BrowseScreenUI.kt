@@ -18,14 +18,14 @@ class BrowseScreenUI : ScreenUI {
         Browse(
             goToDetails = { contentId, mediaType ->
                 navController.navigate(
-                    DetailsScreen.routeWithArguments(contentId, mediaType.name),
+                    DetailsScreen.routeWithArguments(contentId, mediaType.name)
                 )
             },
             goToErrorScreen = {
                 if (currentScreen != ErrorScreen.route()) {
                     navController.navigate(ErrorScreen.route())
                 }
-            },
+            }
         )
     }
 }

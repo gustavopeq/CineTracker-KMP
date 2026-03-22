@@ -17,17 +17,12 @@ object DetailsScreen : Screen {
         get() = listOf(
             navArgument(ARG_CONTENT_ID) {
                 type = NavType.IntType
-            },
+            }
         )
 
-    fun routeWithArguments(
-        contentId: Int,
-        mediaType: String,
-    ): String {
-        return buildString {
-            append(DETAILS_ROUTE)
-            append("/$contentId?")
-            append("$ARG_MEDIA_TYPE=$mediaType")
-        }
+    fun routeWithArguments(contentId: Int, mediaType: String): String = buildString {
+        append(DETAILS_ROUTE)
+        append("/$contentId?")
+        append("$ARG_MEDIA_TYPE=$mediaType")
     }
 }

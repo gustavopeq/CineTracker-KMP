@@ -21,18 +21,14 @@ class WatchlistInteractor(
     private val databaseRepository: DatabaseRepository,
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository,
-    private val personalRatingRepository: PersonalRatingRepository,
+    private val personalRatingRepository: PersonalRatingRepository
 ) {
     private var lastRemovedItem: ContentEntity? = null
     private var lastMovedListId: Int? = null
 
-    suspend fun getAllItems(listId: Int): List<ContentEntity> {
-        return databaseRepository.getAllItemsByListId(listId = listId)
-    }
+    suspend fun getAllItems(listId: Int): List<ContentEntity> = databaseRepository.getAllItemsByListId(listId = listId)
 
-    suspend fun fetchListDetails(
-        entityList: List<ContentEntity>,
-    ): WatchlistState {
+    suspend fun fetchListDetails(entityList: List<ContentEntity>): WatchlistState {
         val watchlistState = WatchlistState()
         try {
             val detailedWatchlist = entityList.mapNotNull { entity ->
@@ -46,7 +42,7 @@ class WatchlistInteractor(
             watchlistState.listItems.value = detailedWatchlist
         } catch (e: IllegalStateException) {
             watchlistState.setError(
-                errorCode = e.message,
+                errorCode = e.message
             )
         }
         return watchlistState
@@ -70,7 +66,7 @@ class WatchlistInteractor(
                     println("getContentDetailsById failed with error: ${response.error}")
                     throw IllegalStateException(
                         response.error.code,
-                        response.error.exception,
+                        response.error.exception
                     )
                 }
                 is Left -> {
@@ -85,28 +81,19 @@ class WatchlistInteractor(
         return contentDetails
     }
 
-    suspend fun removeContentFromDatabase(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ) {
+    suspend fun removeContentFromDatabase(contentId: Int, mediaType: MediaType, listId: Int) {
         lastRemovedItem = databaseRepository.deleteItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = listId,
+            listId = listId
         )
     }
-    suspend fun moveItemToList(
-        contentId: Int,
-        mediaType: MediaType,
-        currentListId: Int,
-        newListId: Int,
-    ) {
+    suspend fun moveItemToList(contentId: Int, mediaType: MediaType, currentListId: Int, newListId: Int) {
         lastRemovedItem = databaseRepository.moveItemToList(
             contentId = contentId,
             mediaType = mediaType,
             currentListId = currentListId,
-            newListId = newListId,
+            newListId = newListId
         )
         lastMovedListId = newListId
     }
@@ -124,7 +111,7 @@ class WatchlistInteractor(
                 databaseRepository.deleteItem(
                     contentId = contentEntity.contentId,
                     mediaType = MediaType.getType(contentEntity.mediaType),
-                    listId = it,
+                    listId = it
                 )
             }
         }
@@ -142,7 +129,7 @@ class WatchlistInteractor(
                 else -> {
                     val customTab = WatchlistTabItem.CustomTab(
                         tabName = listEntity.listName,
-                        listId = listEntity.listId,
+                        listId = listEntity.listId
                     )
                     allWatchlistTabs.add(customTab)
                 }

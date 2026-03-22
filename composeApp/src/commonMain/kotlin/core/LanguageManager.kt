@@ -20,7 +20,7 @@ object LanguageManager {
         "es-PR",
         "es-UY",
         "es-VE",
-        "es-CR",
+        "es-CR"
     )
     private const val DEFAULT_LANGUAGE = "en-US"
 
@@ -36,9 +36,7 @@ object LanguageManager {
         }
     }
 
-    private fun String.isSupported(): Boolean {
-        return supportedLanguages.contains(this)
-    }
+    private fun String.isSupported(): Boolean = supportedLanguages.contains(this)
 
     fun getUserCountryCode(): String = getUserCountry()
 }

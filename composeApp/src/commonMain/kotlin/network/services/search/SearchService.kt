@@ -13,27 +13,27 @@ interface SearchService {
         query: String,
         matureEnabled: Boolean = false,
         language: String = LanguageManager.getUserLanguageTag(),
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<MultiResponse>>
 
     suspend fun searchMovieByQuery(
         query: String,
         matureEnabled: Boolean = false,
         language: String = LanguageManager.getUserLanguageTag(),
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
     suspend fun searchShowByQuery(
         query: String,
         matureEnabled: Boolean = false,
         language: String = LanguageManager.getUserLanguageTag(),
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<ShowResponse>>
 
     suspend fun searchPersonByQuery(
         query: String,
         matureEnabled: Boolean = false,
         language: String = LanguageManager.getUserLanguageTag(),
-        pageIndex: Int,
+        pageIndex: Int
     ): ApiResult<ContentPagingResponse<PersonResponse>>
 }

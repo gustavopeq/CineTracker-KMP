@@ -13,7 +13,7 @@ import network.util.Right
 class SearchPagingSource(
     private val searchRepository: SearchRepository,
     private val query: String,
-    private val mediaType: MediaType?,
+    private val mediaType: MediaType?
 ) : PagingSource<Int, GenericContent>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GenericContent> {
         return try {
@@ -28,25 +28,25 @@ class SearchPagingSource(
                 MediaType.MOVIE -> {
                     searchRepository.onSearchMovieByQuery(
                         query = query,
-                        page = pageNumber,
+                        page = pageNumber
                     ).first()
                 }
                 MediaType.SHOW -> {
                     searchRepository.onSearchShowByQuery(
                         query = query,
-                        page = pageNumber,
+                        page = pageNumber
                     ).first()
                 }
                 MediaType.PERSON -> {
                     searchRepository.onSearchPersonByQuery(
                         query = query,
-                        page = pageNumber,
+                        page = pageNumber
                     ).first()
                 }
                 else -> {
                     searchRepository.onSearchMultiByQuery(
                         query = query,
-                        page = pageNumber,
+                        page = pageNumber
                     ).first()
                 }
             }
@@ -55,7 +55,7 @@ class SearchPagingSource(
                 is Right -> {
                     println("Search Paging source error: ${apiResponse.error}")
                     LoadResult.Error(
-                        apiResponse.error.exception ?: Exception("Unknown error"),
+                        apiResponse.error.exception ?: Exception("Unknown error")
                     )
                 }
 
@@ -66,7 +66,7 @@ class SearchPagingSource(
                     LoadResult.Page(
                         data = data,
                         prevKey = previousKey,
-                        nextKey = pageNumber + 1,
+                        nextKey = pageNumber + 1
                     )
                 }
             }

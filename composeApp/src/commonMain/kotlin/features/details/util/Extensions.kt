@@ -27,10 +27,6 @@ fun Float.mapValueToRange(initialHeaderPosY: Float): Float {
     return (1.0f - mappedValue).coerceIn(0f, 1f)
 }
 
-fun Long?.isValidValue(): Boolean {
-    return this != null && this > 0
-}
+fun Long?.isValidValue(): Boolean = this != null && this > 0
 
-fun Long.toFormattedCurrency(): String {
-    return this.toFormattedCurrency()
-}
+fun Long.toFormattedCurrency(): String = this.toFormattedCurrency()

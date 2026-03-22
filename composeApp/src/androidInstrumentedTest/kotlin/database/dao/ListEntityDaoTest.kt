@@ -108,7 +108,7 @@ class ListEntityDaoTest {
         dao.insertList(ListEntity(listId = 1, listName = "watchlist"))
         val contentDao = database.contentEntityDao()
         contentDao.insert(ContentEntity(contentId = 1, mediaType = "MOVIE", listId = 1, createdAt = 0))
-        contentDao.insert(ContentEntity(contentId = 2, mediaType = "SHOW",  listId = 1, createdAt = 0))
+        contentDao.insert(ContentEntity(contentId = 2, mediaType = "SHOW", listId = 1, createdAt = 0))
 
         dao.deleteList(1)
 

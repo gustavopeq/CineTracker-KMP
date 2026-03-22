@@ -21,26 +21,26 @@ class HomeScreenUI : ScreenUI {
         Home(
             goToDetails = { contentId, mediaType ->
                 navController.navigate(
-                    DetailsScreen.routeWithArguments(contentId, mediaType.name),
+                    DetailsScreen.routeWithArguments(contentId, mediaType.name)
                 )
             },
             goToWatchlist = {
                 navigateToTopLevelDestination(
                     navController = navController,
-                    destination = WatchlistScreen.route(),
+                    destination = WatchlistScreen.route()
                 )
             },
             goToBrowse = {
                 navigateToTopLevelDestination(
                     navController = navController,
-                    destination = BrowseScreen.route(),
+                    destination = BrowseScreen.route()
                 )
             },
             goToErrorScreen = {
                 if (currentScreen != ErrorScreen.route()) {
                     navController.navigate(ErrorScreen.route())
                 }
-            },
+            }
         )
     }
 }

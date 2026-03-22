@@ -31,9 +31,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SearchBar(
-    viewModel: SearchViewModel,
-) {
+fun SearchBar(viewModel: SearchViewModel) {
     val searchBarValue by viewModel.searchQuery
     val textFieldFocus = remember { FocusRequester() }
 
@@ -58,14 +56,14 @@ fun SearchBar(
                 style = MaterialTheme.typography.labelMedium,
                 color = placeholderGrey2,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
         },
         leadingIcon = {
             Icon(
                 painter = painterResource(resource = Res.drawable.ic_nav_search),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         },
         trailingIcon = {
@@ -73,19 +71,19 @@ fun SearchBar(
                 IconButton(
                     onClick = {
                         viewModel.onEvent(SearchEvent.ClearSearchBar)
-                    },
+                    }
                 ) {
                     Icon(
                         painter = painterResource(resource = Res.drawable.ic_close),
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
         },
         colors = textFieldColors(),
         textStyle = MaterialTheme.typography.labelMedium,
-        singleLine = true,
+        singleLine = true
     )
 }
 
@@ -94,8 +92,8 @@ private fun textFieldColors() = TextFieldDefaults.colors(
     cursorColor = MaterialTheme.colorScheme.secondary,
     selectionColors = TextSelectionColors(
         backgroundColor = SecondaryGreyColor,
-        handleColor = PrimaryYellowColor_90,
+        handleColor = PrimaryYellowColor_90
     ),
     focusedContainerColor = MainBarGreyColor,
-    unfocusedContainerColor = MainBarGreyColor,
+    unfocusedContainerColor = MainBarGreyColor
 )

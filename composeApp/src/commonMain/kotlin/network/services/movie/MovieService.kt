@@ -12,36 +12,30 @@ interface MovieService {
     suspend fun getMovieList(
         movieListType: String,
         pageIndex: Int,
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
-    suspend fun getMovieDetailsById(
-        movieId: Int,
-        language: String = getUserLanguageTag(),
-    ): ApiResult<MovieResponse>
+    suspend fun getMovieDetailsById(movieId: Int, language: String = getUserLanguageTag()): ApiResult<MovieResponse>
 
     suspend fun getMovieCreditsById(
         movieId: Int,
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentCreditsResponse>
 
-    suspend fun getMovieVideosById(
-        movieId: Int,
-        language: String = getUserLanguageTag(),
-    ): ApiResult<VideosByIdResponse>
+    suspend fun getMovieVideosById(movieId: Int, language: String = getUserLanguageTag()): ApiResult<VideosByIdResponse>
 
     suspend fun getRecommendationsMoviesById(
         movieId: Int,
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
     suspend fun getSimilarMoviesById(
         movieId: Int,
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
     suspend fun getStreamingProviders(
         movieId: Int,
-        language: String = getUserLanguageTag(),
+        language: String = getUserLanguageTag()
     ): ApiResult<WatchProvidersResponse>
 }

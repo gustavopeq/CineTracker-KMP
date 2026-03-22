@@ -38,9 +38,9 @@ import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.LARGE_MARGIN
+import kotlin.math.round
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,24 +48,24 @@ fun RatingBottomSheet(
     initialRating: Float? = null,
     dismissBottomSheet: () -> Unit,
     onRatingSave: (Float) -> Unit,
-    onRatingClear: (() -> Unit)? = null,
+    onRatingClear: (() -> Unit)? = null
 ) {
     var rating by remember { mutableStateOf(initialRating) }
     val displayRating = rating?.let { round(it * 10) / 10 }
 
     GenericBottomSheet(
         dismissBottomSheet = dismissBottomSheet,
-        headerText = stringResource(Res.string.rating_bottom_sheet_header),
+        headerText = stringResource(Res.string.rating_bottom_sheet_header)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = LARGE_MARGIN.dp, vertical = DEFAULT_MARGIN.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Image(
                     painter = painterResource(Res.drawable.ic_star),
@@ -76,11 +76,11 @@ fun RatingBottomSheet(
                     colorFilter = ColorFilter.tint(PrimaryBlueColor)
                 )
                 Spacer(modifier = Modifier.size(DEFAULT_PADDING.dp))
-                
+
                 val ratingText = displayRating?.let {
                     if (it >= 10f) "10" else displayRating.toString()
                 }
-                
+
                 Text(
                     text = ratingText ?: "0",
                     style = MaterialTheme.typography.displayMedium.copy(

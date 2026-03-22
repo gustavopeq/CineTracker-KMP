@@ -16,7 +16,7 @@ fun PersonMoreOptionsTab(
     contentList: List<GenericContent>,
     personImageList: List<PersonImage>,
     goToDetails: (Int, MediaType) -> Unit,
-    updateShowAllFlag: (Boolean, MediaType) -> Unit,
+    updateShowAllFlag: (Boolean, MediaType) -> Unit
 ) {
     val moviesList = contentList.filter { it.mediaType == MediaType.MOVIE }
     val showList = contentList.filter { it.mediaType == MediaType.SHOW }
@@ -47,7 +47,7 @@ fun PersonMoreOptionsTab(
                         openContentDetails = goToDetails,
                         onSeeAll = {
                             updateShowAllFlag(true, MediaType.MOVIE)
-                        },
+                        }
                     )
                 }
 
@@ -59,13 +59,13 @@ fun PersonMoreOptionsTab(
                         openContentDetails = goToDetails,
                         onSeeAll = {
                             updateShowAllFlag(true, MediaType.SHOW)
-                        },
+                        }
                     )
                 }
 
                 MoreOptionsTabItem.ImagesTab.tabIndex -> {
                     GridImageList(
-                        personImageList = personImageList,
+                        personImageList = personImageList
                     )
                 }
             }

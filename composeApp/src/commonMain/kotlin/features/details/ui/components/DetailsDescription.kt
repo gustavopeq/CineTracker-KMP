@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,10 +41,10 @@ import cinetracker_kmp.composeapp.generated.resources.movie_details_production_c
 import cinetracker_kmp.composeapp.generated.resources.movie_details_release_date_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_revenue_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_runtime_label
-import cinetracker_kmp.composeapp.generated.resources.personal_ratings_add_rating
 import cinetracker_kmp.composeapp.generated.resources.person_details_born_in_label
 import cinetracker_kmp.composeapp.generated.resources.person_details_born_label
 import cinetracker_kmp.composeapp.generated.resources.person_details_death_label
+import cinetracker_kmp.composeapp.generated.resources.personal_ratings_add_rating
 import cinetracker_kmp.composeapp.generated.resources.read_more_text
 import cinetracker_kmp.composeapp.generated.resources.seasons
 import cinetracker_kmp.composeapp.generated.resources.show_details_duration_label
@@ -85,7 +84,7 @@ import org.jetbrains.compose.resources.stringResource
 fun DetailsDescriptionHeader(
     contentDetails: DetailedContent?,
     viewModel: DetailsViewModel,
-    updateTitlePosition: (Float) -> Unit,
+    updateTitlePosition: (Float) -> Unit
 ) {
     var showRatingSheet by remember { mutableStateOf(false) }
     val personalRating by viewModel.personalRating.collectAsState()
@@ -99,8 +98,8 @@ fun DetailsDescriptionHeader(
         modifier = Modifier
             .fillMaxWidth()
             .classicVerticalGradientBrush(
-                direction = GradientDirections.UP,
-            ),
+                direction = GradientDirections.UP
+            )
     ) {
         Spacer(
             modifier = Modifier
@@ -112,25 +111,25 @@ fun DetailsDescriptionHeader(
                         it.positionInWindow().y
                     }
                     updateTitlePosition(titlePosition)
-                },
+                }
         )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(DEFAULT_MARGIN.dp),
+                .padding(DEFAULT_MARGIN.dp)
         ) {
             Text(
                 text = "${contentDetails?.name}",
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displayMedium
             )
             when (contentDetails?.mediaType) {
                 MediaType.MOVIE, MediaType.SHOW -> {
                     Row(
                         modifier = Modifier.height(24.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         RatingComponent(rating = contentDetails.rating)
-                        
+
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = DEFAULT_PADDING.dp)
@@ -146,9 +145,9 @@ fun DetailsDescriptionHeader(
                         Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
                         MediaTypeTag(
                             modifier = Modifier.clip(
-                                RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp),
+                                RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp)
                             ),
-                            mediaType = contentDetails.mediaType,
+                            mediaType = contentDetails.mediaType
                         )
                     }
                 }
@@ -171,9 +170,7 @@ fun DetailsDescriptionHeader(
 }
 
 @Composable
-fun DetailsDescriptionBody(
-    contentDetails: DetailedContent,
-) {
+fun DetailsDescriptionBody(contentDetails: DetailedContent) {
     if (contentDetails.overview.isNotEmpty()) {
         OverviewInfo(contentDetails)
     }
@@ -182,7 +179,7 @@ fun DetailsDescriptionBody(
         MediaType.MOVIE -> {
             DateInfo(
                 header = stringResource(resource = Res.string.movie_details_release_date_label),
-                date = contentDetails.releaseDate,
+                date = contentDetails.releaseDate
             )
 
             GenresInfo(contentDetails.genres)
@@ -193,51 +190,51 @@ fun DetailsDescriptionBody(
 
             FinanceInfo(
                 header = stringResource(resource = Res.string.movie_details_budget_label),
-                value = contentDetails.budget,
+                value = contentDetails.budget
             )
 
             FinanceInfo(
                 header = stringResource(resource = Res.string.movie_details_revenue_label),
-                value = contentDetails.revenue,
+                value = contentDetails.revenue
             )
 
             StreamProviderInfo(
-                streamProviders = contentDetails.streamProviders,
+                streamProviders = contentDetails.streamProviders
             )
         }
         MediaType.SHOW -> {
             DateInfo(
                 header = stringResource(resource = Res.string.show_details_first_air_date_label),
-                date = contentDetails.firstAirDate,
+                date = contentDetails.firstAirDate
             )
 
             DateInfo(
                 header = stringResource(resource = Res.string.show_details_last_air_date_label),
-                date = contentDetails.lastAirDate,
+                date = contentDetails.lastAirDate
             )
 
             GenresInfo(contentDetails.genres)
 
             ShowDurationInfo(
                 seasonNumber = contentDetails.numberOfSeasons,
-                episodeNumber = contentDetails.numberOfEpisodes,
+                episodeNumber = contentDetails.numberOfEpisodes
             )
 
             ProductionCountriesInfo(contentDetails.productionCountries)
 
             StreamProviderInfo(
-                streamProviders = contentDetails.streamProviders,
+                streamProviders = contentDetails.streamProviders
             )
         }
         MediaType.PERSON -> {
             DateInfo(
                 header = stringResource(resource = Res.string.person_details_born_label),
-                date = contentDetails.birthday,
+                date = contentDetails.birthday
             )
 
             DateInfo(
                 header = stringResource(resource = Res.string.person_details_death_label),
-                date = contentDetails.deathday,
+                date = contentDetails.deathday
             )
 
             BornInInfo(contentDetails.placeOfBirth)
@@ -260,8 +257,8 @@ private fun OverviewInfo(contentDetails: DetailedContent) {
                 enabled = isOverflowing || isExpanded,
                 onClick = {
                     isExpanded = !isExpanded
-                },
-            ),
+                }
+            )
     ) {
         Text(
             text = text,
@@ -271,7 +268,7 @@ private fun OverviewInfo(contentDetails: DetailedContent) {
             overflow = TextOverflow.Ellipsis,
             onTextLayout = { textLayoutResult ->
                 isOverflowing = textLayoutResult.hasVisualOverflow
-            },
+            }
         )
         if (isOverflowing && !isExpanded) {
             Text(
@@ -279,7 +276,7 @@ private fun OverviewInfo(contentDetails: DetailedContent) {
                 text = stringResource(resource = Res.string.read_more_text),
                 style = textStyle,
                 color = MaterialTheme.colorScheme.secondary,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         } else {
             Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
@@ -291,7 +288,7 @@ private fun OverviewInfo(contentDetails: DetailedContent) {
 private fun RuntimeInfo(runtime: Int) {
     if (runtime > 0) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.movie_details_runtime_label),
+            stringResource(resource = Res.string.movie_details_runtime_label)
         )
         DetailDescriptionBody(runtime.formatRuntime())
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
@@ -302,7 +299,7 @@ private fun RuntimeInfo(runtime: Int) {
 private fun GenresInfo(genres: List<ContentGenre?>) {
     if (genres.isNotEmpty()) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.movie_details_genres_label),
+            stringResource(resource = Res.string.movie_details_genres_label)
         )
         val formattedGenres = genres.map { it?.name }.joinToString(", ")
         DetailDescriptionBody(bodyText = formattedGenres)
@@ -314,7 +311,7 @@ private fun GenresInfo(genres: List<ContentGenre?>) {
 private fun ProductionCountriesInfo(productionCountry: List<ProductionCountry?>) {
     if (productionCountry.isNotEmpty()) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.movie_details_production_country_title),
+            stringResource(resource = Res.string.movie_details_production_country_title)
         )
 
         productionCountry.forEach {
@@ -325,24 +322,18 @@ private fun ProductionCountriesInfo(productionCountry: List<ProductionCountry?>)
 }
 
 @Composable
-private fun FinanceInfo(
-    header: String,
-    value: Long,
-) {
+private fun FinanceInfo(header: String, value: Long) {
     if (value.isValidValue()) {
         DetailDescriptionLabel(header)
         DetailDescriptionBody(
-            bodyText = value.toFormattedCurrency(),
+            bodyText = value.toFormattedCurrency()
         )
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
 }
 
 @Composable
-private fun DateInfo(
-    header: String,
-    date: String,
-) {
+private fun DateInfo(header: String, date: String) {
     if (date.isNotEmpty()) {
         DetailDescriptionLabel(header)
         val formattedDate = date.formatDate()
@@ -352,23 +343,20 @@ private fun DateInfo(
 }
 
 @Composable
-private fun ShowDurationInfo(
-    seasonNumber: Int,
-    episodeNumber: Int,
-) {
+private fun ShowDurationInfo(seasonNumber: Int, episodeNumber: Int) {
     if (seasonNumber > 0 && episodeNumber > 0) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.show_details_duration_label),
+            stringResource(resource = Res.string.show_details_duration_label)
         )
         val seasonString = pluralStringResource(
             Res.plurals.seasons,
             seasonNumber,
-            seasonNumber,
+            seasonNumber
         )
         val episodeString = pluralStringResource(
             Res.plurals.episodes,
             episodeNumber,
-            episodeNumber,
+            episodeNumber
         )
 
         DetailDescriptionBody(bodyText = "$seasonString, $episodeString")
@@ -377,12 +365,10 @@ private fun ShowDurationInfo(
 }
 
 @Composable
-private fun BornInInfo(
-    bornIn: String,
-) {
+private fun BornInInfo(bornIn: String) {
     if (bornIn.isNotEmpty()) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.person_details_born_in_label),
+            stringResource(resource = Res.string.person_details_born_in_label)
         )
         DetailDescriptionBody(bornIn)
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
@@ -390,12 +376,10 @@ private fun BornInInfo(
 }
 
 @Composable
-private fun StreamProviderInfo(
-    streamProviders: List<StreamProvider>,
-) {
+private fun StreamProviderInfo(streamProviders: List<StreamProvider>) {
     if (streamProviders.isNotEmpty()) {
         DetailDescriptionLabel(
-            stringResource(resource = Res.string.content_details_stream_label),
+            stringResource(resource = Res.string.content_details_stream_label)
         )
         Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
         LazyRow {
@@ -405,7 +389,7 @@ private fun StreamProviderInfo(
                     modifier = Modifier
                         .size(STREAM_PROVIDER_ICON_SIZE.dp)
                         .clip(MaterialTheme.shapes.medium),
-                    imageUrl = fullImagePath,
+                    imageUrl = fullImagePath
                 )
                 Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
             }
@@ -415,24 +399,19 @@ private fun StreamProviderInfo(
 }
 
 @Composable
-fun DetailDescriptionLabel(
-    labelText: String,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-) {
+fun DetailDescriptionLabel(labelText: String, textStyle: TextStyle = MaterialTheme.typography.bodyMedium) {
     Text(
         text = labelText,
         style = textStyle,
-        color = MaterialTheme.colorScheme.onPrimary,
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }
 
 @Composable
-fun DetailDescriptionBody(
-    bodyText: String,
-) {
+fun DetailDescriptionBody(bodyText: String) {
     Text(
         text = bodyText,
         style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surface
     )
 }

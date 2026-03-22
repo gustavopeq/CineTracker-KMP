@@ -26,23 +26,21 @@ private val mainNavDestinations: Map<Screen, ScreenUI> = mapOf(
     WatchlistScreen to WatchlistScreenUI(),
     SearchScreen to SearchScreenUI(),
     DetailsScreen to DetailsScreenUI(),
-    ErrorScreen to ErrorScreenUI(),
+    ErrorScreen to ErrorScreenUI()
 )
 
 @Composable
-fun MainNavGraph(
-    navController: NavHostController = rememberNavController(),
-) {
+fun MainNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
         startDestination = HomeScreen.route(),
         enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
         mainNavDestinations.forEach { (screen, screenUI) ->
             composable(screen.route(), screen.arguments) {
                 screenUI.UI(
-                    navController = navController,
+                    navController = navController
                 )
             }
         }

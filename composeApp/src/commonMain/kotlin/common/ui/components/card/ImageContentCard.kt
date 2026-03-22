@@ -24,7 +24,7 @@ fun ImageContentCard(
     modifier: Modifier = Modifier,
     item: GenericContent,
     adjustedCardSize: Dp,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     val fullImageUrl = BASE_300_IMAGE_URL + item.posterPath
     Column(
@@ -34,16 +34,16 @@ fun ImageContentCard(
             .clickable(
                 onClick = {
                     goToDetails(item.id, item.mediaType)
-                },
+                }
             ),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NetworkImage(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium),
             imageUrl = fullImageUrl,
             widthDp = adjustedCardSize,
-            heightDp = adjustedCardSize * POSTER_ASPECT_RATIO_MULTIPLY,
+            heightDp = adjustedCardSize * POSTER_ASPECT_RATIO_MULTIPLY
         )
         Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
     }

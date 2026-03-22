@@ -13,5 +13,5 @@ data class VideoResponse(
     val official: Boolean? = null,
     val site: String? = null,
     val size: Int? = null,
-    val type: String? = null,
+    val type: String? = null
 )

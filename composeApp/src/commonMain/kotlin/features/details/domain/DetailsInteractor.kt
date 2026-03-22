@@ -34,12 +34,9 @@ class DetailsInteractor(
     private val showRepository: ShowRepository,
     private val personRepository: PersonRepository,
     private val databaseRepository: DatabaseRepository,
-    private val personalRatingRepository: PersonalRatingRepository,
+    private val personalRatingRepository: PersonalRatingRepository
 ) {
-    suspend fun getContentDetailsById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): DetailsState {
+    suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
@@ -69,7 +66,7 @@ class DetailsInteractor(
                     val streamProviders = getStreamingProviders(contentId, mediaType)
                     if (streamProviders.isNotEmpty()) {
                         detailsState.detailsInfo.value = detailsState.detailsInfo.value?.copy(
-                            streamProviders = streamProviders,
+                            streamProviders = streamProviders
                         )
                     }
                 }
@@ -79,10 +76,7 @@ class DetailsInteractor(
         return detailsState
     }
 
-    suspend fun getContentCastById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): DetailsState {
+    suspend fun getContentCastById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
 
         val result = when (mediaType) {
@@ -109,10 +103,7 @@ class DetailsInteractor(
         return detailsState
     }
 
-    suspend fun getContentVideosById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): List<Videos> {
+    suspend fun getContentVideosById(contentId: Int, mediaType: MediaType): List<Videos> {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieVideosById(contentId)
             MediaType.SHOW -> showRepository.getShowVideosById(contentId)
@@ -136,10 +127,7 @@ class DetailsInteractor(
         return videoList
     }
 
-    suspend fun getRecommendationsContentById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): List<GenericContent> {
+    suspend fun getRecommendationsContentById(contentId: Int, mediaType: MediaType): List<GenericContent> {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getRecommendationsMoviesById(contentId)
             MediaType.SHOW -> showRepository.getRecommendationsShowsById(contentId)
@@ -151,7 +139,7 @@ class DetailsInteractor(
             when (response) {
                 is Right -> {
                     println(
-                        "getRecommendationsContentById failed with error: ${response.error}",
+                        "getRecommendationsContentById failed with error: ${response.error}"
                     )
                 }
                 is Left -> {
@@ -159,7 +147,7 @@ class DetailsInteractor(
                     if (listOfSimilar.isEmpty()) {
                         listOfSimilar = getSimilarContentById(
                             contentId = contentId,
-                            mediaType = mediaType,
+                            mediaType = mediaType
                         )
                     }
                 }
@@ -168,10 +156,7 @@ class DetailsInteractor(
         return listOfSimilar
     }
 
-    private suspend fun getSimilarContentById(
-        contentId: Int,
-        mediaType: MediaType,
-    ): List<GenericContent> {
+    private suspend fun getSimilarContentById(contentId: Int, mediaType: MediaType): List<GenericContent> {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getSimilarMoviesById(contentId)
             MediaType.SHOW -> showRepository.getSimilarShowsById(contentId)
@@ -192,10 +177,7 @@ class DetailsInteractor(
         return listOfSimilar
     }
 
-    suspend fun getStreamingProviders(
-        contentId: Int,
-        mediaType: MediaType,
-    ): List<StreamProvider> {
+    suspend fun getStreamingProviders(contentId: Int, mediaType: MediaType): List<StreamProvider> {
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getStreamingProviders(contentId)
             MediaType.SHOW -> showRepository.getStreamingProviders(contentId)
@@ -211,7 +193,7 @@ class DetailsInteractor(
                 is Left -> {
                     val userCountryCode = getUserCountryCode()
                     streamProviderList = response.value.results?.get(
-                        userCountryCode,
+                        userCountryCode
                     )?.flatrate?.map {
                         it.toStreamProvider()
                     }.orEmpty()
@@ -222,20 +204,16 @@ class DetailsInteractor(
     }
 
     private fun mapResponseToGenericContent(
-        response: Left<ContentPagingResponse<out BaseContentResponse>>,
-    ): List<GenericContent> {
-        return response.value.results
-            .filter {
-                it.poster_path?.isNotEmpty() == true && it.title?.isNotEmpty() == true
-            }
-            .mapNotNull {
-                it.toGenericContent()
-            }
-    }
+        response: Left<ContentPagingResponse<out BaseContentResponse>>
+    ): List<GenericContent> = response.value.results
+        .filter {
+            it.poster_path?.isNotEmpty() == true && it.title?.isNotEmpty() == true
+        }
+        .mapNotNull {
+            it.toGenericContent()
+        }
 
-    suspend fun getPersonCreditsById(
-        personId: Int,
-    ): List<GenericContent> {
+    suspend fun getPersonCreditsById(personId: Int): List<GenericContent> {
         val result = personRepository.getPersonCreditsById(personId)
 
         var mediaContentList: List<GenericContent> = emptyList()
@@ -254,9 +232,7 @@ class DetailsInteractor(
         return mediaContentList
     }
 
-    suspend fun getPersonImages(
-        personId: Int,
-    ): List<PersonImage> {
+    suspend fun getPersonImages(personId: Int): List<PersonImage> {
         val result = personRepository.getPersonImagesById(personId)
 
         var imageList: List<PersonImage> = emptyList()
@@ -277,10 +253,7 @@ class DetailsInteractor(
         return imageList
     }
 
-    suspend fun verifyContentInLists(
-        contentId: Int,
-        mediaType: MediaType,
-    ): Map<Int, Boolean> {
+    suspend fun verifyContentInLists(contentId: Int, mediaType: MediaType): Map<Int, Boolean> {
         val allLists = databaseRepository.getAllLists()
         val contentInListMap = allLists.associate { list ->
             list.listId to false
@@ -288,7 +261,7 @@ class DetailsInteractor(
 
         val result = databaseRepository.searchItems(
             contentId = contentId,
-            mediaType = mediaType,
+            mediaType = mediaType
         )
 
         result.forEach { content ->
@@ -298,12 +271,7 @@ class DetailsInteractor(
         return contentInListMap
     }
 
-    suspend fun toggleWatchlist(
-        currentStatus: Boolean,
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ) {
+    suspend fun toggleWatchlist(currentStatus: Boolean, contentId: Int, mediaType: MediaType, listId: Int) {
         when (currentStatus) {
             true -> {
                 removeFromWatchlist(contentId, mediaType, listId)
@@ -314,39 +282,27 @@ class DetailsInteractor(
         }
     }
 
-    private suspend fun addToWatchlist(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ) {
+    private suspend fun addToWatchlist(contentId: Int, mediaType: MediaType, listId: Int) {
         databaseRepository.insertItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = listId,
+            listId = listId
         )
     }
 
-    private suspend fun removeFromWatchlist(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-    ) {
+    private suspend fun removeFromWatchlist(contentId: Int, mediaType: MediaType, listId: Int) {
         databaseRepository.deleteItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = listId,
+            listId = listId
         )
     }
 
-    suspend fun getAllLists(): List<ListItem> {
-        return databaseRepository.getAllLists().map { listEntity ->
-            listEntity.toListItem()
-        }
+    suspend fun getAllLists(): List<ListItem> = databaseRepository.getAllLists().map { listEntity ->
+        listEntity.toListItem()
     }
 
-    suspend fun getPersonalRating(contentId: Int): Float? {
-        return personalRatingRepository.getRating(contentId)
-    }
+    suspend fun getPersonalRating(contentId: Int): Float? = personalRatingRepository.getRating(contentId)
 
     suspend fun setPersonalRating(contentId: Int, mediaType: MediaType, rating: Float) {
         personalRatingRepository.setRating(contentId, mediaType, rating)

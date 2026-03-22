@@ -57,19 +57,14 @@ import features.watchlist.ui.state.WatchlistSnackbarState
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun Watchlist(
-    goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
-) {
+fun Watchlist(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Watchlist(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
         goToDetails = goToDetails,
-        goToErrorScreen = goToErrorScreen,
+        goToErrorScreen = goToErrorScreen
     )
 }
 
@@ -78,7 +73,7 @@ private fun Watchlist(
     viewModel: WatchlistViewModel,
     mainViewModel: MainViewModel,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
     val allLists by viewModel.allLists.collectAsState()
@@ -100,7 +95,7 @@ private fun Watchlist(
             listContent,
             selectedList,
             goToDetails,
-            goToErrorScreen,
+            goToErrorScreen
         )
     }
 }
@@ -117,7 +112,7 @@ private fun AllListsLoadedState(
     listContent: Map<Int, List<GenericContent>>,
     selectedList: Int,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val refreshLists by mainViewModel.refreshLists.collectAsState()
     val selectedTabIndex by viewModel.selectedTabIndex.collectAsState()
@@ -131,26 +126,26 @@ private fun AllListsLoadedState(
             mainViewModel.updateDisplayCreateNewList(true)
         } else {
             viewModel.onEvent(
-                WatchlistEvent.SelectList(tabList[index]),
+                WatchlistEvent.SelectList(tabList[index])
             )
         }
     }
 
     val removeItem: (Int, MediaType) -> Unit = { contentId, mediaType ->
         viewModel.onEvent(
-            WatchlistEvent.RemoveItem(contentId, mediaType),
+            WatchlistEvent.RemoveItem(contentId, mediaType)
         )
     }
 
     val moveItemToList: (Int, MediaType, Int) -> Unit = { contentId, mediaType, listId ->
         viewModel.onEvent(
-            WatchlistEvent.UpdateItemListId(contentId, mediaType, listId),
+            WatchlistEvent.UpdateItemListId(contentId, mediaType, listId)
         )
     }
 
     LaunchedEffect(watchlistSort) {
         viewModel.onEvent(
-            WatchlistEvent.UpdateSortType(watchlistSort),
+            WatchlistEvent.UpdateSortType(watchlistSort)
         )
     }
 
@@ -158,7 +153,7 @@ private fun AllListsLoadedState(
         mainViewModel.updateCurrentScreen(WatchlistScreen.route())
 
         viewModel.onEvent(
-            WatchlistEvent.LoadWatchlistData,
+            WatchlistEvent.LoadWatchlistData
         )
     }
 
@@ -175,7 +170,7 @@ private fun AllListsLoadedState(
         snackbarHostState = snackbarHostState,
         onActionClick = {
             viewModel.onEvent(WatchlistEvent.UndoItemAction)
-        },
+        }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             GenericTabRow(
@@ -192,7 +187,7 @@ private fun AllListsLoadedState(
                         deletePopUpMenuOffset = offset
                         showDeletePopUpMenu = true
                     }
-                },
+                }
             )
             when (loadState) {
                 DataLoadStatus.Empty -> {
@@ -213,7 +208,7 @@ private fun AllListsLoadedState(
                         allLists = tabList,
                         goToDetails = goToDetails,
                         removeItem = removeItem,
-                        moveItemToList = moveItemToList,
+                        moveItemToList = moveItemToList
                     )
                 }
 
@@ -232,7 +227,7 @@ private fun AllListsLoadedState(
         },
         onDismiss = {
             showDeletePopUpMenu = false
-        },
+        }
     )
 
     DeleteListDialog(
@@ -242,7 +237,7 @@ private fun AllListsLoadedState(
         tabList = tabList,
         onDialogDismiss = {
             displayDeleteDialog = false
-        },
+        }
     )
 }
 
@@ -251,14 +246,14 @@ private fun SnackbarLaunchedEffect(
     snackbarState: WatchlistSnackbarState,
     snackbarHostState: SnackbarHostState,
     viewModel: WatchlistViewModel,
-    tabList: List<WatchlistTabItem>,
+    tabList: List<WatchlistTabItem>
 ) {
     LaunchedEffect(snackbarState) {
         if (snackbarState.displaySnackbar.value) {
             val watchlistTabItem = tabList.find { it.listId == snackbarState.listId }
             val tabName = if (watchlistTabItem?.tabName.isNullOrEmpty()) {
                 getString(
-                    getListLocalizedName(DefaultLists.getListById(snackbarState.listId ?: 0)),
+                    getListLocalizedName(DefaultLists.getListById(snackbarState.listId ?: 0))
                 )
             } else {
                 watchlistTabItem?.tabName
@@ -268,12 +263,12 @@ private fun SnackbarLaunchedEffect(
                 val message = if (snackbarState.itemAction == WatchlistItemAction.ITEM_REMOVED) {
                     getString(
                         Res.string.snackbar_item_removed_from_list,
-                        it.capitalized(),
+                        it.capitalized()
                     )
                 } else {
                     getString(
                         Res.string.snackbar_item_moved_to_list,
-                        it.capitalized(),
+                        it.capitalized()
                     )
                 }
                 snackbarHostState.showSnackbar(message)
@@ -291,7 +286,7 @@ private fun WatchlistBody(
     allLists: List<WatchlistTabItem>,
     goToDetails: (Int, MediaType) -> Unit,
     removeItem: (Int, MediaType) -> Unit,
-    moveItemToList: (Int, MediaType, Int) -> Unit,
+    moveItemToList: (Int, MediaType, Int) -> Unit
 ) {
     if (contentList.isNotEmpty()) {
         WatchlistContentLazyList(
@@ -301,7 +296,7 @@ private fun WatchlistBody(
             allLists = allLists,
             goToDetails = goToDetails,
             removeItem = removeItem,
-            moveItemToList = moveItemToList,
+            moveItemToList = moveItemToList
         )
     } else {
         EmptyListMessage()
@@ -316,7 +311,7 @@ private fun WatchlistContentLazyList(
     allLists: List<WatchlistTabItem>,
     goToDetails: (Int, MediaType) -> Unit,
     removeItem: (Int, MediaType) -> Unit,
-    moveItemToList: (Int, MediaType, Int) -> Unit,
+    moveItemToList: (Int, MediaType, Int) -> Unit
 ) {
     val filteredItems = if (watchlistSort.mediaType != null) {
         contentList.filter { it.mediaType == watchlistSort.mediaType }
@@ -332,7 +327,7 @@ private fun WatchlistContentLazyList(
 
     if (sortedItems.isNotEmpty()) {
         LazyColumn(
-            contentPadding = PaddingValues(all = SMALL_MARGIN.dp),
+            contentPadding = PaddingValues(all = SMALL_MARGIN.dp)
         ) {
             items(sortedItems) { mediaInfo ->
                 WatchlistCard(
@@ -351,7 +346,7 @@ private fun WatchlistContentLazyList(
                     },
                     onMoveItemToList = { listId ->
                         moveItemToList(mediaInfo.id, mediaInfo.mediaType, listId)
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
             }
@@ -362,9 +357,7 @@ private fun WatchlistContentLazyList(
 }
 
 @Composable
-private fun EmptyListMessage(
-    mediaType: MediaType? = null,
-) {
+private fun EmptyListMessage(mediaType: MediaType? = null) {
     val messageText = when (mediaType) {
         MediaType.MOVIE -> stringResource(resource = Res.string.empty_movie_list_message)
         MediaType.SHOW -> stringResource(resource = Res.string.empty_show_list_message)
@@ -374,20 +367,20 @@ private fun EmptyListMessage(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.weight(0.3f))
         Text(
             text = stringResource(resource = Res.string.empty_list_header),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Text(
             text = messageText,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimary,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.weight(0.7f))
     }

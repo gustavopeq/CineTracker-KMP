@@ -8,5 +8,5 @@ data class PersonalRatingEntity(
     @PrimaryKey
     val contentId: Int,
     val mediaType: String,
-    val rating: Float,
+    val rating: Float
 )

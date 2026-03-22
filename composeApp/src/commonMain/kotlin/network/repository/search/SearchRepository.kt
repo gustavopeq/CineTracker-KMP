@@ -12,21 +12,21 @@ import network.util.Either
 interface SearchRepository {
     suspend fun onSearchMultiByQuery(
         query: String,
-        page: Int,
+        page: Int
     ): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>>
 
     suspend fun onSearchMovieByQuery(
         query: String,
-        page: Int,
+        page: Int
     ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>>
 
     suspend fun onSearchShowByQuery(
         query: String,
-        page: Int,
+        page: Int
     ): Flow<Either<ContentPagingResponse<ShowResponse>, ApiError>>
 
     suspend fun onSearchPersonByQuery(
         query: String,
-        page: Int,
+        page: Int
     ): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>>
 }

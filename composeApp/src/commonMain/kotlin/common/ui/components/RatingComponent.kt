@@ -33,21 +33,21 @@ fun RatingComponent(
     modifier: Modifier = Modifier,
     rating: Double?,
     ratingIconSize: Int? = RATING_STAR_DEFAULT_SIZE,
-    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.offset(x = (-0.5).dp),
+        modifier = modifier.offset(x = (-0.5).dp)
     ) {
         Image(
             modifier = Modifier.size((ratingIconSize ?: RATING_STAR_DEFAULT_SIZE).dp),
             painter = painterResource(resource = Res.drawable.ic_star),
-            contentDescription = null,
+            contentDescription = null
         )
         Text(
             text = rating.formatRating(),
             color = MaterialTheme.colorScheme.onPrimary,
-            style = textStyle,
+            style = textStyle
         )
     }
 }
@@ -59,7 +59,7 @@ fun PersonalRatingComponent(
     ratingIconSize: Int? = RATING_STAR_DEFAULT_SIZE,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
     starColor: Color = PrimaryBlueColor,
-    onRatingClick: (() -> Unit)? = null,
+    onRatingClick: (() -> Unit)? = null
 ) {
     val isRatingSet = rating.toDoubleOrNull() != null
     val starIcon = if (isRatingSet) Res.drawable.ic_star else Res.drawable.ic_outlined_star
@@ -86,18 +86,18 @@ fun PersonalRatingComponent(
                 } else {
                     Modifier
                 }
-            ),
+            )
     ) {
         Image(
             modifier = Modifier.size((ratingIconSize ?: RATING_STAR_DEFAULT_SIZE).dp),
             painter = painterResource(resource = starIcon),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(starColor),
+            colorFilter = ColorFilter.tint(starColor)
         )
         Text(
             text = rating,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = textStyle,
+            style = textStyle
         )
     }
 }

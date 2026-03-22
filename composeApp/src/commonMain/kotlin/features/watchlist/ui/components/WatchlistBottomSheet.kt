@@ -18,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.all_tag
@@ -37,10 +36,7 @@ import features.watchlist.ui.model.WatchlistRatingSort
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun WatchlistSortBottomSheet(
-    mainViewModel: MainViewModel,
-    displaySortScreen: (Boolean) -> Unit,
-) {
+fun WatchlistSortBottomSheet(mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
     val watchlistSort by mainViewModel.watchlistSort.collectAsState()
 
     val dismissBottomSheet: () -> Unit = {
@@ -49,7 +45,7 @@ fun WatchlistSortBottomSheet(
 
     GenericBottomSheet(
         dismissBottomSheet = dismissBottomSheet,
-        headerText = stringResource(resource = Res.string.watchlist_sort_options_header),
+        headerText = stringResource(resource = Res.string.watchlist_sort_options_header)
     ) {
         Column(
             modifier = Modifier
@@ -60,7 +56,7 @@ fun WatchlistSortBottomSheet(
 
             // Filter Section
             SectionHeader(text = stringResource(resource = Res.string.filter_by_header))
-            
+
             WatchlistOptionRow(
                 text = stringResource(resource = Res.string.all_tag),
                 isSelected = watchlistSort.mediaType == null,
@@ -109,7 +105,7 @@ fun WatchlistSortBottomSheet(
                     mainViewModel.updateWatchlistRatingSort(newSort)
                 }
             )
-            
+
             Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
         }
     }
@@ -126,17 +122,13 @@ private fun SectionHeader(text: String) {
 }
 
 @Composable
-private fun WatchlistOptionRow(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
+private fun WatchlistOptionRow(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = isSelected,
@@ -144,14 +136,14 @@ private fun WatchlistOptionRow(
             modifier = Modifier.size(40.dp),
             colors = RadioButtonDefaults.colors(
                 selectedColor = MaterialTheme.colorScheme.secondary,
-                unselectedColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
-            ),
+                unselectedColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+            )
         )
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
             color = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(start = SMALL_PADDING.dp),
+            modifier = Modifier.padding(start = SMALL_PADDING.dp)
         )
     }
 }

@@ -10,11 +10,7 @@ import features.watchlist.WatchlistScreen
 import features.watchlist.ui.components.WatchlistSortBottomSheet
 
 @Composable
-fun ModalComponents(
-    mainViewModel: MainViewModel,
-    showSortBottomSheet: Boolean,
-    displaySortScreen: (Boolean) -> Unit,
-) {
+fun ModalComponents(mainViewModel: MainViewModel, showSortBottomSheet: Boolean, displaySortScreen: (Boolean) -> Unit) {
     val selectedMovieSortType by mainViewModel.movieSortType.collectAsState()
     val selectedShowSortType by mainViewModel.showSortType.collectAsState()
     val selectedMediaType by mainViewModel.currentMediaTypeSelected.collectAsState()
@@ -28,13 +24,13 @@ fun ModalComponents(
                     selectedMovieSortType = selectedMovieSortType,
                     selectedShowSortType = selectedShowSortType,
                     selectedMediaType = selectedMediaType,
-                    displaySortScreen = displaySortScreen,
+                    displaySortScreen = displaySortScreen
                 )
             }
             WatchlistScreen.route() -> {
                 WatchlistSortBottomSheet(
                     mainViewModel = mainViewModel,
-                    displaySortScreen = displaySortScreen,
+                    displaySortScreen = displaySortScreen
                 )
             }
         }
