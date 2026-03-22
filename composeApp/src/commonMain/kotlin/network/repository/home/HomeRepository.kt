@@ -13,6 +13,6 @@ interface HomeRepository {
     suspend fun getTrendingPerson(): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>>
     suspend fun getMoviesComingSoon(
         releaseDateGte: String,
-        releaseDateLte: String,
+        releaseDateLte: String
     ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>>
 }

@@ -24,11 +24,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainNavBar(
-    navController: NavController,
-    mainViewModel: MainViewModel,
-    navBarItems: List<MainNavBarItem>,
-) {
+fun MainNavBar(navController: NavController, mainViewModel: MainViewModel, navBarItems: List<MainNavBarItem>) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = currentBackStackEntry?.destination?.route
 
@@ -36,7 +32,7 @@ fun MainNavBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(BUTTON_NAVIGATION_BAR_HEIGHT.dp),
-        containerColor = MainBarGreyColor,
+        containerColor = MainBarGreyColor
     ) {
         navBarItems.forEach { item ->
             NavigationBarItem(
@@ -45,20 +41,20 @@ fun MainNavBar(
                     mainViewModel.updateCurrentScreen(item.screen.route())
                     navigateToTopLevelDestination(
                         navController = navController,
-                        destination = item.screen.route(),
+                        destination = item.screen.route()
                     )
                 },
                 icon = {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             painter = painterResource(resource = item.iconResId),
-                            contentDescription = stringResource(resource = item.labelResId),
+                            contentDescription = stringResource(resource = item.labelResId)
                         )
                         Text(
                             text = stringResource(resource = item.labelResId),
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 },
@@ -67,17 +63,14 @@ fun MainNavBar(
                     selectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     selectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
     }
 }
 
-fun navigateToTopLevelDestination(
-    navController: NavController,
-    destination: String,
-) {
+fun navigateToTopLevelDestination(navController: NavController, destination: String) {
     navController.navigate(destination) {
         popUpTo(navController.graph.findStartDestination().displayName) {
             saveState = true

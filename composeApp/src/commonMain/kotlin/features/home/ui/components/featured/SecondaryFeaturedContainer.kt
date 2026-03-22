@@ -33,47 +33,44 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 
 @Composable
-fun SecondaryFeaturedInfo(
-    featuredItem: GenericContent?,
-    goToDetails: (Int, MediaType) -> Unit,
-) {
+fun SecondaryFeaturedInfo(featuredItem: GenericContent?, goToDetails: (Int, MediaType) -> Unit) {
     featuredItem?.let {
         val fullImageUrl = BASE_ORIGINAL_IMAGE_URL + featuredItem.backdropPath
 
         Column(
-            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp),
+            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
         ) {
             Card(
                 modifier = Modifier.clickable(
-                    onClick = { goToDetails(featuredItem.id, featuredItem.mediaType) },
+                    onClick = { goToDetails(featuredItem.id, featuredItem.mediaType) }
                 ),
                 colors = CardDefaults.cardColors(
-                    containerColor = MainBarGreyColor,
+                    containerColor = MainBarGreyColor
                 ),
                 elevation = CardDefaults.elevatedCardElevation(
-                    defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp,
-                ),
+                    defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
+                )
             ) {
                 Box {
                     NetworkImage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(BACKDROP_ASPECT_RATIO),
-                        imageUrl = fullImageUrl,
+                        imageUrl = fullImageUrl
                     )
                     MediaTypeTag(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .clip(RoundedCornerShape(bottomStart = 4.dp)),
-                        mediaType = featuredItem.mediaType,
+                        mediaType = featuredItem.mediaType
                     )
                 }
 
                 Column(
-                    modifier = Modifier.padding(DEFAULT_PADDING.dp),
+                    modifier = Modifier.padding(DEFAULT_PADDING.dp)
                 ) {
                     HomeCardTitle(
-                        title = featuredItem.name,
+                        title = featuredItem.name
                     )
                     if (featuredItem.rating > 0.0) {
                         Spacer(modifier = Modifier.height(UiConstants.SMALL_PADDING.dp))
@@ -85,7 +82,7 @@ fun SecondaryFeaturedInfo(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimary,
                         maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

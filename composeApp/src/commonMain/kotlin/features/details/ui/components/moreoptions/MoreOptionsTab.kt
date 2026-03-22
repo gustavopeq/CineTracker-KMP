@@ -16,7 +16,7 @@ import features.details.ui.components.moreoptions.MoreOptionsTabItem.VideosTab
 fun MoreOptionsTab(
     videoList: List<Videos>,
     contentSimilarList: List<GenericContent>,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     val availableTabs = mutableListOf<MoreOptionsTabItem>()
     if (contentSimilarList.isNotEmpty()) {
@@ -41,7 +41,7 @@ fun MoreOptionsTab(
                     GridContentList(
                         mediaContentList = contentSimilarList,
                         maxCardsNumber = MAX_COUNT_MORE_LIKE_THIS_CARDS,
-                        openContentDetails = goToDetails,
+                        openContentDetails = goToDetails
                     )
                 }
             }

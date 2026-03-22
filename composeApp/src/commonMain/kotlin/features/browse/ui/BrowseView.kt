@@ -58,19 +58,14 @@ import features.browse.BrowseScreen
 import features.browse.events.BrowseEvent
 import features.browse.ui.components.CollapsingTabRow
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun Browse(
-    goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
-) {
+fun Browse(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Browse(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
         goToDetails = goToDetails,
-        goToErrorScreen = goToErrorScreen,
+        goToErrorScreen = goToErrorScreen
     )
 }
 
@@ -80,7 +75,7 @@ private fun Browse(
     viewModel: BrowseViewModel,
     mainViewModel: MainViewModel,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val scaffoldOffset = BROWSE_SCAFFOLD_HEIGHT_OFFSET
@@ -89,7 +84,7 @@ private fun Browse(
     val currentMediaTypeSelected by mainViewModel.currentMediaTypeSelected.collectAsState()
     val pagerState = rememberPagerState(
         initialPage = currentMediaTypeSelected.ordinal,
-        pageCount = { 2 },
+        pageCount = { 2 }
     )
 
     val listOfMovies = viewModel.moviePager.collectAsLazyPagingItems()
@@ -120,37 +115,37 @@ private fun Browse(
                 Modifier.layout { measurable, constraints ->
                     val fixedContentConstraints = constraints.copy(
                         maxHeight = constraints.maxHeight + scaffoldOffset.dp.roundToPx() +
-                            BROWSE_SCAFFOLD_EXTRA_HEIGHT,
+                            BROWSE_SCAFFOLD_EXTRA_HEIGHT
                     )
                     val placeable = measurable.measure(fixedContentConstraints)
 
                     layout(
                         width = placeable.width,
                         height = placeable.height + scaffoldOffset.dp.roundToPx() +
-                            BROWSE_SCAFFOLD_EXTRA_HEIGHT,
+                            BROWSE_SCAFFOLD_EXTRA_HEIGHT
                     ) {
                         placeable.placeRelative(
                             x = 0,
-                            y = scaffoldOffset.dp.roundToPx() + BROWSE_SCAFFOLD_EXTRA_HEIGHT,
+                            y = scaffoldOffset.dp.roundToPx() + BROWSE_SCAFFOLD_EXTRA_HEIGHT
                         )
                     }
-                },
+                }
             ),
         topBar = {
             CollapsingTabRow(
                 scrollBehavior = scrollBehavior,
                 viewModel = viewModel,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
-        },
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding() * 0.95f,
                 bottom = innerPadding.calculateBottomPadding(),
                 start = innerPadding.calculateStartPadding(layoutDirection),
-                end = innerPadding.calculateEndPadding(layoutDirection),
-            ),
+                end = innerPadding.calculateEndPadding(layoutDirection)
+            )
         ) {
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
@@ -161,7 +156,7 @@ private fun Browse(
                             pagingData = listOfMovies,
                             sortTypeItem = movieSortType,
                             goToDetails = goToDetails,
-                            goToErrorScreen = goToErrorScreen,
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                     1 -> {
@@ -171,7 +166,7 @@ private fun Browse(
                             pagingData = listOfShows,
                             sortTypeItem = showSortType,
                             goToDetails = goToDetails,
-                            goToErrorScreen = goToErrorScreen,
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }
@@ -187,7 +182,7 @@ private fun BrowseBody(
     pagingData: LazyPagingItems<GenericContent>,
     sortTypeItem: SortTypeItem,
     goToDetails: (Int, MediaType) -> Unit,
-    goToErrorScreen: () -> Unit,
+    goToErrorScreen: () -> Unit
 ) {
     LaunchedEffect(sortTypeItem) {
         viewModel.onEvent(BrowseEvent.UpdateSortType(sortTypeItem, mediaType))
@@ -202,17 +197,17 @@ private fun BrowseBody(
         screenWidth,
         dpToPx(minCardSize, density),
         spacing,
-        density,
+        density
     )
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         when (pagingData.loadState.refresh) {
             is LoadState.Loading -> {
                 BrowseBodyPlaceholder(
                     numberOfCards = numCardsPerRow,
-                    cardWidth = adjustedCardSize,
+                    cardWidth = adjustedCardSize
                 )
             }
             is LoadState.Error -> {
@@ -222,7 +217,7 @@ private fun BrowseBody(
             else -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(numCardsPerRow),
-                    modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp),
+                    modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp)
                 ) {
                     items(pagingData.itemCount) { index ->
                         val content = pagingData[index]
@@ -232,13 +227,13 @@ private fun BrowseBody(
                                     .width(adjustedCardSize)
                                     .padding(
                                         horizontal = BROWSE_CARD_PADDING_HORIZONTAL.dp,
-                                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp,
+                                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp
                                     ),
                                 cardWidth = adjustedCardSize,
                                 imageUrl = content.posterPath,
                                 title = content.name,
                                 rating = content.rating,
-                                goToDetails = { goToDetails(content.id, content.mediaType) },
+                                goToDetails = { goToDetails(content.id, content.mediaType) }
                             )
                         }
                     }
@@ -249,37 +244,34 @@ private fun BrowseBody(
 }
 
 @Composable
-private fun BrowseBodyPlaceholder(
-    numberOfCards: Int,
-    cardWidth: Dp,
-) {
+private fun BrowseBodyPlaceholder(numberOfCards: Int, cardWidth: Dp) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(numberOfCards),
-        modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp),
+        modifier = Modifier.padding(horizontal = SMALL_MARGIN.dp)
     ) {
         items(numberOfCards * numberOfCards) {
             Column(
                 modifier = Modifier
                     .width(
-                        width = cardWidth,
+                        width = cardWidth
                     )
                     .padding(
                         horizontal = BROWSE_CARD_PADDING_HORIZONTAL.dp,
-                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp,
-                    ),
+                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp
+                    )
             ) {
                 ComponentPlaceholder(
                     modifier = Modifier
                         .width(cardWidth)
                         .height(cardWidth * POSTER_ASPECT_RATIO_MULTIPLY)
-                        .clip(RoundCornerShapes.small),
+                        .clip(RoundCornerShapes.small)
                 )
                 Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
                 ComponentPlaceholder(
                     modifier = Modifier
                         .width(cardWidth)
                         .height(50.dp)
-                        .clip(RoundCornerShapes.extraSmall),
+                        .clip(RoundCornerShapes.extraSmall)
                 )
             }
         }

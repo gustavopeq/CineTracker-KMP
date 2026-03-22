@@ -55,7 +55,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun setupGenericTabs(
     tabList: List<TabItem>,
-    onTabSelected: (Int) -> Unit = {},
+    onTabSelected: (Int) -> Unit = {}
 ): Triple<List<TabItem>, State<Int>, (Int, Boolean) -> Unit> {
     tabList.forEachIndexed { index, tabItem ->
         tabItem.tabIndex = index
@@ -80,7 +80,7 @@ fun GenericTabRow(
     selectedTabIndex: Int,
     tabList: List<TabItem>,
     updateSelectedTab: (Int, Boolean) -> Unit,
-    onLongClick: (Int, Offset) -> Unit = { _, _ -> },
+    onLongClick: (Int, Offset) -> Unit = { _, _ -> }
 ) {
     ScrollableTabRow(
         modifier = Modifier.fillMaxWidth(),
@@ -88,12 +88,12 @@ fun GenericTabRow(
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.secondary
             )
         },
         divider = { },
         containerColor = Color.Transparent,
-        edgePadding = 0.dp,
+        edgePadding = 0.dp
     ) {
         tabList.forEachIndexed { index, mediaTypeTabItem ->
             if (mediaTypeTabItem == WatchlistTabItem.AddNewTab) {
@@ -101,7 +101,7 @@ fun GenericTabRow(
                     tabIndex = index,
                     onClick = {
                         updateSelectedTab(index, false)
-                    },
+                    }
                 )
             } else {
                 val tabName = mediaTypeTabItem.tabResId?.let {
@@ -116,7 +116,7 @@ fun GenericTabRow(
                     },
                     onLongClick = { offset ->
                         onLongClick(index, offset)
-                    },
+                    }
                 )
             }
         }
@@ -127,23 +127,18 @@ fun GenericTabRow(
             .fillMaxWidth()
             .offset(y = (-1).dp)
             .zIndex(BACKGROUND_INDEX)
-            .removeParentPadding(DEFAULT_MARGIN.dp),
+            .removeParentPadding(DEFAULT_MARGIN.dp)
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GenericTab(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    onLongClick: (Offset) -> Unit,
-) {
+fun GenericTab(text: String, isSelected: Boolean, onClick: () -> Unit, onLongClick: (Offset) -> Unit) {
     var tabOffset by remember { mutableStateOf(Offset.Zero) }
     val tabModifier = if (isSelected) {
         Modifier.basicMarquee(
             iterations = 1,
-            spacing = MarqueeSpacing(10.dp),
+            spacing = MarqueeSpacing(10.dp)
         )
     } else {
         Modifier
@@ -157,14 +152,14 @@ fun GenericTab(
                 tabOffset = coordinates.localToRoot(Offset.Zero)
             },
         selected = isSelected,
-        onClick = { onClick() },
+        onClick = { onClick() }
     ) {
         Box(
             modifier = Modifier.combinedClickable(
                 onLongClick = { onLongClick(tabOffset) },
-                onClick = { onClick() },
+                onClick = { onClick() }
             ).widthIn(max = GENERIC_TAB_MAX_WIDTH.dp),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 modifier = tabModifier,
@@ -176,7 +171,7 @@ fun GenericTab(
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Clip,
+                overflow = TextOverflow.Clip
             )
         }
         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
@@ -184,20 +179,17 @@ fun GenericTab(
 }
 
 @Composable
-fun AddNewTab(
-    tabIndex: Int,
-    onClick: (Int) -> Unit,
-) {
+fun AddNewTab(tabIndex: Int, onClick: (Int) -> Unit) {
     Tab(
         modifier = Modifier.padding(horizontal = DEFAULT_PADDING.dp),
         selected = false,
-        onClick = { onClick(tabIndex) },
+        onClick = { onClick(tabIndex) }
     ) {
         Icon(
             modifier = Modifier.size(WATCHLIST_ADD_NEW_ICON_SIZE.dp),
             painter = painterResource(resource = Res.drawable.ic_watchlist_add_list),
             contentDescription = stringResource(resource = Res.string.add_new_tab_description),
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.height(LARGE_PADDING.dp))
     }

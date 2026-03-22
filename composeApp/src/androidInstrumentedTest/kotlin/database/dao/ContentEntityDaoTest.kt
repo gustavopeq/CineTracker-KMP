@@ -86,7 +86,7 @@ class ContentEntityDaoTest {
     @Test
     fun delete_removesOnlyItemMatchingCompositeKey() = runBlocking {
         dao.insert(ContentEntity(contentId = 1, mediaType = "MOVIE", listId = 1, createdAt = 0))
-        dao.insert(ContentEntity(contentId = 1, mediaType = "SHOW",  listId = 1, createdAt = 0))
+        dao.insert(ContentEntity(contentId = 1, mediaType = "SHOW", listId = 1, createdAt = 0))
         dao.insert(ContentEntity(contentId = 1, mediaType = "MOVIE", listId = 2, createdAt = 0))
 
         dao.delete(contentId = 1, mediaType = "MOVIE", listId = 1)
@@ -118,7 +118,7 @@ class ContentEntityDaoTest {
     @Test
     fun searchItems_doesNotReturnItemsWithDifferentMediaType() = runBlocking {
         dao.insert(ContentEntity(contentId = 5, mediaType = "MOVIE", listId = 1, createdAt = 0))
-        dao.insert(ContentEntity(contentId = 5, mediaType = "SHOW",  listId = 1, createdAt = 0))
+        dao.insert(ContentEntity(contentId = 5, mediaType = "SHOW", listId = 1, createdAt = 0))
 
         val result = dao.searchItems(contentId = 5, mediaType = "MOVIE")
 

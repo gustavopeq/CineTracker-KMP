@@ -11,31 +11,21 @@ import org.jetbrains.compose.resources.StringResource
 enum class DefaultLists(val listId: Int) {
     WATCHLIST(1),
     WATCHED(2),
-    ADD_NEW(ADD_NEW_TAB_ID),
+    ADD_NEW(ADD_NEW_TAB_ID)
     ;
 
-    override fun toString(): String {
-        return super.toString().lowercase().capitalized()
-    }
+    override fun toString(): String = super.toString().lowercase().capitalized()
     companion object {
-        fun getListById(listId: Int): DefaultLists? {
-            return values().firstOrNull { it.listId == listId }
-        }
-        fun getOtherList(listId: Int): DefaultLists {
-            return when (listId) {
-                WATCHLIST.listId -> WATCHED
-                else -> WATCHLIST
-            }
+        fun getListById(listId: Int): DefaultLists? = values().firstOrNull { it.listId == listId }
+        fun getOtherList(listId: Int): DefaultLists = when (listId) {
+            WATCHLIST.listId -> WATCHED
+            else -> WATCHLIST
         }
 
-        fun getListLocalizedName(
-            list: DefaultLists?,
-        ): StringResource {
-            return when (list) {
-                WATCHLIST -> Res.string.watchlist_tab
-                WATCHED -> Res.string.watched_tab
-                else -> Res.string.unknown
-            }
+        fun getListLocalizedName(list: DefaultLists?): StringResource = when (list) {
+            WATCHLIST -> Res.string.watchlist_tab
+            WATCHED -> Res.string.watched_tab
+            else -> Res.string.unknown
         }
     }
 }

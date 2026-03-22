@@ -27,11 +27,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(
-    currentScreen: String?,
-    mainViewModel: MainViewModel,
-    displaySortScreen: (Boolean) -> Unit,
-) {
+fun TopNavBar(currentScreen: String?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
     val title = currentScreen.getScreenNameRes()?.let { stringResource(resource = it) }
     val showTopBar = screensWithTopBar.contains(currentScreen)
     val logoModifier = if (getScreenSizeInfo().widthDp < SMALLER_DEVICES_WIDTH.dp) {
@@ -48,13 +44,13 @@ fun TopNavBar(
                         modifier = logoModifier,
                         painter = painterResource(resource = Res.drawable.cinetracker_name_logo),
                         contentDescription = stringResource(
-                            resource = Res.string.app_logo_image_description,
-                        ),
+                            resource = Res.string.app_logo_image_description
+                        )
                     )
                 } else {
                     Text(
                         text = title.orEmpty(),
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.headlineLarge
                     )
                 }
             },
@@ -63,35 +59,33 @@ fun TopNavBar(
                     SortIconButton(
                         mainViewModel = mainViewModel,
                         currentScreen = currentScreen.orEmpty(),
-                        displaySortScreen = displaySortScreen,
+                        displaySortScreen = displaySortScreen
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
+                titleContentColor = MaterialTheme.colorScheme.onPrimary
+            )
         )
     }
 }
 
-private fun String?.getScreenNameRes(): StringResource? {
-    return when (this) {
-        HomeScreen.route() -> MainNavBarItem.Home.labelResId
-        BrowseScreen.route() -> MainNavBarItem.Browse.labelResId
-        WatchlistScreen.route() -> MainNavBarItem.Watchlist.labelResId
-        SearchScreen.route() -> MainNavBarItem.Search.labelResId
-        else -> null
-    }
+private fun String?.getScreenNameRes(): StringResource? = when (this) {
+    HomeScreen.route() -> MainNavBarItem.Home.labelResId
+    BrowseScreen.route() -> MainNavBarItem.Browse.labelResId
+    WatchlistScreen.route() -> MainNavBarItem.Watchlist.labelResId
+    SearchScreen.route() -> MainNavBarItem.Search.labelResId
+    else -> null
 }
 
 private val screensWithTopBar = listOf(
     HomeScreen.route(),
     BrowseScreen.route(),
-    WatchlistScreen.route(),
+    WatchlistScreen.route()
 )
 
 private val screensWithSortIcon = listOf(
     BrowseScreen.route(),
-    WatchlistScreen.route(),
+    WatchlistScreen.route()
 )

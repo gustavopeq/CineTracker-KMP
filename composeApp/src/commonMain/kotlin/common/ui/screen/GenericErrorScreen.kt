@@ -1,6 +1,6 @@
 package common.ui.screen
 
-import KottieAnimation
+import kottie.KottieAnimation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,19 +24,17 @@ import common.ui.components.button.GenericButton
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.ERROR_ANIMATION_SIZE
 import common.util.UiConstants.SECTION_PADDING
-import kottieComposition.KottieCompositionSpec
-import kottieComposition.animateKottieCompositionAsState
-import kottieComposition.rememberKottieComposition
+import kottie.KottieCompositionSpec
+import kottie.animateKottieCompositionAsState
+import kottie.rememberKottieComposition
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ErrorScreen(
-    onTryAgain: () -> Unit,
-) {
+fun ErrorScreen(onTryAgain: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(0.35f))
         ErrorIconAnimation()
@@ -44,13 +42,13 @@ fun ErrorScreen(
         Text(
             text = stringResource(resource = Res.string.generic_error_message),
             style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
 
         GenericButton(
             buttonText = stringResource(resource = Res.string.try_again_button),
-            onClick = onTryAgain,
+            onClick = onTryAgain
         )
         Spacer(modifier = Modifier.weight(0.65f))
     }
@@ -66,18 +64,18 @@ fun ErrorIconAnimation() {
     }
 
     val composition = rememberKottieComposition(
-        spec = KottieCompositionSpec.File(animation),
+        spec = KottieCompositionSpec.File(animation)
     )
 
     val animationState by animateKottieCompositionAsState(
         composition = composition,
-        iterations = 2,
+        iterations = 2
     )
 
     KottieAnimation(
         modifier = Modifier.size(ERROR_ANIMATION_SIZE.dp),
         composition = composition,
         progress = { animationState.progress },
-        backgroundColor = MaterialTheme.colorScheme.primary,
+        backgroundColor = MaterialTheme.colorScheme.primary
     )
 }

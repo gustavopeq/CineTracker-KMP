@@ -34,20 +34,20 @@ import org.jetbrains.compose.resources.stringResource
 fun TrendingCarousel(
     trendingItems: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType) -> Unit
 ) {
     if (trendingItems.isNotEmpty()) {
         ClassicCarousel(
             carouselHeaderRes = Res.string.trending_today_header,
             itemList = trendingItems,
             currentScreenWidth = currentScreenWidth,
-            goToDetails = goToDetails,
+            goToDetails = goToDetails
         ) { item, goToDetails ->
             DefaultContentCard(
                 modifier = Modifier.padding(
                     top = DEFAULT_PADDING.dp,
                     bottom = DEFAULT_PADDING.dp,
-                    end = DEFAULT_PADDING.dp,
+                    end = DEFAULT_PADDING.dp
                 ),
                 cardWidth = CAROUSEL_CARDS_WIDTH.dp,
                 imageUrl = item.posterPath,
@@ -57,7 +57,7 @@ fun TrendingCarousel(
                 ratingIconSize = CAROUSEL_RATING_STAR_SIZE,
                 goToDetails = {
                     goToDetails(item.id, item.mediaType)
-                },
+                }
             )
         }
 
@@ -73,19 +73,19 @@ fun ClassicCarousel(
     itemSizeDp: Dp = CAROUSEL_CARDS_WIDTH.dp,
     goToDetails: (Int, MediaType) -> Unit,
     headerAdditionalAction: @Composable () -> Unit = {},
-    contentCard: @Composable (GenericContent, (Int, MediaType) -> Unit) -> Unit,
+    contentCard: @Composable (GenericContent, (Int, MediaType) -> Unit) -> Unit
 ) {
     val cardsCountInScreen = currentScreenWidth / itemSizeDp.value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = DEFAULT_MARGIN.dp, end = SMALL_MARGIN.dp),
+            .padding(start = DEFAULT_MARGIN.dp, end = SMALL_MARGIN.dp)
     ) {
         CarouselHeaderRow(carouselHeaderRes, headerAdditionalAction)
 
         LazyRow(
-            modifier = Modifier.removeParentPadding(DEFAULT_MARGIN.dp),
+            modifier = Modifier.removeParentPadding(DEFAULT_MARGIN.dp)
         ) {
             if (itemList.size >= cardsCountInScreen) {
                 item {
@@ -103,12 +103,9 @@ fun ClassicCarousel(
 }
 
 @Composable
-fun CarouselHeaderRow(
-    carouselHeaderRes: StringResource,
-    headerAdditionalAction: @Composable () -> Unit,
-) {
+fun CarouselHeaderRow(carouselHeaderRes: StringResource, headerAdditionalAction: @Composable () -> Unit) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CarouselHeader(carouselHeaderRes)
         Spacer(modifier = Modifier.weight(1f))
@@ -120,6 +117,6 @@ fun CarouselHeaderRow(
 fun CarouselHeader(carouselHeaderRes: StringResource) {
     Text(
         text = stringResource(resource = carouselHeaderRes).uppercase(),
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.headlineMedium
     )
 }

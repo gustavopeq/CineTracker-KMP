@@ -27,14 +27,14 @@ class DetailsScreenUI : ScreenUI {
             },
             goToDetails = { id, type ->
                 navController.navigate(
-                    DetailsScreen.routeWithArguments(id, type.name),
+                    DetailsScreen.routeWithArguments(id, type.name)
                 )
             },
             goToErrorScreen = {
                 if (currentScreen != ErrorScreen.route()) {
                     navController.navigate(ErrorScreen.route())
                 }
-            },
+            }
         )
     }
 }

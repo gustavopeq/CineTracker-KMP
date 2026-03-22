@@ -22,12 +22,12 @@ import common.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
 @Composable
 fun DetailBodyPlaceholder(posterHeight: Float) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
         ComponentPlaceholder(
             modifier = Modifier
                 .fillMaxWidth()
-                .height((posterHeight * 0.85).dp),
+                .height((posterHeight * 0.85).dp)
         )
         Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
         TextLinePlaceholder(endPadding = LARGE_MARGIN)
@@ -43,15 +43,13 @@ fun DetailBodyPlaceholder(posterHeight: Float) {
 }
 
 @Composable
-private fun TextLinePlaceholder(
-    endPadding: Int,
-) {
+private fun TextLinePlaceholder(endPadding: Int) {
     ComponentPlaceholder(
         modifier = Modifier
             .padding(start = DEFAULT_MARGIN.dp, end = endPadding.dp)
             .fillMaxWidth()
             .height(14.dp)
-            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
     )
     Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
 }
@@ -64,7 +62,7 @@ private fun CategoriesPlaceholder() {
             .padding(start = DEFAULT_MARGIN.dp)
             .width(150.dp)
             .height(14.dp)
-            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
     )
     Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
     ComponentPlaceholder(
@@ -72,6 +70,6 @@ private fun CategoriesPlaceholder() {
             .padding(start = DEFAULT_MARGIN.dp)
             .width(90.dp)
             .height(14.dp)
-            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE)),
+            .clip(RoundedCornerShape(TEXT_PLACEHOLDER_CORNER_PERCENTAGE))
     )
 }

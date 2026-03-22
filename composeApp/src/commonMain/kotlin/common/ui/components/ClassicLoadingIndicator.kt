@@ -7,6 +7,6 @@ import androidx.compose.runtime.Composable
 @Composable
 fun ClassicLoadingIndicator() {
     CircularProgressIndicator(
-        color = MaterialTheme.colorScheme.secondary,
+        color = MaterialTheme.colorScheme.secondary
     )
 }

@@ -61,7 +61,7 @@ fun WatchlistCard(
     allLists: List<WatchlistTabItem>,
     onCardClick: () -> Unit,
     onRemoveClick: () -> Unit,
-    onMoveItemToList: (Int) -> Unit,
+    onMoveItemToList: (Int) -> Unit
 ) {
     val fullImageUrl = BASE_300_IMAGE_URL + posterUrl
     val imageWidth = WATCHLIST_IMAGE_WIDTH.dp
@@ -77,39 +77,39 @@ fun WatchlistCard(
             .fillMaxWidth()
             .clickable(onClick = onCardClick),
         colors = CardDefaults.cardColors(
-            containerColor = MainBarGreyColor,
+            containerColor = MainBarGreyColor
         ),
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp,
-        ),
+            defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
+        )
     ) {
         Row(
-            modifier = Modifier.height(imageHeight),
+            modifier = Modifier.height(imageHeight)
         ) {
             NetworkImage(
                 imageUrl = fullImageUrl,
                 widthDp = imageWidth,
-                heightDp = imageHeight,
+                heightDp = imageHeight
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(all = DEFAULT_PADDING.dp),
+                    .padding(all = DEFAULT_PADDING.dp)
             ) {
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 2,
+                    maxLines = 2
                 )
                 Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
                 Row(
                     modifier = Modifier.height(20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     RatingComponent(rating = rating)
-                    
+
                     if (personalRating != null) {
                         Box(
                             modifier = Modifier
@@ -120,24 +120,24 @@ fun WatchlistCard(
                         )
 
                         PersonalRatingComponent(
-                            rating = StringFormat.formatRating(personalRating.toDouble()),
+                            rating = StringFormat.formatRating(personalRating.toDouble())
                         )
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 MediaTypeTag(
                     modifier = Modifier.clip(RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp)),
-                    mediaType = mediaType,
+                    mediaType = mediaType
                 )
             }
             IconButton(
                 onClick = {
                     updatePopUpMenuVisibility(true)
-                },
+                }
             ) {
                 Icon(
                     painter = painterResource(resource = Res.drawable.ic_more_options),
-                    contentDescription = "More Options",
+                    contentDescription = "More Options"
                 )
                 CardOptionsPopUpMenu(
                     showMenu = showPopupMenu,
@@ -145,7 +145,7 @@ fun WatchlistCard(
                     allLists = allLists,
                     onDismissRequest = { updatePopUpMenuVisibility(false) },
                     onRemoveClick = onRemoveClick,
-                    onMoveItemToList = onMoveItemToList,
+                    onMoveItemToList = onMoveItemToList
                 )
             }
         }
@@ -153,10 +153,7 @@ fun WatchlistCard(
 }
 
 @Composable
-fun MediaTypeTag(
-    modifier: Modifier = Modifier,
-    mediaType: MediaType,
-) {
+fun MediaTypeTag(modifier: Modifier = Modifier, mediaType: MediaType) {
     val mediaTypeTag = if (mediaType == MediaType.MOVIE) {
         stringResource(resource = Res.string.movie_tag)
     } else {
@@ -167,14 +164,14 @@ fun MediaTypeTag(
         modifier = modifier
             .defaultMinSize(minWidth = 50.dp)
             .background(color = PrimaryYellowColor_90),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = mediaTypeTag,
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
-            modifier = Modifier.padding(horizontal = 2.dp),
+            modifier = Modifier.padding(horizontal = 2.dp)
         )
     }
 }

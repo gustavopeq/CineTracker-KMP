@@ -18,7 +18,7 @@ fun NetworkImage(
     widthDp: Dp = Dp.Unspecified,
     heightDp: Dp = Dp.Unspecified,
     contentScale: ContentScale = ContentScale.Crop,
-    alpha: Float = DefaultAlpha,
+    alpha: Float = DefaultAlpha
 ) {
     Box {
         SubcomposeAsyncImage(
@@ -29,9 +29,9 @@ fun NetworkImage(
             alpha = alpha,
             loading = {
                 ComponentPlaceholder(
-                    modifier = modifier.width(widthDp).height(heightDp),
+                    modifier = modifier.width(widthDp).height(heightDp)
                 )
-            },
+            }
         )
     }
 }

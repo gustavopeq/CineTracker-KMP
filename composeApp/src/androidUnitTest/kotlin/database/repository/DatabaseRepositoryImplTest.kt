@@ -5,22 +5,21 @@ import common.util.fakeContentEntity
 import common.util.fakeListEntity
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
-import database.model.ListEntity
 import io.mockk.MockKAnnotations
 import io.mockk.Ordering
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
 class DatabaseRepositoryImplTest {
 

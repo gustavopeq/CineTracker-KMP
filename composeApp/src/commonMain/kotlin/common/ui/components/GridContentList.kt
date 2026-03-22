@@ -31,11 +31,7 @@ import common.util.removeParentPadding
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun <T> GenericGrid(
-    itemList: List<T>,
-    maxCardsNumber: Int,
-    displayItem: @Composable (T, Dp) -> Unit,
-) {
+fun <T> GenericGrid(itemList: List<T>, maxCardsNumber: Int, displayItem: @Composable (T, Dp) -> Unit) {
     val density = LocalDensity.current
     val screenWidth = density.run { getScreenSizeInfo().widthPx }
     val spacing = density.run { DEFAULT_MARGIN.dp.roundToPx() }
@@ -45,12 +41,12 @@ fun <T> GenericGrid(
         screenWidth,
         dpToPx(minCardSize, density),
         spacing,
-        density,
+        density
     )
 
     Column(
         modifier = Modifier.fillMaxWidth().removeParentPadding(DEFAULT_MARGIN.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val filteredList = itemList.take(maxCardsNumber)
             .chunked(numCardsPerRow)
@@ -71,19 +67,19 @@ fun GridContentList(
     maxCardsNumber: Int? = null,
     showSeeAllButton: Boolean = false,
     openContentDetails: (Int, MediaType) -> Unit,
-    onSeeAll: () -> Unit = {},
+    onSeeAll: () -> Unit = {}
 ) {
     Column {
         GenericGrid(
             itemList = mediaContentList,
-            maxCardsNumber = maxCardsNumber ?: mediaContentList.size,
+            maxCardsNumber = maxCardsNumber ?: mediaContentList.size
         ) { content, size ->
             DefaultContentCard(
                 modifier = Modifier
                     .width(size)
                     .padding(
                         horizontal = BROWSE_CARD_PADDING_HORIZONTAL.dp,
-                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp,
+                        vertical = BROWSE_CARD_PADDING_VERTICAL.dp
                     ),
                 cardWidth = size,
                 imageUrl = content.posterPath,
@@ -91,7 +87,7 @@ fun GridContentList(
                 rating = content.rating,
                 goToDetails = {
                     openContentDetails(content.id, content.mediaType)
-                },
+                }
             )
         }
         if (showSeeAllButton && maxCardsNumber != null && mediaContentList.size > maxCardsNumber) {
@@ -100,25 +96,22 @@ fun GridContentList(
                     .align(Alignment.CenterHorizontally)
                     .padding(vertical = DEFAULT_MARGIN.dp),
                 buttonText = stringResource(resource = Res.string.see_all_button_label),
-                onClick = onSeeAll,
+                onClick = onSeeAll
             )
         }
     }
 }
 
 @Composable
-fun GridImageList(
-    personImageList: List<PersonImage>,
-    maxCardsNumber: Int? = null,
-) {
+fun GridImageList(personImageList: List<PersonImage>, maxCardsNumber: Int? = null) {
     GenericGrid(
         itemList = personImageList,
-        maxCardsNumber = maxCardsNumber ?: personImageList.size,
+        maxCardsNumber = maxCardsNumber ?: personImageList.size
     ) { personImage, size ->
         PersonImages(
             modifier = Modifier.width(size),
             cardWidth = size,
-            imageUrl = personImage.filePath,
+            imageUrl = personImage.filePath
         )
     }
 }

@@ -11,7 +11,7 @@ class ErrorScreenUI : ScreenUI {
         ErrorScreen(
             onTryAgain = {
                 navController.popBackStack()
-            },
+            }
         )
     }
 }

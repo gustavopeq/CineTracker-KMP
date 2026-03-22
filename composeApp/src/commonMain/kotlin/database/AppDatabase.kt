@@ -19,9 +19,11 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
 @ConstructedBy(AppDatabaseConstructor::class)
 @Database(
     entities = [ContentEntity::class, ListEntity::class, PersonalRatingEntity::class],
-    version = 7,
+    version = 7
 )
-abstract class AppDatabase : RoomDatabase(), DB {
+abstract class AppDatabase :
+    RoomDatabase(),
+    DB {
     abstract fun contentEntityDao(): ContentEntityDao
     abstract fun listEntityDao(): ListEntityDao
     abstract fun personalRatingDao(): PersonalRatingDao

@@ -9,5 +9,5 @@ data class PersonProfileResponse(
     val height: Int? = null,
     val vote_average: Double? = null,
     val vote_count: Int? = null,
-    val width: Int? = null,
+    val width: Int? = null
 )

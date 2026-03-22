@@ -11,6 +11,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -21,9 +23,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /**
  * Waits for Dispatchers.IO coroutines launched by the ViewModel to complete.
@@ -109,8 +108,8 @@ class HomeViewModelTest {
                 id = 1, title = "Actor", overview = "", posterPath = "/p.jpg",
                 mediaType = common.domain.models.util.MediaType.PERSON,
                 birthday = null, deathday = null, placeOfBirth = null,
-                knownForDepartment = null, knownFor = emptyList(),
-            ),
+                knownForDepartment = null, knownFor = emptyList()
+            )
         )
 
         val viewModel = createViewModel()
@@ -136,7 +135,7 @@ class HomeViewModelTest {
 
         val viewModel = createViewModel()
         advanceUntilIdle() // runs loadHomeScreen, which launches loadWatchlist on IO
-        awaitIO()          // waits for loadWatchlist IO coroutine to complete
+        awaitIO() // waits for loadWatchlist IO coroutine to complete
 
         assertEquals(1, viewModel.myWatchlist.value.size)
         assertEquals(5, viewModel.myWatchlist.value[0].id)
@@ -163,10 +162,10 @@ class HomeViewModelTest {
 
         val viewModel = createViewModel()
         advanceUntilIdle() // runs loadHomeScreen, which launches loadWatchlist on IO
-        awaitIO()          // waits for first loadWatchlist call
+        awaitIO() // waits for first loadWatchlist call
 
         viewModel.onEvent(HomeEvent.ReloadWatchlist)
-        awaitIO()          // waits for second loadWatchlist call
+        awaitIO() // waits for second loadWatchlist call
 
         assertEquals(1, viewModel.myWatchlist.value.size)
         assertEquals(7, viewModel.myWatchlist.value[0].id)
@@ -193,8 +192,8 @@ class HomeViewModelTest {
                 id = 1, title = "Actor", overview = "", posterPath = "/p.jpg",
                 mediaType = common.domain.models.util.MediaType.PERSON,
                 birthday = null, deathday = null, placeOfBirth = null,
-                knownForDepartment = null, knownFor = emptyList(),
-            ),
+                knownForDepartment = null, knownFor = emptyList()
+            )
         )
         coEvery { homeInteractor.getMoviesComingSoon() } returns listOf(fakeGenericContent(id = 99))
 

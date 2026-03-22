@@ -18,66 +18,66 @@ fun fakePersonResponse(id: Int = 1, name: String = "Test Person") = PersonRespon
     id = id,
     name = name,
     profile_path = "/profile.jpg",
-    biography = "Test bio",
+    biography = "Test bio"
 )
 
 fun fakeContentCreditsResponse(vararg cast: ContentCastResponse) = ContentCreditsResponse(
     id = 1,
-    cast = cast.toList(),
+    cast = cast.toList()
 )
 
 fun fakeContentCastResponse(
     id: Int = 1,
     name: String = "Actor Name",
     profilePath: String? = "/profile.jpg",
-    order: Int? = 0,
+    order: Int? = 0
 ) = ContentCastResponse(
     id = id,
     name = name,
     profile_path = profilePath,
-    order = order,
+    order = order
 )
 
 fun fakeWatchProvidersResponse(
     countryCode: String = "US",
-    providers: List<ProviderResponse> = listOf(fakeProviderResponse()),
+    providers: List<ProviderResponse> = listOf(fakeProviderResponse())
 ) = WatchProvidersResponse(
     id = 1,
-    results = mapOf(countryCode to CountryProviderResponse(flatrate = providers)),
+    results = mapOf(countryCode to CountryProviderResponse(flatrate = providers))
 )
 
 fun fakeProviderResponse(name: String = "Netflix") = ProviderResponse(
     logo_path = "/logo.png",
-    provider_name = name,
+    provider_name = name
 )
 
 fun fakeVideosByIdResponse(count: Int = 1) = VideosByIdResponse(
     id = 1,
     results = List(count) {
         VideoResponse(key = "abc$it", name = "Trailer $it", published_at = "2024-01-01")
-    },
+    }
 )
 
 fun fakePersonCreditsResponse(vararg cast: CastResponse) = PersonCreditsResponse(
     id = 1,
-    cast = cast.toList(),
+    cast = cast.toList()
 )
 
 fun fakeCastResponse(
     id: Int = 1,
     name: String = "Cast Name",
     posterPath: String? = "/poster.jpg",
-    title: String? = "Movie Title",
+    title: String? = "Movie Title"
 ) = CastResponse(
     id = id,
     name = name,
     poster_path = posterPath,
-    _title = title,
+    _title = title
 )
 
 fun fakePersonImagesResponse(vararg filePaths: String?) = PersonImagesResponse(
     id = 1,
     profiles = filePaths.map { path ->
         if (path != null) PersonProfileResponse(file_path = path) else null
-    },
+    }
 )

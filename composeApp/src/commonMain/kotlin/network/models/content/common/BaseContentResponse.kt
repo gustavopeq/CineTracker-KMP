@@ -39,7 +39,7 @@ data class MultiResponse(
     val original_language: String? = null,
     val release_date: String? = null,
     val video: Boolean? = null,
-    val vote_count: Int? = null,
+    val vote_count: Int? = null
 ) : BaseContentResponse
 
 @Serializable
@@ -65,7 +65,7 @@ data class MovieResponse(
     val genres: List<ContentGenre?>? = null,
     val runtime: Int? = null,
     val budget: Long? = null,
-    val revenue: Long? = null,
+    val revenue: Long? = null
 ) : BaseContentResponse
 
 @Serializable
@@ -90,7 +90,7 @@ data class ShowResponse(
     val production_countries: List<ProductionCountry?>? = null,
     val genres: List<ContentGenre?>? = null,
     val number_of_seasons: Int? = null,
-    val number_of_episodes: Int? = null,
+    val number_of_episodes: Int? = null
 ) : BaseContentResponse {
     override val title: String
         get() = name.orEmpty()
@@ -118,7 +118,7 @@ data class PersonResponse(
     val biography: String? = null,
     val birthday: String? = null,
     val deathday: String? = null,
-    val place_of_birth: String? = null,
+    val place_of_birth: String? = null
 ) : BaseContentResponse
 
 @Serializable
@@ -136,7 +136,7 @@ data class CastResponse(
     override val overview: String? = null,
     @SerialName("title")
     val _title: String? = null,
-    val media_type: String? = null,
+    val media_type: String? = null
 ) : BaseContentResponse {
     val mediaType: MediaType
         get() =

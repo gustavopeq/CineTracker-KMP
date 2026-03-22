@@ -18,20 +18,20 @@ private val DarkColorPalette =
         inverseSurface = DividerGrey,
         surfaceVariant = PrimaryGreyColor_55,
         background = PrimaryBlackColor,
-        error = PrimaryRedColor,
+        error = PrimaryRedColor
     )
 
 @Composable
 fun CineTrackerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content:
-        @Composable()
-        () -> Unit,
+    @Composable()
+    () -> Unit
 ) {
     MaterialTheme(
         colorScheme = DarkColorPalette,
         typography = AppTypography,
         shapes = RoundCornerShapes,
-        content = content,
+        content = content
     )
 }

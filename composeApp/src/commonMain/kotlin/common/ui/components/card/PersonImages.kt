@@ -20,34 +20,30 @@ import common.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 
 @Composable
-fun PersonImages(
-    modifier: Modifier = Modifier,
-    cardWidth: Dp,
-    imageUrl: String?,
-) {
+fun PersonImages(modifier: Modifier = Modifier, cardWidth: Dp, imageUrl: String?) {
     val fullImageUrl = BASE_500_IMAGE_URL + imageUrl
     val imageHeight = cardWidth * POSTER_ASPECT_RATIO_MULTIPLY
 
     Card(
         modifier = modifier.padding(
             horizontal = BROWSE_CARD_PADDING_HORIZONTAL.dp,
-            vertical = BROWSE_CARD_PADDING_VERTICAL.dp,
+            vertical = BROWSE_CARD_PADDING_VERTICAL.dp
         ),
         colors = CardDefaults.cardColors(
-            containerColor = MainBarGreyColor,
+            containerColor = MainBarGreyColor
         ),
         elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp,
-        ),
+            defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
+        )
     ) {
         Column(
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.Start
         ) {
             NetworkImage(
                 imageUrl = fullImageUrl,
                 modifier = Modifier.clip(RoundCornerShapes.medium),
                 widthDp = cardWidth,
-                heightDp = imageHeight,
+                heightDp = imageHeight
             )
         }
     }

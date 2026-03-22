@@ -2,7 +2,6 @@ package features.browse.ui.components
 
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,31 +36,24 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CollapsingTabRow(
-    scrollBehavior: TopAppBarScrollBehavior,
-    viewModel: BrowseViewModel,
-    pagerState: PagerState,
-) {
+fun CollapsingTabRow(scrollBehavior: TopAppBarScrollBehavior, viewModel: BrowseViewModel, pagerState: PagerState) {
     TopAppBar(
         title = {
             BrowseTypeTabRow(
                 viewModel = viewModel,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
         },
         scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            scrolledContainerColor = MaterialTheme.colorScheme.primary,
-        ),
+            scrolledContainerColor = MaterialTheme.colorScheme.primary
+        )
     )
 }
 
 @Composable
-private fun BrowseTypeTabRow(
-    viewModel: BrowseViewModel,
-    pagerState: PagerState,
-) {
+private fun BrowseTypeTabRow(viewModel: BrowseViewModel, pagerState: PagerState) {
     val tabList = listOf(MediaTypeTabItem.Movies, MediaTypeTabItem.Shows)
     val selectedTabIndex = pagerState.currentPage
 
@@ -77,11 +69,11 @@ private fun BrowseTypeTabRow(
             TabIndicator(
                 width = tabPositions[selectedTabIndex].width,
                 left = tabPositions[selectedTabIndex].left,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
         },
         divider = { },
-        containerColor = Color.Transparent,
+        containerColor = Color.Transparent
     ) {
         tabList.forEachIndexed { index, mediaTypeTabItem ->
             BrowseTypeTab(
@@ -93,22 +85,17 @@ private fun BrowseTypeTabRow(
                         pagerState.scrollToPage(it)
                     }
                     viewModel.onEvent(BrowseEvent.UpdateMediaType(mediaTypeTabItem.mediaType))
-                },
+                }
             )
         }
     }
 }
 
 @Composable
-private fun BrowseTypeTab(
-    text: String,
-    tabIndex: Int,
-    isSelected: Boolean,
-    onClick: (Int) -> Unit,
-) {
+private fun BrowseTypeTab(text: String, tabIndex: Int, isSelected: Boolean, onClick: (Int) -> Unit) {
     Tab(
         selected = isSelected,
-        onClick = { onClick(tabIndex) },
+        onClick = { onClick(tabIndex) }
     ) {
         Text(
             modifier = Modifier.offset(y = (-4).dp),
@@ -117,23 +104,19 @@ private fun BrowseTypeTab(
                 MaterialTheme.colorScheme.onPrimary
             } else {
                 MaterialTheme.colorScheme.tertiary
-            },
+            }
         )
     }
 }
 
 @Composable
-private fun TabIndicator(
-    width: Dp,
-    left: Dp,
-    pagerState: PagerState,
-) {
+private fun TabIndicator(width: Dp, left: Dp, pagerState: PagerState) {
     val pagerOffset = (pagerState.currentPageOffsetFraction.dp * 175).value.toInt()
 
     val animateIndicatorOffset by animateIntOffsetAsState(
         targetValue = IntOffset(x = pagerOffset + left.value.toInt(), 0),
         animationSpec = tween(100),
-        label = "indicatorAnimation",
+        label = "indicatorAnimation"
     )
 
     Box(
@@ -143,6 +126,6 @@ private fun TabIndicator(
             .offset(x = animateIndicatorOffset.x.dp - 10.dp)
             .width(width)
             .height(2.dp)
-            .background(color = MaterialTheme.colorScheme.secondary),
+            .background(color = MaterialTheme.colorScheme.secondary)
     )
 }

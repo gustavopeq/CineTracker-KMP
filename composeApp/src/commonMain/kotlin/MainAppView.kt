@@ -44,16 +44,13 @@ import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
 import navigation.components.TopNavBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(ExperimentalCoilApi::class, KoinExperimentalAPI::class)
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 @Preview
 fun MainAppView() {
-    KoinContext {
-        CineTrackerTheme {
+    CineTrackerTheme {
             setSingletonImageLoaderFactory { context ->
                 getAsyncImageLoader(context)
             }
@@ -87,19 +84,19 @@ fun MainAppView() {
                         TopNavBar(
                             currentScreen = currentScreen,
                             mainViewModel = mainViewModel,
-                            displaySortScreen = displaySortScreen,
+                            displaySortScreen = displaySortScreen
                         )
                     },
                     bottomBar = {
                         AnimatedVisibility(
                             visible = mainBarState,
                             enter = fadeIn(spring(stiffness = Spring.StiffnessHigh)),
-                            exit = fadeOut(spring(stiffness = Spring.StiffnessHigh)),
+                            exit = fadeOut(spring(stiffness = Spring.StiffnessHigh))
                         ) {
                             MainNavBar(
                                 navController = navController,
                                 mainViewModel = mainViewModel,
-                                navBarItems = navItems,
+                                navBarItems = navItems
                             )
                         }
                     },
@@ -107,28 +104,24 @@ fun MainAppView() {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             MainNavGraph(navController)
                         }
-                    },
+                    }
                 )
             }
 
             ModalComponents(
                 mainViewModel = mainViewModel,
                 showSortBottomSheet = showSortBottomSheet,
-                displaySortScreen = displaySortScreen,
+                displaySortScreen = displaySortScreen
             )
 
             CreateListBottomSheet(
-                mainViewModel = mainViewModel,
+                mainViewModel = mainViewModel
             )
         }
-    }
 }
 
 @Composable
-fun SystemBarsContainer(
-    currentScreen: String? = null,
-    appScaffold: @Composable () -> Unit
-) {
+fun SystemBarsContainer(currentScreen: String? = null, appScaffold: @Composable () -> Unit) {
     val statusBarColor = when (currentScreen) {
         MainNavBarItem.Search.screen.route() -> MainBarGreyColor
         else -> MaterialTheme.colorScheme.primary
@@ -156,15 +149,14 @@ fun SystemBarsContainer(
     }
 }
 
-
 val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
-    MainNavBarItem.Search,
+    MainNavBarItem.Search
 )
 
 val standaloneScreens = listOf(
     DetailsScreen.route(),
-    ErrorScreen.route(),
+    ErrorScreen.route()
 )

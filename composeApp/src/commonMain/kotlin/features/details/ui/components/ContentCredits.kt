@@ -35,13 +35,10 @@ import common.util.removeParentPadding
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun CastCarousel(
-    contentCredits: List<ContentCast>,
-    goToDetails: (Int, MediaType) -> Unit,
-) {
+fun CastCarousel(contentCredits: List<ContentCast>, goToDetails: (Int, MediaType) -> Unit) {
     DetailDescriptionLabel(
         labelText = stringResource(resource = Res.string.movie_details_cast_label),
-        textStyle = MaterialTheme.typography.displayMedium,
+        textStyle = MaterialTheme.typography.displayMedium
     )
 
     Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
@@ -51,7 +48,7 @@ fun CastCarousel(
     val cardsCountInScreen = currentScreenWidth / cardWidth.value
 
     LazyRow(
-        modifier = Modifier.removeParentPadding(DEFAULT_MARGIN.dp),
+        modifier = Modifier.removeParentPadding(DEFAULT_MARGIN.dp)
     ) {
         if (contentCredits.size >= cardsCountInScreen) {
             item {
@@ -69,20 +66,20 @@ fun CastCarousel(
                     .clickable {
                         goToDetails(cast.id, MediaType.PERSON)
                     },
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 NetworkImage(
                     imageUrl = castImageUrl,
                     modifier = Modifier
                         .size(DETAILS_CAST_PICTURE_SIZE.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
                 )
                 Text(
                     text = cast.name,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center,
-                    maxLines = 2,
+                    maxLines = 2
                 )
                 Text(
                     text = cast.character,
@@ -90,7 +87,7 @@ fun CastCarousel(
                     color = MaterialTheme.colorScheme.surface,
                     textAlign = TextAlign.Center,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

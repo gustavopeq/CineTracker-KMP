@@ -14,12 +14,12 @@ fun GenericPopupMenu(
     showMenu: Boolean,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     onDismissRequest: () -> Unit,
-    menuItems: List<PopupMenuItem>,
+    menuItems: List<PopupMenuItem>
 ) {
     DropdownMenu(
         expanded = showMenu,
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.background(color = backgroundColor),
+        modifier = Modifier.background(color = backgroundColor)
     ) {
         menuItems.forEach { menuItem ->
             DropdownMenuItem(
@@ -27,13 +27,13 @@ fun GenericPopupMenu(
                     Text(
                         text = menuItem.title,
                         color = menuItem.textColor,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodySmall
                     )
                 },
                 onClick = {
                     menuItem.onClick()
                     onDismissRequest()
-                },
+                }
             )
         }
     }

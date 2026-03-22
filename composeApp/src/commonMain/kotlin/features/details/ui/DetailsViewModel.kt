@@ -9,7 +9,6 @@ import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.content.Videos
 import common.domain.models.list.ListItem
-import common.domain.models.list.toListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
@@ -25,14 +24,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DetailsViewModel(
-    val contentId: Int,
-    val mediaType: MediaType,
-    private val detailsInteractor: DetailsInteractor,
-) : ViewModel() {
+class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val detailsInteractor: DetailsInteractor) :
+    ViewModel() {
 
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
-        DataLoadStatus.Loading,
+        DataLoadStatus.Loading
     )
     val loadState: StateFlow<DataLoadStatus> get() = _loadState
 
@@ -47,12 +43,12 @@ class DetailsViewModel(
     val contentVideos: StateFlow<List<Videos>> get() = _contentVideos
 
     private val _contentSimilar: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val contentSimilar: StateFlow<List<GenericContent>> get() = _contentSimilar
 
     private val _personCredits: MutableStateFlow<List<GenericContent>> = MutableStateFlow(
-        emptyList(),
+        emptyList()
     )
     val personCredits: StateFlow<List<GenericContent>> get() = _personCredits
 
@@ -62,8 +58,8 @@ class DetailsViewModel(
     private val _contentInListStatus = MutableStateFlow(
         mapOf(
             Pair(DefaultLists.WATCHLIST.listId, false),
-            Pair(DefaultLists.WATCHED.listId, false),
-        ),
+            Pair(DefaultLists.WATCHED.listId, false)
+        )
     )
     val contentInListStatus: StateFlow<Map<Int, Boolean>> get() = _contentInListStatus
 
@@ -74,7 +70,7 @@ class DetailsViewModel(
     val detailsFailedLoading: MutableState<Boolean> get() = _detailsFailedLoading
 
     private val _snackbarState: MutableState<DetailsSnackbarState> = mutableStateOf(
-        DetailsSnackbarState(),
+        DetailsSnackbarState()
     )
     val snackbarState: MutableState<DetailsSnackbarState> get() = _snackbarState
 
@@ -94,14 +90,12 @@ class DetailsViewModel(
         }
     }
 
-    fun onEvent(
-        event: DetailsEvents,
-    ) {
+    fun onEvent(event: DetailsEvents) {
         when (event) {
             is DetailsEvents.FetchDetails -> initFetchDetails()
             is DetailsEvents.ToggleContentFromList -> {
                 toggleContentFromList(
-                    listId = event.listId,
+                    listId = event.listId
                 )
             }
             is DetailsEvents.OnError -> resetDetails()
@@ -163,11 +157,11 @@ class DetailsViewModel(
             MediaType.MOVIE, MediaType.SHOW -> {
                 _contentVideos.value = detailsInteractor.getContentVideosById(
                     contentId,
-                    mediaType,
+                    mediaType
                 )
                 _contentSimilar.value = detailsInteractor.getRecommendationsContentById(
                     contentId,
-                    mediaType,
+                    mediaType
                 )
             }
             MediaType.PERSON -> {
@@ -185,7 +179,7 @@ class DetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _contentInListStatus.value = detailsInteractor.verifyContentInLists(
                 contentId = contentId,
-                mediaType = mediaType,
+                mediaType = mediaType
             )
         }
     }
@@ -203,11 +197,11 @@ class DetailsViewModel(
                 currentStatus = currentStatus,
                 contentId = contentId,
                 mediaType = mediaType,
-                listId = listId,
+                listId = listId
             )
             _snackbarState.value = DetailsSnackbarState(
                 listId = listId,
-                addedItem = !currentStatus,
+                addedItem = !currentStatus
             ).apply {
                 setSnackbarVisible()
             }
@@ -227,7 +221,5 @@ class DetailsViewModel(
         _detailsFailedLoading.value = true
     }
 
-    fun getAllLists(): List<ListItem> {
-        return allLists
-    }
+    fun getAllLists(): List<ListItem> = allLists
 }
