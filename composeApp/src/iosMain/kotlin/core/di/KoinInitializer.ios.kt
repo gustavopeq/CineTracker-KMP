@@ -21,7 +21,7 @@ actual class KoinInitializer {
                 databaseRepositoryModule,
                 apiModule,
                 serviceModule,
-                repositoryModule,
+                repositoryModule
             )
         }
     }

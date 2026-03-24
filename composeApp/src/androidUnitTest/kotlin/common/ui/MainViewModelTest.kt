@@ -3,6 +3,7 @@ package common.ui
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
+import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -25,6 +26,9 @@ import org.junit.Test
 class MainViewModelTest {
 
     private val databaseRepository: DatabaseRepository = mockk()
+    private val settingsRepository: SettingsRepository = mockk {
+        coEvery { hasCompletedOnboarding() } returns true
+    }
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -39,7 +43,7 @@ class MainViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel() = MainViewModel(databaseRepository)
+    private fun createViewModel() = MainViewModel(databaseRepository, settingsRepository)
 
     // ── updateSortType ────────────────────────────────────────────────────────
 

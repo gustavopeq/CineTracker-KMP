@@ -15,6 +15,6 @@ actual fun getScreenSizeInfo(): ScreenSizeInfo {
         widthPx = config.width,
         heightPx = config.height,
         widthDp = with(density) { config.width.toDp() },
-        heightDp = with(density) { config.height.toDp() },
+        heightDp = with(density) { config.height.toDp() }
     )
 }

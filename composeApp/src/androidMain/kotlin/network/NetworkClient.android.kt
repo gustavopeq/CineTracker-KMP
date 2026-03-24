@@ -15,7 +15,7 @@ actual val client: HttpClient
                 Json {
                     ignoreUnknownKeys = true
                     isLenient = true
-                },
+                }
             )
         }
         defaultRequest {
