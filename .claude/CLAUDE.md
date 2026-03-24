@@ -203,7 +203,8 @@ CineTracker-KMP/
 │   │       │   ├── dao/
 │   │       │   │   ├── ContentEntityDao.kt
 │   │       │   │   ├── ListEntityDao.kt
-│   │       │   │   └── PersonalRatingDao.kt
+│   │       │   │   ├── PersonalRatingDao.kt
+│   │       │   │   └── SettingsDao.kt
 │   │       │   ├── di/
 │   │       │   │   ├── DaoModule.kt
 │   │       │   │   ├── DatabaseModule.kt         # expect
@@ -211,12 +212,15 @@ CineTracker-KMP/
 │   │       │   ├── model/
 │   │       │   │   ├── ContentEntity.kt
 │   │       │   │   ├── ListEntity.kt
-│   │       │   │   └── PersonalRatingEntity.kt
+│   │       │   │   ├── PersonalRatingEntity.kt
+│   │       │   │   └── SettingsEntity.kt
 │   │       │   └── repository/
 │   │       │       ├── DatabaseRepository.kt
 │   │       │       ├── DatabaseRepositoryImpl.kt
 │   │       │       ├── PersonalRatingRepository.kt
-│   │       │       └── PersonalRatingRepositoryImpl.kt
+│   │       │       ├── PersonalRatingRepositoryImpl.kt
+│   │       │       ├── SettingsRepository.kt
+│   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
 │   │       │   ├── browse/
 │   │       │   │   ├── BrowseScreen.kt
@@ -281,6 +285,16 @@ CineTracker-KMP/
 │   │       │   │       │       └── SecondaryFeaturedContainer.kt
 │   │       │   │       └── state/
 │   │       │   │           └── HomeState.kt
+│   │       │   ├── onboarding/
+│   │       │   │   └── ui/
+│   │       │   │       ├── OnboardingViewModel.kt
+│   │       │   │       ├── OnboardingView.kt
+│   │       │   │       └── components/
+│   │       │   │           ├── OnboardingPage.kt
+│   │       │   │           ├── OnboardingIndicator.kt
+│   │       │   │           ├── WelcomeIllustration.kt
+│   │       │   │           ├── DiscoverIllustration.kt
+│   │       │   │           └── ListsIllustration.kt
 │   │       │   ├── search/
 │   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/
@@ -460,7 +474,8 @@ CineTracker-KMP/
 │   │   ├── database/
 │   │   │   └── repository/
 │   │   │       ├── DatabaseRepositoryImplTest.kt
-│   │   │       └── PersonalRatingRepositoryImplTest.kt
+│   │   │       ├── PersonalRatingRepositoryImplTest.kt
+│   │   │       └── SettingsRepositoryImplTest.kt
 │   │   └── features/
 │   │       ├── details/
 │   │       │   ├── util/
@@ -488,6 +503,9 @@ CineTracker-KMP/
 │   │       │       ├── paging/
 │   │       │       │   └── MediaContentPagingSourceTest.kt
 │   │       │       └── BrowseViewModelTest.kt
+│   │       ├── onboarding/
+│   │       │   └── ui/
+│   │       │       └── OnboardingViewModelTest.kt
 │   │       └── search/
 │   │           └── ui/
 │   │               ├── paging/
@@ -499,10 +517,12 @@ CineTracker-KMP/
 │   │       ├── dao/
 │   │       │   ├── ContentEntityDaoTest.kt
 │   │       │   ├── ListEntityDaoTest.kt
-│   │       │   └── PersonalRatingDaoTest.kt
+│   │       │   ├── PersonalRatingDaoTest.kt
+│   │       │   └── SettingsEntityDaoTest.kt
 │   │       └── migration/
 │   │           ├── Migration5To6Test.kt
-│   │           └── Migration6To7Test.kt
+│   │           ├── Migration6To7Test.kt
+│   │           └── Migration7To8Test.kt
 │   │
 │   └── src/debug/
 │       └── google-services.json

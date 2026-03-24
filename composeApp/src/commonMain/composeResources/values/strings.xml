@@ -139,4 +139,15 @@
     <string name="personal_ratings_add_rating">Add Rating</string>
     <string name="personal_ratings_clear">Clear Rating</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Welcome to CineTracker</string>
+    <string name="onboarding_welcome_desc">Your personal movie &amp; show companion</string>
+    <string name="onboarding_discover_title">Discover Movies &amp; Shows</string>
+    <string name="onboarding_discover_desc">Browse trending content or search for your favorites</string>
+    <string name="onboarding_lists_title">Build Your Watchlist</string>
+    <string name="onboarding_lists_desc">Save movies &amp; shows to custom lists and never lose track of what to watch next</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get Started</string>
+
 </resources>

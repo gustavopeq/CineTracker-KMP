@@ -9,9 +9,7 @@ import platform.Foundation.currentLocale
 import platform.Foundation.timeIntervalSince1970
 
 actual object DateUtils {
-    actual fun getComingSoonDates(
-        monthPeriod: Int,
-    ): Pair<String, String> {
+    actual fun getComingSoonDates(monthPeriod: Int): Pair<String, String> {
         val calendar = NSCalendar.currentCalendar
 
         val dateFormatter = NSDateFormatter().apply {
@@ -20,7 +18,10 @@ actual object DateUtils {
         }
         val releaseDateGte = dateFormatter.stringFromDate(NSDate())
         val releaseDateLte = calendar.dateByAddingUnit(
-            NSCalendarUnitMonth, monthPeriod.toLong(), NSDate(), 0u,
+            NSCalendarUnitMonth,
+            monthPeriod.toLong(),
+            NSDate(),
+            0u
         )?.let {
             dateFormatter.stringFromDate(it)
         } ?: releaseDateGte

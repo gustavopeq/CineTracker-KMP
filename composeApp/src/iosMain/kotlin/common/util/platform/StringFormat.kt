@@ -15,17 +15,15 @@ actual object StringFormat {
         return formatter.stringFromNumber(NSNumber(number))!!
     }
 
-    actual fun Long.toFormattedCurrency(): String {
-        return try {
-            val numberFormatter = NSNumberFormatter().apply {
-                numberStyle = NSNumberFormatterCurrencyStyle
-                locale = NSLocale.localeWithLocaleIdentifier("en_US")
-                maximumFractionDigits = 0u
-            }
-            val nsNumber = NSNumber(this.toDouble())
-            numberFormatter.stringFromNumber(nsNumber) ?: ""
-        } catch (e: Exception) {
-            ""
+    actual fun Long.toFormattedCurrency(): String = try {
+        val numberFormatter = NSNumberFormatter().apply {
+            numberStyle = NSNumberFormatterCurrencyStyle
+            locale = NSLocale.localeWithLocaleIdentifier("en_US")
+            maximumFractionDigits = 0u
         }
+        val nsNumber = NSNumber(this.toDouble())
+        numberFormatter.stringFromNumber(nsNumber) ?: ""
+    } catch (e: Exception) {
+        ""
     }
 }

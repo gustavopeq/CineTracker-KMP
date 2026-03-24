@@ -10,7 +10,7 @@ fun MainViewController() = ComposeUIViewController(
         KoinInitializer().init()
         Firebase.initialize()
         Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
-    },
+    }
 ) {
     MainAppView()
 }

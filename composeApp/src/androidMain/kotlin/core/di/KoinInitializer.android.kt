@@ -12,9 +12,7 @@ import network.di.serviceModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-actual class KoinInitializer(
-    private val context: Context,
-) {
+actual class KoinInitializer(private val context: Context) {
     actual fun init() {
         startKoin {
             androidContext(context)
@@ -26,7 +24,7 @@ actual class KoinInitializer(
                 databaseRepositoryModule,
                 apiModule,
                 serviceModule,
-                repositoryModule,
+                repositoryModule
             )
         }
     }

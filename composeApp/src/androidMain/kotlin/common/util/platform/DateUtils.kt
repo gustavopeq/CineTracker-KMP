@@ -5,9 +5,7 @@ import java.util.Calendar
 import java.util.Locale
 
 actual object DateUtils {
-    actual fun getComingSoonDates(
-        monthPeriod: Int,
-    ): Pair<String, String> {
+    actual fun getComingSoonDates(monthPeriod: Int): Pair<String, String> {
         val calendar = Calendar.getInstance()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
