@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_search
-import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_desc
-import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_title
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_1
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_2
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_3
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_4
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_5
+import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_desc
+import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_title
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import org.jetbrains.compose.resources.DrawableResource

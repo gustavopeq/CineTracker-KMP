@@ -1,6 +1,5 @@
 package common.util
 
-import co.touchlab.kermit.Logger
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
@@ -20,6 +19,7 @@ import cinetracker_kmp.composeapp.generated.resources.october
 import cinetracker_kmp.composeapp.generated.resources.september
 import cinetracker_kmp.composeapp.generated.resources.undefined_ratings
 import cinetracker_kmp.composeapp.generated.resources.unknown
+import co.touchlab.kermit.Logger
 import common.util.UiConstants.EMPTY_RATINGS
 import common.util.platform.StringFormat
 import org.jetbrains.compose.resources.stringResource

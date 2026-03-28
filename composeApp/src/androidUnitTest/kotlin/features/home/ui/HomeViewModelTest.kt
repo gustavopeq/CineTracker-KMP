@@ -3,11 +3,11 @@ package features.home.ui
 import common.domain.models.list.ListItem
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import features.watchlist.domain.ListInteractor
 import features.home.domain.HomeInteractor
 import features.home.events.HomeEvent
 import features.home.ui.state.HomeState
 import features.home.util.fakeHomeState
+import features.watchlist.domain.ListInteractor
 import features.watchlist.util.fakeGenericContent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

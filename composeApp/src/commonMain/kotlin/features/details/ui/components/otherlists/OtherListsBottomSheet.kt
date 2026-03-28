@@ -77,11 +77,7 @@ fun OtherListsBottomSheet(
 }
 
 @Composable
-private fun ListToggleRow(
-    isContentInList: Boolean,
-    listName: String,
-    onToggleList: () -> Unit
-) {
+private fun ListToggleRow(isContentInList: Boolean, listName: String, onToggleList: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

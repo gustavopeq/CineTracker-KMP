@@ -39,12 +39,12 @@ import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_watchlist
 import cinetracker_kmp.composeapp.generated.resources.onboarding_build_collection
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_1
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_2
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_3
 import cinetracker_kmp.composeapp.generated.resources.onboarding_create_new_list
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_desc
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_title
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_1
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_2
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_3
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import org.jetbrains.compose.resources.DrawableResource
@@ -263,7 +263,11 @@ private fun HighlightedCreateCard(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .size(BOOKMARK_CIRCLE_SIZE.dp)
                     .clip(CircleShape)
-                    .border(width = 1.dp, color = PrimaryYellowColor.copy(alpha = BOOKMARK_CIRCLE_BORDER_ALPHA), shape = CircleShape)
+                    .border(
+                        width = 1.dp,
+                        color = PrimaryYellowColor.copy(alpha = BOOKMARK_CIRCLE_BORDER_ALPHA),
+                        shape = CircleShape
+                    )
                     .background(PrimaryYellowColor.copy(alpha = BOOKMARK_CIRCLE_BG_ALPHA)),
                 contentAlignment = Alignment.Center
             ) {
