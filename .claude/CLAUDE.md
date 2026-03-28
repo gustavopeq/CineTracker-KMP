@@ -313,6 +313,7 @@ CineTracker-KMP/
 │   │       │   └── watchlist/
 │   │       │       ├── WatchlistScreen.kt
 │   │       │       ├── domain/
+│   │       │       │   ├── ListInteractor.kt
 │   │       │       │   └── WatchlistInteractor.kt
 │   │       │       ├── events/
 │   │       │       │   └── WatchlistEvent.kt

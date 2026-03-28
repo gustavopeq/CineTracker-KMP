@@ -26,7 +26,7 @@ class MainViewModel(
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
     }
 
-    fun setOnboardingSeen() {
+    fun updateOnboardingUiState() {
         _hasSeenOnboarding.value = true
     }
 

@@ -71,7 +71,7 @@ fun MainAppView() {
             }
             false -> {
                 OnboardingView(
-                    onOnboardingComplete = { mainViewModel.setOnboardingSeen() }
+                    onOnboardingComplete = { mainViewModel.updateOnboardingUiState() }
                 )
             }
             true -> {

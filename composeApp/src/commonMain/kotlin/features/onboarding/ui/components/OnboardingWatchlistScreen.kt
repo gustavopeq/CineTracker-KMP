@@ -157,8 +157,8 @@ fun OnboardingWatchlistScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .padding(bottom = 180.dp),
+                .padding(horizontal = OnboardingConstants.SCREEN_HORIZONTAL_PADDING.dp)
+                .padding(bottom = OnboardingConstants.TEXT_BOTTOM_PADDING.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -172,7 +172,7 @@ fun OnboardingWatchlistScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(OnboardingConstants.TITLE_DESC_SPACING.dp))
 
             Text(
                 text = stringResource(Res.string.onboarding_lists_desc),
@@ -279,7 +279,7 @@ private fun HighlightedCreateCard(modifier: Modifier = Modifier) {
 
             Text(
                 text = stringResource(Res.string.onboarding_create_new_list),
-                fontSize = 18.sp,
+                fontSize = OnboardingConstants.CARD_LABEL_FONT_SIZE.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 28.sp,
                 color = PrimaryYellowColor,
@@ -290,7 +290,7 @@ private fun HighlightedCreateCard(modifier: Modifier = Modifier) {
 
             Text(
                 text = stringResource(Res.string.onboarding_build_collection),
-                fontSize = 12.sp,
+                fontSize = OnboardingConstants.CARD_SUBLABEL_FONT_SIZE.sp,
                 fontWeight = FontWeight.Medium,
                 lineHeight = 16.sp,
                 color = OnboardingConstants.DESCRIPTION_COLOR,
