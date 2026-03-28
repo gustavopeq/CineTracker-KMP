@@ -427,7 +427,7 @@ class DetailsViewModelTest {
         val viewModel = createViewModel()
         advanceUntilIdle()
 
-        assertTrue(viewModel.showDetailsOverlay.value)
+        assertEquals(true, viewModel.showDetailsOverlay.value)
     }
 
     @Test
@@ -438,7 +438,7 @@ class DetailsViewModelTest {
         val viewModel = createViewModel()
         advanceUntilIdle()
 
-        assertFalse(viewModel.showDetailsOverlay.value)
+        assertEquals(false, viewModel.showDetailsOverlay.value)
     }
 
     @Test
@@ -456,7 +456,7 @@ class DetailsViewModelTest {
         val viewModel = createViewModel(mediaType = MediaType.PERSON)
         advanceUntilIdle()
 
-        assertFalse(viewModel.showDetailsOverlay.value)
+        assertEquals(false, viewModel.showDetailsOverlay.value)
     }
 
     @Test
@@ -466,11 +466,11 @@ class DetailsViewModelTest {
 
         val viewModel = createViewModel()
         advanceUntilIdle()
-        assertTrue(viewModel.showDetailsOverlay.value)
+        assertEquals(true, viewModel.showDetailsOverlay.value)
 
         viewModel.onEvent(DetailsEvents.DismissDetailsOverlay)
 
-        assertFalse(viewModel.showDetailsOverlay.value)
+        assertEquals(false, viewModel.showDetailsOverlay.value)
         verify { settingsRepository.setDetailsOverlaySeen() }
     }
 }

@@ -82,7 +82,7 @@ class DetailsViewModel(
     private val _showDetailsOverlay = MutableStateFlow<Boolean?>(null)
     val showDetailsOverlay: StateFlow<Boolean?> get() = _showDetailsOverlay
 
-    private lateinit var allLists: List<ListItem>
+    private var allLists: List<ListItem> = emptyList()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
