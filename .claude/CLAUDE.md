@@ -290,11 +290,11 @@ CineTracker-KMP/
 │   │       │   │       ├── OnboardingViewModel.kt
 │   │       │   │       ├── OnboardingView.kt
 │   │       │   │       └── components/
-│   │       │   │           ├── OnboardingPage.kt
+│   │       │   │           ├── OnboardingConstants.kt
 │   │       │   │           ├── OnboardingIndicator.kt
-│   │       │   │           ├── WelcomeIllustration.kt
-│   │       │   │           ├── DiscoverIllustration.kt
-│   │       │   │           └── ListsIllustration.kt
+│   │       │   │           ├── WelcomeScreen.kt
+│   │       │   │           ├── DiscoverScreen.kt
+│   │       │   │           └── CollectionsScreen.kt
 │   │       │   ├── search/
 │   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/
