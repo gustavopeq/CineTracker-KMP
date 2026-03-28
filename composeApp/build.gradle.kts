@@ -74,6 +74,7 @@ kotlin {
             implementation(libs.kottie)
             implementation(libs.paging.common)
             implementation(libs.paging.compose)
+            implementation(libs.multiplatform.settings)
             implementation(libs.sqlite.bundled)
             api(libs.gitlive.firebase.kotlin.crashlytics)
         }

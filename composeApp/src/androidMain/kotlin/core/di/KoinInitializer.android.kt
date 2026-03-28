@@ -6,6 +6,7 @@ import core.di.modules.viewModelModule
 import database.di.daoModule
 import database.di.databaseModule
 import database.di.databaseRepositoryModule
+import database.di.settingsModule
 import network.di.apiModule
 import network.di.repositoryModule
 import network.di.serviceModule
@@ -22,6 +23,7 @@ actual class KoinInitializer(private val context: Context) {
                 databaseModule(),
                 daoModule,
                 databaseRepositoryModule,
+                settingsModule(),
                 apiModule,
                 serviceModule,
                 repositoryModule

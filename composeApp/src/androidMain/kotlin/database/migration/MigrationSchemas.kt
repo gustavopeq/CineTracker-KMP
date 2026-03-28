@@ -113,16 +113,3 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         )
     }
 }
-
-val MIGRATION_7_8 = object : Migration(7, 8) {
-    override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS settings_entity (
-                `key` TEXT PRIMARY KEY NOT NULL,
-                value TEXT NOT NULL
-            )
-            """
-        )
-    }
-}

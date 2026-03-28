@@ -1,24 +1,17 @@
 package database.repository
 
-import database.dao.SettingsDao
-import database.model.SettingsEntity
+import com.russhwolf.settings.Settings
 
-class SettingsRepositoryImpl(private val settingsDao: SettingsDao) : SettingsRepository {
+class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepository {
 
-    override suspend fun hasCompletedOnboarding(): Boolean =
-        settingsDao.getSetting(KEY_ONBOARDING_COMPLETED)?.value == VALUE_TRUE
+    override fun hasCompletedOnboarding(): Boolean =
+        settings.getBoolean(KEY_ONBOARDING_COMPLETED, false)
 
-    override suspend fun setOnboardingCompleted() {
-        settingsDao.insertSetting(
-            SettingsEntity(
-                key = KEY_ONBOARDING_COMPLETED,
-                value = VALUE_TRUE
-            )
-        )
+    override fun setOnboardingCompleted() {
+        settings.putBoolean(KEY_ONBOARDING_COMPLETED, true)
     }
 
     companion object {
         private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
-        private const val VALUE_TRUE = "true"
     }
 }

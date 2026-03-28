@@ -6,6 +6,7 @@ import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
@@ -27,7 +28,7 @@ class MainViewModelTest {
 
     private val databaseRepository: DatabaseRepository = mockk()
     private val settingsRepository: SettingsRepository = mockk {
-        coEvery { hasCompletedOnboarding() } returns true
+        every { hasCompletedOnboarding() } returns true
     }
     private val testDispatcher = StandardTestDispatcher()
 
