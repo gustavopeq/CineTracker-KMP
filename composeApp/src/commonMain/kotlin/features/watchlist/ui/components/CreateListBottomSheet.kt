@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
@@ -98,9 +99,11 @@ private fun ShowBottomSheet(mainViewModel: MainViewModel, dismissBottomSheet: ()
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = listName,
-                    onValueChange = {
-                        if (it.length <= NEW_LIST_MAX_CHARACTERS) {
-                            mainViewModel.updateCreateNewListTextField(it.uppercase().trim())
+                    onValueChange = { newValue ->
+                        if (newValue.text.length <= NEW_LIST_MAX_CHARACTERS) {
+                            mainViewModel.updateCreateNewListTextField(
+                                newValue.copy(text = newValue.text.uppercase().trim())
+                            )
                         }
                     },
                     placeholder = {
@@ -156,7 +159,7 @@ private fun ShowBottomSheet(mainViewModel: MainViewModel, dismissBottomSheet: ()
                         }
                     }
                 },
-                enabled = listName.isNotEmpty()
+                enabled = listName.text.isNotEmpty()
             )
         }
         Spacer(
