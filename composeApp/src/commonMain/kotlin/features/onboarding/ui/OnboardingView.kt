@@ -1,56 +1,55 @@
 package features.onboarding.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
-import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_desc
-import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_title
 import cinetracker_kmp.composeapp.generated.resources.onboarding_get_started
-import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_desc
-import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_title
 import cinetracker_kmp.composeapp.generated.resources.onboarding_next
-import cinetracker_kmp.composeapp.generated.resources.onboarding_skip
-import cinetracker_kmp.composeapp.generated.resources.onboarding_welcome_desc
-import cinetracker_kmp.composeapp.generated.resources.onboarding_welcome_title
-import common.ui.components.button.GenericButton
 import common.ui.theme.PrimaryBlackColor
-import common.util.UiConstants.DEFAULT_MARGIN
-import common.util.UiConstants.LARGE_MARGIN
-import features.onboarding.ui.components.DiscoverIllustration
-import features.onboarding.ui.components.ListsIllustration
+import common.ui.theme.PrimaryYellowColor
+import features.onboarding.ui.components.CollectionsScreen
+import features.onboarding.ui.components.DiscoverScreen
 import features.onboarding.ui.components.OnboardingIndicator
-import features.onboarding.ui.components.OnboardingPage
-import features.onboarding.ui.components.WelcomeIllustration
+import features.onboarding.ui.components.WelcomeScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val PAGE_COUNT = 3
+private const val BUTTON_HEIGHT = 56
+private const val BUTTON_CORNER_RADIUS = 12
+private const val BUTTON_FONT_SIZE = 18
+private val BUTTON_TEXT_COLOR = Color(0xFF4E3000)
 
 @Composable
 fun OnboardingView(onOnboardingComplete: () -> Unit) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val pagerState = rememberPagerState(pageCount = { PAGE_COUNT })
     val coroutineScope = rememberCoroutineScope()
-    val isLastPage = pagerState.currentPage == PAGE_COUNT - 1
 
     Box(
         modifier = Modifier
@@ -58,67 +57,41 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
             .background(PrimaryBlackColor)
             .windowInsetsPadding(WindowInsets.systemBars)
     ) {
-        // Skip button (hidden on last page)
-        if (!isLastPage) {
-            Text(
-                text = stringResource(Res.string.onboarding_skip),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(DEFAULT_MARGIN.dp)
-                    .clickable {
-                        viewModel.completeOnboarding(onOnboardingComplete)
-                    }
-            )
-        }
-
         // Pager content
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> OnboardingPage(
-                    title = stringResource(Res.string.onboarding_welcome_title),
-                    description = stringResource(Res.string.onboarding_welcome_desc),
-                    illustration = { WelcomeIllustration() }
-                )
-                1 -> OnboardingPage(
-                    title = stringResource(Res.string.onboarding_discover_title),
-                    description = stringResource(Res.string.onboarding_discover_desc),
-                    illustration = { DiscoverIllustration() }
-                )
-                2 -> OnboardingPage(
-                    title = stringResource(Res.string.onboarding_lists_title),
-                    description = stringResource(Res.string.onboarding_lists_desc),
-                    illustration = { ListsIllustration() }
-                )
+                0 -> WelcomeScreen()
+                1 -> DiscoverScreen()
+                2 -> CollectionsScreen()
             }
         }
 
         // Bottom controls
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = LARGE_MARGIN.dp, vertical = LARGE_MARGIN.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 32.dp)
+                .padding(bottom = 48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(40.dp)
         ) {
             OnboardingIndicator(
                 pageCount = PAGE_COUNT,
                 currentPage = pagerState.currentPage
             )
 
-            GenericButton(
-                buttonText = if (isLastPage) {
+            OnboardingButton(
+                text = if (pagerState.currentPage == PAGE_COUNT - 1) {
                     stringResource(Res.string.onboarding_get_started)
                 } else {
                     stringResource(Res.string.onboarding_next)
                 },
                 onClick = {
-                    if (isLastPage) {
+                    if (pagerState.currentPage == PAGE_COUNT - 1) {
                         viewModel.completeOnboarding(onOnboardingComplete)
                     } else {
                         coroutineScope.launch {
@@ -128,5 +101,32 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun OnboardingButton(text: String, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(BUTTON_CORNER_RADIUS.dp)
+
+    Button(
+        onClick = onClick,
+        shape = shape,
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(BUTTON_HEIGHT.dp)
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(PrimaryYellowColor, PrimaryYellowColor.copy(alpha = 0.85f))
+                ),
+                shape = shape
+            )
+    ) {
+        Text(
+            text = text,
+            fontSize = BUTTON_FONT_SIZE.sp,
+            fontWeight = FontWeight.Bold,
+            color = BUTTON_TEXT_COLOR
+        )
     }
 }

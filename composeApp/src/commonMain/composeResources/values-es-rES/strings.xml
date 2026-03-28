@@ -141,14 +141,17 @@
     <string name="personal_ratings_clear">Borrar calificación</string>
 
     <!-- Onboarding -->
-    <string name="onboarding_welcome_title">Bienvenido a CineTracker</string>
-    <string name="onboarding_welcome_desc">Tu acompañante personal de películas y series</string>
-    <string name="onboarding_discover_title">Descubre Películas y Series</string>
-    <string name="onboarding_discover_desc">Explora contenido en tendencia o busca tus favoritos</string>
-    <string name="onboarding_lists_title">Crea Tu Lista</string>
-    <string name="onboarding_lists_desc">Guarda películas y series en listas personalizadas</string>
+    <string name="onboarding_welcome_title_prefix">Bienvenido a</string>
+    <string name="onboarding_welcome_title_app">CineTracker</string>
+    <string name="onboarding_welcome_desc">Tu rastreador personal de cine y series.</string>
+    <string name="onboarding_discover_title">Descubre Películas\ny Series</string>
+    <string name="onboarding_discover_desc">Explora contenido en tendencia, busca por título y encuentra tu próximo favorito.</string>
+    <string name="onboarding_lists_title">Organiza Tu\nWatchlist</string>
+    <string name="onboarding_lists_desc">Crea listas personalizadas, lleva un registro de lo que ya viste y no pierdas de vista lo que quieres ver.</string>
     <string name="onboarding_skip">Omitir</string>
     <string name="onboarding_next">Siguiente</string>
     <string name="onboarding_get_started">Comenzar</string>
+    <string name="onboarding_create_new_list">Crear Nueva\nLista</string>
+    <string name="onboarding_build_collection">Crea tu colección</string>
 
 </resources>
