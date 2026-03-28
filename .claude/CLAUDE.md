@@ -27,6 +27,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Testing Rules
 
+- **Every new or modified ViewModel, Interactor, or Repository must have corresponding unit tests.** If a new class is created, create a matching test file. If an existing class gains new public methods, add tests for those methods.
 - **Always run tests after writing or modifying them** — compilation success is not enough. Unit tests: `./gradlew :composeApp:testDebugUnitTest`. Instrumented tests: `./gradlew :composeApp:connectedDebugAndroidTest`.
 - **Before running instrumented tests, check for a connected device** using `~/Library/Android/sdk/platform-tools/adb devices`. If a device or emulator is listed, run the tests. If none is found, explicitly tell the user no device is available — never silently skip.
 
@@ -491,6 +492,7 @@ CineTracker-KMP/
 │   │       │   ├── util/
 │   │       │   │   └── WatchlistTestFixtures.kt # Watchlist-specific fixtures
 │   │       │   ├── domain/
+│   │       │   │   ├── ListInteractorTest.kt
 │   │       │   │   └── WatchlistInteractorTest.kt
 │   │       │   └── ui/
 │   │       │       └── WatchlistViewModelTest.kt
