@@ -252,6 +252,7 @@ CineTracker-KMP/
 │   │       │   │       │   ├── ContentCredits.kt
 │   │       │   │       │   ├── DetailsBodyPlaceholder.kt
 │   │       │   │       │   ├── DetailsDescription.kt
+│   │       │   │       │   ├── DetailsOnboardingOverlay.kt
 │   │       │   │       │   ├── DetailsTopBar.kt
 │   │       │   │       │   ├── moreoptions/
 │   │       │   │       │   │   ├── MoreOptionsTab.kt

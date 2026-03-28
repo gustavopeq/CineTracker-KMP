@@ -53,4 +53,29 @@ class SettingsRepositoryImplTest {
 
         verify { settings.putBoolean("onboarding_completed", true) }
     }
+
+    @Test
+    fun `hasSeenDetailsOverlay returns true when flag is set`() {
+        every { settings.getBoolean("details_overlay_seen", false) } returns true
+
+        val result = repository.hasSeenDetailsOverlay()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `hasSeenDetailsOverlay returns false when flag is not set`() {
+        every { settings.getBoolean("details_overlay_seen", false) } returns false
+
+        val result = repository.hasSeenDetailsOverlay()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `setDetailsOverlaySeen stores true value`() {
+        repository.setDetailsOverlaySeen()
+
+        verify { settings.putBoolean("details_overlay_seen", true) }
+    }
 }

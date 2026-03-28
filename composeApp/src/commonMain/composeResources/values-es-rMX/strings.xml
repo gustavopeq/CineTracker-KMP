@@ -155,4 +155,10 @@
     <string name="onboarding_create_new_list">Crear Nueva\nLista</string>
     <string name="onboarding_build_collection">Crea tu colección</string>
 
+    <!-- Details Onboarding Overlay -->
+    <string name="details_overlay_title_movie">¿Te gustó esta película?</string>
+    <string name="details_overlay_title_show">¿Te gustó esta serie?</string>
+    <string name="details_overlay_subtitle">¡Agrégala a tu lista!</string>
+    <string name="details_overlay_cta">¡Entendido!</string>
+
 </resources>

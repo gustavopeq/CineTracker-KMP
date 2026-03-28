@@ -19,6 +19,6 @@ val viewModelModule = module {
     viewModel { WatchlistViewModel(get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { (contentId: Int, mediaType: MediaType) ->
-        DetailsViewModel(contentId, mediaType, get())
+        DetailsViewModel(contentId, mediaType, get(), get())
     }
 }

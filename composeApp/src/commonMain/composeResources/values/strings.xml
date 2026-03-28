@@ -154,4 +154,10 @@
     <string name="onboarding_create_new_list">Create New\nList</string>
     <string name="onboarding_build_collection">Build your collection</string>
 
+    <!-- Details Onboarding Overlay -->
+    <string name="details_overlay_title_movie">Did you like this movie?</string>
+    <string name="details_overlay_title_show">Did you like this show?</string>
+    <string name="details_overlay_subtitle">Make sure to add it to your list!</string>
+    <string name="details_overlay_cta">Got it!</string>
+
 </resources>
