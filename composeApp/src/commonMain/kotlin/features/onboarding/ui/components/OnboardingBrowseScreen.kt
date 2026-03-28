@@ -228,7 +228,7 @@ private fun SearchPlaceholderCard(modifier: Modifier = Modifier) {
         Icon(
             painter = painterResource(Res.drawable.ic_nav_search),
             contentDescription = null,
-            tint = Color.White.copy(alpha = 0.3f),
+            tint = PrimaryYellowColor,
             modifier = Modifier.size(SEARCH_ICON_SIZE.dp)
         )
     }
