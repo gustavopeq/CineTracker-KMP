@@ -100,6 +100,22 @@ fun OnboardingWelcomeScreen(modifier: Modifier = Modifier) {
                 )
         )
 
+        // Subtle yellow gradient from bottom
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize(0.6f)
+                .align(Alignment.BottomCenter)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            PrimaryYellowColor.copy(alpha = 0.06f)
+                        )
+                    )
+                )
+        )
+
         // Text content at bottom
         Column(
             modifier = Modifier

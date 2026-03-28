@@ -32,6 +32,7 @@ import cinetracker_kmp.composeapp.generated.resources.onboarding_next
 import common.ui.theme.OnboardingButtonTextColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
+import common.util.platform.SetNavigationBarColor
 import features.onboarding.ui.components.OnboardingBrowseScreen
 import features.onboarding.ui.components.OnboardingConstants.CONTROLS_BOTTOM_PADDING
 import features.onboarding.ui.components.OnboardingConstants.CONTROLS_HORIZONTAL_PADDING
@@ -51,6 +52,8 @@ private val BUTTON_TEXT_COLOR = OnboardingButtonTextColor
 
 @Composable
 fun OnboardingView(onOnboardingComplete: () -> Unit) {
+    SetNavigationBarColor(PrimaryBlackColor)
+
     val viewModel: OnboardingViewModel = koinViewModel()
     val pagerState = rememberPagerState(pageCount = { PAGE_COUNT })
     val coroutineScope = rememberCoroutineScope()

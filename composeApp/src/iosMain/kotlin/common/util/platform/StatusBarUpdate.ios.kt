@@ -7,3 +7,8 @@ import androidx.compose.ui.graphics.Color
 actual fun SetStatusBarColor(newColor: Color) {
     // TODO status bar color update on IOS
 }
+
+@Composable
+actual fun SetNavigationBarColor(newColor: Color) {
+    // iOS home indicator area color is controlled by the Swift ContentView background
+}
