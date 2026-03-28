@@ -1,5 +1,6 @@
 package features.search.ui.paging
 
+import co.touchlab.kermit.Logger
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import common.domain.models.content.GenericContent
@@ -15,6 +16,10 @@ class SearchPagingSource(
     private val query: String,
     private val mediaType: MediaType?
 ) : PagingSource<Int, GenericContent>() {
+    companion object {
+        private const val TAG = "SearchPagingSource"
+    }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GenericContent> {
         return try {
             val pageNumber = params.key ?: 1
@@ -53,7 +58,7 @@ class SearchPagingSource(
 
             return when (apiResponse) {
                 is Right -> {
-                    println("Search Paging source error: ${apiResponse.error}")
+                    Logger.e(TAG) { "Search paging source error: ${apiResponse.error}" }
                     LoadResult.Error(
                         apiResponse.error.exception ?: Exception("Unknown error")
                     )

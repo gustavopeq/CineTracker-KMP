@@ -1,5 +1,6 @@
 package common.util
 
+import co.touchlab.kermit.Logger
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
@@ -34,7 +35,7 @@ fun String.formatDate(): String {
         day = this.substring(8, 10).toIntOrNull()
         year = this.substring(0, 4)
     } catch (e: Exception) {
-        println("Date format caught exception: $e")
+        Logger.w("Extensions") { "Date format caught exception: $e" }
         return stringResource(Res.string.unknown)
     }
 
