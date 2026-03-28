@@ -1,5 +1,6 @@
 package features.details.domain
 
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.StreamProvider
 import common.domain.models.content.Videos
@@ -10,14 +11,13 @@ import common.domain.models.content.toGenericContentList
 import common.domain.models.content.toStreamProvider
 import common.domain.models.content.toVideos
 import common.domain.models.list.ListItem
-import common.domain.models.list.toListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
 import core.LanguageManager.getUserCountryCode
-import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.state.DetailsState
+import features.watchlist.domain.ListInteractor
 import network.models.content.common.BaseContentResponse
 import network.models.content.common.MovieResponse
 import network.models.content.common.PersonResponse
@@ -33,9 +33,12 @@ class DetailsInteractor(
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository,
     private val personRepository: PersonRepository,
-    private val databaseRepository: DatabaseRepository,
+    private val listInteractor: ListInteractor,
     private val personalRatingRepository: PersonalRatingRepository
 ) {
+    companion object {
+        private const val TAG = "DetailsInteractor"
+    }
     suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
         val result = when (mediaType) {
@@ -48,7 +51,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentDetailsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
                     detailsState.setError(errorCode = response.error.code)
                 }
                 is Left -> {
@@ -88,7 +91,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentCreditsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentCreditsById failed with error: ${response.error}" }
                     detailsState.setError(errorCode = response.error.code)
                 }
                 is Left -> {
@@ -114,7 +117,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentVideosById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentVideosById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     videoList = response.value.results?.map {
@@ -138,9 +141,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println(
-                        "getRecommendationsContentById failed with error: ${response.error}"
-                    )
+                    Logger.e(TAG) { "getRecommendationsContentById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listOfSimilar = mapResponseToGenericContent(response)
@@ -167,7 +168,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getSimilarContentById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getSimilarContentById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listOfSimilar = mapResponseToGenericContent(response)
@@ -188,7 +189,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getStreamingProviders failed with error: ${response.error}")
+                    Logger.e(TAG) { "getStreamingProviders failed with error: ${response.error}" }
                 }
                 is Left -> {
                     val userCountryCode = getUserCountryCode()
@@ -220,7 +221,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getPersonCreditsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getPersonCreditsById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     mediaContentList = response.value.cast.toGenericContentList().filterNot {
@@ -239,7 +240,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getPersonImages failed with error: ${response.error}")
+                    Logger.e(TAG) { "getPersonImages failed with error: ${response.error}" }
                 }
                 is Left -> {
                     imageList = response.value.profiles?.filter {
@@ -253,54 +254,13 @@ class DetailsInteractor(
         return imageList
     }
 
-    suspend fun verifyContentInLists(contentId: Int, mediaType: MediaType): Map<Int, Boolean> {
-        val allLists = databaseRepository.getAllLists()
-        val contentInListMap = allLists.associate { list ->
-            list.listId to false
-        }.toMutableMap()
+    suspend fun verifyContentInLists(contentId: Int, mediaType: MediaType): Map<Int, Boolean> =
+        listInteractor.verifyContentInLists(contentId, mediaType)
 
-        val result = databaseRepository.searchItems(
-            contentId = contentId,
-            mediaType = mediaType
-        )
+    suspend fun toggleWatchlist(currentStatus: Boolean, contentId: Int, mediaType: MediaType, listId: Int) =
+        listInteractor.toggleWatchlist(currentStatus, contentId, mediaType, listId)
 
-        result.forEach { content ->
-            contentInListMap[content.listId] = true
-        }
-
-        return contentInListMap
-    }
-
-    suspend fun toggleWatchlist(currentStatus: Boolean, contentId: Int, mediaType: MediaType, listId: Int) {
-        when (currentStatus) {
-            true -> {
-                removeFromWatchlist(contentId, mediaType, listId)
-            }
-            false -> {
-                addToWatchlist(contentId, mediaType, listId)
-            }
-        }
-    }
-
-    private suspend fun addToWatchlist(contentId: Int, mediaType: MediaType, listId: Int) {
-        databaseRepository.insertItem(
-            contentId = contentId,
-            mediaType = mediaType,
-            listId = listId
-        )
-    }
-
-    private suspend fun removeFromWatchlist(contentId: Int, mediaType: MediaType, listId: Int) {
-        databaseRepository.deleteItem(
-            contentId = contentId,
-            mediaType = mediaType,
-            listId = listId
-        )
-    }
-
-    suspend fun getAllLists(): List<ListItem> = databaseRepository.getAllLists().map { listEntity ->
-        listEntity.toListItem()
-    }
+    suspend fun getAllLists(): List<ListItem> = listInteractor.getAllLists()
 
     suspend fun getPersonalRating(contentId: Int): Float? = personalRatingRepository.getRating(contentId)
 

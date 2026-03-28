@@ -7,6 +7,7 @@ import common.domain.models.list.ListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
+import database.repository.SettingsRepository
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
 import features.details.state.DetailsState
@@ -14,8 +15,10 @@ import features.watchlist.ui.model.DefaultLists
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -43,6 +46,7 @@ private fun awaitIO(ms: Long = 300L) = Thread.sleep(ms)
 class DetailsViewModelTest {
 
     private val detailsInteractor: DetailsInteractor = mockk()
+    private val settingsRepository: SettingsRepository = mockk(relaxUnitFun = true)
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -60,6 +64,9 @@ class DetailsViewModelTest {
             DefaultLists.WATCHLIST.listId to false,
             DefaultLists.WATCHED.listId to false
         )
+
+        // Default: overlay not yet seen
+        every { settingsRepository.hasSeenDetailsOverlay() } returns false
     }
 
     @After
@@ -72,7 +79,8 @@ class DetailsViewModelTest {
         DetailsViewModel(
             contentId = contentId,
             mediaType = mediaType,
-            detailsInteractor = detailsInteractor
+            detailsInteractor = detailsInteractor,
+            settingsRepository = settingsRepository
         )
 
     private fun fakeDetailedContent(id: Int = 1, name: String = "Test Movie", mediaType: MediaType = MediaType.MOVIE) =
@@ -407,5 +415,62 @@ class DetailsViewModelTest {
 
         assertNull(viewModel.personalRating.value)
         coVerify { detailsInteractor.removePersonalRating(1, MediaType.MOVIE) }
+    }
+
+    // ── Details Onboarding Overlay ───────────────────────────────────────────
+
+    @Test
+    fun `showDetailsOverlay is true after successful movie load when not yet seen`() = runTest {
+        every { settingsRepository.hasSeenDetailsOverlay() } returns false
+        stubSuccessfulMovieDetails()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(true, viewModel.showDetailsOverlay.value)
+    }
+
+    @Test
+    fun `showDetailsOverlay is false when overlay was already seen`() = runTest {
+        every { settingsRepository.hasSeenDetailsOverlay() } returns true
+        stubSuccessfulMovieDetails()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(false, viewModel.showDetailsOverlay.value)
+    }
+
+    @Test
+    fun `showDetailsOverlay is false for PERSON media type`() = runTest {
+        every { settingsRepository.hasSeenDetailsOverlay() } returns false
+        val personDetailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent(id = 1, name = "Test Person", mediaType = MediaType.PERSON)
+        }
+        coEvery { detailsInteractor.getContentDetailsById(1, MediaType.PERSON) } returns personDetailsState
+        coEvery { detailsInteractor.getContentCastById(1, MediaType.PERSON) } returns DetailsState()
+        coEvery { detailsInteractor.getStreamingProviders(1, MediaType.PERSON) } returns emptyList()
+        coEvery { detailsInteractor.getPersonCreditsById(1) } returns emptyList()
+        coEvery { detailsInteractor.getPersonImages(1) } returns emptyList()
+
+        val viewModel = createViewModel(mediaType = MediaType.PERSON)
+        advanceUntilIdle()
+
+        assertEquals(false, viewModel.showDetailsOverlay.value)
+    }
+
+    @Test
+    fun `DismissDetailsOverlay sets overlay to false and persists to settings`() = runTest {
+        every { settingsRepository.hasSeenDetailsOverlay() } returns false
+        stubSuccessfulMovieDetails()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        assertEquals(true, viewModel.showDetailsOverlay.value)
+
+        viewModel.onEvent(DetailsEvents.DismissDetailsOverlay)
+
+        assertEquals(false, viewModel.showDetailsOverlay.value)
+        verify { settingsRepository.setDetailsOverlaySeen() }
     }
 }

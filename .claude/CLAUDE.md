@@ -27,6 +27,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Testing Rules
 
+- **Every new or modified ViewModel, Interactor, or Repository must have corresponding unit tests.** If a new class is created, create a matching test file. If an existing class gains new public methods, add tests for those methods.
 - **Always run tests after writing or modifying them** — compilation success is not enough. Unit tests: `./gradlew :composeApp:testDebugUnitTest`. Instrumented tests: `./gradlew :composeApp:connectedDebugAndroidTest`.
 - **Before running instrumented tests, check for a connected device** using `~/Library/Android/sdk/platform-tools/adb devices`. If a device or emulator is listed, run the tests. If none is found, explicitly tell the user no device is available — never silently skip.
 
@@ -53,7 +54,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Never use fully-qualified references in code bodies.** Always add a proper `import` at the top of the file and use the short name (e.g., `mockk()` not `io.mockk.mockk()`).
 - **Never use wildcard imports** (`import foo.bar.*`). Import each symbol explicitly.
-- **Never add `@Suppress` annotations** without explicit user approval. If a suppression seems necessary, explain why and ask before adding it.
+- **Never add `@Suppress` annotations.** Find an alternative approach that avoids the warning or error instead.
+- **Never use deprecated APIs.** Always use the modern replacement. If unsure what the replacement is, research it before proceeding.
 
 ## Project Overview
 
@@ -196,7 +198,6 @@ CineTracker-KMP/
 │   │       │           ├── DateUtils.kt          # expect
 │   │       │           ├── PlatformUtils.kt      # expect
 │   │       │           ├── ScreenSizeInfo.kt     # expect
-│   │       │           ├── StatusBarUpdate.kt    # expect
 │   │       │           └── StringFormat.kt       # expect
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
@@ -207,7 +208,8 @@ CineTracker-KMP/
 │   │       │   ├── di/
 │   │       │   │   ├── DaoModule.kt
 │   │       │   │   ├── DatabaseModule.kt         # expect
-│   │       │   │   └── DatabaseRepositoryModule.kt
+│   │       │   │   ├── DatabaseRepositoryModule.kt
+│   │       │   │   └── SettingsModule.kt         # expect
 │   │       │   ├── model/
 │   │       │   │   ├── ContentEntity.kt
 │   │       │   │   ├── ListEntity.kt
@@ -216,7 +218,9 @@ CineTracker-KMP/
 │   │       │       ├── DatabaseRepository.kt
 │   │       │       ├── DatabaseRepositoryImpl.kt
 │   │       │       ├── PersonalRatingRepository.kt
-│   │       │       └── PersonalRatingRepositoryImpl.kt
+│   │       │       ├── PersonalRatingRepositoryImpl.kt
+│   │       │       ├── SettingsRepository.kt
+│   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
 │   │       │   ├── browse/
 │   │       │   │   ├── BrowseScreen.kt
@@ -249,6 +253,7 @@ CineTracker-KMP/
 │   │       │   │       │   ├── ContentCredits.kt
 │   │       │   │       │   ├── DetailsBodyPlaceholder.kt
 │   │       │   │       │   ├── DetailsDescription.kt
+│   │       │   │       │   ├── DetailsOnboardingOverlay.kt
 │   │       │   │       │   ├── DetailsTopBar.kt
 │   │       │   │       │   ├── moreoptions/
 │   │       │   │       │   │   ├── MoreOptionsTab.kt
@@ -281,6 +286,16 @@ CineTracker-KMP/
 │   │       │   │       │       └── SecondaryFeaturedContainer.kt
 │   │       │   │       └── state/
 │   │       │   │           └── HomeState.kt
+│   │       │   ├── onboarding/
+│   │       │   │   └── ui/
+│   │       │   │       ├── OnboardingViewModel.kt
+│   │       │   │       ├── OnboardingView.kt
+│   │       │   │       └── components/
+│   │       │   │           ├── OnboardingConstants.kt
+│   │       │   │           ├── OnboardingIndicator.kt
+│   │       │   │           ├── OnboardingWelcomeScreen.kt
+│   │       │   │           ├── OnboardingBrowseScreen.kt
+│   │       │   │           └── OnboardingWatchlistScreen.kt
 │   │       │   ├── search/
 │   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/
@@ -300,6 +315,7 @@ CineTracker-KMP/
 │   │       │   └── watchlist/
 │   │       │       ├── WatchlistScreen.kt
 │   │       │       ├── domain/
+│   │       │       │   ├── ListInteractor.kt
 │   │       │       │   └── WatchlistInteractor.kt
 │   │       │       ├── events/
 │   │       │       │   └── WatchlistEvent.kt
@@ -411,13 +427,13 @@ CineTracker-KMP/
 │   │   │   │   ├── DateUtils.kt
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
-│   │   │   │   ├── StatusBarUpdate.android.kt
 │   │   │   │   └── StringFormat.kt
 │   │   │   ├── core/di/
 │   │   │   │   └── KoinInitializer.android.kt
 │   │   │   ├── database/
 │   │   │   │   ├── di/
-│   │   │   │   │   └── DatabaseModule.android.kt
+│   │   │   │   │   ├── DatabaseModule.android.kt
+│   │   │   │   │   └── SettingsModule.android.kt
 │   │   │   │   └── migration/
 │   │   │   │       └── MigrationSchemas.kt
 │   │   │   └── network/
@@ -436,13 +452,13 @@ CineTracker-KMP/
 │   │   │   ├── DateUtils.kt
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt
-│   │   │   ├── StatusBarUpdate.ios.kt
 │   │   │   └── StringFormat.kt
 │   │   ├── core/di/
 │   │   │   └── KoinInitializer.ios.kt
 │   │   ├── database/
 │   │   │   └── di/
-│   │   │       └── DatabaseModule.ios.kt
+│   │   │       ├── DatabaseModule.ios.kt
+│   │   │       └── SettingsModule.ios.kt
 │   │   └── network/
 │   │       ├── di/
 │   │       │   └── ApiModule.ios.kt
@@ -460,7 +476,8 @@ CineTracker-KMP/
 │   │   ├── database/
 │   │   │   └── repository/
 │   │   │       ├── DatabaseRepositoryImplTest.kt
-│   │   │       └── PersonalRatingRepositoryImplTest.kt
+│   │   │       ├── PersonalRatingRepositoryImplTest.kt
+│   │   │       └── SettingsRepositoryImplTest.kt
 │   │   └── features/
 │   │       ├── details/
 │   │       │   ├── util/
@@ -473,6 +490,7 @@ CineTracker-KMP/
 │   │       │   ├── util/
 │   │       │   │   └── WatchlistTestFixtures.kt # Watchlist-specific fixtures
 │   │       │   ├── domain/
+│   │       │   │   ├── ListInteractorTest.kt
 │   │       │   │   └── WatchlistInteractorTest.kt
 │   │       │   └── ui/
 │   │       │       └── WatchlistViewModelTest.kt
@@ -488,6 +506,9 @@ CineTracker-KMP/
 │   │       │       ├── paging/
 │   │       │       │   └── MediaContentPagingSourceTest.kt
 │   │       │       └── BrowseViewModelTest.kt
+│   │       ├── onboarding/
+│   │       │   └── ui/
+│   │       │       └── OnboardingViewModelTest.kt
 │   │       └── search/
 │   │           └── ui/
 │   │               ├── paging/
@@ -513,9 +534,7 @@ CineTracker-KMP/
     └── iosApp/
         ├── ContentView.swift
         ├── iOSApp.swift
-        ├── Info.plist
-        └── Util/
-            └── Extensions.swift
+        └── Info.plist
 ```
 
 ## Architecture
@@ -527,7 +546,7 @@ CineTracker-KMP/
 - `androidMain` — Android platform implementations (OkHttp engine, Room DB path, Koin init via `CoreApplication`)
 - `iosMain` — iOS platform implementations (Darwin engine, Room DB path, Koin init via `MainViewController`)
 
-**Expect/actual declarations** are used for: `NetworkClient`, `DatabaseModule`, `ApiModule`, and platform utilities (`DateUtils`, `StringFormat`, `ScreenSizeInfo`, `PlatformUtils`, `StatusBarUpdate`).
+**Expect/actual declarations** are used for: `NetworkClient`, `DatabaseModule`, `ApiModule`, and platform utilities (`DateUtils`, `StringFormat`, `ScreenSizeInfo`, `PlatformUtils`).
 
 ### Layer Structure (all under `composeApp/src/commonMain/kotlin/`)
 
@@ -538,7 +557,7 @@ CineTracker-KMP/
   - `events/` — UI event definitions
 - **`navigation/`** — `Screen`/`ScreenUI` interfaces, `MainNavGraph`, nav bar components
 - **`network/`** — Ktor client setup, services, repositories, DTOs (`models/`), `Either<Left,Right>` error handling
-- **`database/`** — Room entities (`ContentEntity`, `ListEntity`, `PersonalRatingEntity`), DAOs, repository. DB version 6 with migrations in `androidMain`.
+- **`database/`** — Room entities (`ContentEntity`, `ListEntity`, `PersonalRatingEntity`), DAOs, repository. DB version 7 with migrations in `androidMain`. App settings use `multiplatform-settings` (SharedPreferences/NSUserDefaults) via `SettingsModule`.
 - **`common/`** — Shared UI components, domain models (`BaseMediaContent`, `GenericContent`, `DetailedContent`, `MediaType`), theme, platform utilities
 - **`core/di/`** — Koin module definitions (`InteractorModule`, `ViewModelModule`)
 

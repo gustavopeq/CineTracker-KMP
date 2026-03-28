@@ -26,7 +26,6 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SEARCH_CARDS_WIDTH
 import common.util.calculateCardsPerRow
 import common.util.dpToPx
-import common.util.platform.SetStatusBarColor
 import common.util.platform.getScreenSizeInfo
 import common.util.pxToDp
 import features.search.events.SearchEvent
@@ -59,8 +58,6 @@ private fun Search(viewModel: SearchViewModel, goToDetails: (Int, MediaType) -> 
             SearchEvent.FilterTypeSelected(it)
         )
     }
-
-    SetStatusBarColor()
 
     LaunchedEffect(Unit) {
         if (searchQuery.isNotEmpty() && searchResults.itemCount == 0) {

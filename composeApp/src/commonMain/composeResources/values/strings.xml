@@ -20,6 +20,8 @@
     <string name="home_bottom_screen_message">Looks like you've caught up with everything here!</string>
     <string name="home_discover_more_button">Discover More</string>
     <string name="app_logo_image_description">CineTracker app logo</string>
+    <string name="home_my_list">My List</string>
+    <string name="home_in_my_list">In My List</string>
 
     <!-- Browse screen -->
     <string name="movies_tab">Movies</string>
@@ -138,5 +140,24 @@
     <string name="rating_bottom_sheet_save_button">Save Rating</string>
     <string name="personal_ratings_add_rating">Add Rating</string>
     <string name="personal_ratings_clear">Clear Rating</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title_prefix">Welcome to</string>
+    <string name="onboarding_welcome_title_app">CineTracker</string>
+    <string name="onboarding_welcome_desc">Your personal movie &amp; show tracker.</string>
+    <string name="onboarding_discover_title">Discover Movies\n&amp; Shows</string>
+    <string name="onboarding_discover_desc">Browse trending content, search by title, and find your next favorite to watch.</string>
+    <string name="onboarding_lists_title">Organize Your\nWatchlist</string>
+    <string name="onboarding_lists_desc">Create custom lists, track what you already watched, and plan what to watch next.</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_create_new_list">Create New\nList</string>
+    <string name="onboarding_build_collection">Build your collection</string>
+
+    <!-- Details Onboarding Overlay -->
+    <string name="details_overlay_title_movie">Did you like this movie?</string>
+    <string name="details_overlay_title_show">Did you like this show?</string>
+    <string name="details_overlay_subtitle">Make sure to add it to your list!</string>
+    <string name="details_overlay_cta">Got it!</string>
 
 </resources>

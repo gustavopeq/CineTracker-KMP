@@ -17,14 +17,12 @@ actual object StringFormat {
         return formattedRating
     }
 
-    actual fun Long.toFormattedCurrency(): String {
-        return try {
-            val decimalFormat = (NumberFormat.getCurrencyInstance(Locale.US)).apply {
-                maximumFractionDigits = 0
-            }
-            decimalFormat.format(this)
-        } catch (e: IllegalArgumentException) {
-            ""
+    actual fun Long.toFormattedCurrency(): String = try {
+        val decimalFormat = (NumberFormat.getCurrencyInstance(Locale.US)).apply {
+            maximumFractionDigits = 0
         }
+        decimalFormat.format(this)
+    } catch (e: IllegalArgumentException) {
+        ""
     }
 }

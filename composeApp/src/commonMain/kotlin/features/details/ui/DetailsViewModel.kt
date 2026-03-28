@@ -13,6 +13,7 @@ import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
+import database.repository.SettingsRepository
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
 import features.details.state.DetailsSnackbarState
@@ -24,8 +25,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val detailsInteractor: DetailsInteractor) :
-    ViewModel() {
+class DetailsViewModel(
+    val contentId: Int,
+    val mediaType: MediaType,
+    private val detailsInteractor: DetailsInteractor,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
 
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
         DataLoadStatus.Loading
@@ -74,7 +79,10 @@ class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val
     )
     val snackbarState: MutableState<DetailsSnackbarState> get() = _snackbarState
 
-    private lateinit var allLists: List<ListItem>
+    private val _showDetailsOverlay = MutableStateFlow<Boolean?>(null)
+    val showDetailsOverlay: StateFlow<Boolean?> get() = _showDetailsOverlay
+
+    private var allLists: List<ListItem> = emptyList()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -102,6 +110,7 @@ class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val
             is DetailsEvents.OnSnackbarDismiss -> {
                 snackbarDismiss()
             }
+            is DetailsEvents.DismissDetailsOverlay -> dismissDetailsOverlay()
         }
     }
 
@@ -149,6 +158,7 @@ class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val
         } else {
             _contentCredits.value = castDetailsState.detailsCast.value
             _loadState.value = DataLoadStatus.Success
+            checkDetailsOverlay()
         }
     }
 
@@ -219,6 +229,19 @@ class DetailsViewModel(val contentId: Int, val mediaType: MediaType, private val
     private fun resetDetails() {
         _loadState.value = DataLoadStatus.Loading
         _detailsFailedLoading.value = true
+    }
+
+    private fun checkDetailsOverlay() {
+        if (mediaType != MediaType.PERSON && !settingsRepository.hasSeenDetailsOverlay()) {
+            _showDetailsOverlay.value = true
+        } else {
+            _showDetailsOverlay.value = false
+        }
+    }
+
+    private fun dismissDetailsOverlay() {
+        settingsRepository.setDetailsOverlaySeen()
+        _showDetailsOverlay.value = false
     }
 
     fun getAllLists(): List<ListItem> = allLists

@@ -2,14 +2,11 @@ package features.details.domain
 
 import common.domain.models.util.MediaType
 import common.util.errorFlow
-import common.util.fakeContentEntity
-import common.util.fakeListEntity
 import common.util.fakeMoviePagingResponse
 import common.util.fakeMovieResponse
 import common.util.fakeShowResponse
 import common.util.successFlow
 import core.LanguageManager
-import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.util.fakeCastResponse
 import features.details.util.fakeContentCastResponse
@@ -49,7 +46,7 @@ class DetailsInteractorTest {
     private val movieRepository: MovieRepository = mockk()
     private val showRepository: ShowRepository = mockk()
     private val personRepository: PersonRepository = mockk()
-    private val databaseRepository: DatabaseRepository = mockk()
+    private val listInteractor: features.watchlist.domain.ListInteractor = mockk()
     private val personalRatingRepository: PersonalRatingRepository = mockk()
 
     private lateinit var interactor: DetailsInteractor
@@ -64,7 +61,7 @@ class DetailsInteractorTest {
             movieRepository = movieRepository,
             showRepository = showRepository,
             personRepository = personRepository,
-            databaseRepository = databaseRepository,
+            listInteractor = listInteractor,
             personalRatingRepository = personalRatingRepository
         )
     }
@@ -477,49 +474,21 @@ class DetailsInteractorTest {
     // ── verifyContentInLists ──────────────────────────────────────────────────
 
     @Test
-    fun `verifyContentInLists returns false for all lists when content not present`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(1),
-            fakeListEntity(2)
-        )
-        coEvery { databaseRepository.searchItems(any(), any()) } returns emptyList()
+    fun `verifyContentInLists delegates to listInteractor`() = runTest {
+        val expected = mapOf(1 to true, 2 to false)
+        coEvery { listInteractor.verifyContentInLists(42, MediaType.MOVIE) } returns expected
 
         val result = interactor.verifyContentInLists(42, MediaType.MOVIE)
 
-        assertEquals(mapOf(1 to false, 2 to false), result)
-    }
-
-    @Test
-    fun `verifyContentInLists returns true for the list where content exists`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(1),
-            fakeListEntity(2)
-        )
-        coEvery { databaseRepository.searchItems(42, MediaType.MOVIE) } returns listOf(
-            fakeContentEntity(contentId = 42, listId = 1)
-        )
-
-        val result = interactor.verifyContentInLists(42, MediaType.MOVIE)
-
-        assertEquals(true, result[1])
-        assertEquals(false, result[2])
-    }
-
-    @Test
-    fun `verifyContentInLists returns empty map when no lists exist`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns emptyList()
-        coEvery { databaseRepository.searchItems(any(), any()) } returns emptyList()
-
-        val result = interactor.verifyContentInLists(42, MediaType.MOVIE)
-
-        assertTrue(result.isEmpty())
+        assertEquals(expected, result)
+        coVerify { listInteractor.verifyContentInLists(42, MediaType.MOVIE) }
     }
 
     // ── toggleWatchlist ───────────────────────────────────────────────────────
 
     @Test
-    fun `toggleWatchlist calls insertItem when currentStatus is false`() = runTest {
-        coEvery { databaseRepository.insertItem(any(), any(), any()) } returns Unit
+    fun `toggleWatchlist delegates to listInteractor`() = runTest {
+        coEvery { listInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
 
         interactor.toggleWatchlist(
             currentStatus = false,
@@ -528,50 +497,23 @@ class DetailsInteractorTest {
             listId = 1
         )
 
-        coVerify(exactly = 1) { databaseRepository.insertItem(1, MediaType.MOVIE, 1) }
-        coVerify(exactly = 0) { databaseRepository.deleteItem(any(), any(), any()) }
-    }
-
-    @Test
-    fun `toggleWatchlist calls deleteItem when currentStatus is true`() = runTest {
-        coEvery { databaseRepository.deleteItem(any(), any(), any()) } returns null
-
-        interactor.toggleWatchlist(
-            currentStatus = true,
-            contentId = 1,
-            mediaType = MediaType.MOVIE,
-            listId = 1
-        )
-
-        coVerify(exactly = 1) { databaseRepository.deleteItem(1, MediaType.MOVIE, 1) }
-        coVerify(exactly = 0) { databaseRepository.insertItem(any(), any(), any()) }
+        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1) }
     }
 
     // ── getAllLists ───────────────────────────────────────────────────────────
 
     @Test
-    fun `getAllLists maps ListEntity list to ListItem list correctly`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(1, "Watchlist"),
-            fakeListEntity(2, "Watched")
+    fun `getAllLists delegates to listInteractor`() = runTest {
+        val expected = listOf(
+            common.domain.models.list.ListItem(id = 1, name = "Watchlist"),
+            common.domain.models.list.ListItem(id = 2, name = "Watched")
         )
+        coEvery { listInteractor.getAllLists() } returns expected
 
         val result = interactor.getAllLists()
 
-        assertEquals(2, result.size)
-        assertEquals(1, result[0].id)
-        assertEquals("Watchlist", result[0].name)
-        assertEquals(2, result[1].id)
-        assertEquals("Watched", result[1].name)
-    }
-
-    @Test
-    fun `getAllLists returns empty list when no lists exist`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns emptyList()
-
-        val result = interactor.getAllLists()
-
-        assertTrue(result.isEmpty())
+        assertEquals(expected, result)
+        coVerify { listInteractor.getAllLists() }
     }
 
     // ── getPersonalRating ─────────────────────────────────────────────────────

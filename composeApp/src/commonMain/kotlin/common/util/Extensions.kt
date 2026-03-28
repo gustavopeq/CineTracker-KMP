@@ -19,6 +19,7 @@ import cinetracker_kmp.composeapp.generated.resources.october
 import cinetracker_kmp.composeapp.generated.resources.september
 import cinetracker_kmp.composeapp.generated.resources.undefined_ratings
 import cinetracker_kmp.composeapp.generated.resources.unknown
+import co.touchlab.kermit.Logger
 import common.util.UiConstants.EMPTY_RATINGS
 import common.util.platform.StringFormat
 import org.jetbrains.compose.resources.stringResource
@@ -34,7 +35,7 @@ fun String.formatDate(): String {
         day = this.substring(8, 10).toIntOrNull()
         year = this.substring(0, 4)
     } catch (e: Exception) {
-        println("Date format caught exception: $e")
+        Logger.w("Extensions") { "Date format caught exception: $e" }
         return stringResource(Res.string.unknown)
     }
 

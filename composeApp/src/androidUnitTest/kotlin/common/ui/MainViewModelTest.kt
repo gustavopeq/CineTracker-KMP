@@ -1,10 +1,13 @@
 package common.ui
 
+import androidx.compose.ui.text.input.TextFieldValue
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
+import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
@@ -25,6 +28,9 @@ import org.junit.Test
 class MainViewModelTest {
 
     private val databaseRepository: DatabaseRepository = mockk()
+    private val settingsRepository: SettingsRepository = mockk {
+        every { hasCompletedOnboarding() } returns true
+    }
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -39,7 +45,7 @@ class MainViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel() = MainViewModel(databaseRepository)
+    private fun createViewModel() = MainViewModel(databaseRepository, settingsRepository)
 
     // ── updateSortType ────────────────────────────────────────────────────────
 
@@ -103,11 +109,11 @@ class MainViewModelTest {
     @Test
     fun `updateDisplayCreateNewList resets text field and duplicate flag`() {
         val viewModel = createViewModel()
-        viewModel.updateCreateNewListTextField("something")
+        viewModel.updateCreateNewListTextField(TextFieldValue("something"))
 
         viewModel.updateDisplayCreateNewList(true)
 
-        assertEquals("", viewModel.newListTextFieldValue.value)
+        assertEquals("", viewModel.newListTextFieldValue.value.text)
         assertFalse(viewModel.isDuplicatedListName.value)
         assertTrue(viewModel.displayCreateNewList.value)
     }
@@ -122,9 +128,9 @@ class MainViewModelTest {
 
         assertTrue(viewModel.isDuplicatedListName.value)
 
-        viewModel.updateCreateNewListTextField("new name")
+        viewModel.updateCreateNewListTextField(TextFieldValue("new name"))
 
         assertFalse(viewModel.isDuplicatedListName.value)
-        assertEquals("new name", viewModel.newListTextFieldValue.value)
+        assertEquals("new name", viewModel.newListTextFieldValue.value.text)
     }
 }

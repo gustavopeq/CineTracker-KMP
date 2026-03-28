@@ -2,10 +2,12 @@ package common.ui
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
+import database.repository.SettingsRepository
 import features.home.HomeScreen
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,21 @@ import kotlinx.coroutines.flow.StateFlow
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
-class MainViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
+class MainViewModel(
+    private val databaseRepository: DatabaseRepository,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
+
+    private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
+    val hasSeenOnboarding: StateFlow<Boolean?> get() = _hasSeenOnboarding
+
+    init {
+        _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
+    }
+
+    fun updateOnboardingUiState() {
+        _hasSeenOnboarding.value = true
+    }
 
     private val _movieSortType = MutableStateFlow<SortTypeItem>(SortTypeItem.NowPlaying)
     val movieSortType: StateFlow<SortTypeItem> get() = _movieSortType
@@ -34,8 +50,8 @@ class MainViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
     private val _displayCreateNewList = MutableStateFlow(false)
     val displayCreateNewList: StateFlow<Boolean> get() = _displayCreateNewList
 
-    private val _newListTextFieldValue = mutableStateOf("")
-    val newListTextFieldValue: MutableState<String> get() = _newListTextFieldValue
+    private val _newListTextFieldValue = mutableStateOf(TextFieldValue())
+    val newListTextFieldValue: MutableState<TextFieldValue> get() = _newListTextFieldValue
 
     private val _isDuplicatedListName = MutableStateFlow(false)
     val isDuplicatedListName: StateFlow<Boolean> get() = _isDuplicatedListName
@@ -68,13 +84,13 @@ class MainViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
     }
 
     fun updateDisplayCreateNewList(open: Boolean) {
-        _newListTextFieldValue.value = ""
+        _newListTextFieldValue.value = TextFieldValue()
         _isDuplicatedListName.value = false
         _displayCreateNewList.value = open
     }
 
-    fun updateCreateNewListTextField(listName: String) {
-        _newListTextFieldValue.value = listName
+    fun updateCreateNewListTextField(value: TextFieldValue) {
+        _newListTextFieldValue.value = value
         if (_isDuplicatedListName.value) {
             _isDuplicatedListName.value = false
         }
@@ -82,7 +98,7 @@ class MainViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
 
     suspend fun createNewList(closeSheet: suspend () -> Unit) {
         val listCreated = databaseRepository.addNewList(
-            listName = _newListTextFieldValue.value
+            listName = _newListTextFieldValue.value.text
         )
 
         if (listCreated) {

@@ -2,6 +2,7 @@ package features.browse.ui.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.util.ContentListType
@@ -20,6 +21,10 @@ class MediaContentPagingSource(
     private val contentListType: ContentListType,
     private val mediaType: MediaType
 ) : PagingSource<Int, GenericContent>() {
+    companion object {
+        private const val TAG = "MediaContentPagingSource"
+    }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GenericContent> {
         return try {
             val pageNumber = params.key ?: 1
@@ -41,7 +46,7 @@ class MediaContentPagingSource(
 
             return when (apiResponse) {
                 is Right -> {
-                    println("Paging source error: ${apiResponse.error.exception}")
+                    Logger.e(TAG) { "Paging source error: ${apiResponse.error.exception}" }
                     LoadResult.Error(
                         apiResponse.error.exception ?: Exception("Unknown error")
                     )

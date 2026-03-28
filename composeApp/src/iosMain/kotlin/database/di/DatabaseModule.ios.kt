@@ -4,7 +4,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import androidx.sqlite.execSQL
 import database.AppDatabase
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -17,16 +16,14 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-actual fun databaseModule(): Module {
-    return module {
-        single<AppDatabase> { createRoomDatabase() }
-    }
+actual fun databaseModule(): Module = module {
+    single<AppDatabase> { createRoomDatabase() }
 }
 
 private fun createRoomDatabase(): AppDatabase {
     val dbFilePath = "${fileDirectory()}/movie_manager_database"
     return Room.databaseBuilder<AppDatabase>(
-        name = dbFilePath,
+        name = dbFilePath
     )
         .addCallback(roomCallback)
         .setDriver(BundledSQLiteDriver())
@@ -41,7 +38,7 @@ private fun fileDirectory(): String {
         inDomain = NSUserDomainMask,
         appropriateForURL = null,
         create = false,
-        error = null,
+        error = null
     )
     return requireNotNull(documentDirectory).path!!
 }
@@ -56,7 +53,7 @@ val roomCallback = object : RoomDatabase.Callback() {
 private fun createDefaultLists(connection: SQLiteConnection) {
     val defaultLists = listOf(
         DefaultLists.WATCHLIST.name.lowercase(),
-        DefaultLists.WATCHED.name.lowercase(),
+        DefaultLists.WATCHED.name.lowercase()
     )
     defaultLists.forEach { listName ->
         val stmt = connection.prepare("INSERT INTO list_entity (listName, isDefault) VALUES (?, 1)")

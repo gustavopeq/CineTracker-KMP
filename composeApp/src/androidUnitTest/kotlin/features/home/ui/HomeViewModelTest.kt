@@ -1,10 +1,13 @@
 package features.home.ui
 
+import common.domain.models.list.ListItem
 import common.domain.models.util.DataLoadStatus
+import common.domain.models.util.MediaType
 import features.home.domain.HomeInteractor
 import features.home.events.HomeEvent
 import features.home.ui.state.HomeState
 import features.home.util.fakeHomeState
+import features.watchlist.domain.ListInteractor
 import features.watchlist.util.fakeGenericContent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -12,6 +15,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,6 +38,7 @@ private fun awaitIO(ms: Long = 300L) = Thread.sleep(ms)
 class HomeViewModelTest {
 
     private val homeInteractor: HomeInteractor = mockk()
+    private val listInteractor: ListInteractor = mockk()
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -46,6 +51,8 @@ class HomeViewModelTest {
         coEvery { homeInteractor.getTrendingPerson() } returns emptyList()
         coEvery { homeInteractor.getMoviesComingSoon() } returns emptyList()
         coEvery { homeInteractor.getAllWatchlist() } returns emptyList()
+        coEvery { listInteractor.getAllLists() } returns emptyList()
+        coEvery { listInteractor.verifyContentInLists(any(), any()) } returns emptyMap()
     }
 
     @After
@@ -54,7 +61,7 @@ class HomeViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel() = HomeViewModel(homeInteractor)
+    private fun createViewModel() = HomeViewModel(homeInteractor, listInteractor)
 
     // ── Init ──────────────────────────────────────────────────────────────────
 
@@ -106,7 +113,7 @@ class HomeViewModelTest {
         coEvery { homeInteractor.getTrendingPerson() } returns listOf(
             common.domain.models.person.PersonDetails(
                 id = 1, title = "Actor", overview = "", posterPath = "/p.jpg",
-                mediaType = common.domain.models.util.MediaType.PERSON,
+                mediaType = MediaType.PERSON,
                 birthday = null, deathday = null, placeOfBirth = null,
                 knownForDepartment = null, knownFor = emptyList()
             )
@@ -190,7 +197,7 @@ class HomeViewModelTest {
         coEvery { homeInteractor.getTrendingPerson() } returns listOf(
             common.domain.models.person.PersonDetails(
                 id = 1, title = "Actor", overview = "", posterPath = "/p.jpg",
-                mediaType = common.domain.models.util.MediaType.PERSON,
+                mediaType = MediaType.PERSON,
                 birthday = null, deathday = null, placeOfBirth = null,
                 knownForDepartment = null, knownFor = emptyList()
             )
@@ -205,5 +212,153 @@ class HomeViewModelTest {
         assertTrue(viewModel.trendingMulti.value.isEmpty())
         assertTrue(viewModel.trendingPerson.value.isEmpty())
         assertTrue(viewModel.moviesComingSoon.value.isEmpty())
+    }
+
+    @Test
+    fun `OnError clears featuredContentInListStatus`() = runTest {
+        coEvery {
+            listInteractor.verifyContentInLists(any(), any())
+        } returns mapOf(1 to true)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        viewModel.onEvent(HomeEvent.OnError)
+
+        assertTrue(viewModel.featuredContentInListStatus.value.isEmpty())
+    }
+
+    // ── Featured list status ─────────────────────────────────────────────────
+
+    @Test
+    fun `loadFeaturedListStatus sets status map for featured content`() = runTest {
+        val statusMap = mapOf(1 to true, 2 to false)
+        coEvery {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns statusMap
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        assertEquals(statusMap, viewModel.featuredContentInListStatus.value)
+    }
+
+    @Test
+    fun `featuredContentInListStatus is empty when no featured content`() = runTest {
+        coEvery { homeInteractor.getTrendingMulti() } returns fakeHomeState()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        assertTrue(viewModel.featuredContentInListStatus.value.isEmpty())
+    }
+
+    @Test
+    fun `allLists is populated after init`() = runTest {
+        val lists = listOf(
+            ListItem(id = 1, name = "watchlist", isDefault = true),
+            ListItem(id = 2, name = "watched", isDefault = true)
+        )
+        coEvery { listInteractor.getAllLists() } returns lists
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        assertEquals(lists, viewModel.allLists.value)
+    }
+
+    // ── Toggle featured from list ────────────────────────────────────────────
+
+    @Test
+    fun `toggleFeaturedFromList adds content to list and updates status`() = runTest {
+        coEvery {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns mapOf(1 to false, 2 to false)
+        coEvery {
+            listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1)
+        } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        // After toggle, verify returns updated map
+        coEvery {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns mapOf(1 to true, 2 to false)
+
+        viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
+        awaitIO()
+
+        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1) }
+        assertEquals(true, viewModel.featuredContentInListStatus.value[1])
+    }
+
+    @Test
+    fun `toggleFeaturedFromList removes content from list and updates status`() = runTest {
+        coEvery {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns mapOf(1 to true, 2 to false)
+        coEvery {
+            listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1)
+        } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        // After toggle, verify returns updated map
+        coEvery {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns mapOf(1 to false, 2 to false)
+
+        viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
+        awaitIO()
+
+        coVerify { listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1) }
+        assertEquals(false, viewModel.featuredContentInListStatus.value[1])
+    }
+
+    @Test
+    fun `toggleFeaturedFromList does nothing when no featured content`() = runTest {
+        coEvery { homeInteractor.getTrendingMulti() } returns fakeHomeState()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
+        awaitIO()
+
+        coVerify(exactly = 0) { listInteractor.toggleWatchlist(any(), any(), any(), any()) }
+    }
+
+    // ── Bottom sheet visibility ──────────────────────────────────────────────
+
+    @Test
+    fun `OpenListBottomSheet sets showListBottomSheet to true`() = runTest {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.showListBottomSheet.value)
+
+        viewModel.onEvent(HomeEvent.OpenListBottomSheet)
+
+        assertTrue(viewModel.showListBottomSheet.value)
+    }
+
+    @Test
+    fun `CloseListBottomSheet sets showListBottomSheet to false`() = runTest {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.onEvent(HomeEvent.OpenListBottomSheet)
+        assertTrue(viewModel.showListBottomSheet.value)
+
+        viewModel.onEvent(HomeEvent.CloseListBottomSheet)
+        assertFalse(viewModel.showListBottomSheet.value)
     }
 }

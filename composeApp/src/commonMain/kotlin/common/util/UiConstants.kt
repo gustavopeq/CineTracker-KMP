@@ -53,6 +53,9 @@ object UiConstants {
     const val MAX_COUNT_PERSON_ADDITIONAL_CONTENT = 20
     const val STREAM_PROVIDER_ICON_SIZE = 60
     const val VIDEOS_PLAY_ICON_SIZE = 48
+    const val OVERLAY_INDEX = 2f
+    const val OVERLAY_BLUR_RADIUS = 6
+    const val DETAILS_OVERLAY_ICON_SIZE = 160
 
     // Watchlist
     const val WATCHLIST_IMAGE_WIDTH = 100

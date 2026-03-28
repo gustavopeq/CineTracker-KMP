@@ -19,6 +19,8 @@
     <string name="home_bottom_screen_message">¡Parece que ya has visto todo aquí!</string>
     <string name="home_discover_more_button">Descubre Más</string>
     <string name="app_logo_image_description">Logotipo de la app CineTracker</string>
+    <string name="home_my_list">Mi Lista</string>
+    <string name="home_in_my_list">En Mi Lista</string>
 
     <!-- Browse screen -->
     <string name="movies_tab">Películas</string>
@@ -139,5 +141,24 @@
     <string name="rating_bottom_sheet_save_button">Guardar calificación</string>
     <string name="personal_ratings_add_rating">Agregar calificación</string>
     <string name="personal_ratings_clear">Borrar calificación</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title_prefix">Bienvenido a</string>
+    <string name="onboarding_welcome_title_app">CineTracker</string>
+    <string name="onboarding_welcome_desc">Tu rastreador personal de cine y series.</string>
+    <string name="onboarding_discover_title">Descubre Películas\ny Series</string>
+    <string name="onboarding_discover_desc">Explora contenido en tendencia, busca por título y encuentra tu próximo favorito.</string>
+    <string name="onboarding_lists_title">Organiza Tu\nWatchlist</string>
+    <string name="onboarding_lists_desc">Crea listas personalizadas, lleva un registro de lo que ya viste y planifica lo que ver a continuación.</string>
+    <string name="onboarding_next">Siguiente</string>
+    <string name="onboarding_get_started">Comenzar</string>
+    <string name="onboarding_create_new_list">Crear Nueva\nLista</string>
+    <string name="onboarding_build_collection">Crea tu colección</string>
+
+    <!-- Details Onboarding Overlay -->
+    <string name="details_overlay_title_movie">¿Te gustó esta película?</string>
+    <string name="details_overlay_title_show">¿Te gustó esta serie?</string>
+    <string name="details_overlay_subtitle">¡Agrégala a tu lista!</string>
+    <string name="details_overlay_cta">¡Entendido!</string>
 
 </resources>

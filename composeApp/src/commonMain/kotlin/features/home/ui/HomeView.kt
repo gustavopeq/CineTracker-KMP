@@ -41,6 +41,7 @@ import common.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
+import features.details.ui.components.otherlists.OtherListsBottomSheet
 import features.home.HomeScreen
 import features.home.events.HomeEvent
 import features.home.ui.components.carousel.ComingSoonCarousel
@@ -84,6 +85,9 @@ private fun Home(
     val myWatchlist by viewModel.myWatchlist.collectAsState()
     val trendingPersonList by viewModel.trendingPerson.collectAsState()
     val moviesComingSoonList by viewModel.moviesComingSoon.collectAsState()
+    val showListBottomSheet by viewModel.showListBottomSheet.collectAsState()
+    val allLists by viewModel.allLists.collectAsState()
+    val featuredContentInListStatus by viewModel.featuredContentInListStatus.collectAsState()
 
     LaunchedEffect(Unit) {
         mainViewModel.updateCurrentScreen(HomeScreen.route())
@@ -119,12 +123,25 @@ private fun Home(
                         myWatchlist = myWatchlist,
                         trendingPersonList = trendingPersonList,
                         moviesComingSoonList = moviesComingSoonList,
+                        featuredContentInListStatus = featuredContentInListStatus,
                         goToDetails = goToDetails,
                         goToWatchlist = goToWatchlist,
-                        goToBrowse = goToBrowse
+                        goToBrowse = goToBrowse,
+                        onMyListClick = { viewModel.onEvent(HomeEvent.OpenListBottomSheet) }
                     )
                 }
             }
+        }
+
+        if (showListBottomSheet) {
+            OtherListsBottomSheet(
+                allLists = allLists,
+                contentInListStatus = featuredContentInListStatus,
+                onToggleList = { listId ->
+                    viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId))
+                },
+                onClosePanel = { viewModel.onEvent(HomeEvent.CloseListBottomSheet) }
+            )
         }
     }
 }
@@ -137,9 +154,11 @@ private fun HomeBody(
     myWatchlist: List<GenericContent>,
     trendingPersonList: List<PersonDetails>,
     moviesComingSoonList: List<GenericContent>,
+    featuredContentInListStatus: Map<Int, Boolean>,
     goToDetails: (Int, MediaType) -> Unit,
     goToWatchlist: () -> Unit,
-    goToBrowse: () -> Unit
+    goToBrowse: () -> Unit,
+    onMyListClick: () -> Unit
 ) {
     val homePosterUrl = BASE_ORIGINAL_IMAGE_URL + trendingMultiList[0].posterPath
     val featuredItem = trendingMultiList.firstOrNull()
@@ -155,6 +174,7 @@ private fun HomeBody(
         it.knownForDepartment?.isNotEmpty() == true && it.knownFor.size >= 3
     }
     val bgOffset = posterHeight * HOME_BACKGROUND_OFFSET_PERCENT
+    val isInAnyList = featuredContentInListStatus.values.any { it }
 
     val scrollState = rememberLazyListState()
     val showBackgroundImage = remember { mutableStateOf(true) }
@@ -190,7 +210,9 @@ private fun HomeBody(
             item {
                 FeaturedInfo(
                     featuredContent = featuredItem,
-                    goToDetails = goToDetails
+                    isInAnyList = isInAnyList,
+                    goToDetails = goToDetails,
+                    onMyListClick = onMyListClick
                 )
                 Column(
                     modifier = Modifier

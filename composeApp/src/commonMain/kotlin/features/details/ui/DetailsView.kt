@@ -1,7 +1,8 @@
 package features.details.ui
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.savedstate.read
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,9 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavBackStackEntry
+import androidx.savedstate.read
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_added_in_list
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
@@ -41,6 +45,7 @@ import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
+import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.POSTER_ASPECT_RATIO
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING
@@ -54,6 +59,7 @@ import features.details.ui.components.CastCarousel
 import features.details.ui.components.DetailBodyPlaceholder
 import features.details.ui.components.DetailsDescriptionBody
 import features.details.ui.components.DetailsDescriptionHeader
+import features.details.ui.components.DetailsOnboardingOverlay
 import features.details.ui.components.DetailsTopBar
 import features.details.ui.components.moreoptions.MoreOptionsTab
 import features.details.ui.components.moreoptions.PersonMoreOptionsTab
@@ -109,6 +115,10 @@ private fun Details(
 
     var currentTitlePosY by rememberSaveable { mutableFloatStateOf(0f) }
     var initialTitlePosY by rememberSaveable { mutableStateOf<Float?>(null) }
+
+    // Onboarding overlay
+    val showDetailsOverlay by viewModel.showDetailsOverlay.collectAsState()
+    var watchlistIconPosition by remember { mutableStateOf(Offset.Zero) }
 
     // Other Lists Panel
     var showOtherListsPanel by remember { mutableStateOf(false) }
@@ -181,54 +191,71 @@ private fun Details(
             onBackBtnPress = { updateShowAllFlag(false, MediaType.UNKNOWN) }
         )
     } else {
-        DetailsTopBar(
-            contentTitle = contentDetails?.name.orEmpty(),
-            currentHeaderPosY = currentTitlePosY,
-            initialHeaderPosY = initialTitlePosY,
-            showWatchlistButton = contentDetails?.mediaType != MediaType.PERSON,
-            contentInWatchlistStatus = contentInListStatus,
-            onBackBtnPress = onBackPress,
-            toggleWatchlist = onToggleWatchlist,
-            showOtherListsPanel = updateShowOtherListsPanel
-        )
+        var overlayDismissing by remember { mutableStateOf(false) }
+        val targetBlur = if (showDetailsOverlay == true && !overlayDismissing) OVERLAY_BLUR_RADIUS.dp else 0.dp
+        val contentBlur by animateDpAsState(targetValue = targetBlur, animationSpec = tween(300))
 
-        ClassicSnackbar(
-            snackbarHostState = snackbarHostState
-        ) {
-            when (loadState) {
-                is DataLoadStatus.Loading -> {
-                    DetailBodyPlaceholder(posterHeight)
-                }
+        Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
+            DetailsTopBar(
+                contentTitle = contentDetails?.name.orEmpty(),
+                currentHeaderPosY = currentTitlePosY,
+                initialHeaderPosY = initialTitlePosY,
+                showWatchlistButton = contentDetails?.mediaType != MediaType.PERSON,
+                watchlistButtonVisible = showDetailsOverlay == false,
+                contentInWatchlistStatus = contentInListStatus,
+                onBackBtnPress = onBackPress,
+                toggleWatchlist = onToggleWatchlist,
+                showOtherListsPanel = updateShowOtherListsPanel,
+                onWatchlistIconPositioned = { watchlistIconPosition = it }
+            )
 
-                is DataLoadStatus.Success -> {
-                    DetailsBody(
-                        posterHeight = posterHeight,
-                        viewModel = viewModel,
-                        contentDetails = contentDetails,
-                        personContentList = personContentList,
-                        initialTitlePosY = initialTitlePosY,
-                        currentTitlePosY = currentTitlePosY,
-                        updateTitlePosition = updateTitlePosition,
-                        goToDetails = goToDetails,
-                        updateShowAllFlag = updateShowAllFlag
-                    )
-                }
+            ClassicSnackbar(
+                snackbarHostState = snackbarHostState
+            ) {
+                when (loadState) {
+                    is DataLoadStatus.Loading -> {
+                        DetailBodyPlaceholder(posterHeight)
+                    }
 
-                else -> {
-                    viewModel.onEvent(DetailsEvents.OnError)
-                    goToErrorScreen()
+                    is DataLoadStatus.Success -> {
+                        DetailsBody(
+                            posterHeight = posterHeight,
+                            viewModel = viewModel,
+                            contentDetails = contentDetails,
+                            personContentList = personContentList,
+                            initialTitlePosY = initialTitlePosY,
+                            currentTitlePosY = currentTitlePosY,
+                            updateTitlePosition = updateTitlePosition,
+                            goToDetails = goToDetails,
+                            updateShowAllFlag = updateShowAllFlag
+                        )
+                    }
+
+                    else -> {
+                        viewModel.onEvent(DetailsEvents.OnError)
+                        goToErrorScreen()
+                    }
                 }
+            }
+
+            if (showOtherListsPanel) {
+                OtherListsBottomSheet(
+                    allLists = viewModel.getAllLists(),
+                    contentInListStatus = contentInListStatus,
+                    onToggleList = onToggleWatchlist,
+                    onClosePanel = {
+                        updateShowOtherListsPanel(false)
+                    }
+                )
             }
         }
 
-        if (showOtherListsPanel) {
-            OtherListsBottomSheet(
-                allLists = viewModel.getAllLists(),
-                contentInListStatus = contentInListStatus,
-                onToggleList = onToggleWatchlist,
-                onClosePanel = {
-                    updateShowOtherListsPanel(false)
-                }
+        if (showDetailsOverlay == true) {
+            DetailsOnboardingOverlay(
+                targetIconPosition = watchlistIconPosition,
+                mediaType = viewModel.mediaType,
+                onDismissStarted = { overlayDismissing = true },
+                onDismiss = { viewModel.onEvent(DetailsEvents.DismissDetailsOverlay) }
             )
         }
     }
