@@ -42,7 +42,7 @@ private const val WELCOME_TITLE_LETTER_SPACING = -2f
 private const val GRADIENT_TOP_HEIGHT = 128
 
 @Composable
-fun WelcomeScreen(modifier: Modifier = Modifier) {
+fun OnboardingWelcomeScreen(modifier: Modifier = Modifier) {
     val saturationMatrix = ColorMatrix().apply { setToSaturation(0f) }
 
     Box(modifier = modifier.fillMaxSize()) {

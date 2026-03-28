@@ -37,11 +37,11 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_search
 import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_desc
 import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_title
-import cinetracker_kmp.composeapp.generated.resources.onboarding_poster_1
-import cinetracker_kmp.composeapp.generated.resources.onboarding_poster_2
-import cinetracker_kmp.composeapp.generated.resources.onboarding_poster_3
-import cinetracker_kmp.composeapp.generated.resources.onboarding_poster_4
-import cinetracker_kmp.composeapp.generated.resources.onboarding_poster_5
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_1
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_2
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_3
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_4
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_5
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import org.jetbrains.compose.resources.DrawableResource
@@ -61,7 +61,7 @@ private const val HIGHLIGHTED_GLOW_ALPHA = 0.2f
 private val SEARCH_BG_COLOR = Color(0xFF1F1F1F)
 
 @Composable
-fun DiscoverScreen(modifier: Modifier = Modifier) {
+fun OnboardingBrowseScreen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize().background(PrimaryBlackColor)) {
         // Poster grid illustration
         BoxWithConstraints(
@@ -84,26 +84,26 @@ fun DiscoverScreen(modifier: Modifier = Modifier) {
                     // Row 1
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         PosterCard(
-                            imageRes = Res.drawable.onboarding_poster_1,
+                            imageRes = Res.drawable.onboarding_browse_1,
                             modifier = Modifier.weight(1f)
                         )
                         PosterCard(
-                            imageRes = Res.drawable.onboarding_poster_2,
+                            imageRes = Res.drawable.onboarding_browse_2,
                             modifier = Modifier.weight(1f)
                         )
                         PosterCard(
-                            imageRes = Res.drawable.onboarding_poster_3,
+                            imageRes = Res.drawable.onboarding_browse_3,
                             modifier = Modifier.weight(1f)
                         )
                     }
                     // Row 2
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         PosterCard(
-                            imageRes = Res.drawable.onboarding_poster_4,
+                            imageRes = Res.drawable.onboarding_browse_4,
                             modifier = Modifier.weight(1f)
                         )
                         PosterCard(
-                            imageRes = Res.drawable.onboarding_poster_5,
+                            imageRes = Res.drawable.onboarding_browse_5,
                             modifier = Modifier.weight(1f),
                             isHighlighted = true
                         )
