@@ -20,6 +20,8 @@
     <string name="home_bottom_screen_message">Looks like you've caught up with everything here!</string>
     <string name="home_discover_more_button">Discover More</string>
     <string name="app_logo_image_description">CineTracker app logo</string>
+    <string name="home_my_list">My List</string>
+    <string name="home_in_my_list">In My List</string>
 
     <!-- Browse screen -->
     <string name="movies_tab">Movies</string>

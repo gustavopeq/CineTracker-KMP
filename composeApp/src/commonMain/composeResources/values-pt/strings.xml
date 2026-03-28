@@ -19,6 +19,8 @@
     <string name="home_bottom_screen_message">Parece que você viu tudo por aqui!</string>
     <string name="home_discover_more_button">Descubra Mais</string>
     <string name="app_logo_image_description">Logotipo do app CineTracker</string>
+    <string name="home_my_list">Minha Lista</string>
+    <string name="home_in_my_list">Minha Lista</string>
 
     <!-- Browse screen -->
     <string name="movies_tab">Filmes</string>
