@@ -149,7 +149,6 @@
     <string name="onboarding_discover_desc">Browse trending content, search by title, and find your next favorite to watch.</string>
     <string name="onboarding_lists_title">Organize Your\nWatchlist</string>
     <string name="onboarding_lists_desc">Create custom lists, track what you already watched, and plan what to watch next.</string>
-    <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_create_new_list">Create New\nList</string>

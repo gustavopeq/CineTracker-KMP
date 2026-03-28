@@ -150,10 +150,8 @@
     <string name="onboarding_discover_desc">Explore conteúdo em alta, pesquise por título e encontre seu próximo favorito.</string>
     <string name="onboarding_lists_title">Organize Suas\nListas</string>
     <string name="onboarding_lists_desc">Crie listas personalizadas, acompanhe o que já assistiu e planeje o que assistir depois.</string>
-    <string name="onboarding_skip">Pular</string>
     <string name="onboarding_next">Próximo</string>
     <string name="onboarding_get_started">Começar</string>
-
     <string name="onboarding_create_new_list">Criar Nova\nLista</string>
     <string name="onboarding_build_collection">Crie sua coleção</string>
 

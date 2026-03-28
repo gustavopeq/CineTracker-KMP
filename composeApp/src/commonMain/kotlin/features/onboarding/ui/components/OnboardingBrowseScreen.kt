@@ -152,8 +152,8 @@ fun OnboardingBrowseScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .padding(bottom = 180.dp),
+                .padding(horizontal = OnboardingConstants.SCREEN_HORIZONTAL_PADDING.dp)
+                .padding(bottom = OnboardingConstants.TEXT_BOTTOM_PADDING.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -167,7 +167,7 @@ fun OnboardingBrowseScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(OnboardingConstants.TITLE_DESC_SPACING.dp))
 
             Text(
                 text = stringResource(Res.string.onboarding_discover_desc),

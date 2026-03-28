@@ -6,8 +6,8 @@ import common.domain.models.content.GenericContent
 import common.domain.models.list.ListItem
 import common.domain.models.person.PersonDetails
 import common.domain.models.util.DataLoadStatus
-import features.details.domain.DetailsInteractor
 import features.home.domain.HomeInteractor
+import features.watchlist.domain.ListInteractor
 import features.home.events.HomeEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val homeInteractor: HomeInteractor,
-    private val detailsInteractor: DetailsInteractor
+    private val listInteractor: ListInteractor
 ) : ViewModel() {
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
         DataLoadStatus.Loading
@@ -101,14 +101,14 @@ class HomeViewModel(
 
     private fun loadAllLists() {
         viewModelScope.launch(Dispatchers.IO) {
-            _allLists.value = detailsInteractor.getAllLists()
+            _allLists.value = listInteractor.getAllLists()
         }
     }
 
     private fun loadFeaturedListStatus() {
         val featured = _trendingMulti.value.firstOrNull() ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            _featuredContentInListStatus.value = detailsInteractor.verifyContentInLists(
+            _featuredContentInListStatus.value = listInteractor.verifyContentInLists(
                 contentId = featured.id,
                 mediaType = featured.mediaType
             )
@@ -119,13 +119,13 @@ class HomeViewModel(
         val featured = _trendingMulti.value.firstOrNull() ?: return
         val currentStatus = _featuredContentInListStatus.value[listId] ?: false
         viewModelScope.launch(Dispatchers.IO) {
-            detailsInteractor.toggleWatchlist(
+            listInteractor.toggleWatchlist(
                 currentStatus = currentStatus,
                 contentId = featured.id,
                 mediaType = featured.mediaType,
                 listId = listId
             )
-            _featuredContentInListStatus.value = detailsInteractor.verifyContentInLists(
+            _featuredContentInListStatus.value = listInteractor.verifyContentInLists(
                 contentId = featured.id,
                 mediaType = featured.mediaType
             )
