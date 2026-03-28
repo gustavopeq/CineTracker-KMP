@@ -1,5 +1,6 @@
 package features.watchlist.domain
 
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.util.MediaType
@@ -23,6 +24,10 @@ class WatchlistInteractor(
     private val showRepository: ShowRepository,
     private val personalRatingRepository: PersonalRatingRepository
 ) {
+    companion object {
+        private const val TAG = "WatchlistInteractor"
+    }
+
     private var lastRemovedItem: ContentEntity? = null
     private var lastMovedListId: Int? = null
 
@@ -63,7 +68,7 @@ class WatchlistInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentDetailsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
                     throw IllegalStateException(
                         response.error.code,
                         response.error.exception

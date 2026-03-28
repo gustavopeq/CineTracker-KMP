@@ -1,5 +1,6 @@
 package features.home.domain
 
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.person.PersonDetails
@@ -23,6 +24,10 @@ class HomeInteractor(
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository
 ) {
+    companion object {
+        private const val TAG = "HomeInteractor"
+    }
+
     suspend fun getTrendingMulti(): HomeState {
         val homeState = HomeState()
         val result = homeRepository.getTrendingMulti()
@@ -30,7 +35,7 @@ class HomeInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getTrendingMulti failed with error: ${response.error}")
+                    Logger.e(TAG) { "getTrendingMulti failed with error: ${response.error}" }
                     homeState.setError(errorCode = response.error.code)
                 }
                 is Left -> {
@@ -67,7 +72,7 @@ class HomeInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentDetailsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     contentDetails = when (mediaType) {
@@ -92,7 +97,7 @@ class HomeInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getTrendingPerson failed with error: ${response.error}")
+                    Logger.e(TAG) { "getTrendingPerson failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listResults = response.value.results.map {
@@ -116,7 +121,7 @@ class HomeInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getMoviesComingSoon failed with error: ${response.error}")
+                    Logger.e(TAG) { "getMoviesComingSoon failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listResults = response.value.results.mapNotNull {

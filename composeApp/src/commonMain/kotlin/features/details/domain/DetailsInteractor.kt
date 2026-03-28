@@ -1,5 +1,6 @@
 package features.details.domain
 
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.StreamProvider
 import common.domain.models.content.Videos
@@ -35,6 +36,9 @@ class DetailsInteractor(
     private val listInteractor: ListInteractor,
     private val personalRatingRepository: PersonalRatingRepository
 ) {
+    companion object {
+        private const val TAG = "DetailsInteractor"
+    }
     suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
         val result = when (mediaType) {
@@ -47,7 +51,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentDetailsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
                     detailsState.setError(errorCode = response.error.code)
                 }
                 is Left -> {
@@ -87,7 +91,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentCreditsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentCreditsById failed with error: ${response.error}" }
                     detailsState.setError(errorCode = response.error.code)
                 }
                 is Left -> {
@@ -113,7 +117,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getContentVideosById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getContentVideosById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     videoList = response.value.results?.map {
@@ -137,9 +141,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println(
-                        "getRecommendationsContentById failed with error: ${response.error}"
-                    )
+                    Logger.e(TAG) { "getRecommendationsContentById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listOfSimilar = mapResponseToGenericContent(response)
@@ -166,7 +168,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getSimilarContentById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getSimilarContentById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     listOfSimilar = mapResponseToGenericContent(response)
@@ -187,7 +189,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getStreamingProviders failed with error: ${response.error}")
+                    Logger.e(TAG) { "getStreamingProviders failed with error: ${response.error}" }
                 }
                 is Left -> {
                     val userCountryCode = getUserCountryCode()
@@ -219,7 +221,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getPersonCreditsById failed with error: ${response.error}")
+                    Logger.e(TAG) { "getPersonCreditsById failed with error: ${response.error}" }
                 }
                 is Left -> {
                     mediaContentList = response.value.cast.toGenericContentList().filterNot {
@@ -238,7 +240,7 @@ class DetailsInteractor(
         result.collect { response ->
             when (response) {
                 is Right -> {
-                    println("getPersonImages failed with error: ${response.error}")
+                    Logger.e(TAG) { "getPersonImages failed with error: ${response.error}" }
                 }
                 is Left -> {
                     imageList = response.value.profiles?.filter {
