@@ -16,8 +16,8 @@ import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
 import core.LanguageManager.getUserCountryCode
 import database.repository.PersonalRatingRepository
-import features.watchlist.domain.ListInteractor
 import features.details.state.DetailsState
+import features.watchlist.domain.ListInteractor
 import network.models.content.common.BaseContentResponse
 import network.models.content.common.MovieResponse
 import network.models.content.common.PersonResponse

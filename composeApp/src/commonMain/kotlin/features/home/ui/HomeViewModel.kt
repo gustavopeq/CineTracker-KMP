@@ -7,18 +7,16 @@ import common.domain.models.list.ListItem
 import common.domain.models.person.PersonDetails
 import common.domain.models.util.DataLoadStatus
 import features.home.domain.HomeInteractor
-import features.watchlist.domain.ListInteractor
 import features.home.events.HomeEvent
+import features.watchlist.domain.ListInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    private val homeInteractor: HomeInteractor,
-    private val listInteractor: ListInteractor
-) : ViewModel() {
+class HomeViewModel(private val homeInteractor: HomeInteractor, private val listInteractor: ListInteractor) :
+    ViewModel() {
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
         DataLoadStatus.Loading
     )

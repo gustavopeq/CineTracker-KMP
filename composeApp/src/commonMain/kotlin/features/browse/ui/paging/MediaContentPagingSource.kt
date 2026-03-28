@@ -1,8 +1,8 @@
 package features.browse.ui.paging
 
-import co.touchlab.kermit.Logger
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.util.ContentListType

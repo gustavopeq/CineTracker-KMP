@@ -27,7 +27,6 @@ import cinetracker_kmp.composeapp.generated.resources.coming_soon_header
 import cinetracker_kmp.composeapp.generated.resources.home_bottom_screen_message
 import cinetracker_kmp.composeapp.generated.resources.home_discover_more_button
 import common.domain.models.content.GenericContent
-import common.domain.models.list.ListItem
 import common.domain.models.person.PersonDetails
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
