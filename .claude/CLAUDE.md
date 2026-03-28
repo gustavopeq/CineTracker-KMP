@@ -291,9 +291,9 @@ CineTracker-KMP/
 │   │       │   │       └── components/
 │   │       │   │           ├── OnboardingConstants.kt
 │   │       │   │           ├── OnboardingIndicator.kt
-│   │       │   │           ├── WelcomeScreen.kt
-│   │       │   │           ├── DiscoverScreen.kt
-│   │       │   │           └── CollectionsScreen.kt
+│   │       │   │           ├── OnboardingWelcomeScreen.kt
+│   │       │   │           ├── OnboardingBrowseScreen.kt
+│   │       │   │           └── OnboardingWatchlistScreen.kt
 │   │       │   ├── search/
 │   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/

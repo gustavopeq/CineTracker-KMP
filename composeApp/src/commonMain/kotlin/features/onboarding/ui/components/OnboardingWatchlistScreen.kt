@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_watchlist
 import cinetracker_kmp.composeapp.generated.resources.onboarding_build_collection
-import cinetracker_kmp.composeapp.generated.resources.onboarding_collection_1
-import cinetracker_kmp.composeapp.generated.resources.onboarding_collection_2
-import cinetracker_kmp.composeapp.generated.resources.onboarding_collection_3
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_1
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_2
+import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_3
 import cinetracker_kmp.composeapp.generated.resources.onboarding_create_new_list
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_desc
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_title
@@ -70,7 +70,7 @@ private val PLACEHOLDER_BAR_COLOR_1 = Color(0x1AFFFFFF)
 private val PLACEHOLDER_BAR_COLOR_2 = Color(0x0DFFFFFF)
 
 @Composable
-fun CollectionsScreen(modifier: Modifier = Modifier) {
+fun OnboardingWatchlistScreen(modifier: Modifier = Modifier) {
     val saturationMatrix = ColorMatrix().apply { setToSaturation(0f) }
 
     Box(modifier = modifier.fillMaxSize().background(PrimaryBlackColor)) {
@@ -95,7 +95,7 @@ fun CollectionsScreen(modifier: Modifier = Modifier) {
                     // Row 1
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_collection_1,
+                            imageRes = Res.drawable.onboarding_watchlist_1,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )
@@ -104,12 +104,12 @@ fun CollectionsScreen(modifier: Modifier = Modifier) {
                     // Row 2
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_collection_2,
+                            imageRes = Res.drawable.onboarding_watchlist_2,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_collection_3,
+                            imageRes = Res.drawable.onboarding_watchlist_3,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )

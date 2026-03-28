@@ -31,10 +31,10 @@ import cinetracker_kmp.composeapp.generated.resources.onboarding_get_started
 import cinetracker_kmp.composeapp.generated.resources.onboarding_next
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
-import features.onboarding.ui.components.CollectionsScreen
-import features.onboarding.ui.components.DiscoverScreen
+import features.onboarding.ui.components.OnboardingBrowseScreen
 import features.onboarding.ui.components.OnboardingIndicator
-import features.onboarding.ui.components.WelcomeScreen
+import features.onboarding.ui.components.OnboardingWatchlistScreen
+import features.onboarding.ui.components.OnboardingWelcomeScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -63,9 +63,9 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> WelcomeScreen()
-                1 -> DiscoverScreen()
-                2 -> CollectionsScreen()
+                0 -> OnboardingWelcomeScreen()
+                1 -> OnboardingBrowseScreen()
+                2 -> OnboardingWatchlistScreen()
             }
         }
 
