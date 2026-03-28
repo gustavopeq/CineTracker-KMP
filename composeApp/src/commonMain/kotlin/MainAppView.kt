@@ -107,6 +107,7 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
     ) {
         Scaffold(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 TopNavBar(
                     currentScreen = currentScreen,
@@ -148,9 +149,17 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 
 @Composable
 fun SystemBarsContainer(currentScreen: String? = null, appScaffold: @Composable () -> Unit) {
+    val isStandaloneScreen = standaloneScreens.contains(currentScreen)
+
     val statusBarColor = when (currentScreen) {
         MainNavBarItem.Search.screen.route() -> MainBarGreyColor
         else -> MaterialTheme.colorScheme.primary
+    }
+
+    val navigationBarColor = if (isStandaloneScreen) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MainBarGreyColor
     }
 
     Box(
@@ -168,7 +177,7 @@ fun SystemBarsContainer(currentScreen: String? = null, appScaffold: @Composable 
                 .fillMaxWidth()
                 .height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
                 .align(Alignment.BottomCenter)
-                .background(color = MainBarGreyColor)
+                .background(color = navigationBarColor)
         )
 
         appScaffold()

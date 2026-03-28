@@ -172,6 +172,30 @@ Icons are stored as XML vector drawables in `composeResources/drawable/` with `i
 painterResource(resource = Res.drawable.ic_star)
 ```
 
+## System Bars
+
+Both platforms run edge-to-edge. Bar colors are managed by `SystemBarsContainer` in `MainAppView.kt` — never set bar colors from individual screens or platform-specific code.
+
+### Status Bar Color
+
+| Screen | Color |
+|--------|-------|
+| Search | `MainBarGreyColor` (merges with search bar) |
+| All others | `PrimaryBlackColor` |
+
+### Navigation Bar Color
+
+| Screen | Color |
+|--------|-------|
+| Standalone (Details, Error) | `PrimaryBlackColor` |
+| All others | `MainBarGreyColor` (merges with bottom nav bar) |
+
+### Edge-to-Edge Setup
+
+- **Android:** `enableEdgeToEdge()` in `MainActivity` makes system bars transparent; Compose draws behind them.
+- **iOS:** `ContentView.swift` uses `.ignoresSafeArea(edges: .all)` so ComposeView fills the entire screen.
+- **Scaffold** uses `contentWindowInsets = WindowInsets(0, 0, 0, 0)` to prevent double inset application on iOS.
+
 ## UI Patterns
 
 - **Cards:** `MainBarGreyColor` background + 2dp elevation. Image on top (cropped, 1.5x aspect), text below.

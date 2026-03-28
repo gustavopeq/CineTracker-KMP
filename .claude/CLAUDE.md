@@ -198,7 +198,6 @@ CineTracker-KMP/
 │   │       │           ├── DateUtils.kt          # expect
 │   │       │           ├── PlatformUtils.kt      # expect
 │   │       │           ├── ScreenSizeInfo.kt     # expect
-│   │       │           ├── StatusBarUpdate.kt    # expect
 │   │       │           └── StringFormat.kt       # expect
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
@@ -428,7 +427,6 @@ CineTracker-KMP/
 │   │   │   │   ├── DateUtils.kt
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
-│   │   │   │   ├── StatusBarUpdate.android.kt
 │   │   │   │   └── StringFormat.kt
 │   │   │   ├── core/di/
 │   │   │   │   └── KoinInitializer.android.kt
@@ -454,7 +452,6 @@ CineTracker-KMP/
 │   │   │   ├── DateUtils.kt
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt
-│   │   │   ├── StatusBarUpdate.ios.kt
 │   │   │   └── StringFormat.kt
 │   │   ├── core/di/
 │   │   │   └── KoinInitializer.ios.kt
@@ -537,9 +534,7 @@ CineTracker-KMP/
     └── iosApp/
         ├── ContentView.swift
         ├── iOSApp.swift
-        ├── Info.plist
-        └── Util/
-            └── Extensions.swift
+        └── Info.plist
 ```
 
 ## Architecture
@@ -551,7 +546,7 @@ CineTracker-KMP/
 - `androidMain` — Android platform implementations (OkHttp engine, Room DB path, Koin init via `CoreApplication`)
 - `iosMain` — iOS platform implementations (Darwin engine, Room DB path, Koin init via `MainViewController`)
 
-**Expect/actual declarations** are used for: `NetworkClient`, `DatabaseModule`, `ApiModule`, and platform utilities (`DateUtils`, `StringFormat`, `ScreenSizeInfo`, `PlatformUtils`, `StatusBarUpdate`).
+**Expect/actual declarations** are used for: `NetworkClient`, `DatabaseModule`, `ApiModule`, and platform utilities (`DateUtils`, `StringFormat`, `ScreenSizeInfo`, `PlatformUtils`).
 
 ### Layer Structure (all under `composeApp/src/commonMain/kotlin/`)
 
