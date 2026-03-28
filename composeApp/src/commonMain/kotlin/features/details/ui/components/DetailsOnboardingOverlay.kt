@@ -52,6 +52,7 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DETAILS_OVERLAY_ICON_SIZE
 import common.util.UiConstants.OVERLAY_INDEX
 import common.util.UiConstants.SMALL_PADDING
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -112,7 +113,7 @@ fun DetailsOnboardingOverlay(
             launch { contentAlpha.animateTo(0f, tween(CONTENT_FADE_DURATION_MS)) }
 
             launch {
-                kotlinx.coroutines.delay(BACKGROUND_FADE_DELAY_MS)
+                delay(BACKGROUND_FADE_DELAY_MS)
                 backgroundAlpha.animateTo(0f, tween(BACKGROUND_FADE_DURATION_MS))
             }
 
@@ -214,7 +215,7 @@ fun DetailsOnboardingOverlay(
             Text(
                 text = stringResource(resource = titleRes),
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = OVERLAY_TEXT_FONT_SIZE.sp,
+                    fontSize = OVERLAY_TEXT_FONT_SIZE.sp
 
                 ),
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -226,7 +227,7 @@ fun DetailsOnboardingOverlay(
             Text(
                 text = stringResource(resource = Res.string.details_overlay_subtitle),
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = OVERLAY_TEXT_FONT_SIZE.sp,
+                    fontSize = OVERLAY_TEXT_FONT_SIZE.sp
 
                 ),
                 color = PrimaryYellowColor,

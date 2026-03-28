@@ -1,5 +1,7 @@
 package features.details.ui
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -43,9 +43,9 @@ import common.ui.components.NetworkImage
 import common.ui.components.popup.ClassicSnackbar
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
-import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
+import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.POSTER_ASPECT_RATIO
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING

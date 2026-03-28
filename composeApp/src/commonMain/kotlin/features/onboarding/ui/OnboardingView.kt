@@ -29,9 +29,13 @@ import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.onboarding_get_started
 import cinetracker_kmp.composeapp.generated.resources.onboarding_next
+import common.ui.theme.OnboardingButtonTextColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import features.onboarding.ui.components.OnboardingBrowseScreen
+import features.onboarding.ui.components.OnboardingConstants.CONTROLS_BOTTOM_PADDING
+import features.onboarding.ui.components.OnboardingConstants.CONTROLS_HORIZONTAL_PADDING
+import features.onboarding.ui.components.OnboardingConstants.CONTROLS_SPACING
 import features.onboarding.ui.components.OnboardingIndicator
 import features.onboarding.ui.components.OnboardingWatchlistScreen
 import features.onboarding.ui.components.OnboardingWelcomeScreen
@@ -43,7 +47,7 @@ private const val PAGE_COUNT = 3
 private const val BUTTON_HEIGHT = 56
 private const val BUTTON_CORNER_RADIUS = 12
 private const val BUTTON_FONT_SIZE = 18
-private val BUTTON_TEXT_COLOR = Color(0xFF4E3000)
+private val BUTTON_TEXT_COLOR = OnboardingButtonTextColor
 
 @Composable
 fun OnboardingView(onOnboardingComplete: () -> Unit) {
@@ -74,10 +78,10 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 32.dp)
-                .padding(bottom = 48.dp),
+                .padding(horizontal = CONTROLS_HORIZONTAL_PADDING.dp)
+                .padding(bottom = CONTROLS_BOTTOM_PADDING.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(40.dp)
+            verticalArrangement = Arrangement.spacedBy(CONTROLS_SPACING.dp)
         ) {
             OnboardingIndicator(
                 pageCount = PAGE_COUNT,

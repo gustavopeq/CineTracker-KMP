@@ -19,4 +19,8 @@ internal object OnboardingConstants {
 
     const val CARD_LABEL_FONT_SIZE = 18
     const val CARD_SUBLABEL_FONT_SIZE = 12
+
+    const val CONTROLS_HORIZONTAL_PADDING = 32
+    const val CONTROLS_BOTTOM_PADDING = 48
+    const val CONTROLS_SPACING = 40
 }
