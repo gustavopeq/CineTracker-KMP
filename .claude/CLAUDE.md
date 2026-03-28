@@ -203,17 +203,16 @@ CineTracker-KMP/
 │   │       │   ├── dao/
 │   │       │   │   ├── ContentEntityDao.kt
 │   │       │   │   ├── ListEntityDao.kt
-│   │       │   │   ├── PersonalRatingDao.kt
-│   │       │   │   └── SettingsDao.kt
+│   │       │   │   └── PersonalRatingDao.kt
 │   │       │   ├── di/
 │   │       │   │   ├── DaoModule.kt
 │   │       │   │   ├── DatabaseModule.kt         # expect
-│   │       │   │   └── DatabaseRepositoryModule.kt
+│   │       │   │   ├── DatabaseRepositoryModule.kt
+│   │       │   │   └── SettingsModule.kt         # expect
 │   │       │   ├── model/
 │   │       │   │   ├── ContentEntity.kt
 │   │       │   │   ├── ListEntity.kt
-│   │       │   │   ├── PersonalRatingEntity.kt
-│   │       │   │   └── SettingsEntity.kt
+│   │       │   │   └── PersonalRatingEntity.kt
 │   │       │   └── repository/
 │   │       │       ├── DatabaseRepository.kt
 │   │       │       ├── DatabaseRepositoryImpl.kt
@@ -431,7 +430,8 @@ CineTracker-KMP/
 │   │   │   │   └── KoinInitializer.android.kt
 │   │   │   ├── database/
 │   │   │   │   ├── di/
-│   │   │   │   │   └── DatabaseModule.android.kt
+│   │   │   │   │   ├── DatabaseModule.android.kt
+│   │   │   │   │   └── SettingsModule.android.kt
 │   │   │   │   └── migration/
 │   │   │   │       └── MigrationSchemas.kt
 │   │   │   └── network/
@@ -456,7 +456,8 @@ CineTracker-KMP/
 │   │   │   └── KoinInitializer.ios.kt
 │   │   ├── database/
 │   │   │   └── di/
-│   │   │       └── DatabaseModule.ios.kt
+│   │   │       ├── DatabaseModule.ios.kt
+│   │   │       └── SettingsModule.ios.kt
 │   │   └── network/
 │   │       ├── di/
 │   │       │   └── ApiModule.ios.kt
@@ -517,12 +518,10 @@ CineTracker-KMP/
 │   │       ├── dao/
 │   │       │   ├── ContentEntityDaoTest.kt
 │   │       │   ├── ListEntityDaoTest.kt
-│   │       │   ├── PersonalRatingDaoTest.kt
-│   │       │   └── SettingsEntityDaoTest.kt
+│   │       │   └── PersonalRatingDaoTest.kt
 │   │       └── migration/
 │   │           ├── Migration5To6Test.kt
-│   │           ├── Migration6To7Test.kt
-│   │           └── Migration7To8Test.kt
+│   │           └── Migration6To7Test.kt
 │   │
 │   └── src/debug/
 │       └── google-services.json
@@ -558,7 +557,7 @@ CineTracker-KMP/
   - `events/` — UI event definitions
 - **`navigation/`** — `Screen`/`ScreenUI` interfaces, `MainNavGraph`, nav bar components
 - **`network/`** — Ktor client setup, services, repositories, DTOs (`models/`), `Either<Left,Right>` error handling
-- **`database/`** — Room entities (`ContentEntity`, `ListEntity`, `PersonalRatingEntity`), DAOs, repository. DB version 6 with migrations in `androidMain`.
+- **`database/`** — Room entities (`ContentEntity`, `ListEntity`, `PersonalRatingEntity`), DAOs, repository. DB version 7 with migrations in `androidMain`. App settings use `multiplatform-settings` (SharedPreferences/NSUserDefaults) via `SettingsModule`.
 - **`common/`** — Shared UI components, domain models (`BaseMediaContent`, `GenericContent`, `DetailedContent`, `MediaType`), theme, platform utilities
 - **`core/di/`** — Koin module definitions (`InteractorModule`, `ViewModelModule`)
 

@@ -3,7 +3,6 @@ package common.ui
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
@@ -12,7 +11,6 @@ import features.home.HomeScreen
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
@@ -25,9 +23,7 @@ class MainViewModel(
     val hasSeenOnboarding: StateFlow<Boolean?> get() = _hasSeenOnboarding
 
     init {
-        viewModelScope.launch {
-            _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
-        }
+        _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
     }
 
     fun setOnboardingSeen() {
