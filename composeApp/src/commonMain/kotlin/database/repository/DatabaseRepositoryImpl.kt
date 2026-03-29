@@ -98,6 +98,9 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
         listEntityDao.deleteList(listId)
     }
 
+    override suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity> =
+        contentEntityDao.getEntitiesWithMissingCachedFields()
+
     override suspend fun updateCachedFields(
         contentId: Int,
         mediaType: MediaType,

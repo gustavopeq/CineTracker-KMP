@@ -32,6 +32,9 @@ interface ContentEntityDao {
     )
     suspend fun getItem(contentId: Int, mediaType: String, listId: Int): ContentEntity?
 
+    @Query("SELECT * FROM content_entity WHERE posterPath IS NULL")
+    suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity>
+
     @Query(
         "UPDATE content_entity SET title = :title, posterPath = :posterPath, voteAverage = :voteAverage " +
             "WHERE contentId = :contentId AND mediaType = :mediaType"

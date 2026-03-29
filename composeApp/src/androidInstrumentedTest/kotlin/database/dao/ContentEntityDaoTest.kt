@@ -235,4 +235,29 @@ class ContentEntityDaoTest {
         val unchanged = dao.getItem(701, "SHOW", 1)
         assertEquals("Other", unchanged!!.title)
     }
+
+    // ── getEntitiesWithMissingCachedFields ────────────────────────────────────
+
+    @Test
+    fun getEntitiesWithMissingCachedFields_returnsOnlyNullPosterPathEntities() = runBlocking {
+        dao.insert(ContentEntity(contentId = 800, mediaType = "MOVIE", listId = 1, posterPath = null))
+        dao.insert(ContentEntity(contentId = 801, mediaType = "SHOW", listId = 1, posterPath = "/poster.jpg"))
+        dao.insert(ContentEntity(contentId = 802, mediaType = "MOVIE", listId = 2, posterPath = null))
+
+        val stale = dao.getEntitiesWithMissingCachedFields()
+
+        assertEquals(2, stale.size)
+        assertTrue(stale.all { it.posterPath == null })
+        assertTrue(stale.map { it.contentId }.containsAll(listOf(800, 802)))
+    }
+
+    @Test
+    fun getEntitiesWithMissingCachedFields_returnsEmptyWhenAllHavePosterPath() = runBlocking {
+        dao.insert(ContentEntity(contentId = 900, mediaType = "MOVIE", listId = 1, posterPath = "/a.jpg"))
+        dao.insert(ContentEntity(contentId = 901, mediaType = "SHOW", listId = 1, posterPath = "/b.jpg"))
+
+        val stale = dao.getEntitiesWithMissingCachedFields()
+
+        assertTrue(stale.isEmpty())
+    }
 }

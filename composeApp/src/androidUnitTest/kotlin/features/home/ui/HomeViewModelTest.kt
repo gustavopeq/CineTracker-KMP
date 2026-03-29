@@ -3,6 +3,7 @@ package features.home.ui
 import common.domain.models.list.ListItem
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
+import database.backfill.CachedFieldsBackfill
 import features.home.domain.HomeInteractor
 import features.home.events.HomeEvent
 import features.home.ui.state.HomeState
@@ -13,7 +14,9 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -41,6 +44,7 @@ class HomeViewModelTest {
 
     private val homeInteractor: HomeInteractor = mockk()
     private val listInteractor: ListInteractor = mockk()
+    private val cachedFieldsBackfill: CachedFieldsBackfill = mockk()
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -55,6 +59,7 @@ class HomeViewModelTest {
         every { homeInteractor.getWatchlistFlow() } returns flowOf(emptyList())
         every { listInteractor.getAllLists() } returns flowOf(emptyList())
         every { listInteractor.verifyContentInLists(any(), any()) } returns flowOf(emptyMap())
+        coEvery { cachedFieldsBackfill.backfillIfNeeded() } just runs
     }
 
     @After
@@ -63,7 +68,7 @@ class HomeViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel() = HomeViewModel(homeInteractor, listInteractor)
+    private fun createViewModel() = HomeViewModel(homeInteractor, listInteractor, cachedFieldsBackfill)
 
     // ── Init ──────────────────────────────────────────────────────────────────
 

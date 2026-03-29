@@ -1,5 +1,6 @@
 package core.di.modules
 
+import database.backfill.CachedFieldsBackfill
 import features.browse.domain.BrowseInteractor
 import features.details.domain.DetailsInteractor
 import features.home.domain.HomeInteractor
@@ -15,4 +16,5 @@ val interactorModule = module {
     single<SearchInteractor> { SearchInteractor(get()) }
     single { HomeInteractor(get(), get()) }
     single { ListInteractor(get()) }
+    single { CachedFieldsBackfill(get(), get(), get()) }
 }

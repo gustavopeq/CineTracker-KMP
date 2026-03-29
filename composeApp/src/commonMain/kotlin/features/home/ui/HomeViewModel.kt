@@ -6,6 +6,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.list.ListItem
 import common.domain.models.person.PersonDetails
 import common.domain.models.util.DataLoadStatus
+import database.backfill.CachedFieldsBackfill
 import features.home.domain.HomeInteractor
 import features.home.events.HomeEvent
 import features.watchlist.domain.ListInteractor
@@ -16,8 +17,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val homeInteractor: HomeInteractor, private val listInteractor: ListInteractor) :
-    ViewModel() {
+class HomeViewModel(
+    private val homeInteractor: HomeInteractor,
+    private val listInteractor: ListInteractor,
+    private val cachedFieldsBackfill: CachedFieldsBackfill
+) : ViewModel() {
     private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
         DataLoadStatus.Loading
     )
@@ -55,9 +59,16 @@ class HomeViewModel(private val homeInteractor: HomeInteractor, private val list
     val showListBottomSheet: StateFlow<Boolean> get() = _showListBottomSheet
 
     init {
+        runBackfill()
         loadHomeScreen()
         collectWatchlist()
         collectAllLists()
+    }
+
+    private fun runBackfill() {
+        viewModelScope.launch(Dispatchers.IO) {
+            cachedFieldsBackfill.backfillIfNeeded()
+        }
     }
 
     fun onEvent(event: HomeEvent) {

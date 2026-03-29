@@ -31,6 +31,8 @@ interface DatabaseRepository {
 
     suspend fun deleteList(listId: Int)
 
+    suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity>
+
     suspend fun updateCachedFields(
         contentId: Int,
         mediaType: MediaType,
