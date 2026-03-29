@@ -11,6 +11,7 @@ import database.migration.MIGRATION_3_4
 import database.migration.MIGRATION_4_5
 import database.migration.MIGRATION_5_6
 import database.migration.MIGRATION_6_7
+import database.migration.MIGRATION_7_8
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
@@ -32,7 +33,8 @@ private fun createRoomDatabase(context: Context): AppDatabase = Room
         MIGRATION_3_4,
         MIGRATION_4_5,
         MIGRATION_5_6,
-        MIGRATION_6_7
+        MIGRATION_6_7,
+        MIGRATION_7_8
     )
     .setQueryCoroutineContext(Dispatchers.IO)
     .addCallback(roomCallback)

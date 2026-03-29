@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import database.AppDatabase
 import database.model.ContentEntity
 import database.model.ListEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -48,7 +49,7 @@ class ContentEntityDaoTest {
         dao.insert(ContentEntity(contentId = 2, mediaType = "MOVIE", listId = 1, createdAt = 300))
         dao.insert(ContentEntity(contentId = 3, mediaType = "MOVIE", listId = 1, createdAt = 200))
 
-        val result = dao.getAllItems(1)
+        val result = dao.getAllItems(1).first()
 
         assertEquals(3, result.size)
         assertEquals(2, result[0].contentId) // newest (300)
@@ -61,7 +62,7 @@ class ContentEntityDaoTest {
         dao.insert(ContentEntity(contentId = 1, mediaType = "MOVIE", listId = 1, createdAt = 0))
         dao.insert(ContentEntity(contentId = 2, mediaType = "MOVIE", listId = 2, createdAt = 0))
 
-        val result = dao.getAllItems(1)
+        val result = dao.getAllItems(1).first()
 
         assertEquals(1, result.size)
         assertEquals(1, result[0].contentId)
@@ -78,7 +79,7 @@ class ContentEntityDaoTest {
         dao.insert(entity)
         dao.insert(entity) // same PK — silently ignored
 
-        assertEquals(1, dao.getAllItems(1).size)
+        assertEquals(1, dao.getAllItems(1).first().size)
     }
 
     // ── delete ────────────────────────────────────────────────────────────────
@@ -109,7 +110,7 @@ class ContentEntityDaoTest {
         dao.insert(ContentEntity(contentId = 5, mediaType = "MOVIE", listId = 2, createdAt = 0))
         dao.insert(ContentEntity(contentId = 6, mediaType = "MOVIE", listId = 1, createdAt = 0))
 
-        val result = dao.searchItems(contentId = 5, mediaType = "MOVIE")
+        val result = dao.searchItems(contentId = 5, mediaType = "MOVIE").first()
 
         assertEquals(2, result.size)
         assertTrue(result.all { it.contentId == 5 })
@@ -120,7 +121,7 @@ class ContentEntityDaoTest {
         dao.insert(ContentEntity(contentId = 5, mediaType = "MOVIE", listId = 1, createdAt = 0))
         dao.insert(ContentEntity(contentId = 5, mediaType = "SHOW", listId = 1, createdAt = 0))
 
-        val result = dao.searchItems(contentId = 5, mediaType = "MOVIE")
+        val result = dao.searchItems(contentId = 5, mediaType = "MOVIE").first()
 
         assertEquals(1, result.size)
         assertEquals("MOVIE", result[0].mediaType)
@@ -144,5 +145,94 @@ class ContentEntityDaoTest {
         assertEquals(3, result!!.contentId)
         assertEquals("SHOW", result.mediaType)
         assertEquals(1, result.listId)
+    }
+
+    // ── cached fields ─────────────────────────────────────────────────────────
+
+    @Test
+    fun insert_storesCachedFieldsCorrectly() = runBlocking {
+        val entity = ContentEntity(
+            contentId = 500,
+            mediaType = "MOVIE",
+            listId = 1,
+            title = "Test Movie",
+            posterPath = "/poster.jpg",
+            voteAverage = 8.5f
+        )
+        dao.insert(entity)
+
+        val result = dao.getItem(500, "MOVIE", 1)
+        assertNotNull(result)
+        assertEquals("Test Movie", result!!.title)
+        assertEquals("/poster.jpg", result.posterPath)
+        assertEquals(8.5f, result.voteAverage, 0.001f)
+    }
+
+    @Test
+    fun insert_usesDefaultsForCachedFieldsWhenNotProvided() = runBlocking {
+        val entity = ContentEntity(
+            contentId = 501,
+            mediaType = "MOVIE",
+            listId = 1
+        )
+        dao.insert(entity)
+
+        val result = dao.getItem(501, "MOVIE", 1)
+        assertNotNull(result)
+        assertEquals("", result!!.title)
+        assertNull(result.posterPath)
+        assertEquals(0f, result.voteAverage, 0.001f)
+    }
+
+    @Test
+    fun updateCachedFields_updatesAllMatchingEntities() = runBlocking {
+        dao.insert(ContentEntity(contentId = 600, mediaType = "MOVIE", listId = 1))
+        dao.insert(ContentEntity(contentId = 600, mediaType = "MOVIE", listId = 2))
+
+        dao.updateCachedFields(
+            contentId = 600,
+            mediaType = "MOVIE",
+            title = "Updated Title",
+            posterPath = "/new_poster.jpg",
+            voteAverage = 7.5f
+        )
+
+        val item1 = dao.getItem(600, "MOVIE", 1)
+        val item2 = dao.getItem(600, "MOVIE", 2)
+        assertEquals("Updated Title", item1!!.title)
+        assertEquals("Updated Title", item2!!.title)
+        assertEquals("/new_poster.jpg", item1.posterPath)
+        assertEquals(7.5f, item1.voteAverage, 0.001f)
+    }
+
+    @Test
+    fun updateCachedFields_doesNotAffectOtherContent() = runBlocking {
+        dao.insert(
+            ContentEntity(
+                contentId = 700,
+                mediaType = "MOVIE",
+                listId = 1,
+                title = "Original"
+            )
+        )
+        dao.insert(
+            ContentEntity(
+                contentId = 701,
+                mediaType = "SHOW",
+                listId = 1,
+                title = "Other"
+            )
+        )
+
+        dao.updateCachedFields(
+            contentId = 700,
+            mediaType = "MOVIE",
+            title = "Changed",
+            posterPath = "/changed.jpg",
+            voteAverage = 9.0f
+        )
+
+        val unchanged = dao.getItem(701, "SHOW", 1)
+        assertEquals("Other", unchanged!!.title)
     }
 }

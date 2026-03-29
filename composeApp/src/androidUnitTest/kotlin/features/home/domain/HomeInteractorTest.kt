@@ -8,21 +8,21 @@ import common.util.fakeMovieResponse
 import common.util.fakeMultiPagingResponse
 import common.util.fakeMultiResponse
 import common.util.fakePersonPagingResponse
-import common.util.fakeShowResponse
 import common.util.successFlow
 import database.repository.DatabaseRepository
 import features.details.util.fakePersonResponse
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import network.repository.home.HomeRepository
-import network.repository.movie.MovieRepository
-import network.repository.show.ShowRepository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -31,8 +31,6 @@ class HomeInteractorTest {
 
     private val homeRepository: HomeRepository = mockk()
     private val databaseRepository: DatabaseRepository = mockk()
-    private val movieRepository: MovieRepository = mockk()
-    private val showRepository: ShowRepository = mockk()
 
     private lateinit var interactor: HomeInteractor
 
@@ -41,9 +39,7 @@ class HomeInteractorTest {
         MockKAnnotations.init(this)
         interactor = HomeInteractor(
             homeRepository = homeRepository,
-            databaseRepository = databaseRepository,
-            movieRepository = movieRepository,
-            showRepository = showRepository
+            databaseRepository = databaseRepository
         )
     }
 
@@ -88,50 +84,41 @@ class HomeInteractorTest {
         assertEquals(1, result.trendingList.value.size)
     }
 
-    // ── getAllWatchlist ────────────────────────────────────────────────────────
+    // ── getWatchlistFlow ─────────────────────────────────────────────────────
 
     @Test
-    fun `getAllWatchlist returns GenericContent list for MOVIE entities`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
+    fun `getWatchlistFlow returns GenericContent list from entity data`() = runTest {
+        every { databaseRepository.getAllItemsByListId(any()) } returns flowOf(
+            listOf(
+                fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
+            )
         )
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse(id = 1))
 
-        val result = interactor.getAllWatchlist()
+        val result = interactor.getWatchlistFlow().first()
 
         assertEquals(1, result.size)
         assertEquals(MediaType.MOVIE, result[0].mediaType)
     }
 
     @Test
-    fun `getAllWatchlist returns GenericContent list for SHOW entities`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.SHOW.name)
+    fun `getWatchlistFlow filters out entities with null posterPath`() = runTest {
+        every { databaseRepository.getAllItemsByListId(any()) } returns flowOf(
+            listOf(
+                fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
+                fakeContentEntity(contentId = 2, listId = 1, mediaType = MediaType.SHOW.name, posterPath = null)
+            )
         )
-        coEvery { showRepository.getShowDetailsById(1) } returns successFlow(fakeShowResponse(id = 1))
 
-        val result = interactor.getAllWatchlist()
+        val result = interactor.getWatchlistFlow().first()
 
         assertEquals(1, result.size)
-        assertEquals(MediaType.SHOW, result[0].mediaType)
     }
 
     @Test
-    fun `getAllWatchlist skips PERSON entities`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(any()) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.PERSON.name)
-        )
+    fun `getWatchlistFlow returns empty list when watchlist is empty`() = runTest {
+        every { databaseRepository.getAllItemsByListId(any()) } returns flowOf(emptyList())
 
-        val result = interactor.getAllWatchlist()
-
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `getAllWatchlist returns empty list when watchlist is empty`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(any()) } returns emptyList()
-
-        val result = interactor.getAllWatchlist()
+        val result = interactor.getWatchlistFlow().first()
 
         assertTrue(result.isEmpty())
     }

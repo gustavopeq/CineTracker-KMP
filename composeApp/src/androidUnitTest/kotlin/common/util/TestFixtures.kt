@@ -87,8 +87,18 @@ fun fakeListEntity(listId: Int, name: String = "List $listId", isDefault: Boolea
     isDefault = isDefault
 )
 
-fun fakeContentEntity(contentId: Int = 1, listId: Int = 1, mediaType: String = MediaType.MOVIE.name) = ContentEntity(
+fun fakeContentEntity(
+    contentId: Int = 1,
+    listId: Int = 1,
+    mediaType: String = MediaType.MOVIE.name,
+    title: String = "Fake Movie",
+    posterPath: String? = "/fake_poster.jpg",
+    voteAverage: Float = 7.5f
+) = ContentEntity(
     contentId = contentId,
     listId = listId,
-    mediaType = mediaType
+    mediaType = mediaType,
+    title = title,
+    posterPath = posterPath,
+    voteAverage = voteAverage
 )

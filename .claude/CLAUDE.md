@@ -509,7 +509,8 @@ CineTracker-KMP/
 │   │       │   └── PersonalRatingDaoTest.kt
 │   │       └── migration/
 │   │           ├── Migration5To6Test.kt
-│   │           └── Migration6To7Test.kt
+│   │           ├── Migration6To7Test.kt
+│   │           └── Migration7To8Test.kt
 │   │
 │   └── src/debug/
 │       └── google-services.json

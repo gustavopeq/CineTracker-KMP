@@ -89,9 +89,8 @@ private fun Home(
     val featuredContentInListStatus by viewModel.featuredContentInListStatus.collectAsState()
 
     LaunchedEffect(Unit) {
-        when (loadState) {
-            is DataLoadStatus.Success -> viewModel.onEvent(HomeEvent.ReloadWatchlist)
-            else -> viewModel.onEvent(HomeEvent.LoadHome)
+        if (loadState !is DataLoadStatus.Success) {
+            viewModel.onEvent(HomeEvent.LoadHome)
         }
     }
 

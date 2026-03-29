@@ -26,6 +26,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -49,21 +51,33 @@ class DetailsViewModelTest {
     private val settingsRepository: SettingsRepository = mockk(relaxUnitFun = true)
     private val testDispatcher = StandardTestDispatcher()
 
+    private val personalRatingFlow = MutableStateFlow<Float?>(null)
+    private val contentInListStatusFlow = MutableStateFlow(
+        mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+    )
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
 
         // Default stubs so init block never throws
-        coEvery { detailsInteractor.getAllLists() } returns listOf(
-            ListItem(DefaultLists.WATCHLIST.listId, "Watchlist"),
-            ListItem(DefaultLists.WATCHED.listId, "Watched")
+        every { detailsInteractor.getAllLists() } returns flowOf(
+            listOf(
+                ListItem(DefaultLists.WATCHLIST.listId, "Watchlist"),
+                ListItem(DefaultLists.WATCHED.listId, "Watched")
+            )
         )
-        coEvery { detailsInteractor.getPersonalRating(any()) } returns null
-        coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
+        personalRatingFlow.value = null
+        every { detailsInteractor.getPersonalRating(any()) } returns personalRatingFlow
+        contentInListStatusFlow.value = mapOf(
             DefaultLists.WATCHLIST.listId to false,
             DefaultLists.WATCHED.listId to false
         )
+        every { detailsInteractor.verifyContentInLists(any(), any()) } returns contentInListStatusFlow
 
         // Default: overlay not yet seen
         every { settingsRepository.hasSeenDetailsOverlay() } returns false
@@ -106,6 +120,7 @@ class DetailsViewModelTest {
         coEvery { detailsInteractor.getStreamingProviders(contentId, MediaType.MOVIE) } returns emptyList()
         coEvery { detailsInteractor.getContentVideosById(contentId, MediaType.MOVIE) } returns emptyList()
         coEvery { detailsInteractor.getRecommendationsContentById(contentId, MediaType.MOVIE) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
     }
 
     // ── Initial state ─────────────────────────────────────────────────────────
@@ -119,22 +134,24 @@ class DetailsViewModelTest {
 
     @Test
     fun `personalRating is populated from interactor after init`() = runTest {
-        coEvery { detailsInteractor.getPersonalRating(1) } returns 8.0f
+        personalRatingFlow.value = 8.0f
         stubSuccessfulMovieDetails()
 
         val viewModel = createViewModel()
         advanceUntilIdle()
+        awaitIO()
 
         assertEquals(8.0f, viewModel.personalRating.value)
     }
 
     @Test
     fun `personalRating is null when interactor returns null`() = runTest {
-        coEvery { detailsInteractor.getPersonalRating(1) } returns null
+        personalRatingFlow.value = null
         stubSuccessfulMovieDetails()
 
         val viewModel = createViewModel()
         advanceUntilIdle()
+        awaitIO()
 
         assertNull(viewModel.personalRating.value)
     }
@@ -174,6 +191,7 @@ class DetailsViewModelTest {
             Videos(key = "abc", name = "Trailer", publishedAt = "2024-01-01")
         )
         coEvery { detailsInteractor.getRecommendationsContentById(1, MediaType.MOVIE) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -203,6 +221,7 @@ class DetailsViewModelTest {
         coEvery { detailsInteractor.getPersonImages(1) } returns listOf(
             PersonImage(aspectRatio = 1.0, filePath = "/img.jpg", height = 100, width = 100)
         )
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel(mediaType = MediaType.PERSON)
         advanceUntilIdle()
@@ -247,6 +266,7 @@ class DetailsViewModelTest {
         }
         coEvery { detailsInteractor.getContentCastById(1, MediaType.MOVIE) } returns failedCastState
         coEvery { detailsInteractor.getStreamingProviders(any(), any()) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -259,23 +279,23 @@ class DetailsViewModelTest {
     @Test
     fun `ToggleContentFromList calls toggleWatchlist with correct args`() = runTest {
         stubSuccessfulMovieDetails()
-        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
-        coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
-            DefaultLists.WATCHLIST.listId to false
-        )
+        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
 
         viewModel.onEvent(DetailsEvents.ToggleContentFromList(DefaultLists.WATCHLIST.listId))
-        advanceUntilIdle()
+        awaitIO()
 
         coVerify {
             detailsInteractor.toggleWatchlist(
                 currentStatus = false,
                 contentId = 1,
                 mediaType = MediaType.MOVIE,
-                listId = DefaultLists.WATCHLIST.listId
+                listId = DefaultLists.WATCHLIST.listId,
+                title = any(),
+                posterPath = any(),
+                voteAverage = any()
             )
         }
     }
@@ -283,7 +303,7 @@ class DetailsViewModelTest {
     @Test
     fun `ToggleContentFromList flips contentInListStatus from false to true`() = runTest {
         stubSuccessfulMovieDetails()
-        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
+        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -291,8 +311,12 @@ class DetailsViewModelTest {
         assertFalse(viewModel.contentInListStatus.value[DefaultLists.WATCHLIST.listId] == true)
 
         viewModel.onEvent(DetailsEvents.ToggleContentFromList(DefaultLists.WATCHLIST.listId))
-        // contentInListStatus is updated after DELAY_UPDATE_POPUP_TEXT_MS (100ms) on real IO thread
-        awaitIO(500L)
+        // Simulate the Flow emitting new status after the toggle
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to true,
+            DefaultLists.WATCHED.listId to false
+        )
+        awaitIO()
 
         assertTrue(viewModel.contentInListStatus.value[DefaultLists.WATCHLIST.listId] == true)
     }
@@ -300,13 +324,12 @@ class DetailsViewModelTest {
     @Test
     fun `ToggleContentFromList sets snackbarState addedItem to true when adding`() = runTest {
         stubSuccessfulMovieDetails()
-        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
+        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
 
         viewModel.onEvent(DetailsEvents.ToggleContentFromList(DefaultLists.WATCHLIST.listId))
-        // Snackbar is set on real IO thread before the 100ms delay; wait for IO thread to run
         awaitIO()
 
         assertTrue(viewModel.snackbarState.value.addedItem)
@@ -316,15 +339,16 @@ class DetailsViewModelTest {
     @Test
     fun `ToggleContentFromList sets snackbarState addedItem to false when removing`() = runTest {
         // Start with item already in list
-        coEvery { detailsInteractor.verifyContentInLists(any(), any()) } returns mapOf(
+        contentInListStatusFlow.value = mapOf(
             DefaultLists.WATCHLIST.listId to true,
             DefaultLists.WATCHED.listId to false
         )
         stubSuccessfulMovieDetails()
-        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
+        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
+        awaitIO()
 
         viewModel.onEvent(DetailsEvents.ToggleContentFromList(DefaultLists.WATCHLIST.listId))
         awaitIO()
@@ -366,7 +390,7 @@ class DetailsViewModelTest {
     @Test
     fun `OnSnackbarDismiss sets snackbar displaySnackbar to false`() = runTest {
         stubSuccessfulMovieDetails()
-        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
+        coEvery { detailsInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -393,7 +417,9 @@ class DetailsViewModelTest {
         advanceUntilIdle()
 
         viewModel.setPersonalRating(9.0f)
-        awaitIO() // setPersonalRating launches on Dispatchers.IO
+        // Simulate the Flow emitting the new rating after the mutation
+        personalRatingFlow.value = 9.0f
+        awaitIO()
 
         assertEquals(9.0f, viewModel.personalRating.value)
         coVerify { detailsInteractor.setPersonalRating(1, MediaType.MOVIE, 9.0f) }
@@ -403,15 +429,18 @@ class DetailsViewModelTest {
 
     @Test
     fun `removePersonalRating sets personalRating to null and calls interactor`() = runTest {
-        coEvery { detailsInteractor.getPersonalRating(1) } returns 7.0f
+        personalRatingFlow.value = 7.0f
         stubSuccessfulMovieDetails()
         coEvery { detailsInteractor.removePersonalRating(any(), any()) } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
+        awaitIO()
 
         viewModel.removePersonalRating()
-        awaitIO() // removePersonalRating launches on Dispatchers.IO
+        // Simulate the Flow emitting null after the mutation
+        personalRatingFlow.value = null
+        awaitIO()
 
         assertNull(viewModel.personalRating.value)
         coVerify { detailsInteractor.removePersonalRating(1, MediaType.MOVIE) }
@@ -452,6 +481,7 @@ class DetailsViewModelTest {
         coEvery { detailsInteractor.getStreamingProviders(1, MediaType.PERSON) } returns emptyList()
         coEvery { detailsInteractor.getPersonCreditsById(1) } returns emptyList()
         coEvery { detailsInteractor.getPersonImages(1) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
 
         val viewModel = createViewModel(mediaType = MediaType.PERSON)
         advanceUntilIdle()

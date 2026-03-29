@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val homeInteractor: HomeInteractor, private val listInteractor: ListInteractor) :
@@ -55,19 +56,18 @@ class HomeViewModel(private val homeInteractor: HomeInteractor, private val list
 
     init {
         loadHomeScreen()
-        loadAllLists()
+        collectWatchlist()
+        collectAllLists()
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.LoadHome -> loadHomeScreen()
-            HomeEvent.ReloadWatchlist -> loadWatchlist()
             HomeEvent.OnError -> resetHome()
             is HomeEvent.ToggleFeaturedFromList -> toggleFeaturedFromList(event.listId)
             HomeEvent.OpenListBottomSheet -> _showListBottomSheet.value = true
             HomeEvent.CloseListBottomSheet -> {
                 _showListBottomSheet.value = false
-                loadWatchlist()
             }
         }
     }
@@ -83,7 +83,6 @@ class HomeViewModel(private val homeInteractor: HomeInteractor, private val list
                 _trendingMulti.value = homeState.trendingList.value
             }
 
-            loadWatchlist()
             loadFeaturedListStatus()
             _trendingPerson.value = homeInteractor.getTrendingPerson()
             _moviesComingSoon.value = homeInteractor.getMoviesComingSoon()
@@ -91,25 +90,31 @@ class HomeViewModel(private val homeInteractor: HomeInteractor, private val list
         }
     }
 
-    private fun loadWatchlist() {
+    private fun collectWatchlist() {
         viewModelScope.launch(Dispatchers.IO) {
-            _myWatchlist.value = homeInteractor.getAllWatchlist()
+            homeInteractor.getWatchlistFlow().collectLatest { watchlist ->
+                _myWatchlist.value = watchlist
+            }
         }
     }
 
-    private fun loadAllLists() {
+    private fun collectAllLists() {
         viewModelScope.launch(Dispatchers.IO) {
-            _allLists.value = listInteractor.getAllLists()
+            listInteractor.getAllLists().collectLatest { lists ->
+                _allLists.value = lists
+            }
         }
     }
 
     private fun loadFeaturedListStatus() {
         val featured = _trendingMulti.value.firstOrNull() ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            _featuredContentInListStatus.value = listInteractor.verifyContentInLists(
+            listInteractor.verifyContentInLists(
                 contentId = featured.id,
                 mediaType = featured.mediaType
-            )
+            ).collectLatest { status ->
+                _featuredContentInListStatus.value = status
+            }
         }
     }
 
@@ -121,11 +126,10 @@ class HomeViewModel(private val homeInteractor: HomeInteractor, private val list
                 currentStatus = currentStatus,
                 contentId = featured.id,
                 mediaType = featured.mediaType,
-                listId = listId
-            )
-            _featuredContentInListStatus.value = listInteractor.verifyContentInLists(
-                contentId = featured.id,
-                mediaType = featured.mediaType
+                listId = listId,
+                title = featured.name,
+                posterPath = featured.posterPath,
+                voteAverage = featured.rating.toFloat()
             )
         }
     }

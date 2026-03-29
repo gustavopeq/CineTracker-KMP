@@ -52,9 +52,6 @@ class MainViewModel(
     private val _isDuplicatedListName = MutableStateFlow(false)
     val isDuplicatedListName: StateFlow<Boolean> get() = _isDuplicatedListName
 
-    private val _refreshLists = MutableStateFlow(false)
-    val refreshLists: StateFlow<Boolean> get() = _refreshLists
-
     fun updateSortType(sortTypeItem: SortTypeItem) {
         when (_currentMediaTypeSelected.value) {
             MediaType.MOVIE -> _movieSortType.value = sortTypeItem
@@ -98,9 +95,5 @@ class MainViewModel(
         } else {
             _isDuplicatedListName.value = true
         }
-    }
-
-    fun setRefreshLists(shouldRefresh: Boolean) {
-        _refreshLists.value = shouldRefresh
     }
 }

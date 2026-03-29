@@ -5,11 +5,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import database.model.PersonalRatingEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PersonalRatingDao {
     @Query("SELECT * FROM personal_ratings WHERE contentId = :contentId")
-    suspend fun getRating(contentId: Int): PersonalRatingEntity?
+    fun getRating(contentId: Int): Flow<PersonalRatingEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRating(rating: PersonalRatingEntity)
@@ -18,5 +19,5 @@ interface PersonalRatingDao {
     suspend fun deleteRating(contentId: Int)
 
     @Query("SELECT * FROM personal_ratings")
-    suspend fun getAllRatings(): List<PersonalRatingEntity>
+    fun getAllRatings(): Flow<List<PersonalRatingEntity>>
 }

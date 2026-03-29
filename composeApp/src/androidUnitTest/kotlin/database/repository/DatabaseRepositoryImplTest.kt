@@ -9,13 +9,19 @@ import io.mockk.MockKAnnotations
 import io.mockk.Ordering
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -97,21 +103,21 @@ class DatabaseRepositoryImplTest {
     // ── moveItemToList ────────────────────────────────────────────────────────
 
     @Test
-    fun `moveItemToList executes delete-insert-delete in order`() = runTest {
+    fun `moveItemToList preserves cached fields and executes in order`() = runTest {
         val oldEntity = fakeContentEntity(contentId = 1, listId = 1)
-        // First deleteItem (from newListId=2): item may not exist there
-        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 2) } returns null
-        // Second deleteItem (from currentListId=1): item exists
         coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 1) } returns oldEntity
+        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 2) } returns null
 
         repository.moveItemToList(1, MediaType.MOVIE, currentListId = 1, newListId = 2)
 
         coVerify(ordering = Ordering.SEQUENCE) {
-            // 1. Delete from new list (cleanup any duplicate)
+            // 1. Fetch existing item to preserve cached fields
+            contentEntityDao.getItem(1, MediaType.MOVIE.name, 1)
+            // 2. Delete from new list (cleanup any duplicate)
             contentEntityDao.getItem(1, MediaType.MOVIE.name, 2)
-            // 2. Insert into new list
+            // 3. Insert into new list with cached fields
             contentEntityDao.insert(any())
-            // 3. Delete from old list
+            // 4. Delete from old list
             contentEntityDao.getItem(1, MediaType.MOVIE.name, 1)
             contentEntityDao.delete(1, MediaType.MOVIE.name, 1)
         }
@@ -158,9 +164,9 @@ class DatabaseRepositoryImplTest {
     @Test
     fun `getAllItemsByListId returns items from DAO for given listId`() = runTest {
         val items = listOf(fakeContentEntity(contentId = 1, listId = 3), fakeContentEntity(contentId = 2, listId = 3))
-        coEvery { contentEntityDao.getAllItems(3) } returns items
+        every { contentEntityDao.getAllItems(3) } returns flowOf(items)
 
-        val result = repository.getAllItemsByListId(3)
+        val result = repository.getAllItemsByListId(3).first()
 
         assertEquals(items, result)
     }
@@ -170,12 +176,12 @@ class DatabaseRepositoryImplTest {
     @Test
     fun `searchItems passes contentId and mediaType name to DAO`() = runTest {
         val items = listOf(fakeContentEntity(contentId = 5, listId = 1), fakeContentEntity(contentId = 5, listId = 2))
-        coEvery { contentEntityDao.searchItems(5, MediaType.SHOW.name) } returns items
+        every { contentEntityDao.searchItems(5, MediaType.SHOW.name) } returns flowOf(items)
 
-        val result = repository.searchItems(contentId = 5, mediaType = MediaType.SHOW)
+        val result = repository.searchItems(contentId = 5, mediaType = MediaType.SHOW).first()
 
         assertEquals(items, result)
-        coVerify { contentEntityDao.searchItems(5, "SHOW") }
+        verify { contentEntityDao.searchItems(5, "SHOW") }
     }
 
     // ── getAllLists ───────────────────────────────────────────────────────────
@@ -183,9 +189,9 @@ class DatabaseRepositoryImplTest {
     @Test
     fun `getAllLists returns all lists from DAO`() = runTest {
         val lists = listOf(fakeListEntity(listId = 1, name = "watchlist"), fakeListEntity(listId = 2, name = "watched"))
-        coEvery { listEntityDao.getAllLists() } returns lists
+        every { listEntityDao.getAllLists() } returns flowOf(lists)
 
-        val result = repository.getAllLists()
+        val result = repository.getAllLists().first()
 
         assertEquals(lists, result)
     }
@@ -197,5 +203,116 @@ class DatabaseRepositoryImplTest {
         repository.deleteList(listId = 3)
 
         coVerify { listEntityDao.deleteList(3) }
+    }
+
+    // ── updateCachedFields ────────────────────────────────────────────────────
+
+    @Test
+    fun `updateCachedFields delegates to contentEntityDao`() = runTest {
+        coEvery { contentEntityDao.updateCachedFields(any(), any(), any(), any(), any()) } just runs
+
+        repository.updateCachedFields(
+            contentId = 1,
+            mediaType = MediaType.MOVIE,
+            title = "Updated",
+            posterPath = "/poster.jpg",
+            voteAverage = 8.0f
+        )
+
+        coVerify {
+            contentEntityDao.updateCachedFields(1, "MOVIE", "Updated", "/poster.jpg", 8.0f)
+        }
+    }
+
+    // ── insertItem with cached fields ─────────────────────────────────────────
+
+    @Test
+    fun `insertItem passes cached fields to entity`() = runTest {
+        repository.insertItem(
+            contentId = 1,
+            mediaType = MediaType.MOVIE,
+            listId = 1,
+            title = "Test",
+            posterPath = "/poster.jpg",
+            voteAverage = 7.5f
+        )
+
+        coVerify {
+            contentEntityDao.insert(
+                match {
+                    it.contentId == 1 &&
+                        it.title == "Test" &&
+                        it.posterPath == "/poster.jpg" &&
+                        it.voteAverage == 7.5f
+                }
+            )
+        }
+    }
+
+    @Test
+    fun `insertItem uses empty defaults when cached fields not provided`() = runTest {
+        repository.insertItem(contentId = 5, mediaType = MediaType.SHOW, listId = 2)
+
+        coVerify {
+            contentEntityDao.insert(
+                match {
+                    it.contentId == 5 &&
+                        it.mediaType == "SHOW" &&
+                        it.listId == 2 &&
+                        it.title == "" &&
+                        it.posterPath == null &&
+                        it.voteAverage == 0f
+                }
+            )
+        }
+    }
+
+    // ── moveItemToList — cached field preservation ────────────────────────────
+
+    @Test
+    fun `moveItemToList preserves title posterPath and voteAverage from source entity`() = runTest {
+        val sourceEntity = fakeContentEntity(
+            contentId = 1,
+            listId = 1,
+            title = "Cached Title",
+            posterPath = "/cached_poster.jpg",
+            voteAverage = 9.2f
+        )
+        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 1) } returns sourceEntity
+        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 2) } returns null
+
+        repository.moveItemToList(1, MediaType.MOVIE, currentListId = 1, newListId = 2)
+
+        coVerify {
+            contentEntityDao.insert(
+                match {
+                    it.contentId == 1 &&
+                        it.listId == 2 &&
+                        it.title == "Cached Title" &&
+                        it.posterPath == "/cached_poster.jpg" &&
+                        it.voteAverage == 9.2f
+                }
+            )
+        }
+    }
+
+    @Test
+    fun `moveItemToList handles null existing item gracefully`() = runTest {
+        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 1) } returns null
+        coEvery { contentEntityDao.getItem(1, MediaType.MOVIE.name, 2) } returns null
+
+        repository.moveItemToList(1, MediaType.MOVIE, currentListId = 1, newListId = 2)
+
+        coVerify {
+            contentEntityDao.insert(
+                match {
+                    it.contentId == 1 &&
+                        it.listId == 2 &&
+                        it.title == "" &&
+                        it.posterPath == null &&
+                        it.voteAverage == 0f
+                }
+            )
+        }
     }
 }

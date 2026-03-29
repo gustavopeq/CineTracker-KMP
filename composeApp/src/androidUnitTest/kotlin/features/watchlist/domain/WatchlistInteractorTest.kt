@@ -1,12 +1,8 @@
 package features.watchlist.domain
 
 import common.domain.models.util.MediaType
-import common.util.errorFlow
 import common.util.fakeContentEntity
 import common.util.fakeListEntity
-import common.util.fakeMovieResponse
-import common.util.fakeShowResponse
-import common.util.successFlow
 import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.watchlist.ui.components.WatchlistTabItem
@@ -14,15 +10,17 @@ import features.watchlist.ui.model.DefaultLists
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import network.repository.movie.MovieRepository
-import network.repository.show.ShowRepository
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,8 +28,6 @@ import org.junit.Test
 class WatchlistInteractorTest {
 
     private val databaseRepository: DatabaseRepository = mockk()
-    private val movieRepository: MovieRepository = mockk()
-    private val showRepository: ShowRepository = mockk()
     private val personalRatingRepository: PersonalRatingRepository = mockk()
 
     private lateinit var interactor: WatchlistInteractor
@@ -41,8 +37,6 @@ class WatchlistInteractorTest {
         MockKAnnotations.init(this)
         interactor = WatchlistInteractor(
             databaseRepository = databaseRepository,
-            movieRepository = movieRepository,
-            showRepository = showRepository,
             personalRatingRepository = personalRatingRepository
         )
     }
@@ -52,88 +46,134 @@ class WatchlistInteractorTest {
         unmockkAll()
     }
 
-    // ── getAllItems ────────────────────────────────────────────────────────────
+    // ── getListContentWithRatings ─────────────────────────────────────────────
 
     @Test
-    fun `getAllItems returns list of entities for given listId`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(1) } returns listOf(
-            fakeContentEntity(contentId = 1, listId = 1),
-            fakeContentEntity(contentId = 2, listId = 1)
+    fun `getListContentWithRatings returns list of GenericContent for given listId`() = runTest {
+        every { databaseRepository.getAllItemsByListId(1) } returns flowOf(
+            listOf(
+                fakeContentEntity(contentId = 1, listId = 1),
+                fakeContentEntity(contentId = 2, listId = 1)
+            )
         )
+        every { personalRatingRepository.getAllRatings() } returns flowOf(emptyMap())
 
-        val result = interactor.getAllItems(1)
+        val result = interactor.getListContentWithRatings(1).first()
 
         assertEquals(2, result.size)
     }
 
     @Test
-    fun `getAllItems returns empty list when no items exist`() = runTest {
-        coEvery { databaseRepository.getAllItemsByListId(1) } returns emptyList()
+    fun `getListContentWithRatings returns empty list when no items exist`() = runTest {
+        every { databaseRepository.getAllItemsByListId(1) } returns flowOf(emptyList())
+        every { personalRatingRepository.getAllRatings() } returns flowOf(emptyMap())
 
-        val result = interactor.getAllItems(1)
+        val result = interactor.getListContentWithRatings(1).first()
 
         assertTrue(result.isEmpty())
     }
 
-    // ── fetchListDetails ──────────────────────────────────────────────────────
+    // ── mapEntitiesToGenericContent ───────────────────────────────────────────
 
     @Test
-    fun `fetchListDetails returns populated state for MOVIE entities`() = runTest {
-        val entity = fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
-        coEvery { personalRatingRepository.getRating(1) } returns null
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse(id = 1))
+    fun `mapEntitiesToGenericContent maps entities to GenericContent for MOVIE`() {
+        val entities = listOf(
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
+        )
 
-        val result = interactor.fetchListDetails(listOf(entity))
+        val result = interactor.mapEntitiesToGenericContent(entities)
 
-        assertFalse(result.isFailed())
-        assertEquals(1, result.listItems.value.size)
-        assertEquals(MediaType.MOVIE, result.listItems.value[0].mediaType)
+        assertEquals(1, result.size)
+        assertEquals(MediaType.MOVIE, result[0].mediaType)
     }
 
     @Test
-    fun `fetchListDetails returns populated state for SHOW entities`() = runTest {
-        val entity = fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.SHOW.name)
-        coEvery { personalRatingRepository.getRating(1) } returns null
-        coEvery { showRepository.getShowDetailsById(1) } returns successFlow(fakeShowResponse(id = 1))
+    fun `mapEntitiesToGenericContent maps entities to GenericContent for SHOW`() {
+        val entities = listOf(
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.SHOW.name)
+        )
 
-        val result = interactor.fetchListDetails(listOf(entity))
+        val result = interactor.mapEntitiesToGenericContent(entities)
 
-        assertFalse(result.isFailed())
-        assertEquals(1, result.listItems.value.size)
-        assertEquals(MediaType.SHOW, result.listItems.value[0].mediaType)
+        assertEquals(1, result.size)
+        assertEquals(MediaType.SHOW, result[0].mediaType)
     }
 
     @Test
-    fun `fetchListDetails skips entities with PERSON mediaType`() = runTest {
-        val entity = fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.PERSON.name)
-        coEvery { personalRatingRepository.getRating(1) } returns null
+    fun `mapEntitiesToGenericContent filters out entities with null posterPath`() {
+        val entities = listOf(
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
+            fakeContentEntity(contentId = 2, listId = 1, mediaType = MediaType.MOVIE.name, posterPath = null)
+        )
 
-        val result = interactor.fetchListDetails(listOf(entity))
+        val result = interactor.mapEntitiesToGenericContent(entities)
 
-        assertFalse(result.isFailed())
-        assertTrue(result.listItems.value.isEmpty())
+        assertEquals(1, result.size)
     }
 
     @Test
-    fun `fetchListDetails attaches personalRating to each item`() = runTest {
-        val entity = fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
-        coEvery { personalRatingRepository.getRating(1) } returns 8.5f
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse(id = 1))
+    fun `mapEntitiesToGenericContent returns empty list for empty input`() {
+        val result = interactor.mapEntitiesToGenericContent(emptyList())
 
-        val result = interactor.fetchListDetails(listOf(entity))
-
-        assertEquals(8.5f, result.listItems.value[0].personalRating)
+        assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `fetchListDetails returns error state when API returns error`() = runTest {
-        val entity = fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name)
-        coEvery { personalRatingRepository.getRating(1) } returns null
-        coEvery { movieRepository.getMovieDetailsById(1) } returns errorFlow("500")
+    fun `mapEntitiesToGenericContent maps cached fields correctly`() {
+        val entities = listOf(
+            fakeContentEntity(
+                contentId = 1,
+                listId = 1,
+                mediaType = MediaType.MOVIE.name,
+                title = "Cached Title",
+                posterPath = "/cached_poster.jpg",
+                voteAverage = 8.5f
+            )
+        )
 
-        val result = interactor.fetchListDetails(listOf(entity))
+        val result = interactor.mapEntitiesToGenericContent(entities)
 
-        assertTrue(result.isFailed())
+        assertEquals(1, result.size)
+        assertEquals("Cached Title", result[0].name)
+        assertEquals("/cached_poster.jpg", result[0].posterPath)
+        assertEquals(8.5, result[0].rating, 0.01)
+    }
+
+    @Test
+    fun `mapEntitiesToGenericContent preserves mediaType from entity`() {
+        val entities = listOf(
+            fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
+            fakeContentEntity(contentId = 2, listId = 1, mediaType = MediaType.SHOW.name)
+        )
+
+        val result = interactor.mapEntitiesToGenericContent(entities)
+
+        assertEquals(2, result.size)
+        assertEquals(MediaType.MOVIE, result[0].mediaType)
+        assertEquals(MediaType.SHOW, result[1].mediaType)
+    }
+
+    @Test
+    fun `mapEntitiesToGenericContent attaches personalRating from ratingsMap`() {
+        val entities = listOf(
+            fakeContentEntity(contentId = 1, posterPath = "/poster.jpg"),
+            fakeContentEntity(contentId = 2, posterPath = "/poster2.jpg")
+        )
+        val ratingsMap = mapOf(1 to 8.5f)
+
+        val result = interactor.mapEntitiesToGenericContent(entities, ratingsMap)
+
+        assertEquals(8.5f, result[0].personalRating)
+        assertNull(result[1].personalRating)
+    }
+
+    @Test
+    fun `mapEntitiesToGenericContent uses null personalRating when ratingsMap is empty`() {
+        val entities = listOf(fakeContentEntity(contentId = 1, posterPath = "/poster.jpg"))
+
+        val result = interactor.mapEntitiesToGenericContent(entities)
+
+        assertNull(result[0].personalRating)
     }
 
     // ── removeContentFromDatabase ─────────────────────────────────────────────
@@ -206,33 +246,39 @@ class WatchlistInteractorTest {
 
     @Test
     fun `getAllLists maps WATCHLIST listId to WatchlistTab`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist")
+        every { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist")
+            )
         )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         assertTrue(result.any { it is WatchlistTabItem.WatchlistTab })
     }
 
     @Test
     fun `getAllLists maps WATCHED listId to WatchedTab`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
+        every { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
+            )
         )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         assertTrue(result.any { it is WatchlistTabItem.WatchedTab })
     }
 
     @Test
     fun `getAllLists maps other listId to CustomTab with correct name and id`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(99, "My Favs")
+        every { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                fakeListEntity(99, "My Favs")
+            )
         )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         val customTab = result.filterIsInstance<WatchlistTabItem.CustomTab>().firstOrNull()
         assertNotNull(customTab)
@@ -242,12 +288,14 @@ class WatchlistInteractorTest {
 
     @Test
     fun `getAllLists appends AddNewTab when list count is below maximum`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHLIST.listId),
-            fakeListEntity(DefaultLists.WATCHED.listId)
+        every { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                fakeListEntity(DefaultLists.WATCHLIST.listId),
+                fakeListEntity(DefaultLists.WATCHED.listId)
+            )
         )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         assertTrue(result.last() is WatchlistTabItem.AddNewTab)
     }
@@ -255,21 +303,25 @@ class WatchlistInteractorTest {
     @Test
     fun `getAllLists does not append AddNewTab when list count equals maximum`() = runTest {
         // MAX_WATCHLIST_LIST_NUMBER = 12
-        coEvery { databaseRepository.getAllLists() } returns List(12) { fakeListEntity(it + 10, "List ${it + 10}") }
+        every { databaseRepository.getAllLists() } returns flowOf(
+            List(12) { fakeListEntity(it + 10, "List ${it + 10}") }
+        )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         assertFalse(result.any { it is WatchlistTabItem.AddNewTab })
     }
 
     @Test
     fun `getAllLists assigns ascending tabIndex to all items`() = runTest {
-        coEvery { databaseRepository.getAllLists() } returns listOf(
-            fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist"),
-            fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
+        every { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                fakeListEntity(DefaultLists.WATCHLIST.listId, "Watchlist"),
+                fakeListEntity(DefaultLists.WATCHED.listId, "Watched")
+            )
         )
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         result.forEachIndexed { index, item ->
             assertEquals(index, item.tabIndex)

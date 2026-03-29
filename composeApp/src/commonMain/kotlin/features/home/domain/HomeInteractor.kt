@@ -10,20 +10,13 @@ import common.util.platform.DateUtils
 import database.repository.DatabaseRepository
 import features.home.ui.state.HomeState
 import features.watchlist.ui.model.DefaultLists
-import network.models.content.common.MovieResponse
-import network.models.content.common.ShowResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import network.repository.home.HomeRepository
-import network.repository.movie.MovieRepository
-import network.repository.show.ShowRepository
 import network.util.Left
 import network.util.Right
 
-class HomeInteractor(
-    private val homeRepository: HomeRepository,
-    private val databaseRepository: DatabaseRepository,
-    private val movieRepository: MovieRepository,
-    private val showRepository: ShowRepository
-) {
+class HomeInteractor(private val homeRepository: HomeRepository, private val databaseRepository: DatabaseRepository) {
     companion object {
         private const val TAG = "HomeInteractor"
     }
@@ -48,47 +41,20 @@ class HomeInteractor(
         return homeState
     }
 
-    suspend fun getAllWatchlist(): List<GenericContent> {
-        val result = databaseRepository.getAllItemsByListId(
-            listId = DefaultLists.WATCHLIST.listId
-        )
-
-        return result.mapNotNull { contentEntity ->
-            getContentDetailsById(
-                contentId = contentEntity.contentId,
-                mediaType = MediaType.getType(contentEntity.mediaType)
-            )
-        }
-    }
-
-    private suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): GenericContent? {
-        val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
-            MediaType.SHOW -> showRepository.getShowDetailsById(contentId)
-            else -> return null
-        }
-
-        var contentDetails: GenericContent? = null
-        result.collect { response ->
-            when (response) {
-                is Right -> {
-                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
-                }
-                is Left -> {
-                    contentDetails = when (mediaType) {
-                        MediaType.MOVIE -> {
-                            (response.value as MovieResponse).toGenericContent()
-                        }
-                        MediaType.SHOW -> {
-                            (response.value as ShowResponse).toGenericContent()
-                        }
-                        else -> return@collect
-                    }
-                }
+    fun getWatchlistFlow(): Flow<List<GenericContent>> =
+        databaseRepository.getAllItemsByListId(DefaultLists.WATCHLIST.listId).map { entities ->
+            entities.filter { it.posterPath != null }.map { entity ->
+                GenericContent(
+                    id = entity.contentId,
+                    name = entity.title,
+                    rating = entity.voteAverage.toDouble(),
+                    overview = "",
+                    posterPath = entity.posterPath.orEmpty(),
+                    backdropPath = "",
+                    mediaType = MediaType.getType(entity.mediaType)
+                )
             }
         }
-        return contentDetails
-    }
 
     suspend fun getTrendingPerson(): List<PersonDetails> {
         val result = homeRepository.getTrendingPerson()

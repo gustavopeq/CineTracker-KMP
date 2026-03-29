@@ -12,6 +12,7 @@ import features.watchlist.util.fakeGenericContent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
@@ -19,6 +20,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -50,9 +52,9 @@ class HomeViewModelTest {
         coEvery { homeInteractor.getTrendingMulti() } returns fakeHomeState(fakeGenericContent())
         coEvery { homeInteractor.getTrendingPerson() } returns emptyList()
         coEvery { homeInteractor.getMoviesComingSoon() } returns emptyList()
-        coEvery { homeInteractor.getAllWatchlist() } returns emptyList()
-        coEvery { listInteractor.getAllLists() } returns emptyList()
-        coEvery { listInteractor.verifyContentInLists(any(), any()) } returns emptyMap()
+        every { homeInteractor.getWatchlistFlow() } returns flowOf(emptyList())
+        every { listInteractor.getAllLists() } returns flowOf(emptyList())
+        every { listInteractor.verifyContentInLists(any(), any()) } returns flowOf(emptyMap())
     }
 
     @After
@@ -138,11 +140,11 @@ class HomeViewModelTest {
 
     @Test
     fun `myWatchlist is populated after init`() = runTest {
-        coEvery { homeInteractor.getAllWatchlist() } returns listOf(fakeGenericContent(id = 5))
+        every { homeInteractor.getWatchlistFlow() } returns flowOf(listOf(fakeGenericContent(id = 5)))
 
         val viewModel = createViewModel()
-        advanceUntilIdle() // runs loadHomeScreen, which launches loadWatchlist on IO
-        awaitIO() // waits for loadWatchlist IO coroutine to complete
+        advanceUntilIdle()
+        awaitIO()
 
         assertEquals(1, viewModel.myWatchlist.value.size)
         assertEquals(5, viewModel.myWatchlist.value[0].id)
@@ -159,24 +161,6 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         coVerify(atLeast = 2) { homeInteractor.getTrendingMulti() }
-    }
-
-    // ── ReloadWatchlist event ─────────────────────────────────────────────────
-
-    @Test
-    fun `ReloadWatchlist updates myWatchlist`() = runTest {
-        coEvery { homeInteractor.getAllWatchlist() } returns listOf(fakeGenericContent(id = 7))
-
-        val viewModel = createViewModel()
-        advanceUntilIdle() // runs loadHomeScreen, which launches loadWatchlist on IO
-        awaitIO() // waits for first loadWatchlist call
-
-        viewModel.onEvent(HomeEvent.ReloadWatchlist)
-        awaitIO() // waits for second loadWatchlist call
-
-        assertEquals(1, viewModel.myWatchlist.value.size)
-        assertEquals(7, viewModel.myWatchlist.value[0].id)
-        coVerify(atLeast = 2) { homeInteractor.getAllWatchlist() }
     }
 
     // ── OnError event ─────────────────────────────────────────────────────────
@@ -216,9 +200,9 @@ class HomeViewModelTest {
 
     @Test
     fun `OnError clears featuredContentInListStatus`() = runTest {
-        coEvery {
+        every {
             listInteractor.verifyContentInLists(any(), any())
-        } returns mapOf(1 to true)
+        } returns flowOf(mapOf(1 to true))
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -234,9 +218,9 @@ class HomeViewModelTest {
     @Test
     fun `loadFeaturedListStatus sets status map for featured content`() = runTest {
         val statusMap = mapOf(1 to true, 2 to false)
-        coEvery {
+        every {
             listInteractor.verifyContentInLists(1, MediaType.MOVIE)
-        } returns statusMap
+        } returns flowOf(statusMap)
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -262,7 +246,7 @@ class HomeViewModelTest {
             ListItem(id = 1, name = "watchlist", isDefault = true),
             ListItem(id = 2, name = "watched", isDefault = true)
         )
-        coEvery { listInteractor.getAllLists() } returns lists
+        every { listInteractor.getAllLists() } returns flowOf(lists)
 
         val viewModel = createViewModel()
         advanceUntilIdle()
@@ -275,52 +259,40 @@ class HomeViewModelTest {
 
     @Test
     fun `toggleFeaturedFromList adds content to list and updates status`() = runTest {
-        coEvery {
+        every {
             listInteractor.verifyContentInLists(1, MediaType.MOVIE)
-        } returns mapOf(1 to false, 2 to false)
+        } returns flowOf(mapOf(1 to false, 2 to false))
         coEvery {
-            listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1)
+            listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1, any(), any(), any())
         } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
         awaitIO()
 
-        // After toggle, verify returns updated map
-        coEvery {
-            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
-        } returns mapOf(1 to true, 2 to false)
-
         viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
         awaitIO()
 
-        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1) }
-        assertEquals(true, viewModel.featuredContentInListStatus.value[1])
+        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1, any(), any(), any()) }
     }
 
     @Test
     fun `toggleFeaturedFromList removes content from list and updates status`() = runTest {
-        coEvery {
+        every {
             listInteractor.verifyContentInLists(1, MediaType.MOVIE)
-        } returns mapOf(1 to true, 2 to false)
+        } returns flowOf(mapOf(1 to true, 2 to false))
         coEvery {
-            listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1)
+            listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1, any(), any(), any())
         } returns Unit
 
         val viewModel = createViewModel()
         advanceUntilIdle()
         awaitIO()
 
-        // After toggle, verify returns updated map
-        coEvery {
-            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
-        } returns mapOf(1 to false, 2 to false)
-
         viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
         awaitIO()
 
-        coVerify { listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1) }
-        assertEquals(false, viewModel.featuredContentInListStatus.value[1])
+        coVerify { listInteractor.toggleWatchlist(true, 1, MediaType.MOVIE, 1, any(), any(), any()) }
     }
 
     @Test
@@ -333,7 +305,7 @@ class HomeViewModelTest {
         viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
         awaitIO()
 
-        coVerify(exactly = 0) { listInteractor.toggleWatchlist(any(), any(), any(), any()) }
+        coVerify(exactly = 0) { listInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     // ── Bottom sheet visibility ──────────────────────────────────────────────
@@ -360,5 +332,69 @@ class HomeViewModelTest {
 
         viewModel.onEvent(HomeEvent.CloseListBottomSheet)
         assertFalse(viewModel.showListBottomSheet.value)
+    }
+
+    // ── toggleFeaturedFromList — cached field forwarding ─────────────────────
+
+    @Test
+    fun `toggleFeaturedFromList passes content details to toggleWatchlist`() = runTest {
+        val featured = fakeGenericContent(id = 1, name = "Test Movie", mediaType = MediaType.MOVIE)
+        coEvery { homeInteractor.getTrendingMulti() } returns fakeHomeState(featured)
+        every {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns flowOf(mapOf(1 to false))
+        coEvery {
+            listInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any())
+        } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
+        awaitIO()
+
+        coVerify {
+            listInteractor.toggleWatchlist(
+                currentStatus = false,
+                contentId = 1,
+                mediaType = MediaType.MOVIE,
+                listId = 1,
+                title = "Test Movie",
+                posterPath = "/poster.jpg",
+                voteAverage = 7.5f
+            )
+        }
+    }
+
+    @Test
+    fun `toggleFeaturedFromList passes cached fields when removing from list`() = runTest {
+        val featured = fakeGenericContent(id = 1, name = "Test Movie", mediaType = MediaType.MOVIE)
+        coEvery { homeInteractor.getTrendingMulti() } returns fakeHomeState(featured)
+        every {
+            listInteractor.verifyContentInLists(1, MediaType.MOVIE)
+        } returns flowOf(mapOf(1 to true))
+        coEvery {
+            listInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any())
+        } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO()
+
+        viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId = 1))
+        awaitIO()
+
+        coVerify {
+            listInteractor.toggleWatchlist(
+                currentStatus = true,
+                contentId = 1,
+                mediaType = MediaType.MOVIE,
+                listId = 1,
+                title = "Test Movie",
+                posterPath = "/poster.jpg",
+                voteAverage = 7.5f
+            )
+        }
     }
 }

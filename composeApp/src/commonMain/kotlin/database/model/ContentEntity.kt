@@ -21,5 +21,8 @@ data class ContentEntity(
     val contentId: Int,
     val mediaType: String,
     val listId: Int,
-    val createdAt: Long = DateUtils.getCurrentTimeMillis()
+    val createdAt: Long = DateUtils.getCurrentTimeMillis(),
+    val title: String = "",
+    val posterPath: String? = null,
+    val voteAverage: Float = 0f
 )

@@ -2,18 +2,16 @@ package features.watchlist.ui
 
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import common.util.fakeContentEntity
 import features.watchlist.domain.WatchlistInteractor
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.WatchlistTabItem
 import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.model.WatchlistItemAction
-import features.watchlist.ui.state.WatchlistState
 import features.watchlist.util.fakeGenericContent
-import features.watchlist.util.successfulWatchlistState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
@@ -21,6 +19,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -48,12 +47,13 @@ class WatchlistViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         // Default stubs so init block never throws
-        coEvery { watchlistInteractor.getAllLists() } returns listOf(
-            WatchlistTabItem.WatchlistTab,
-            WatchlistTabItem.WatchedTab
+        every { watchlistInteractor.getAllLists() } returns flowOf(
+            listOf(
+                WatchlistTabItem.WatchlistTab,
+                WatchlistTabItem.WatchedTab
+            )
         )
-        coEvery { watchlistInteractor.getAllItems(any()) } returns emptyList()
-        coEvery { watchlistInteractor.fetchListDetails(any()) } returns WatchlistState()
+        every { watchlistInteractor.getListContentWithRatings(any()) } returns flowOf(emptyList())
         coEvery { watchlistInteractor.removeContentFromDatabase(any(), any(), any()) } returns Unit
         coEvery { watchlistInteractor.moveItemToList(any(), any(), any(), any()) } returns Unit
         coEvery { watchlistInteractor.undoItemRemoved() } returns Unit
@@ -88,52 +88,30 @@ class WatchlistViewModelTest {
         assertEquals(DefaultLists.WATCHLIST.listId, viewModel.selectedList.value)
     }
 
-    // ── LoadWatchlistData — success ───────────────────────────────────────────
+    // ── listContent populated via Flow ───────────────────────────────────────
 
     @Test
-    fun `loadState transitions to Success after LoadWatchlistData`() = runTest {
-        val viewModel = createViewModel()
-        awaitIO()
-
-        viewModel.onEvent(WatchlistEvent.LoadWatchlistData)
-        awaitIO()
-
-        assertEquals(DataLoadStatus.Success, viewModel.loadState.value)
-    }
-
-    @Test
-    fun `LoadWatchlistData populates listContent map keyed by listId`() = runTest {
+    fun `listContent is populated after init via Flow collection`() = runTest {
         val content = fakeGenericContent(id = 1)
-        coEvery { watchlistInteractor.getAllItems(WatchlistTabItem.WatchlistTab.listId) } returns listOf(
-            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId)
+        every { watchlistInteractor.getListContentWithRatings(WatchlistTabItem.WatchlistTab.listId) } returns flowOf(
+            listOf(content)
         )
-        coEvery { watchlistInteractor.fetchListDetails(any()) } returns successfulWatchlistState(content)
 
         val viewModel = createViewModel()
-        awaitIO()
-
-        viewModel.onEvent(WatchlistEvent.LoadWatchlistData)
         awaitIO()
 
         assertTrue(viewModel.listContent.value.isNotEmpty())
-        assertEquals(1, viewModel.listContent.value[WatchlistTabItem.WatchlistTab.listId]?.size)
+        assertEquals(1, viewModel.listContent.value.size)
     }
 
-    // ── LoadWatchlistData — failure ───────────────────────────────────────────
-
     @Test
-    fun `loadState is Failed when fetchListDetails returns error state`() = runTest {
-        val errorState = WatchlistState().apply { setError("500") }
-        coEvery { watchlistInteractor.getAllItems(any()) } returns listOf(fakeContentEntity(1, 1))
-        coEvery { watchlistInteractor.fetchListDetails(any()) } returns errorState
+    fun `loadState transitions to Success after list content is collected`() = runTest {
+        every { watchlistInteractor.getListContentWithRatings(any()) } returns flowOf(emptyList())
 
         val viewModel = createViewModel()
         awaitIO()
 
-        viewModel.onEvent(WatchlistEvent.LoadWatchlistData)
-        awaitIO()
-
-        assertEquals(DataLoadStatus.Failed, viewModel.loadState.value)
+        assertEquals(DataLoadStatus.Success, viewModel.loadState.value)
     }
 
     // ── RemoveItem ────────────────────────────────────────────────────────────
@@ -153,27 +131,6 @@ class WatchlistViewModelTest {
                 listId = DefaultLists.WATCHLIST.listId
             )
         }
-    }
-
-    @Test
-    fun `RemoveItem removes item from listContent map`() = runTest {
-        val content = fakeGenericContent(id = 1, mediaType = MediaType.MOVIE)
-        coEvery { watchlistInteractor.getAllItems(WatchlistTabItem.WatchlistTab.listId) } returns listOf(
-            fakeContentEntity(1, WatchlistTabItem.WatchlistTab.listId)
-        )
-        coEvery { watchlistInteractor.fetchListDetails(any()) } returns successfulWatchlistState(content)
-
-        val viewModel = createViewModel()
-        awaitIO()
-
-        viewModel.onEvent(WatchlistEvent.LoadWatchlistData)
-        awaitIO()
-        assertEquals(1, viewModel.listContent.value[WatchlistTabItem.WatchlistTab.listId]?.size)
-
-        viewModel.onEvent(WatchlistEvent.RemoveItem(contentId = 1, mediaType = MediaType.MOVIE))
-        awaitIO()
-
-        assertTrue(viewModel.listContent.value[WatchlistTabItem.WatchlistTab.listId].isNullOrEmpty())
     }
 
     @Test
@@ -240,6 +197,7 @@ class WatchlistViewModelTest {
         awaitIO()
 
         viewModel.onEvent(WatchlistEvent.SelectList(WatchlistTabItem.WatchedTab))
+        awaitIO()
 
         assertEquals(WatchlistTabItem.WatchedTab.listId, viewModel.selectedList.value)
     }
@@ -296,20 +254,6 @@ class WatchlistViewModelTest {
         viewModel.onEvent(WatchlistEvent.OnSnackbarDismiss)
 
         assertFalse(viewModel.snackbarState.value.displaySnackbar.value)
-    }
-
-    // ── LoadAllLists ──────────────────────────────────────────────────────────
-
-    @Test
-    fun `LoadAllLists calls getAllLists again`() = runTest {
-        val viewModel = createViewModel()
-        awaitIO()
-
-        viewModel.onEvent(WatchlistEvent.LoadAllLists)
-        awaitIO()
-
-        // Called once during init + once for LoadAllLists
-        coVerify(atLeast = 2) { watchlistInteractor.getAllLists() }
     }
 
     // ── DeleteList ────────────────────────────────────────────────────────────
