@@ -54,7 +54,6 @@ import common.util.calculateCardsPerRow
 import common.util.dpToPx
 import common.util.platform.getScreenSizeInfo
 import common.util.pxToDp
-import features.browse.BrowseScreen
 import features.browse.events.BrowseEvent
 import features.browse.ui.components.CollapsingTabRow
 import org.koin.compose.viewmodel.koinViewModel
@@ -92,10 +91,6 @@ private fun Browse(
 
     val listOfShows = viewModel.showPager.collectAsLazyPagingItems()
     val showSortType by mainViewModel.showSortType.collectAsState()
-
-    LaunchedEffect(Unit) {
-        mainViewModel.updateCurrentScreen(BrowseScreen.route())
-    }
 
     LaunchedEffect(pagerState.currentPage) {
         when (pagerState.currentPage) {

@@ -42,7 +42,6 @@ import common.util.Constants.UNSELECTED_OPTION_INDEX
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SMALL_MARGIN
 import common.util.capitalized
-import features.watchlist.WatchlistScreen
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.DeleteListDialog
 import features.watchlist.ui.components.ListRemovePopUpMenu
@@ -85,17 +84,17 @@ private fun Watchlist(
 
     if (allLists.isNotEmpty()) {
         AllListsLoadedState(
-            allLists,
-            viewModel,
-            watchlistSort,
-            mainViewModel,
-            snackbarState,
-            snackbarHostState,
-            loadState,
-            listContent,
-            selectedList,
-            goToDetails,
-            goToErrorScreen
+            tabList = allLists,
+            viewModel = viewModel,
+            watchlistSort = watchlistSort,
+            mainViewModel = mainViewModel,
+            snackbarState = snackbarState,
+            snackbarHostState = snackbarHostState,
+            loadState = loadState,
+            listContent = listContent,
+            selectedList = selectedList,
+            goToDetails = goToDetails,
+            goToErrorScreen = goToErrorScreen
         )
     }
 }
@@ -109,12 +108,11 @@ private fun AllListsLoadedState(
     snackbarState: WatchlistSnackbarState,
     snackbarHostState: SnackbarHostState,
     loadState: DataLoadStatus,
-    listContent: Map<Int, List<GenericContent>>,
+    listContent: List<GenericContent>,
     selectedList: Int,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
-    val refreshLists by mainViewModel.refreshLists.collectAsState()
     val selectedTabIndex by viewModel.selectedTabIndex.collectAsState()
     var showDeletePopUpMenu by remember { mutableStateOf(false) }
     var deletePopUpMenuOffset by remember { mutableStateOf(Offset.Zero) }
@@ -147,21 +145,6 @@ private fun AllListsLoadedState(
         viewModel.onEvent(
             WatchlistEvent.UpdateSortType(watchlistSort)
         )
-    }
-
-    LaunchedEffect(Unit) {
-        mainViewModel.updateCurrentScreen(WatchlistScreen.route())
-
-        viewModel.onEvent(
-            WatchlistEvent.LoadWatchlistData
-        )
-    }
-
-    LaunchedEffect(refreshLists) {
-        if (refreshLists) {
-            mainViewModel.setRefreshLists(false)
-            viewModel.onEvent(WatchlistEvent.LoadAllLists)
-        }
     }
 
     SnackbarLaunchedEffect(snackbarState, snackbarHostState, viewModel, tabList)
@@ -199,10 +182,8 @@ private fun AllListsLoadedState(
                 }
 
                 DataLoadStatus.Success -> {
-                    val contentList = listContent[tabList[selectedTabIndex].listId]
-
                     WatchlistBody(
-                        contentList = contentList.orEmpty(),
+                        contentList = listContent,
                         watchlistSort = watchlistSort,
                         selectedList = selectedList,
                         allLists = tabList,

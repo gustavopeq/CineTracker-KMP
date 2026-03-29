@@ -180,7 +180,6 @@ CineTracker-KMP/
 │   │       │   │   │       ├── GenericTabComponents.kt
 │   │       │   │   │       └── TabItem.kt
 │   │       │   │   ├── screen/
-│   │       │   │   │   ├── ErrorScreen.kt
 │   │       │   │   │   └── GenericErrorScreen.kt
 │   │       │   │   └── theme/
 │   │       │   │       ├── Color.kt
@@ -201,6 +200,8 @@ CineTracker-KMP/
 │   │       │           └── StringFormat.kt       # expect
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
+│   │       │   ├── backfill/
+│   │       │   │   └── CachedFieldsBackfill.kt
 │   │       │   ├── dao/
 │   │       │   │   ├── ContentEntityDao.kt
 │   │       │   │   ├── ListEntityDao.kt
@@ -210,6 +211,8 @@ CineTracker-KMP/
 │   │       │   │   ├── DatabaseModule.kt         # expect
 │   │       │   │   ├── DatabaseRepositoryModule.kt
 │   │       │   │   └── SettingsModule.kt         # expect
+│   │       │   ├── migration/
+│   │       │   │   └── MigrationSchemas.kt
 │   │       │   ├── model/
 │   │       │   │   ├── ContentEntity.kt
 │   │       │   │   ├── ListEntity.kt
@@ -223,7 +226,6 @@ CineTracker-KMP/
 │   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
 │   │       │   ├── browse/
-│   │       │   │   ├── BrowseScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── BrowseInteractor.kt
 │   │       │   │   ├── events/
@@ -238,7 +240,6 @@ CineTracker-KMP/
 │   │       │   │       └── paging/
 │   │       │   │           └── MediaContentPagingSource.kt
 │   │       │   ├── details/
-│   │       │   │   ├── DetailsScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── DetailsInteractor.kt
 │   │       │   │   ├── events/
@@ -267,7 +268,6 @@ CineTracker-KMP/
 │   │       │   │       └── util/
 │   │       │   │           └── Extensions.kt
 │   │       │   ├── home/
-│   │       │   │   ├── HomeScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── HomeInteractor.kt
 │   │       │   │   ├── events/
@@ -297,7 +297,6 @@ CineTracker-KMP/
 │   │       │   │           ├── OnboardingBrowseScreen.kt
 │   │       │   │           └── OnboardingWatchlistScreen.kt
 │   │       │   ├── search/
-│   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── SearchInteractor.kt
 │   │       │   │   ├── events/
@@ -313,7 +312,6 @@ CineTracker-KMP/
 │   │       │   │       └── paging/
 │   │       │   │           └── SearchPagingSource.kt
 │   │       │   └── watchlist/
-│   │       │       ├── WatchlistScreen.kt
 │   │       │       ├── domain/
 │   │       │       │   ├── ListInteractor.kt
 │   │       │       │   └── WatchlistInteractor.kt
@@ -340,19 +338,11 @@ CineTracker-KMP/
 │   │       │               └── WatchlistState.kt
 │   │       ├── navigation/
 │   │       │   ├── MainNavGraph.kt
-│   │       │   ├── Screen.kt
-│   │       │   ├── ScreenUI.kt
-│   │       │   ├── components/
-│   │       │   │   ├── MainNavBar.kt
-│   │       │   │   ├── MainNavBarItem.kt
-│   │       │   │   └── TopNavBar.kt
-│   │       │   └── screens/
-│   │       │       ├── BrowseScreenUI.kt
-│   │       │       ├── DetailsScreenUI.kt
-│   │       │       ├── ErrorScreenUI.kt
-│   │       │       ├── HomeScreenUI.kt
-│   │       │       ├── SearchScreenUI.kt
-│   │       │       └── WatchlistScreenUI.kt
+│   │       │   ├── Routes.kt
+│   │       │   └── components/
+│   │       │       ├── MainNavBar.kt
+│   │       │       ├── MainNavBarItem.kt
+│   │       │       └── TopNavBar.kt
 │   │       └── network/
 │   │           ├── NetworkClient.kt              # expect
 │   │           ├── di/
@@ -434,8 +424,6 @@ CineTracker-KMP/
 │   │   │   │   ├── di/
 │   │   │   │   │   ├── DatabaseModule.android.kt
 │   │   │   │   │   └── SettingsModule.android.kt
-│   │   │   │   └── migration/
-│   │   │   │       └── MigrationSchemas.kt
 │   │   │   └── network/
 │   │   │       ├── di/
 │   │   │       │   └── ApiModule.android.kt
@@ -474,6 +462,8 @@ CineTracker-KMP/
 │   │   │   └── util/
 │   │   │       └── TestFixtures.kt              # Shared test helpers (flows, entities, responses)
 │   │   ├── database/
+│   │   │   ├── backfill/
+│   │   │   │   └── CachedFieldsBackfillTest.kt
 │   │   │   └── repository/
 │   │   │       ├── DatabaseRepositoryImplTest.kt
 │   │   │       ├── PersonalRatingRepositoryImplTest.kt
@@ -523,7 +513,8 @@ CineTracker-KMP/
 │   │       │   └── PersonalRatingDaoTest.kt
 │   │       └── migration/
 │   │           ├── Migration5To6Test.kt
-│   │           └── Migration6To7Test.kt
+│   │           ├── Migration6To7Test.kt
+│   │           └── Migration7To8Test.kt
 │   │
 │   └── src/debug/
 │       └── google-services.json

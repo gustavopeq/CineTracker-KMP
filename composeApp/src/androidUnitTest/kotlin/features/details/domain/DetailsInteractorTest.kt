@@ -7,6 +7,7 @@ import common.util.fakeMovieResponse
 import common.util.fakeShowResponse
 import common.util.successFlow
 import core.LanguageManager
+import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.util.fakeCastResponse
 import features.details.util.fakeContentCastResponse
@@ -30,6 +31,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import network.models.content.common.CountryProviderResponse
 import network.models.content.common.WatchProvidersResponse
@@ -48,6 +51,7 @@ class DetailsInteractorTest {
     private val personRepository: PersonRepository = mockk()
     private val listInteractor: features.watchlist.domain.ListInteractor = mockk()
     private val personalRatingRepository: PersonalRatingRepository = mockk()
+    private val databaseRepository: DatabaseRepository = mockk()
 
     private lateinit var interactor: DetailsInteractor
 
@@ -62,7 +66,8 @@ class DetailsInteractorTest {
             showRepository = showRepository,
             personRepository = personRepository,
             listInteractor = listInteractor,
-            personalRatingRepository = personalRatingRepository
+            personalRatingRepository = personalRatingRepository,
+            databaseRepository = databaseRepository
         )
     }
 
@@ -476,19 +481,19 @@ class DetailsInteractorTest {
     @Test
     fun `verifyContentInLists delegates to listInteractor`() = runTest {
         val expected = mapOf(1 to true, 2 to false)
-        coEvery { listInteractor.verifyContentInLists(42, MediaType.MOVIE) } returns expected
+        every { listInteractor.verifyContentInLists(42, MediaType.MOVIE) } returns flowOf(expected)
 
-        val result = interactor.verifyContentInLists(42, MediaType.MOVIE)
+        val result = interactor.verifyContentInLists(42, MediaType.MOVIE).first()
 
         assertEquals(expected, result)
-        coVerify { listInteractor.verifyContentInLists(42, MediaType.MOVIE) }
+        verify { listInteractor.verifyContentInLists(42, MediaType.MOVIE) }
     }
 
     // ── toggleWatchlist ───────────────────────────────────────────────────────
 
     @Test
     fun `toggleWatchlist delegates to listInteractor`() = runTest {
-        coEvery { listInteractor.toggleWatchlist(any(), any(), any(), any()) } returns Unit
+        coEvery { listInteractor.toggleWatchlist(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         interactor.toggleWatchlist(
             currentStatus = false,
@@ -497,7 +502,7 @@ class DetailsInteractorTest {
             listId = 1
         )
 
-        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1) }
+        coVerify { listInteractor.toggleWatchlist(false, 1, MediaType.MOVIE, 1, any(), any(), any()) }
     }
 
     // ── getAllLists ───────────────────────────────────────────────────────────
@@ -508,30 +513,30 @@ class DetailsInteractorTest {
             common.domain.models.list.ListItem(id = 1, name = "Watchlist"),
             common.domain.models.list.ListItem(id = 2, name = "Watched")
         )
-        coEvery { listInteractor.getAllLists() } returns expected
+        every { listInteractor.getAllLists() } returns flowOf(expected)
 
-        val result = interactor.getAllLists()
+        val result = interactor.getAllLists().first()
 
         assertEquals(expected, result)
-        coVerify { listInteractor.getAllLists() }
+        verify { listInteractor.getAllLists() }
     }
 
     // ── getPersonalRating ─────────────────────────────────────────────────────
 
     @Test
     fun `getPersonalRating returns float value when rating exists`() = runTest {
-        coEvery { personalRatingRepository.getRating(42) } returns 7.5f
+        every { personalRatingRepository.getRating(42) } returns flowOf(7.5f)
 
-        val result = interactor.getPersonalRating(42)
+        val result = interactor.getPersonalRating(42).first()
 
         assertEquals(7.5f, result)
     }
 
     @Test
     fun `getPersonalRating returns null when no rating exists`() = runTest {
-        coEvery { personalRatingRepository.getRating(42) } returns null
+        every { personalRatingRepository.getRating(42) } returns flowOf(null)
 
-        val result = interactor.getPersonalRating(42)
+        val result = interactor.getPersonalRating(42).first()
 
         assertNull(result)
     }

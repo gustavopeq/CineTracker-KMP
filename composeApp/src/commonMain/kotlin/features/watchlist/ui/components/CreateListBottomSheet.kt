@@ -149,7 +149,6 @@ private fun ShowBottomSheet(mainViewModel: MainViewModel, dismissBottomSheet: ()
                         mainViewModel.createNewList(
                             closeSheet = {
                                 sheetState.hide()
-                                mainViewModel.setRefreshLists(true)
                             }
                         )
                     }.invokeOnCompletion {

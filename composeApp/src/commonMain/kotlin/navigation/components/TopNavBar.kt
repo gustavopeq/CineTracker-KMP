@@ -10,6 +10,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.app_logo_image_description
 import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
@@ -17,19 +19,29 @@ import common.ui.MainViewModel
 import common.ui.components.button.SortIconButton
 import common.util.UiConstants.SMALLER_DEVICES_WIDTH
 import common.util.platform.getScreenSizeInfo
-import features.browse.BrowseScreen
-import features.home.HomeScreen
-import features.search.SearchScreen
-import features.watchlist.WatchlistScreen
-import org.jetbrains.compose.resources.StringResource
+import navigation.BrowseRoute
+import navigation.HomeRoute
+import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(currentScreen: String?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
-    val title = currentScreen.getScreenNameRes()?.let { stringResource(resource = it) }
-    val showTopBar = screensWithTopBar.contains(currentScreen)
+fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
+    val isHomeScreen = currentDestination?.hasRoute<HomeRoute>() == true
+    val isBrowseScreen = currentDestination?.hasRoute<BrowseRoute>() == true
+    val isWatchlistScreen = currentDestination?.hasRoute<WatchlistRoute>() == true
+
+    val showTopBar = isHomeScreen || isBrowseScreen || isWatchlistScreen
+    val showSortIcon = isBrowseScreen || isWatchlistScreen
+
+    val title = when {
+        isHomeScreen -> null
+        isBrowseScreen -> stringResource(resource = MainNavBarItem.Browse.labelResId)
+        isWatchlistScreen -> stringResource(resource = MainNavBarItem.Watchlist.labelResId)
+        else -> null
+    }
+
     val logoModifier = if (getScreenSizeInfo().widthDp < SMALLER_DEVICES_WIDTH.dp) {
         Modifier.fillMaxWidth(0.5f)
     } else {
@@ -39,7 +51,7 @@ fun TopNavBar(currentScreen: String?, mainViewModel: MainViewModel, displaySortS
     if (showTopBar) {
         TopAppBar(
             title = {
-                if (currentScreen == HomeScreen.route()) {
+                if (isHomeScreen) {
                     Image(
                         modifier = logoModifier,
                         painter = painterResource(resource = Res.drawable.cinetracker_name_logo),
@@ -55,10 +67,10 @@ fun TopNavBar(currentScreen: String?, mainViewModel: MainViewModel, displaySortS
                 }
             },
             actions = {
-                if (screensWithSortIcon.contains(currentScreen)) {
+                if (showSortIcon) {
                     SortIconButton(
                         mainViewModel = mainViewModel,
-                        currentScreen = currentScreen.orEmpty(),
+                        isWatchlistScreen = isWatchlistScreen,
                         displaySortScreen = displaySortScreen
                     )
                 }
@@ -70,22 +82,3 @@ fun TopNavBar(currentScreen: String?, mainViewModel: MainViewModel, displaySortS
         )
     }
 }
-
-private fun String?.getScreenNameRes(): StringResource? = when (this) {
-    HomeScreen.route() -> MainNavBarItem.Home.labelResId
-    BrowseScreen.route() -> MainNavBarItem.Browse.labelResId
-    WatchlistScreen.route() -> MainNavBarItem.Watchlist.labelResId
-    SearchScreen.route() -> MainNavBarItem.Search.labelResId
-    else -> null
-}
-
-private val screensWithTopBar = listOf(
-    HomeScreen.route(),
-    BrowseScreen.route(),
-    WatchlistScreen.route()
-)
-
-private val screensWithSortIcon = listOf(
-    BrowseScreen.route(),
-    WatchlistScreen.route()
-)

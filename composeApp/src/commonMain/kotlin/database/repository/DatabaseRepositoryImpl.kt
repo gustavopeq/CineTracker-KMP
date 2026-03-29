@@ -5,17 +5,27 @@ import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
 import database.model.ContentEntity
 import database.model.ListEntity
+import kotlinx.coroutines.flow.Flow
 
 class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, private val listEntityDao: ListEntityDao) :
     DatabaseRepository {
 
-    override suspend fun insertItem(contentId: Int, mediaType: MediaType, listId: Int) {
+    override suspend fun insertItem(
+        contentId: Int,
+        mediaType: MediaType,
+        listId: Int,
+        title: String,
+        posterPath: String?,
+        voteAverage: Float
+    ) {
         val item = ContentEntity(
             contentId = contentId,
             mediaType = mediaType.name,
-            listId = listId
+            listId = listId,
+            title = title,
+            posterPath = posterPath,
+            voteAverage = voteAverage
         )
-
         contentEntityDao.insert(item)
     }
 
@@ -35,9 +45,9 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
         return itemRemoved
     }
 
-    override suspend fun getAllItemsByListId(listId: Int): List<ContentEntity> = contentEntityDao.getAllItems(listId)
+    override fun getAllItemsByListId(listId: Int): Flow<List<ContentEntity>> = contentEntityDao.getAllItems(listId)
 
-    override suspend fun searchItems(contentId: Int, mediaType: MediaType): List<ContentEntity> =
+    override fun searchItems(contentId: Int, mediaType: MediaType): Flow<List<ContentEntity>> =
         contentEntityDao.searchItems(
             contentId = contentId,
             mediaType = mediaType.name
@@ -49,32 +59,25 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
         currentListId: Int,
         newListId: Int
     ): ContentEntity? {
-        deleteItem(
-            contentId = contentId,
-            mediaType = mediaType,
-            listId = newListId
-        )
+        val existingItem = contentEntityDao.getItem(contentId, mediaType.name, currentListId)
+        deleteItem(contentId = contentId, mediaType = mediaType, listId = newListId)
         insertItem(
             contentId = contentId,
             mediaType = mediaType,
-            listId = newListId
+            listId = newListId,
+            title = existingItem?.title.orEmpty(),
+            posterPath = existingItem?.posterPath,
+            voteAverage = existingItem?.voteAverage ?: 0f
         )
-        return deleteItem(
-            contentId = contentId,
-            mediaType = mediaType,
-            listId = currentListId
-        )
+        return deleteItem(contentId = contentId, mediaType = mediaType, listId = currentListId)
     }
 
     override suspend fun reinsertItem(contentEntity: ContentEntity) {
         contentEntityDao.insert(contentEntity)
     }
 
-    override suspend fun getAllLists(): List<ListEntity> = listEntityDao.getAllLists()
+    override fun getAllLists(): Flow<List<ListEntity>> = listEntityDao.getAllLists()
 
-    /**
-     * @return Return true when list is created or false if new list couldn't be created
-     */
     override suspend fun addNewList(listName: String): Boolean {
         val newListName = listName.lowercase()
         val isDuplicated = listEntityDao.getListCountByName(newListName) > 0
@@ -93,5 +96,24 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
 
     override suspend fun deleteList(listId: Int) {
         listEntityDao.deleteList(listId)
+    }
+
+    override suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity> =
+        contentEntityDao.getEntitiesWithMissingCachedFields()
+
+    override suspend fun updateCachedFields(
+        contentId: Int,
+        mediaType: MediaType,
+        title: String,
+        posterPath: String?,
+        voteAverage: Float
+    ) {
+        contentEntityDao.updateCachedFields(
+            contentId = contentId,
+            mediaType = mediaType.name,
+            title = title,
+            posterPath = posterPath,
+            voteAverage = voteAverage
+        )
     }
 }

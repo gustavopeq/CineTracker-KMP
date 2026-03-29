@@ -1,8 +1,6 @@
 package features.watchlist.domain
 
-import co.touchlab.kermit.Logger
 import common.domain.models.content.GenericContent
-import common.domain.models.content.toGenericContent
 import common.domain.models.util.MediaType
 import common.util.Constants
 import database.model.ContentEntity
@@ -10,80 +8,39 @@ import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.watchlist.ui.components.WatchlistTabItem
 import features.watchlist.ui.model.DefaultLists
-import features.watchlist.ui.state.WatchlistState
-import network.models.content.common.MovieResponse
-import network.models.content.common.ShowResponse
-import network.repository.movie.MovieRepository
-import network.repository.show.ShowRepository
-import network.util.Left
-import network.util.Right
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 class WatchlistInteractor(
     private val databaseRepository: DatabaseRepository,
-    private val movieRepository: MovieRepository,
-    private val showRepository: ShowRepository,
     private val personalRatingRepository: PersonalRatingRepository
 ) {
-    companion object {
-        private const val TAG = "WatchlistInteractor"
-    }
 
     private var lastRemovedItem: ContentEntity? = null
     private var lastMovedListId: Int? = null
 
-    suspend fun getAllItems(listId: Int): List<ContentEntity> = databaseRepository.getAllItemsByListId(listId = listId)
-
-    suspend fun fetchListDetails(entityList: List<ContentEntity>): WatchlistState {
-        val watchlistState = WatchlistState()
-        try {
-            val detailedWatchlist = entityList.mapNotNull { entity ->
-                val personalRating = personalRatingRepository.getRating(entity.contentId)
-                getContentDetailsById(
-                    contentId = entity.contentId,
-                    mediaType = MediaType.getType(entity.mediaType),
-                    personalRating = personalRating
-                )
-            }
-            watchlistState.listItems.value = detailedWatchlist
-        } catch (e: IllegalStateException) {
-            watchlistState.setError(
-                errorCode = e.message
-            )
-        }
-        return watchlistState
+    fun getListContentWithRatings(listId: Int): Flow<List<GenericContent>> = combine(
+        databaseRepository.getAllItemsByListId(listId),
+        personalRatingRepository.getAllRatings()
+    ) { entities, ratingsMap ->
+        mapEntitiesToGenericContent(entities, ratingsMap)
     }
 
-    private suspend fun getContentDetailsById(
-        contentId: Int,
-        mediaType: MediaType,
-        personalRating: Float? = null
-    ): GenericContent? {
-        val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
-            MediaType.SHOW -> showRepository.getShowDetailsById(contentId)
-            else -> return null
-        }
-
-        var contentDetails: GenericContent? = null
-        result.collect { response ->
-            when (response) {
-                is Right -> {
-                    Logger.e(TAG) { "getContentDetailsById failed with error: ${response.error}" }
-                    throw IllegalStateException(
-                        response.error.code,
-                        response.error.exception
-                    )
-                }
-                is Left -> {
-                    contentDetails = when (mediaType) {
-                        MediaType.MOVIE -> (response.value as MovieResponse).toGenericContent()
-                        MediaType.SHOW -> (response.value as ShowResponse).toGenericContent()
-                        else -> return@collect
-                    }?.copy(personalRating = personalRating)
-                }
-            }
-        }
-        return contentDetails
+    fun mapEntitiesToGenericContent(
+        entities: List<ContentEntity>,
+        ratingsMap: Map<Int, Float> = emptyMap()
+    ): List<GenericContent> = entities.map { entity ->
+        GenericContent(
+            id = entity.contentId,
+            name = entity.title,
+            rating = entity.voteAverage.toDouble(),
+            overview = "",
+            posterPath = entity.posterPath.orEmpty(),
+            backdropPath = "",
+            mediaType = MediaType.getType(entity.mediaType),
+            personalRating = ratingsMap[entity.contentId]
+        )
     }
 
     suspend fun removeContentFromDatabase(contentId: Int, mediaType: MediaType, listId: Int) {
@@ -93,6 +50,7 @@ class WatchlistInteractor(
             listId = listId
         )
     }
+
     suspend fun moveItemToList(contentId: Int, mediaType: MediaType, currentListId: Int, newListId: Int) {
         lastRemovedItem = databaseRepository.moveItemToList(
             contentId = contentId,
@@ -122,9 +80,7 @@ class WatchlistInteractor(
         }
     }
 
-    suspend fun getAllLists(): List<WatchlistTabItem> {
-        val allListsEntity = databaseRepository.getAllLists()
-
+    fun getAllLists(): Flow<List<WatchlistTabItem>> = databaseRepository.getAllLists().map { allListsEntity ->
         val allWatchlistTabs = mutableListOf<WatchlistTabItem>()
 
         allListsEntity.forEach { listEntity ->
@@ -147,7 +103,7 @@ class WatchlistInteractor(
         allWatchlistTabs.forEachIndexed { index, tabItem ->
             tabItem.tabIndex = index
         }
-        return allWatchlistTabs
+        allWatchlistTabs
     }
 
     suspend fun deleteList(listId: Int) {

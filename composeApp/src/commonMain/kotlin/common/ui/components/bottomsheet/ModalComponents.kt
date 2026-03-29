@@ -3,22 +3,28 @@ package common.ui.components.bottomsheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import common.ui.MainViewModel
-import features.browse.BrowseScreen
 import features.browse.ui.components.BrowseSortBottomSheet
-import features.watchlist.WatchlistScreen
 import features.watchlist.ui.components.WatchlistSortBottomSheet
+import navigation.BrowseRoute
+import navigation.WatchlistRoute
 
 @Composable
-fun ModalComponents(mainViewModel: MainViewModel, showSortBottomSheet: Boolean, displaySortScreen: (Boolean) -> Unit) {
+fun ModalComponents(
+    mainViewModel: MainViewModel,
+    currentDestination: NavDestination?,
+    showSortBottomSheet: Boolean,
+    displaySortScreen: (Boolean) -> Unit
+) {
     val selectedMovieSortType by mainViewModel.movieSortType.collectAsState()
     val selectedShowSortType by mainViewModel.showSortType.collectAsState()
     val selectedMediaType by mainViewModel.currentMediaTypeSelected.collectAsState()
-    val currentScreen by mainViewModel.currentScreen.collectAsState()
 
     if (showSortBottomSheet) {
-        when (currentScreen) {
-            BrowseScreen.route() -> {
+        when {
+            currentDestination?.hasRoute<BrowseRoute>() == true -> {
                 BrowseSortBottomSheet(
                     mainViewModel = mainViewModel,
                     selectedMovieSortType = selectedMovieSortType,
@@ -27,7 +33,7 @@ fun ModalComponents(mainViewModel: MainViewModel, showSortBottomSheet: Boolean, 
                     displaySortScreen = displaySortScreen
                 )
             }
-            WatchlistScreen.route() -> {
+            currentDestination?.hasRoute<WatchlistRoute>() == true -> {
                 WatchlistSortBottomSheet(
                     mainViewModel = mainViewModel,
                     displaySortScreen = displaySortScreen

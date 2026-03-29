@@ -8,7 +8,6 @@ import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
-import features.home.HomeScreen
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,9 +39,6 @@ class MainViewModel(
     private val _currentMediaTypeSelected = MutableStateFlow(MediaType.MOVIE)
     val currentMediaTypeSelected: StateFlow<MediaType> get() = _currentMediaTypeSelected
 
-    private val _currentScreen = MutableStateFlow(HomeScreen.route())
-    val currentScreen: StateFlow<String> get() = _currentScreen
-
     private val _watchlistSort = MutableStateFlow(WatchlistSort())
     val watchlistSort: StateFlow<WatchlistSort> get() = _watchlistSort
 
@@ -56,9 +52,6 @@ class MainViewModel(
     private val _isDuplicatedListName = MutableStateFlow(false)
     val isDuplicatedListName: StateFlow<Boolean> get() = _isDuplicatedListName
 
-    private val _refreshLists = MutableStateFlow(false)
-    val refreshLists: StateFlow<Boolean> get() = _refreshLists
-
     fun updateSortType(sortTypeItem: SortTypeItem) {
         when (_currentMediaTypeSelected.value) {
             MediaType.MOVIE -> _movieSortType.value = sortTypeItem
@@ -69,10 +62,6 @@ class MainViewModel(
 
     fun updateMediaType(mediaType: MediaType) {
         _currentMediaTypeSelected.value = mediaType
-    }
-
-    fun updateCurrentScreen(screen: String) {
-        _currentScreen.value = screen
     }
 
     fun updateWatchlistSort(mediaType: MediaType?) {
@@ -106,9 +95,5 @@ class MainViewModel(
         } else {
             _isDuplicatedListName.value = true
         }
-    }
-
-    fun setRefreshLists(shouldRefresh: Boolean) {
-        _refreshLists.value = shouldRefresh
     }
 }

@@ -11,54 +11,46 @@ import common.ui.WatchlistSort
 import features.watchlist.domain.WatchlistInteractor
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.WatchlistTabItem
-import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.model.WatchlistItemAction
 import features.watchlist.ui.state.WatchlistSnackbarState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) : ViewModel() {
 
-    private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(
-        DataLoadStatus.Empty
-    )
+    private val _loadState: MutableStateFlow<DataLoadStatus> = MutableStateFlow(DataLoadStatus.Empty)
     val loadState: StateFlow<DataLoadStatus> get() = _loadState
 
     private val _allLists = MutableStateFlow(listOf<WatchlistTabItem>())
     val allLists: StateFlow<List<WatchlistTabItem>> get() = _allLists
 
-    private val _listContent = MutableStateFlow<Map<Int, List<GenericContent>>>(emptyMap())
-    val listContent: StateFlow<Map<Int, List<GenericContent>>> get() = _listContent
+    private val _listContent = MutableStateFlow<List<GenericContent>>(emptyList())
+    val listContent: StateFlow<List<GenericContent>> get() = _listContent
 
-    val selectedList = mutableStateOf(DefaultLists.WATCHLIST.listId)
+    val selectedList = mutableStateOf(1)
 
     private val sortType: MutableState<WatchlistSort> = mutableStateOf(WatchlistSort())
 
-    private val _snackbarState: MutableState<WatchlistSnackbarState> = mutableStateOf(
-        WatchlistSnackbarState()
-    )
+    private val _snackbarState: MutableState<WatchlistSnackbarState> = mutableStateOf(WatchlistSnackbarState())
     val snackbarState: MutableState<WatchlistSnackbarState> get() = _snackbarState
     private var lastItemAction: WatchlistItemAction? = null
 
-    // Tabs
     private var _selectedTabIndex = MutableStateFlow(0)
     val selectedTabIndex: StateFlow<Int> get() = _selectedTabIndex
 
+    private var listContentJob: Job? = null
+
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            loadAllLists(
-                focusFirst = true
-            )
-        }
+        collectAllLists()
     }
 
     fun onEvent(event: WatchlistEvent) {
         when (event) {
-            is WatchlistEvent.LoadWatchlistData -> loadWatchlistData(showLoadingState = true)
             is WatchlistEvent.RemoveItem -> removeListItem(event.contentId, event.mediaType)
             is WatchlistEvent.SelectList -> updateSelectedTab(event.tabItem)
             is WatchlistEvent.UpdateSortType -> sortType.value = event.watchlistSort
@@ -67,41 +59,33 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
             }
             is WatchlistEvent.OnSnackbarDismiss -> snackbarDismiss()
             is WatchlistEvent.UndoItemAction -> undoItemRemoved()
-            is WatchlistEvent.LoadAllLists -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    loadAllLists(
-                        focusLast = true
-                    )
+            is WatchlistEvent.DeleteList -> onDeleteList(event.listId)
+        }
+    }
+
+    private fun collectAllLists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            watchlistInteractor.getAllLists().collectLatest { lists ->
+                _allLists.value = lists
+                if (lists.isNotEmpty() && _loadState.value == DataLoadStatus.Empty) {
+                    val firstTab = lists.firstOrNull()
+                    if (firstTab != null) {
+                        updateSelectedTab(firstTab)
+                    }
                 }
-            }
-            is WatchlistEvent.DeleteList -> {
-                onDeleteList(event.listId)
             }
         }
     }
 
-    private fun loadWatchlistData(showLoadingState: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val allListsData = mutableMapOf<Int, List<GenericContent>>()
-
-            allLists.value.forEach { listItem ->
-                val databaseItems = watchlistInteractor.getAllItems(listItem.listId)
-
-                if (showLoadingState && databaseItems.isNotEmpty()) {
-                    _loadState.value = DataLoadStatus.Loading
+    private fun collectListContent(listId: Int) {
+        listContentJob?.cancel()
+        listContentJob = viewModelScope.launch(Dispatchers.IO) {
+            watchlistInteractor.getListContentWithRatings(listId).collectLatest { content ->
+                _listContent.value = content
+                if (_loadState.value != DataLoadStatus.Success) {
+                    _loadState.value = DataLoadStatus.Success
                 }
-
-                val listState = watchlistInteractor.fetchListDetails(databaseItems)
-                if (listState.isFailed()) {
-                    _loadState.value = DataLoadStatus.Failed
-                    return@launch
-                }
-
-                allListsData[listItem.listId] = listState.listItems.value
             }
-
-            _listContent.value = allListsData
-            _loadState.value = DataLoadStatus.Success
         }
     }
 
@@ -112,12 +96,7 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
                 mediaType = mediaType,
                 listId = selectedList.value
             )
-            removeContentFromUiList(contentId, mediaType)
-
-            triggerSnackbar(
-                listId = selectedList.value,
-                itemAction = WatchlistItemAction.ITEM_REMOVED
-            )
+            triggerSnackbar(listId = selectedList.value, itemAction = WatchlistItemAction.ITEM_REMOVED)
         }
     }
 
@@ -129,12 +108,7 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
                 currentListId = selectedList.value,
                 newListId = listId
             )
-            loadWatchlistData(showLoadingState = false)
-
-            triggerSnackbar(
-                listId = listId,
-                itemAction = WatchlistItemAction.ITEM_MOVED
-            )
+            triggerSnackbar(listId = listId, itemAction = WatchlistItemAction.ITEM_MOVED)
         }
     }
 
@@ -142,20 +116,8 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
         _snackbarState.value = WatchlistSnackbarState(
             listId = listId,
             itemAction = itemAction
-        ).apply {
-            setSnackbarVisible()
-        }
+        ).apply { setSnackbarVisible() }
         lastItemAction = itemAction
-    }
-
-    private fun removeContentFromUiList(contentId: Int, mediaType: MediaType) {
-        val listId = selectedList.value
-
-        _listContent.value = _listContent.value.toMutableMap().apply {
-            this[listId] = this[listId]?.filterNot {
-                it.id == contentId && it.mediaType == mediaType
-            } ?: emptyList()
-        }
     }
 
     private fun undoItemRemoved() {
@@ -166,7 +128,6 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
                 } else {
                     watchlistInteractor.undoMovedItem()
                 }
-                loadWatchlistData(showLoadingState = false)
             }
         }
     }
@@ -175,37 +136,17 @@ class WatchlistViewModel(private val watchlistInteractor: WatchlistInteractor) :
         _snackbarState.value = WatchlistSnackbarState()
     }
 
-    private suspend fun loadAllLists(focusLast: Boolean = false, focusFirst: Boolean = false) {
-        _allLists.value = watchlistInteractor.getAllLists()
-        withContext(Dispatchers.Main) {
-            if (focusFirst) {
-                updateSelectedTab(_allLists.value.firstOrNull())
-            } else if (focusLast) {
-                val isLastItemAddNew = _allLists.value.lastOrNull()?.listId ==
-                    WatchlistTabItem.AddNewTab.listId
-                val lastValidItem = if (isLastItemAddNew) {
-                    _allLists.value[_allLists.value.lastIndex - 1]
-                } else {
-                    _allLists.value.lastOrNull()
-                }
-                updateSelectedTab(lastValidItem)
-            }
-        }
-    }
-
     private fun updateSelectedTab(tabItem: WatchlistTabItem?) {
         if (tabItem != null) {
             selectedList.value = tabItem.listId
             _selectedTabIndex.value = tabItem.tabIndex
+            collectListContent(tabItem.listId)
         }
     }
 
     private fun onDeleteList(listId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             watchlistInteractor.deleteList(listId)
-            loadAllLists(
-                focusFirst = true
-            )
         }
     }
 }

@@ -4,12 +4,15 @@ import common.domain.models.util.MediaType
 import database.dao.PersonalRatingDao
 import database.model.PersonalRatingEntity
 import io.mockk.MockKAnnotations
-import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -54,23 +57,50 @@ class PersonalRatingRepositoryImplTest {
 
     @Test
     fun `getRating returns rating float from entity`() = runTest {
-        coEvery { personalRatingDao.getRating(1) } returns PersonalRatingEntity(
-            contentId = 1,
-            mediaType = "MOVIE",
-            rating = 7.5f
+        every { personalRatingDao.getRating(1) } returns flowOf(
+            PersonalRatingEntity(
+                contentId = 1,
+                mediaType = "MOVIE",
+                rating = 7.5f
+            )
         )
 
-        val result = repository.getRating(1)
+        val result = repository.getRating(1).first()
 
         assertEquals(7.5f, result)
     }
 
     @Test
     fun `getRating returns null when entity not found`() = runTest {
-        coEvery { personalRatingDao.getRating(any()) } returns null
+        every { personalRatingDao.getRating(any()) } returns flowOf(null)
 
-        val result = repository.getRating(99)
+        val result = repository.getRating(99).first()
 
         assertNull(result)
+    }
+
+    @Test
+    fun `getAllRatings returns map of contentId to rating`() = runTest {
+        every { personalRatingDao.getAllRatings() } returns flowOf(
+            listOf(
+                PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 7.5f),
+                PersonalRatingEntity(contentId = 2, mediaType = "SHOW", rating = 9.0f)
+            )
+        )
+
+        val result = repository.getAllRatings().first()
+
+        assertEquals(2, result.size)
+        assertEquals(7.5f, result[1])
+        assertEquals(9.0f, result[2])
+    }
+
+    @Test
+    fun `getAllRatings returns empty map when no ratings exist`() = runTest {
+        every { personalRatingDao.getAllRatings() } returns flowOf(emptyList())
+
+        val result = repository.getAllRatings().first()
+
+        assertTrue(result.isEmpty())
     }
 }

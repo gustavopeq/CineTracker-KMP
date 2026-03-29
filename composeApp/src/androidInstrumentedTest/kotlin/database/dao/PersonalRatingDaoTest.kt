@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import database.AppDatabase
 import database.model.PersonalRatingEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -40,7 +41,7 @@ class PersonalRatingDaoTest {
     fun getRating_returnsEntityWhenFound() = runBlocking {
         dao.insertRating(PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 8.5f))
 
-        val result = dao.getRating(1)
+        val result = dao.getRating(1).first()
 
         assertNotNull(result)
         assertEquals(8.5f, result!!.rating)
@@ -49,7 +50,7 @@ class PersonalRatingDaoTest {
 
     @Test
     fun getRating_returnsNullWhenNotFound() = runBlocking {
-        val result = dao.getRating(99)
+        val result = dao.getRating(99).first()
 
         assertNull(result)
     }
@@ -61,11 +62,11 @@ class PersonalRatingDaoTest {
         dao.insertRating(PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 6.0f))
         dao.insertRating(PersonalRatingEntity(contentId = 1, mediaType = "MOVIE", rating = 9.0f))
 
-        val result = dao.getRating(1)
+        val result = dao.getRating(1).first()
 
         assertNotNull(result)
         assertEquals(9.0f, result!!.rating)
-        assertEquals(1, dao.getAllRatings().size) // only one row, not two
+        assertEquals(1, dao.getAllRatings().first().size) // only one row, not two
     }
 
     // ── deleteRating ──────────────────────────────────────────────────────────
@@ -76,14 +77,14 @@ class PersonalRatingDaoTest {
 
         dao.deleteRating(1)
 
-        assertNull(dao.getRating(1))
+        assertNull(dao.getRating(1).first())
     }
 
     @Test
     fun deleteRating_doesNothingWhenRatingDoesNotExist() = runBlocking {
         dao.deleteRating(99)
 
-        assertEquals(0, dao.getAllRatings().size)
+        assertEquals(0, dao.getAllRatings().first().size)
     }
 
     @Test
@@ -93,8 +94,8 @@ class PersonalRatingDaoTest {
 
         dao.deleteRating(1)
 
-        assertNull(dao.getRating(1))
-        assertNotNull(dao.getRating(2))
+        assertNull(dao.getRating(1).first())
+        assertNotNull(dao.getRating(2).first())
     }
 
     // ── getAllRatings ─────────────────────────────────────────────────────────
@@ -105,14 +106,14 @@ class PersonalRatingDaoTest {
         dao.insertRating(PersonalRatingEntity(contentId = 2, mediaType = "SHOW", rating = 5.0f))
         dao.insertRating(PersonalRatingEntity(contentId = 3, mediaType = "MOVIE", rating = 9.0f))
 
-        val result = dao.getAllRatings()
+        val result = dao.getAllRatings().first()
 
         assertEquals(3, result.size)
     }
 
     @Test
     fun getAllRatings_returnsEmptyWhenNoRatingsExist() = runBlocking {
-        val result = dao.getAllRatings()
+        val result = dao.getAllRatings().first()
 
         assertEquals(0, result.size)
     }

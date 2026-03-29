@@ -1,5 +1,6 @@
 package core.di.modules
 
+import database.backfill.CachedFieldsBackfill
 import features.browse.domain.BrowseInteractor
 import features.details.domain.DetailsInteractor
 import features.home.domain.HomeInteractor
@@ -10,9 +11,10 @@ import org.koin.dsl.module
 
 val interactorModule = module {
     single<BrowseInteractor> { BrowseInteractor(get(), get()) }
-    single<DetailsInteractor> { DetailsInteractor(get(), get(), get(), get(), get()) }
-    single<WatchlistInteractor> { WatchlistInteractor(get(), get(), get(), get()) }
+    single<DetailsInteractor> { DetailsInteractor(get(), get(), get(), get(), get(), get()) }
+    single<WatchlistInteractor> { WatchlistInteractor(get(), get()) }
     single<SearchInteractor> { SearchInteractor(get()) }
-    single { HomeInteractor(get(), get(), get(), get()) }
+    single { HomeInteractor(get(), get()) }
     single { ListInteractor(get()) }
+    single { CachedFieldsBackfill(get(), get(), get()) }
 }

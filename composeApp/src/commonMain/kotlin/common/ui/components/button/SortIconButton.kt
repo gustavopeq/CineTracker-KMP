@@ -13,17 +13,16 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_sort
 import common.ui.MainViewModel
 import common.util.UiConstants.BROWSE_SORT_ICON_SIZE
-import features.watchlist.WatchlistScreen
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SortIconButton(mainViewModel: MainViewModel, currentScreen: String, displaySortScreen: (Boolean) -> Unit) {
+fun SortIconButton(mainViewModel: MainViewModel, isWatchlistScreen: Boolean, displaySortScreen: (Boolean) -> Unit) {
     val watchlistSortSelected by mainViewModel.watchlistSort.collectAsState()
 
     val isWatchlistSortActive = watchlistSortSelected.mediaType != null ||
         watchlistSortSelected.ratingSort != null
 
-    val iconColor = if (currentScreen == WatchlistScreen.route() && isWatchlistSortActive) {
+    val iconColor = if (isWatchlistScreen && isWatchlistSortActive) {
         MaterialTheme.colorScheme.secondary
     } else {
         MaterialTheme.colorScheme.onPrimary

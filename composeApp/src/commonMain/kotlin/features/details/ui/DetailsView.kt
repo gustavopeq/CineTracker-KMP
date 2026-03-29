@@ -29,8 +29,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavBackStackEntry
-import androidx.savedstate.read
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_added_in_list
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
@@ -51,9 +49,6 @@ import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
-import features.details.DetailsScreen
-import features.details.DetailsScreen.ARG_CONTENT_ID
-import features.details.DetailsScreen.ARG_MEDIA_TYPE
 import features.details.events.DetailsEvents
 import features.details.ui.components.CastCarousel
 import features.details.ui.components.DetailBodyPlaceholder
@@ -74,17 +69,15 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun Details(
-    navBackStackEntry: NavBackStackEntry,
+    contentId: Int,
+    mediaType: String,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
-    val contentId = navBackStackEntry.arguments?.read { getInt(ARG_CONTENT_ID) } ?: -1
-    val mediaType = MediaType.getType(navBackStackEntry.arguments?.read { getStringOrNull(ARG_MEDIA_TYPE) })
-
     Box(modifier = Modifier.fillMaxSize()) {
         Details(
-            viewModel = koinViewModel { parametersOf(contentId, mediaType) },
+            viewModel = koinViewModel { parametersOf(contentId, MediaType.getType(mediaType)) },
             mainViewModel = koinViewModel(),
             onBackPress = onBackPress,
             goToDetails = goToDetails,
@@ -151,8 +144,6 @@ private fun Details(
     }
 
     LaunchedEffect(Unit) {
-        mainViewModel.updateCurrentScreen(DetailsScreen.route())
-
         if (detailsFailedLoading) {
             viewModel.onEvent(
                 DetailsEvents.FetchDetails

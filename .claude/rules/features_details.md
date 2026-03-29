@@ -7,7 +7,7 @@
 
 ### Structure
 - `HomeScreen.kt` — Route definition
-- `HomeEvent.kt` — `LoadHome`, `ReloadWatchlist`, `OnError`
+- `HomeEvent.kt` — `LoadHome`, `OnError`
 - `HomeInteractor.kt` — Network + DB fetching
 - `HomeViewModel.kt` — Orchestrates loading
 - `HomeView.kt` — Main composable
@@ -82,7 +82,7 @@
 
 ### Structure
 - `WatchlistScreen.kt` — Route definition
-- `WatchlistEvent.kt` — 9 events (see below)
+- `WatchlistEvent.kt` — 7 events (see below)
 - `WatchlistInteractor.kt` — DB CRUD + content detail fetching
 - `WatchlistViewModel.kt` — Complex state with list map and undo logic
 - `WatchlistView.kt` — Tab row, lazy list, snackbar
@@ -105,13 +105,11 @@
 ### Events
 | Event | Action |
 |---|---|
-| `LoadWatchlistData` | Load all list contents from DB |
 | `RemoveItem(contentId, mediaType)` | Remove from current list, trigger snackbar |
 | `SelectList(tabItem)` | Switch active tab |
 | `UpdateSortType(watchlistSort)` | Apply new sort/filter |
 | `UpdateItemListId(contentId, mediaType, listId)` | Move item to another list |
 | `UndoItemAction` | Undo last remove or move |
-| `LoadAllLists` | Reload tab list (used after create/delete) |
 | `DeleteList(listId)` | Delete custom list |
 | `OnSnackbarDismiss` | Hide snackbar |
 

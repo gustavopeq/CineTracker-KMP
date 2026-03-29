@@ -5,6 +5,13 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import database.AppDatabase
+import database.migration.MIGRATION_1_2
+import database.migration.MIGRATION_2_3
+import database.migration.MIGRATION_3_4
+import database.migration.MIGRATION_4_5
+import database.migration.MIGRATION_5_6
+import database.migration.MIGRATION_6_7
+import database.migration.MIGRATION_7_8
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +33,15 @@ private fun createRoomDatabase(): AppDatabase {
         name = dbFilePath
     )
         .addCallback(roomCallback)
+        .addMigrations(
+            MIGRATION_1_2,
+            MIGRATION_2_3,
+            MIGRATION_3_4,
+            MIGRATION_4_5,
+            MIGRATION_5_6,
+            MIGRATION_6_7,
+            MIGRATION_7_8
+        )
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

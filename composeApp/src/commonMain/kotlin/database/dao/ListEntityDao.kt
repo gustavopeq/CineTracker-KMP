@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import database.model.ListEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ListEntityDao {
@@ -16,7 +17,7 @@ interface ListEntityDao {
     suspend fun deleteList(listId: Int)
 
     @Query("SELECT * FROM list_entity")
-    suspend fun getAllLists(): List<ListEntity>
+    fun getAllLists(): Flow<List<ListEntity>>
 
     @Query("SELECT COUNT(*) FROM list_entity WHERE listName = :listName COLLATE NOCASE")
     suspend fun getListCountByName(listName: String): Int

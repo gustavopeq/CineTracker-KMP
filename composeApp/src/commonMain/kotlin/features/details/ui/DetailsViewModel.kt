@@ -12,7 +12,6 @@ import common.domain.models.list.ListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import common.util.UiConstants.DELAY_UPDATE_POPUP_TEXT_MS
 import database.repository.SettingsRepository
 import features.details.domain.DetailsInteractor
 import features.details.events.DetailsEvents
@@ -20,9 +19,9 @@ import features.details.state.DetailsSnackbarState
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(
@@ -85,16 +84,33 @@ class DetailsViewModel(
     private var allLists: List<ListItem> = emptyList()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            allLists = detailsInteractor.getAllLists()
-        }
-        fetchPersonalRating()
+        collectAllLists()
+        collectPersonalRating()
+        collectContentInListStatus()
         initFetchDetails()
     }
 
-    private fun fetchPersonalRating() {
-        viewModelScope.launch {
-            _personalRating.value = detailsInteractor.getPersonalRating(contentId)
+    private fun collectAllLists() {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailsInteractor.getAllLists().collectLatest { lists ->
+                allLists = lists
+            }
+        }
+    }
+
+    private fun collectPersonalRating() {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailsInteractor.getPersonalRating(contentId).collectLatest { rating ->
+                _personalRating.value = rating
+            }
+        }
+    }
+
+    private fun collectContentInListStatus() {
+        viewModelScope.launch(Dispatchers.IO) {
+            detailsInteractor.verifyContentInLists(contentId, mediaType).collectLatest { status ->
+                _contentInListStatus.value = status
+            }
         }
     }
 
@@ -117,14 +133,12 @@ class DetailsViewModel(
     fun setPersonalRating(rating: Float) {
         viewModelScope.launch(Dispatchers.IO) {
             detailsInteractor.setPersonalRating(contentId, mediaType, rating)
-            _personalRating.value = rating
         }
     }
 
     fun removePersonalRating() {
         viewModelScope.launch(Dispatchers.IO) {
             detailsInteractor.removePersonalRating(contentId, mediaType)
-            _personalRating.value = null
         }
     }
 
@@ -146,9 +160,20 @@ class DetailsViewModel(
             _loadState.value = DataLoadStatus.Failed
         } else {
             _contentDetails.value = detailsState.detailsInfo.value
-            verifyContentInLists()
+            updateCachedFieldsInDb()
             fetchCastDetails()
         }
+    }
+
+    private suspend fun updateCachedFieldsInDb() {
+        val details = _contentDetails.value ?: return
+        detailsInteractor.updateCachedFields(
+            contentId = contentId,
+            mediaType = mediaType,
+            title = details.name,
+            posterPath = details.posterPath,
+            voteAverage = details.rating.toFloat()
+        )
     }
 
     private suspend fun fetchCastDetails() {
@@ -182,43 +207,24 @@ class DetailsViewModel(
         }
     }
 
-    /**
-     * Verify if content is present in any of the database list.
-     */
-    private fun verifyContentInLists() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _contentInListStatus.value = detailsInteractor.verifyContentInLists(
-                contentId = contentId,
-                mediaType = mediaType
-            )
-        }
-    }
-
-    /**
-     * Function to Add or Remove content from database list. If the item is currently in the list,
-     * it'll be removed. If it's not, it'll be added.
-     */
     private fun toggleContentFromList(listId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val currentStatus = _contentInListStatus.value[listId] ?: false
-            val updatedWatchlistStatus = _contentInListStatus.value.toMutableMap()
+            val details = _contentDetails.value
 
             detailsInteractor.toggleWatchlist(
                 currentStatus = currentStatus,
                 contentId = contentId,
                 mediaType = mediaType,
-                listId = listId
+                listId = listId,
+                title = details?.name.orEmpty(),
+                posterPath = details?.posterPath,
+                voteAverage = details?.rating?.toFloat() ?: 0f
             )
             _snackbarState.value = DetailsSnackbarState(
                 listId = listId,
                 addedItem = !currentStatus
-            ).apply {
-                setSnackbarVisible()
-            }
-            delay(DELAY_UPDATE_POPUP_TEXT_MS)
-            updatedWatchlistStatus[listId] = !currentStatus
-
-            _contentInListStatus.value = updatedWatchlistStatus
+            ).apply { setSnackbarVisible() }
         }
     }
 

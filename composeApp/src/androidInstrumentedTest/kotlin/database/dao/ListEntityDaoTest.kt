@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import database.AppDatabase
 import database.model.ContentEntity
 import database.model.ListEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -43,14 +44,14 @@ class ListEntityDaoTest {
         dao.insertList(ListEntity(listId = 2, listName = "watched"))
         dao.insertList(ListEntity(listId = 3, listName = "favorites"))
 
-        val result = dao.getAllLists()
+        val result = dao.getAllLists().first()
 
         assertEquals(3, result.size)
     }
 
     @Test
     fun getAllLists_returnsEmptyWhenNoListsExist() = runBlocking {
-        val result = dao.getAllLists()
+        val result = dao.getAllLists().first()
 
         assertEquals(0, result.size)
     }
@@ -100,7 +101,7 @@ class ListEntityDaoTest {
 
         dao.deleteList(1)
 
-        assertEquals(0, dao.getAllLists().size)
+        assertEquals(0, dao.getAllLists().first().size)
     }
 
     @Test
@@ -112,7 +113,7 @@ class ListEntityDaoTest {
 
         dao.deleteList(1)
 
-        assertEquals(0, contentDao.getAllItems(1).size)
+        assertEquals(0, contentDao.getAllItems(1).first().size)
     }
 
     // ── isDefault ─────────────────────────────────────────────────────────────
@@ -121,7 +122,7 @@ class ListEntityDaoTest {
     fun insertList_storesIsDefaultTrue() = runBlocking {
         dao.insertList(ListEntity(listId = 1, listName = "watchlist", isDefault = true))
 
-        val result = dao.getAllLists()
+        val result = dao.getAllLists().first()
 
         assertTrue(result[0].isDefault)
     }
@@ -130,7 +131,7 @@ class ListEntityDaoTest {
     fun insertList_isDefaultFalseByDefault() = runBlocking {
         dao.insertList(ListEntity(listId = 1, listName = "favorites"))
 
-        val result = dao.getAllLists()
+        val result = dao.getAllLists().first()
 
         assertFalse(result[0].isDefault)
     }
@@ -145,6 +146,6 @@ class ListEntityDaoTest {
 
         dao.deleteList(1)
 
-        assertEquals(1, contentDao.getAllItems(2).size)
+        assertEquals(1, contentDao.getAllItems(2).first().size)
     }
 }

@@ -15,9 +15,11 @@ import common.domain.models.person.PersonImage
 import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
 import core.LanguageManager.getUserCountryCode
+import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.state.DetailsState
 import features.watchlist.domain.ListInteractor
+import kotlinx.coroutines.flow.Flow
 import network.models.content.common.BaseContentResponse
 import network.models.content.common.MovieResponse
 import network.models.content.common.PersonResponse
@@ -34,7 +36,8 @@ class DetailsInteractor(
     private val showRepository: ShowRepository,
     private val personRepository: PersonRepository,
     private val listInteractor: ListInteractor,
-    private val personalRatingRepository: PersonalRatingRepository
+    private val personalRatingRepository: PersonalRatingRepository,
+    private val databaseRepository: DatabaseRepository
 ) {
     companion object {
         private const val TAG = "DetailsInteractor"
@@ -85,7 +88,7 @@ class DetailsInteractor(
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieCreditsById(contentId)
             MediaType.SHOW -> showRepository.getShowCreditsById(contentId)
-            else -> return return detailsState
+            else -> return detailsState
         }
 
         result.collect { response ->
@@ -254,15 +257,22 @@ class DetailsInteractor(
         return imageList
     }
 
-    suspend fun verifyContentInLists(contentId: Int, mediaType: MediaType): Map<Int, Boolean> =
+    fun verifyContentInLists(contentId: Int, mediaType: MediaType): Flow<Map<Int, Boolean>> =
         listInteractor.verifyContentInLists(contentId, mediaType)
 
-    suspend fun toggleWatchlist(currentStatus: Boolean, contentId: Int, mediaType: MediaType, listId: Int) =
-        listInteractor.toggleWatchlist(currentStatus, contentId, mediaType, listId)
+    suspend fun toggleWatchlist(
+        currentStatus: Boolean,
+        contentId: Int,
+        mediaType: MediaType,
+        listId: Int,
+        title: String = "",
+        posterPath: String? = null,
+        voteAverage: Float = 0f
+    ) = listInteractor.toggleWatchlist(currentStatus, contentId, mediaType, listId, title, posterPath, voteAverage)
 
-    suspend fun getAllLists(): List<ListItem> = listInteractor.getAllLists()
+    fun getAllLists(): Flow<List<ListItem>> = listInteractor.getAllLists()
 
-    suspend fun getPersonalRating(contentId: Int): Float? = personalRatingRepository.getRating(contentId)
+    fun getPersonalRating(contentId: Int): Flow<Float?> = personalRatingRepository.getRating(contentId)
 
     suspend fun setPersonalRating(contentId: Int, mediaType: MediaType, rating: Float) {
         personalRatingRepository.setRating(contentId, mediaType, rating)
@@ -270,5 +280,15 @@ class DetailsInteractor(
 
     suspend fun removePersonalRating(contentId: Int, mediaType: MediaType) {
         personalRatingRepository.setRating(contentId, mediaType, null)
+    }
+
+    suspend fun updateCachedFields(
+        contentId: Int,
+        mediaType: MediaType,
+        title: String,
+        posterPath: String?,
+        voteAverage: Float
+    ) {
+        databaseRepository.updateCachedFields(contentId, mediaType, title, posterPath, voteAverage)
     }
 }
