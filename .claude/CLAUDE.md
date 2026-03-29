@@ -180,7 +180,6 @@ CineTracker-KMP/
 │   │       │   │   │       ├── GenericTabComponents.kt
 │   │       │   │   │       └── TabItem.kt
 │   │       │   │   ├── screen/
-│   │       │   │   │   ├── ErrorScreen.kt
 │   │       │   │   │   └── GenericErrorScreen.kt
 │   │       │   │   └── theme/
 │   │       │   │       ├── Color.kt
@@ -223,7 +222,6 @@ CineTracker-KMP/
 │   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
 │   │       │   ├── browse/
-│   │       │   │   ├── BrowseScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── BrowseInteractor.kt
 │   │       │   │   ├── events/
@@ -238,7 +236,6 @@ CineTracker-KMP/
 │   │       │   │       └── paging/
 │   │       │   │           └── MediaContentPagingSource.kt
 │   │       │   ├── details/
-│   │       │   │   ├── DetailsScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── DetailsInteractor.kt
 │   │       │   │   ├── events/
@@ -267,7 +264,6 @@ CineTracker-KMP/
 │   │       │   │       └── util/
 │   │       │   │           └── Extensions.kt
 │   │       │   ├── home/
-│   │       │   │   ├── HomeScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── HomeInteractor.kt
 │   │       │   │   ├── events/
@@ -297,7 +293,6 @@ CineTracker-KMP/
 │   │       │   │           ├── OnboardingBrowseScreen.kt
 │   │       │   │           └── OnboardingWatchlistScreen.kt
 │   │       │   ├── search/
-│   │       │   │   ├── SearchScreen.kt
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── SearchInteractor.kt
 │   │       │   │   ├── events/
@@ -313,7 +308,6 @@ CineTracker-KMP/
 │   │       │   │       └── paging/
 │   │       │   │           └── SearchPagingSource.kt
 │   │       │   └── watchlist/
-│   │       │       ├── WatchlistScreen.kt
 │   │       │       ├── domain/
 │   │       │       │   ├── ListInteractor.kt
 │   │       │       │   └── WatchlistInteractor.kt
@@ -340,19 +334,11 @@ CineTracker-KMP/
 │   │       │               └── WatchlistState.kt
 │   │       ├── navigation/
 │   │       │   ├── MainNavGraph.kt
-│   │       │   ├── Screen.kt
-│   │       │   ├── ScreenUI.kt
-│   │       │   ├── components/
-│   │       │   │   ├── MainNavBar.kt
-│   │       │   │   ├── MainNavBarItem.kt
-│   │       │   │   └── TopNavBar.kt
-│   │       │   └── screens/
-│   │       │       ├── BrowseScreenUI.kt
-│   │       │       ├── DetailsScreenUI.kt
-│   │       │       ├── ErrorScreenUI.kt
-│   │       │       ├── HomeScreenUI.kt
-│   │       │       ├── SearchScreenUI.kt
-│   │       │       └── WatchlistScreenUI.kt
+│   │       │   ├── Routes.kt
+│   │       │   └── components/
+│   │       │       ├── MainNavBar.kt
+│   │       │       ├── MainNavBarItem.kt
+│   │       │       └── TopNavBar.kt
 │   │       └── network/
 │   │           ├── NetworkClient.kt              # expect
 │   │           ├── di/

@@ -6,43 +6,85 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import common.ui.screen.ErrorScreen
-import features.browse.BrowseScreen
-import features.details.DetailsScreen
-import features.home.HomeScreen
-import features.search.SearchScreen
-import features.watchlist.WatchlistScreen
-import navigation.screens.BrowseScreenUI
-import navigation.screens.DetailsScreenUI
-import navigation.screens.ErrorScreenUI
-import navigation.screens.HomeScreenUI
-import navigation.screens.SearchScreenUI
-import navigation.screens.WatchlistScreenUI
-
-private val mainNavDestinations: Map<Screen, ScreenUI> = mapOf(
-    HomeScreen to HomeScreenUI(),
-    BrowseScreen to BrowseScreenUI(),
-    WatchlistScreen to WatchlistScreenUI(),
-    SearchScreen to SearchScreenUI(),
-    DetailsScreen to DetailsScreenUI(),
-    ErrorScreen to ErrorScreenUI()
-)
+import features.browse.ui.Browse
+import features.details.ui.Details
+import features.home.ui.Home
+import features.search.ui.Search
+import features.watchlist.ui.Watchlist
+import navigation.components.navigateToTopLevelDestination
 
 @Composable
-fun MainNavGraph(navController: NavHostController = rememberNavController()) {
+fun MainNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = HomeScreen.route(),
+        startDestination = HomeRoute,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
     ) {
-        mainNavDestinations.forEach { (screen, screenUI) ->
-            composable(screen.route(), screen.arguments) {
-                screenUI.UI(
-                    navController = navController
-                )
-            }
+        composable<HomeRoute> {
+            Home(
+                goToDetails = { contentId, mediaType ->
+                    navController.navigate(DetailsRoute(contentId, mediaType.name))
+                },
+                goToWatchlist = {
+                    navigateToTopLevelDestination(navController, WatchlistRoute)
+                },
+                goToBrowse = {
+                    navigateToTopLevelDestination(navController, BrowseRoute)
+                },
+                goToErrorScreen = {
+                    navController.navigate(ErrorRoute) { launchSingleTop = true }
+                }
+            )
+        }
+        composable<BrowseRoute> {
+            Browse(
+                goToDetails = { contentId, mediaType ->
+                    navController.navigate(DetailsRoute(contentId, mediaType.name))
+                },
+                goToErrorScreen = {
+                    navController.navigate(ErrorRoute) { launchSingleTop = true }
+                }
+            )
+        }
+        composable<WatchlistRoute> {
+            Watchlist(
+                goToDetails = { contentId, mediaType ->
+                    navController.navigate(DetailsRoute(contentId, mediaType.name))
+                },
+                goToErrorScreen = {
+                    navController.navigate(ErrorRoute) { launchSingleTop = true }
+                }
+            )
+        }
+        composable<SearchRoute> {
+            Search(
+                goToDetails = { contentId, mediaType ->
+                    navController.navigate(DetailsRoute(contentId, mediaType.name))
+                },
+                goToErrorScreen = {
+                    navController.navigate(ErrorRoute) { launchSingleTop = true }
+                }
+            )
+        }
+        composable<DetailsRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<DetailsRoute>()
+            Details(
+                contentId = route.contentId,
+                mediaType = route.mediaType,
+                onBackPress = { navController.popBackStack() },
+                goToDetails = { contentId, mediaType ->
+                    navController.navigate(DetailsRoute(contentId, mediaType.name))
+                },
+                goToErrorScreen = {
+                    navController.navigate(ErrorRoute) { launchSingleTop = true }
+                }
+            )
+        }
+        composable<ErrorRoute> {
+            ErrorScreen(onTryAgain = { navController.popBackStack() })
         }
     }
 }

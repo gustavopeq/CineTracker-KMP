@@ -19,30 +19,31 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import common.ui.MainViewModel
 import common.ui.components.bottomsheet.ModalComponents
-import common.ui.screen.ErrorScreen
 import common.ui.theme.CineTrackerTheme
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
-import features.details.DetailsScreen
 import features.onboarding.ui.OnboardingView
 import features.watchlist.ui.components.CreateListBottomSheet
+import navigation.DetailsRoute
+import navigation.ErrorRoute
 import navigation.MainNavGraph
+import navigation.SearchRoute
 import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
 import navigation.components.TopNavBar
@@ -86,7 +87,9 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
     val navItems = mainNavBarItems
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = currentBackStackEntry?.destination?.route
+    val currentDestination = currentBackStackEntry?.destination
+
+    val isStandaloneScreen = currentDestination.isStandalone()
 
     var showSortBottomSheet by remember { mutableStateOf(false) }
 
@@ -94,36 +97,27 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
         showSortBottomSheet = it
     }
 
-    var topBarState by rememberSaveable { mutableStateOf(true) }
-    var mainBarState by rememberSaveable { mutableStateOf(true) }
-
-    LaunchedEffect(currentScreen) {
-        topBarState = !standaloneScreens.contains(currentScreen)
-        mainBarState = !standaloneScreens.contains(currentScreen)
-    }
-
     SystemBarsContainer(
-        currentScreen = currentScreen
+        currentDestination = currentDestination
     ) {
         Scaffold(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 TopNavBar(
-                    currentScreen = currentScreen,
+                    currentDestination = currentDestination,
                     mainViewModel = mainViewModel,
                     displaySortScreen = displaySortScreen
                 )
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = mainBarState,
+                    visible = !isStandaloneScreen,
                     enter = fadeIn(spring(stiffness = Spring.StiffnessHigh)),
                     exit = fadeOut(spring(stiffness = Spring.StiffnessHigh))
                 ) {
                     MainNavBar(
                         navController = navController,
-                        mainViewModel = mainViewModel,
                         navBarItems = navItems
                     )
                 }
@@ -138,6 +132,7 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 
     ModalComponents(
         mainViewModel = mainViewModel,
+        currentDestination = currentDestination,
         showSortBottomSheet = showSortBottomSheet,
         displaySortScreen = displaySortScreen
     )
@@ -148,11 +143,11 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SystemBarsContainer(currentScreen: String? = null, appScaffold: @Composable () -> Unit) {
-    val isStandaloneScreen = standaloneScreens.contains(currentScreen)
+fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold: @Composable () -> Unit) {
+    val isStandaloneScreen = currentDestination.isStandalone()
 
-    val statusBarColor = when (currentScreen) {
-        MainNavBarItem.Search.screen.route() -> MainBarGreyColor
+    val statusBarColor = when {
+        currentDestination?.hasRoute<SearchRoute>() == true -> MainBarGreyColor
         else -> MaterialTheme.colorScheme.primary
     }
 
@@ -184,14 +179,12 @@ fun SystemBarsContainer(currentScreen: String? = null, appScaffold: @Composable 
     }
 }
 
+private fun NavDestination?.isStandalone(): Boolean =
+    this?.hasRoute<DetailsRoute>() == true || this?.hasRoute<ErrorRoute>() == true
+
 val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
     MainNavBarItem.Search
-)
-
-val standaloneScreens = listOf(
-    DetailsScreen.route(),
-    ErrorScreen.route()
 )

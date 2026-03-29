@@ -42,7 +42,6 @@ import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
 import features.details.ui.components.otherlists.OtherListsBottomSheet
-import features.home.HomeScreen
 import features.home.events.HomeEvent
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
@@ -90,7 +89,6 @@ private fun Home(
     val featuredContentInListStatus by viewModel.featuredContentInListStatus.collectAsState()
 
     LaunchedEffect(Unit) {
-        mainViewModel.updateCurrentScreen(HomeScreen.route())
         when (loadState) {
             is DataLoadStatus.Success -> viewModel.onEvent(HomeEvent.ReloadWatchlist)
             else -> viewModel.onEvent(HomeEvent.LoadHome)

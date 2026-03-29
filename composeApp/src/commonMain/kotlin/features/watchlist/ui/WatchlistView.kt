@@ -42,7 +42,6 @@ import common.util.Constants.UNSELECTED_OPTION_INDEX
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SMALL_MARGIN
 import common.util.capitalized
-import features.watchlist.WatchlistScreen
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.DeleteListDialog
 import features.watchlist.ui.components.ListRemovePopUpMenu
@@ -150,8 +149,6 @@ private fun AllListsLoadedState(
     }
 
     LaunchedEffect(Unit) {
-        mainViewModel.updateCurrentScreen(WatchlistScreen.route())
-
         viewModel.onEvent(
             WatchlistEvent.LoadWatchlistData
         )

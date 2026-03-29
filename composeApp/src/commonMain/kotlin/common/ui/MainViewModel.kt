@@ -8,7 +8,6 @@ import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
-import features.home.HomeScreen
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,9 +39,6 @@ class MainViewModel(
     private val _currentMediaTypeSelected = MutableStateFlow(MediaType.MOVIE)
     val currentMediaTypeSelected: StateFlow<MediaType> get() = _currentMediaTypeSelected
 
-    private val _currentScreen = MutableStateFlow(HomeScreen.route())
-    val currentScreen: StateFlow<String> get() = _currentScreen
-
     private val _watchlistSort = MutableStateFlow(WatchlistSort())
     val watchlistSort: StateFlow<WatchlistSort> get() = _watchlistSort
 
@@ -69,10 +65,6 @@ class MainViewModel(
 
     fun updateMediaType(mediaType: MediaType) {
         _currentMediaTypeSelected.value = mediaType
-    }
-
-    fun updateCurrentScreen(screen: String) {
-        _currentScreen.value = screen
     }
 
     fun updateWatchlistSort(mediaType: MediaType?) {

@@ -15,18 +15,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import common.ui.MainViewModel
 import common.ui.theme.MainBarGreyColor
 import common.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
+import navigation.BrowseRoute
+import navigation.HomeRoute
+import navigation.SearchRoute
+import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MainNavBar(navController: NavController, mainViewModel: MainViewModel, navBarItems: List<MainNavBarItem>) {
+fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = currentBackStackEntry?.destination?.route
+    val currentDestination = currentBackStackEntry?.destination
 
     NavigationBar(
         modifier = Modifier
@@ -35,13 +39,19 @@ fun MainNavBar(navController: NavController, mainViewModel: MainViewModel, navBa
         containerColor = MainBarGreyColor
     ) {
         navBarItems.forEach { item ->
+            val isSelected = when (item) {
+                is MainNavBarItem.Home -> currentDestination?.hasRoute<HomeRoute>() == true
+                is MainNavBarItem.Browse -> currentDestination?.hasRoute<BrowseRoute>() == true
+                is MainNavBarItem.Watchlist -> currentDestination?.hasRoute<WatchlistRoute>() == true
+                is MainNavBarItem.Search -> currentDestination?.hasRoute<SearchRoute>() == true
+            }
+
             NavigationBarItem(
-                selected = currentScreen == item.screen.route(),
+                selected = isSelected,
                 onClick = {
-                    mainViewModel.updateCurrentScreen(item.screen.route())
                     navigateToTopLevelDestination(
                         navController = navController,
-                        destination = item.screen.route()
+                        destination = item.route
                     )
                 },
                 icon = {
@@ -70,9 +80,9 @@ fun MainNavBar(navController: NavController, mainViewModel: MainViewModel, navBa
     }
 }
 
-fun navigateToTopLevelDestination(navController: NavController, destination: String) {
+fun navigateToTopLevelDestination(navController: NavController, destination: Any) {
     navController.navigate(destination) {
-        popUpTo(navController.graph.findStartDestination().displayName) {
+        popUpTo(navController.graph.findStartDestination().id) {
             saveState = true
         }
         launchSingleTop = true
