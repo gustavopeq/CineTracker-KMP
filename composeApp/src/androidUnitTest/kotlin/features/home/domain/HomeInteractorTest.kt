@@ -101,7 +101,7 @@ class HomeInteractorTest {
     }
 
     @Test
-    fun `getWatchlistFlow filters out entities with null posterPath`() = runTest {
+    fun `getWatchlistFlow includes entities with null posterPath`() = runTest {
         every { databaseRepository.getAllItemsByListId(any()) } returns flowOf(
             listOf(
                 fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
@@ -111,7 +111,8 @@ class HomeInteractorTest {
 
         val result = interactor.getWatchlistFlow().first()
 
-        assertEquals(1, result.size)
+        assertEquals(2, result.size)
+        assertEquals("", result[1].posterPath)
     }
 
     @Test

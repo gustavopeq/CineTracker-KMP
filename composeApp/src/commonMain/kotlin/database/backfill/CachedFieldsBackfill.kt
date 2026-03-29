@@ -20,7 +20,11 @@ class CachedFieldsBackfill(
         private const val TAG = "CachedFieldsBackfill"
     }
 
+    private var hasRun = false
+
     suspend fun backfillIfNeeded() {
+        if (hasRun) return
+        hasRun = true
         val staleEntities = databaseRepository.getEntitiesWithMissingCachedFields()
         if (staleEntities.isEmpty()) return
 

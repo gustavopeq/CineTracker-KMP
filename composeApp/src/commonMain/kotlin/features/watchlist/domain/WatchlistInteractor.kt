@@ -30,7 +30,7 @@ class WatchlistInteractor(
     fun mapEntitiesToGenericContent(
         entities: List<ContentEntity>,
         ratingsMap: Map<Int, Float> = emptyMap()
-    ): List<GenericContent> = entities.filter { it.posterPath != null }.map { entity ->
+    ): List<GenericContent> = entities.map { entity ->
         GenericContent(
             id = entity.contentId,
             name = entity.title,

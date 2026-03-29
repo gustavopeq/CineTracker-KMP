@@ -88,7 +88,7 @@ class DetailsInteractor(
         val result = when (mediaType) {
             MediaType.MOVIE -> movieRepository.getMovieCreditsById(contentId)
             MediaType.SHOW -> showRepository.getShowCreditsById(contentId)
-            else -> return return detailsState
+            else -> return detailsState
         }
 
         result.collect { response ->

@@ -43,7 +43,7 @@ class HomeInteractor(private val homeRepository: HomeRepository, private val dat
 
     fun getWatchlistFlow(): Flow<List<GenericContent>> =
         databaseRepository.getAllItemsByListId(DefaultLists.WATCHLIST.listId).map { entities ->
-            entities.filter { it.posterPath != null }.map { entity ->
+            entities.map { entity ->
                 GenericContent(
                     id = entity.contentId,
                     name = entity.title,

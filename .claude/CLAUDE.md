@@ -200,6 +200,8 @@ CineTracker-KMP/
 │   │       │           └── StringFormat.kt       # expect
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
+│   │       │   ├── backfill/
+│   │       │   │   └── CachedFieldsBackfill.kt
 │   │       │   ├── dao/
 │   │       │   │   ├── ContentEntityDao.kt
 │   │       │   │   ├── ListEntityDao.kt
@@ -209,6 +211,8 @@ CineTracker-KMP/
 │   │       │   │   ├── DatabaseModule.kt         # expect
 │   │       │   │   ├── DatabaseRepositoryModule.kt
 │   │       │   │   └── SettingsModule.kt         # expect
+│   │       │   ├── migration/
+│   │       │   │   └── MigrationSchemas.kt
 │   │       │   ├── model/
 │   │       │   │   ├── ContentEntity.kt
 │   │       │   │   ├── ListEntity.kt
@@ -420,8 +424,6 @@ CineTracker-KMP/
 │   │   │   │   ├── di/
 │   │   │   │   │   ├── DatabaseModule.android.kt
 │   │   │   │   │   └── SettingsModule.android.kt
-│   │   │   │   └── migration/
-│   │   │   │       └── MigrationSchemas.kt
 │   │   │   └── network/
 │   │   │       ├── di/
 │   │   │       │   └── ApiModule.android.kt
@@ -460,6 +462,8 @@ CineTracker-KMP/
 │   │   │   └── util/
 │   │   │       └── TestFixtures.kt              # Shared test helpers (flows, entities, responses)
 │   │   ├── database/
+│   │   │   ├── backfill/
+│   │   │   │   └── CachedFieldsBackfillTest.kt
 │   │   │   └── repository/
 │   │   │       ├── DatabaseRepositoryImplTest.kt
 │   │   │       ├── PersonalRatingRepositoryImplTest.kt

@@ -100,7 +100,7 @@ class WatchlistInteractorTest {
     }
 
     @Test
-    fun `mapEntitiesToGenericContent filters out entities with null posterPath`() {
+    fun `mapEntitiesToGenericContent includes entities with null posterPath`() {
         val entities = listOf(
             fakeContentEntity(contentId = 1, listId = 1, mediaType = MediaType.MOVIE.name),
             fakeContentEntity(contentId = 2, listId = 1, mediaType = MediaType.MOVIE.name, posterPath = null)
@@ -108,7 +108,8 @@ class WatchlistInteractorTest {
 
         val result = interactor.mapEntitiesToGenericContent(entities)
 
-        assertEquals(1, result.size)
+        assertEquals(2, result.size)
+        assertEquals("", result[1].posterPath)
     }
 
     @Test
