@@ -14,6 +14,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.sentry.kmp)
+    alias(libs.plugins.sentry.android)
 }
 
 kotlin {
@@ -155,6 +157,26 @@ ktlint {
     }
 }
 
+sentryKmp {
+    autoInstall {
+        enabled.set(true)
+        commonMain {
+            enabled.set(true)
+        }
+    }
+}
+
+sentry {
+    autoInstallation {
+        enabled.set(false)
+    }
+    org.set(getLocalProperty("SENTRY_ORG"))
+    projectName.set(getLocalProperty("SENTRY_PROJECT"))
+    authToken.set(getLocalProperty("SENTRY_AUTH_TOKEN"))
+    includeProguardMapping.set(true)
+    autoUploadProguardMapping.set(true)
+}
+
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
@@ -166,16 +188,16 @@ buildkonfig {
     packageName = "com.projects.cinetracker"
 
     defaultConfigs {
-        buildConfigField(STRING, "API_KEY", getApiKeyLocalProperties())
+        buildConfigField(STRING, "API_KEY", getLocalProperty("API_KEY"))
     }
 }
 
-fun getApiKeyLocalProperties(): String {
+fun getLocalProperty(key: String): String {
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         localProperties.load(FileInputStream(localPropertiesFile))
     }
 
-    return localProperties["API_KEY"] as? String ?: ""
+    return localProperties[key] as? String ?: ""
 }
