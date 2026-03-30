@@ -1,6 +1,7 @@
 package features.details.ui
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -195,7 +196,10 @@ private fun Details(
     } else {
         var overlayDismissing by remember { mutableStateOf(false) }
         val targetBlur = if (showDetailsOverlay == true && !overlayDismissing) OVERLAY_BLUR_RADIUS.dp else 0.dp
-        val contentBlur by animateDpAsState(targetValue = targetBlur, animationSpec = tween(300))
+        val contentBlur by animateDpAsState(
+            targetValue = targetBlur,
+            animationSpec = if (targetBlur > 0.dp) snap() else tween(300)
+        )
 
         Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
             DetailsTopBar(

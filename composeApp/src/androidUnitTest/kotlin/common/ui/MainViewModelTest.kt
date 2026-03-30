@@ -7,7 +7,6 @@ import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -18,7 +17,6 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -135,5 +133,4 @@ class MainViewModelTest {
         assertFalse(viewModel.isDuplicatedListName.value)
         assertEquals("new name", viewModel.newListTextFieldValue.value.text)
     }
-
 }
