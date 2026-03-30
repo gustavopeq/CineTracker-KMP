@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import database.repository.DatabaseRepository
@@ -12,7 +11,6 @@ import database.repository.SettingsRepository
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
@@ -86,7 +84,6 @@ class MainViewModel(
             _isDuplicatedListName.value = false
         }
     }
-
 
     suspend fun createNewList(closeSheet: suspend () -> Unit) {
         val listCreated = databaseRepository.addNewList(
