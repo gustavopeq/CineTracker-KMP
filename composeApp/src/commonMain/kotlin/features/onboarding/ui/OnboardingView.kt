@@ -64,6 +64,7 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
         // Pager content
         HorizontalPager(
             state = pagerState,
+            beyondViewportPageCount = PAGE_COUNT - 1,
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
