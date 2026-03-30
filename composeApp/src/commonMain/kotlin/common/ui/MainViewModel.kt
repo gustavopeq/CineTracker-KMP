@@ -87,25 +87,6 @@ class MainViewModel(
         }
     }
 
-    fun quickAddToList(
-        contentId: Int,
-        mediaType: MediaType,
-        listId: Int,
-        title: String,
-        posterPath: String?,
-        voteAverage: Float
-    ) {
-        viewModelScope.launch {
-            databaseRepository.insertItem(
-                contentId = contentId,
-                mediaType = mediaType,
-                listId = listId,
-                title = title,
-                posterPath = posterPath,
-                voteAverage = voteAverage
-            )
-        }
-    }
 
     suspend fun createNewList(closeSheet: suspend () -> Unit) {
         val listCreated = databaseRepository.addNewList(

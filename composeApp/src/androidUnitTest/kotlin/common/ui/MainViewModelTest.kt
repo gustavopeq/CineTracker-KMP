@@ -136,27 +136,4 @@ class MainViewModelTest {
         assertEquals("new name", viewModel.newListTextFieldValue.value.text)
     }
 
-    // ── quickAddToList ───────────────────────────────────────────────────────
-
-    @Test
-    fun `quickAddToList calls databaseRepository insertItem`() = runTest {
-        coEvery {
-            databaseRepository.insertItem(any(), any(), any(), any(), any(), any())
-        } returns Unit
-        val viewModel = createViewModel()
-
-        viewModel.quickAddToList(
-            contentId = 123,
-            mediaType = MediaType.MOVIE,
-            listId = 1,
-            title = "Test Movie",
-            posterPath = "/test.jpg",
-            voteAverage = 8.5f
-        )
-        advanceUntilIdle()
-
-        coVerify {
-            databaseRepository.insertItem(123, MediaType.MOVIE, 1, "Test Movie", "/test.jpg", 8.5f)
-        }
-    }
 }
