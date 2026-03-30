@@ -185,7 +185,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" = \"Release\" ]; then\n      if command -v sentry-cli &> /dev/null; then\n          sentry-cli debug-files upload \\\n              --auth-token \"$SENTRY_AUTH_TOKEN\" \\\n              --org \"$SENTRY_ORG\" \\\n              --project \"$SENTRY_PROJECT\" \\\n              --include-sources \\\n              \"$DWARF_DSYM_FOLDER_PATH\"\n      else\n          echo \"warning: sentry-cli not found, skipping dSYM upload\"\n      fi\n  fi\n";
+			shellScript = "if [ \"$CONFIGURATION\" = \"Release\" ]; then\n    if command -v sentry-cli &> /dev/null; then\n        cd \"$SRCROOT/..\"\n        sentry-cli debug-files upload \\\n            --include-sources \\\n            \"$DWARF_DSYM_FOLDER_PATH\"\n    else\n        echo \"warning: sentry-cli not found, skipping dSYM upload\"\n    fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		F36B1CEB2AD83DDC00CB74D5 /* Compile Kotlin Framework */ = {
