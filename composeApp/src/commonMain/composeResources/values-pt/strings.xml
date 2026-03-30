@@ -159,6 +159,6 @@
     <string name="details_overlay_title_movie">Gostou desse filme?</string>
     <string name="details_overlay_title_show">Gostou dessa série?</string>
     <string name="details_overlay_subtitle">Adicione à sua lista!</string>
-    <string name="details_overlay_cta">Entendi!</string>
+    <string name="details_overlay_cta">Entendi</string>
 
 </resources>

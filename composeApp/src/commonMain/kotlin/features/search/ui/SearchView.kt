@@ -21,6 +21,7 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SEARCH_CARDS_WIDTH
@@ -40,13 +41,19 @@ import org.koin.compose.viewmodel.koinViewModel
 fun Search(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
     Search(
         viewModel = koinViewModel(),
+        mainViewModel = koinViewModel(),
         goToDetails = goToDetails,
         goToErrorScreen = goToErrorScreen
     )
 }
 
 @Composable
-private fun Search(viewModel: SearchViewModel, goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
+private fun Search(
+    viewModel: SearchViewModel,
+    mainViewModel: MainViewModel,
+    goToDetails: (Int, MediaType) -> Unit,
+    goToErrorScreen: () -> Unit
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val searchQuery by viewModel.searchQuery
     val searchTypeSelected by viewModel.searchFilterSelected

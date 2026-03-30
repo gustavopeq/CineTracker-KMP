@@ -56,6 +56,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Never use wildcard imports** (`import foo.bar.*`). Import each symbol explicitly.
 - **Never add `@Suppress` annotations.** Find an alternative approach that avoids the warning or error instead.
 - **Never use deprecated APIs.** Always use the modern replacement. If unsure what the replacement is, research it before proceeding.
+- **Never leave API level warnings** (e.g. "Call requires API level X (current min is Y)"). When an API has a minimum version requirement, always ask the user how to handle it before writing any code — options are typically: guard with a version check and skip on lower, guard with a version check and use a fallback, or raise the minSdk.
 
 ## Project Overview
 
@@ -195,6 +196,7 @@ CineTracker-KMP/
 │   │       │       ├── UiConstants.kt
 │   │       │       └── platform/
 │   │       │           ├── DateUtils.kt          # expect
+│   │       │           ├── HapticFeedback.kt     # expect
 │   │       │           ├── PlatformUtils.kt      # expect
 │   │       │           ├── ScreenSizeInfo.kt     # expect
 │   │       │           └── StringFormat.kt       # expect
@@ -415,6 +417,7 @@ CineTracker-KMP/
 │   │   │   │       └── CoreApplication.kt
 │   │   │   ├── common/util/platform/
 │   │   │   │   ├── DateUtils.kt
+│   │   │   │   ├── HapticFeedback.kt
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt
@@ -437,6 +440,7 @@ CineTracker-KMP/
 │   ├── src/iosMain/kotlin/
 │   │   ├── MainViewController.kt
 │   │   ├── common/util/platform/
+│   │   │   ├── AppHaptics.kt
 │   │   │   ├── DateUtils.kt
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt

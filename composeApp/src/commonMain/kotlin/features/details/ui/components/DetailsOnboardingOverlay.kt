@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-private const val OVERLAY_BACKGROUND_ALPHA = 0.85f
+private const val OVERLAY_BACKGROUND_ALPHA = 0.6f
 private const val GLOW_BLUR = 24
 private const val GLOW_ALPHA = 0.5f
 private const val CONTENT_FADE_DURATION_MS = 200

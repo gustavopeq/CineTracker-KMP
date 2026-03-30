@@ -47,6 +47,7 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.GENERIC_TAB_MAX_WIDTH
 import common.util.UiConstants.LARGE_PADDING
 import common.util.UiConstants.WATCHLIST_ADD_NEW_ICON_SIZE
+import common.util.platform.AppHaptics
 import common.util.removeParentPadding
 import features.watchlist.ui.components.WatchlistTabItem
 import org.jetbrains.compose.resources.painterResource
@@ -152,12 +153,15 @@ fun GenericTab(text: String, isSelected: Boolean, onClick: () -> Unit, onLongCli
                 tabOffset = coordinates.localToRoot(Offset.Zero)
             },
         selected = isSelected,
-        onClick = { onClick() }
+        onClick = {}
     ) {
         Box(
             modifier = Modifier.combinedClickable(
                 onLongClick = { onLongClick(tabOffset) },
-                onClick = { onClick() }
+                onClick = {
+                    AppHaptics.light()
+                    onClick()
+                }
             ).widthIn(max = GENERIC_TAB_MAX_WIDTH.dp),
             contentAlignment = Alignment.Center
         ) {

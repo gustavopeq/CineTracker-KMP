@@ -39,9 +39,9 @@ import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_2
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_3
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_4
 import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_5
-import cinetracker_kmp.composeapp.generated.resources.onboarding_welcome_bg
 import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_desc
 import cinetracker_kmp.composeapp.generated.resources.onboarding_discover_title
+import cinetracker_kmp.composeapp.generated.resources.onboarding_welcome_bg
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import org.jetbrains.compose.resources.DrawableResource

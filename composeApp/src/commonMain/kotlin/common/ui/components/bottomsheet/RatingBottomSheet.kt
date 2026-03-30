@@ -38,6 +38,7 @@ import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.LARGE_MARGIN
+import common.util.platform.AppHaptics
 import kotlin.math.round
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -51,6 +52,7 @@ fun RatingBottomSheet(
     onRatingClear: (() -> Unit)? = null
 ) {
     var rating by remember { mutableStateOf(initialRating) }
+    var lastHapticStep by remember { mutableStateOf((initialRating?.times(10))?.toInt() ?: 0) }
     val displayRating = rating?.let { round(it * 10) / 10 }
 
     GenericBottomSheet(
@@ -101,7 +103,14 @@ fun RatingBottomSheet(
 
             Slider(
                 value = rating ?: 0f,
-                onValueChange = { rating = it },
+                onValueChange = {
+                    rating = it
+                    val currentStep = (it * 10).toInt()
+                    if (currentStep != lastHapticStep) {
+                        lastHapticStep = currentStep
+                        AppHaptics.tick()
+                    }
+                },
                 valueRange = 0f..10f,
                 steps = 99,
                 colors = SliderDefaults.colors(
@@ -120,6 +129,7 @@ fun RatingBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 buttonText = stringResource(Res.string.rating_bottom_sheet_save_button),
                 onClick = {
+                    AppHaptics.success()
                     onRatingSave(displayRating ?: 0f)
                     dismissBottomSheet()
                 }
@@ -129,6 +139,7 @@ fun RatingBottomSheet(
                 Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
                 TextButton(
                     onClick = {
+                        AppHaptics.light()
                         onRatingClear()
                         dismissBottomSheet()
                     },

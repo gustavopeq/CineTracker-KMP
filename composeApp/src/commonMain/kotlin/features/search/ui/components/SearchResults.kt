@@ -46,9 +46,9 @@ fun SearchResultsGrid(
     ) {
         items(searchResults.itemCount) { index ->
             val item = searchResults[index]
-            item?.let {
+            item?.let { content ->
                 ImageContentCard(
-                    item = item,
+                    item = content,
                     adjustedCardSize = adjustedCardSize,
                     goToDetails = goToDetails
                 )

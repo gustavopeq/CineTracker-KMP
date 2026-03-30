@@ -42,6 +42,7 @@ import common.util.Constants.UNSELECTED_OPTION_INDEX
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SMALL_MARGIN
 import common.util.capitalized
+import common.util.platform.AppHaptics
 import features.watchlist.events.WatchlistEvent
 import features.watchlist.ui.components.DeleteListDialog
 import features.watchlist.ui.components.ListRemovePopUpMenu
@@ -166,6 +167,7 @@ private fun AllListsLoadedState(
                     if (index != WatchlistTabItem.WatchlistTab.tabIndex &&
                         index != WatchlistTabItem.WatchedTab.tabIndex
                     ) {
+                        AppHaptics.heavy()
                         listToRemoveIndex.intValue = index
                         deletePopUpMenuOffset = offset
                         showDeletePopUpMenu = true
@@ -310,7 +312,10 @@ private fun WatchlistContentLazyList(
         LazyColumn(
             contentPadding = PaddingValues(all = SMALL_MARGIN.dp)
         ) {
-            items(sortedItems) { mediaInfo ->
+            items(
+                sortedItems,
+                key = { mediaInfo -> "${mediaInfo.id}_${mediaInfo.mediaType}" }
+            ) { mediaInfo ->
                 WatchlistCard(
                     title = mediaInfo.name,
                     rating = mediaInfo.rating,

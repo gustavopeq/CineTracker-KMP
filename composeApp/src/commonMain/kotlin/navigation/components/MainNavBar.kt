@@ -20,6 +20,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import common.ui.theme.MainBarGreyColor
 import common.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
+import common.util.platform.AppHaptics
 import navigation.BrowseRoute
 import navigation.HomeRoute
 import navigation.SearchRoute
@@ -49,6 +50,7 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
+                    AppHaptics.light()
                     navigateToTopLevelDestination(
                         navController = navController,
                         destination = item.route

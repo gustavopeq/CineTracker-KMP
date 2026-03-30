@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,11 +16,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,9 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.ic_delete
 import cinetracker_kmp.composeapp.generated.resources.ic_more_options
 import cinetracker_kmp.composeapp.generated.resources.movie_tag
 import cinetracker_kmp.composeapp.generated.resources.show_tag
@@ -38,18 +46,22 @@ import common.ui.components.NetworkImage
 import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
+import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryYellowColor_90
 import common.util.Constants.BASE_300_IMAGE_URL
 import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.LARGE_MARGIN
 import common.util.UiConstants.MEDIA_TYPE_TAG_CORNER_SIZE
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SMALL_PADDING
 import common.util.UiConstants.WATCHLIST_IMAGE_WIDTH
+import common.util.platform.AppHaptics
 import common.util.platform.StringFormat
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WatchlistCard(
     title: String,
@@ -72,81 +84,134 @@ fun WatchlistCard(
         showPopupMenu = isVisible
     }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onCardClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MainBarGreyColor
-        ),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
-        )
-    ) {
-        Row(
-            modifier = Modifier.height(imageHeight)
-        ) {
-            NetworkImage(
-                imageUrl = fullImageUrl,
-                widthDp = imageWidth,
-                heightDp = imageHeight
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(all = DEFAULT_PADDING.dp)
-            ) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.titleMedium,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
-                Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
-                Row(
-                    modifier = Modifier.height(20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    RatingComponent(rating = rating)
+    var pointerDown by remember { mutableStateOf(false) }
 
-                    if (personalRating != null) {
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = SMALL_PADDING.dp)
-                                .fillMaxHeight(0.6f)
-                                .width(1.dp)
-                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f))
-                        )
+    val dismissState = rememberSwipeToDismissBoxState()
 
-                        PersonalRatingComponent(
-                            rating = StringFormat.formatRating(personalRating.toDouble())
-                        )
-                    }
+    LaunchedEffect(Unit) {
+        if (dismissState.currentValue != SwipeToDismissBoxValue.Settled) {
+            dismissState.snapTo(SwipeToDismissBoxValue.Settled)
+        }
+    }
+
+    LaunchedEffect(dismissState.currentValue, pointerDown) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart && !pointerDown) {
+            AppHaptics.medium()
+            onRemoveClick()
+        }
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        modifier = Modifier.pointerInput(Unit) {
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent()
+                    pointerDown = event.changes.any { it.pressed }
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                MediaTypeTag(
-                    modifier = Modifier.clip(RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp)),
-                    mediaType = mediaType
-                )
             }
-            IconButton(
-                onClick = {
-                    updatePopUpMenuVisibility(true)
-                }
+        },
+        backgroundContent = {
+            val color = when (dismissState.dismissDirection) {
+                SwipeToDismissBoxValue.EndToStart -> PrimaryRedColor
+                else -> MainBarGreyColor
+            }
+            val alignment = when (dismissState.dismissDirection) {
+                SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+                else -> Alignment.CenterStart
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color),
+                contentAlignment = alignment
             ) {
                 Icon(
-                    painter = painterResource(resource = Res.drawable.ic_more_options),
-                    contentDescription = "More Options"
+                    painter = painterResource(resource = Res.drawable.ic_delete),
+                    contentDescription = null,
+                    modifier = Modifier.padding(horizontal = LARGE_MARGIN.dp)
                 )
-                CardOptionsPopUpMenu(
-                    showMenu = showPopupMenu,
-                    selectedListId = selectedList,
-                    allLists = allLists,
-                    onDismissRequest = { updatePopUpMenuVisibility(false) },
-                    onRemoveClick = onRemoveClick,
-                    onMoveItemToList = onMoveItemToList
+            }
+        },
+        enableDismissFromStartToEnd = false,
+        enableDismissFromEndToStart = true
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onCardClick),
+            colors = CardDefaults.cardColors(
+                containerColor = MainBarGreyColor
+            ),
+            elevation = CardDefaults.elevatedCardElevation(
+                defaultElevation = BROWSE_CARD_DEFAULT_ELEVATION.dp
+            )
+        ) {
+            Row(
+                modifier = Modifier.height(imageHeight)
+            ) {
+                NetworkImage(
+                    imageUrl = fullImageUrl,
+                    widthDp = imageWidth,
+                    heightDp = imageHeight
                 )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(all = DEFAULT_PADDING.dp)
+                ) {
+                    Text(
+                        text = title,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.titleMedium,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
+                    )
+                    Spacer(modifier = Modifier.height(SMALL_PADDING.dp))
+                    Row(
+                        modifier = Modifier.height(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RatingComponent(rating = rating)
+
+                        if (personalRating != null) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = SMALL_PADDING.dp)
+                                    .fillMaxHeight(0.6f)
+                                    .width(1.dp)
+                                    .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f))
+                            )
+
+                            PersonalRatingComponent(
+                                rating = StringFormat.formatRating(personalRating.toDouble())
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    MediaTypeTag(
+                        modifier = Modifier.clip(RoundedCornerShape(MEDIA_TYPE_TAG_CORNER_SIZE.dp)),
+                        mediaType = mediaType
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        updatePopUpMenuVisibility(true)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(resource = Res.drawable.ic_more_options),
+                        contentDescription = "More Options"
+                    )
+                    CardOptionsPopUpMenu(
+                        showMenu = showPopupMenu,
+                        selectedListId = selectedList,
+                        allLists = allLists,
+                        onDismissRequest = { updatePopUpMenuVisibility(false) },
+                        onRemoveClick = onRemoveClick,
+                        onMoveItemToList = onMoveItemToList
+                    )
+                }
             }
         }
     }
