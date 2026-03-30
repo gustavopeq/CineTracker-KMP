@@ -175,7 +175,7 @@ sentry {
     projectName.set(getLocalProperty("SENTRY_PROJECT"))
     authToken.set(getLocalProperty("SENTRY_AUTH_TOKEN"))
     includeProguardMapping.set(true)
-    autoUploadProguardMapping.set(true)
+    autoUploadProguardMapping.set(getLocalProperty("SENTRY_AUTH_TOKEN").isNotEmpty())
 }
 
 dependencies {
