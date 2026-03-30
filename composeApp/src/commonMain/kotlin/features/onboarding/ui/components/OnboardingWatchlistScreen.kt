@@ -38,13 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.ic_watchlist
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_2
+import cinetracker_kmp.composeapp.generated.resources.onboarding_browse_5
 import cinetracker_kmp.composeapp.generated.resources.onboarding_build_collection
 import cinetracker_kmp.composeapp.generated.resources.onboarding_create_new_list
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_desc
 import cinetracker_kmp.composeapp.generated.resources.onboarding_lists_title
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_1
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_2
-import cinetracker_kmp.composeapp.generated.resources.onboarding_watchlist_3
+import cinetracker_kmp.composeapp.generated.resources.onboarding_welcome_bg
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
 import org.jetbrains.compose.resources.DrawableResource
@@ -95,7 +95,7 @@ fun OnboardingWatchlistScreen(modifier: Modifier = Modifier) {
                     // Row 1
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_watchlist_1,
+                            imageRes = Res.drawable.onboarding_welcome_bg,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )
@@ -104,12 +104,12 @@ fun OnboardingWatchlistScreen(modifier: Modifier = Modifier) {
                     // Row 2
                     Row(horizontalArrangement = Arrangement.spacedBy(GRID_SPACING.dp)) {
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_watchlist_2,
+                            imageRes = Res.drawable.onboarding_browse_5,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )
                         FadedCollectionCard(
-                            imageRes = Res.drawable.onboarding_watchlist_3,
+                            imageRes = Res.drawable.onboarding_browse_2,
                             saturationMatrix = saturationMatrix,
                             modifier = Modifier.weight(1f)
                         )

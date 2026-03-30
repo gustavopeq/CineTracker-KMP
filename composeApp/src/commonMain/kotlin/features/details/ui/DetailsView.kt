@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -42,11 +43,13 @@ import common.ui.components.popup.ClassicSnackbar
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
 import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.DELAY_TOGGLE_BOTTOM_SHEET_MS
 import common.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
 import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.POSTER_ASPECT_RATIO
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING
+import common.util.platform.AppHaptics
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
 import features.details.events.DetailsEvents
@@ -63,6 +66,8 @@ import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
 import features.watchlist.ui.model.DefaultLists
 import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -100,6 +105,7 @@ private fun Details(
     val detailsFailedLoading by viewModel.detailsFailedLoading
     val snackbarState by viewModel.snackbarState
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val posterWidth = getScreenSizeInfo().widthDp.value
     val posterHeight = posterWidth * POSTER_ASPECT_RATIO_MULTIPLY
     val personContentList by viewModel.personCredits.collectAsState()
@@ -130,11 +136,16 @@ private fun Details(
 
     val onToggleWatchlist: (Int) -> Unit = { listId ->
         contentDetails?.let {
-            viewModel.onEvent(
-                DetailsEvents.ToggleContentFromList(
-                    listId = listId
+            AppHaptics.success()
+            updateShowOtherListsPanel(false)
+            coroutineScope.launch {
+                delay(DELAY_TOGGLE_BOTTOM_SHEET_MS)
+                viewModel.onEvent(
+                    DetailsEvents.ToggleContentFromList(
+                        listId = listId
+                    )
                 )
-            )
+            }
         }
     }
 

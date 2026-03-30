@@ -1,5 +1,6 @@
 
 import androidx.compose.ui.window.ComposeUIViewController
+import common.util.platform.AppHaptics
 import core.di.KoinInitializer
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.crashlytics.crashlytics
@@ -10,6 +11,7 @@ fun MainViewController() = ComposeUIViewController(
         KoinInitializer().init()
         Firebase.initialize()
         Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
+        AppHaptics.warmUp()
     }
 ) {
     MainAppView()
