@@ -141,6 +141,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     dependencies {
         debugImplementation(compose.uiTooling)
@@ -189,6 +190,7 @@ buildkonfig {
 
     defaultConfigs {
         buildConfigField(STRING, "API_KEY", getLocalProperty("API_KEY"))
+        buildConfigField(STRING, "SENTRY_DSN", getLocalProperty("SENTRY_DSN"))
     }
 }
 
