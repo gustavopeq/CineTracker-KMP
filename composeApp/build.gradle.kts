@@ -13,8 +13,6 @@ plugins {
     alias(libs.plugins.buildKonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.crashlytics)
     alias(libs.plugins.ktlint)
 }
 
@@ -77,7 +75,6 @@ kotlin {
             implementation(libs.paging.compose)
             implementation(libs.multiplatform.settings)
             implementation(libs.sqlite.bundled)
-            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -156,14 +153,6 @@ ktlint {
     filter {
         exclude { it.file.path.contains("/build/") }
     }
-}
-
-// Firebase KTX artifacts have unresolved versions in the androidTest classpath
-// because the gitlive SDK relies on a BOM that isn't applied to the test variant.
-// Migration tests don't need Firebase, so exclude it from the test configuration.
-configurations.matching { it.name.contains("AndroidTest") }.configureEach {
-    exclude(group = "com.google.firebase")
-    exclude(group = "dev.gitlive")
 }
 
 dependencies {
