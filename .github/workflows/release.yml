@@ -29,6 +29,10 @@ jobs:
             echo "::error::Tag must follow vMAJOR.MINOR.PATCH format (e.g., v4.1.0)"
             exit 1
           fi
+          if [ "$MINOR" -gt 99 ] || [ "$PATCH" -gt 99 ]; then
+            echo "::error::MINOR and PATCH must be <= 99 for versionCode encoding"
+            exit 1
+          fi
           VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
           echo "version-name=$TAG" >> "$GITHUB_OUTPUT"
           echo "version-code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
@@ -65,8 +69,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Decode keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/release.keystore
+        run: echo "${KEYSTORE_BASE64}" | base64 --decode > /tmp/release.keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: Build signed AAB
         run: |
@@ -80,12 +85,15 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
+      - name: Rename AAB artifact
+        run: mv composeApp/build/outputs/bundle/release/*.aab composeApp/build/outputs/bundle/release/cinetracker-v${{ steps.version.outputs.version-name }}.aab
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           name: "v${{ steps.version.outputs.version-name }}"
-          files: composeApp/build/outputs/bundle/release/composeApp-release.aab
+          files: composeApp/build/outputs/bundle/release/cinetracker-v${{ steps.version.outputs.version-name }}.aab
           generate_release_notes: true
 
       - name: Clean up keystore

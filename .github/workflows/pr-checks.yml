@@ -3,6 +3,8 @@ name: PR Checks
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
