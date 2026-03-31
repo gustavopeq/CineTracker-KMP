@@ -1,7 +1,9 @@
 package common.ui.components.bottomsheet
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -22,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +38,14 @@ import cinetracker_kmp.composeapp.generated.resources.rating_bottom_sheet_header
 import cinetracker_kmp.composeapp.generated.resources.rating_bottom_sheet_save_button
 import common.ui.components.button.GenericButton
 import common.ui.theme.PrimaryBlueColor
+import common.ui.theme.PrimaryRedColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.LARGE_MARGIN
+import common.util.UiConstants.RATING_SLIDER_THUMB_ELEVATION
+import common.util.UiConstants.RATING_SLIDER_THUMB_SIZE
+import common.util.UiConstants.RATING_SLIDER_TRACK_HEIGHT
 import common.util.platform.AppHaptics
 import kotlin.math.round
 import org.jetbrains.compose.resources.painterResource
@@ -73,7 +81,7 @@ fun RatingBottomSheet(
                     painter = painterResource(Res.drawable.ic_star),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(56.dp)
                         .padding(bottom = 8.dp),
                     colorFilter = ColorFilter.tint(PrimaryBlueColor)
                 )
@@ -84,7 +92,7 @@ fun RatingBottomSheet(
                 }
 
                 Text(
-                    text = ratingText ?: "0",
+                    text = ratingText ?: "-",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 56.sp
@@ -113,13 +121,29 @@ fun RatingBottomSheet(
                 },
                 valueRange = 0f..10f,
                 steps = 99,
-                colors = SliderDefaults.colors(
-                    thumbColor = PrimaryBlueColor,
-                    activeTrackColor = PrimaryBlueColor,
-                    inactiveTrackColor = PrimaryBlueColor.copy(alpha = 0.24f),
-                    activeTickColor = Color.Transparent,
-                    inactiveTickColor = Color.Transparent
-                ),
+                thumb = {
+                    Box(
+                        modifier = Modifier
+                            .size(RATING_SLIDER_THUMB_SIZE.dp)
+                            .shadow(RATING_SLIDER_THUMB_ELEVATION.dp, CircleShape)
+                            .background(PrimaryBlueColor, CircleShape)
+                    )
+                },
+                track = { sliderState ->
+                    SliderDefaults.Track(
+                        sliderState = sliderState,
+                        modifier = Modifier.height(RATING_SLIDER_TRACK_HEIGHT.dp),
+                        colors = SliderDefaults.colors(
+                            activeTrackColor = PrimaryBlueColor,
+                            inactiveTrackColor = PrimaryBlueColor.copy(alpha = 0.24f),
+                            activeTickColor = Color.Transparent,
+                            inactiveTickColor = Color.Transparent
+                        ),
+                        thumbTrackGapSize = 0.dp,
+                        trackInsideCornerSize = 0.dp,
+                        drawStopIndicator = null
+                    )
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -147,7 +171,7 @@ fun RatingBottomSheet(
                 ) {
                     Text(
                         text = stringResource(Res.string.personal_ratings_clear),
-                        color = SecondaryGreyColor,
+                        color = PrimaryRedColor,
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = FontWeight.Medium
                         )
