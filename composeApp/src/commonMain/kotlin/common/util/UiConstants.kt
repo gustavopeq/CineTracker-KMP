@@ -43,6 +43,11 @@ object UiConstants {
     const val BROWSE_TAB_ROW_OFFSET_HEIGHT = 10
     const val BROWSE_SORT_ICON_SIZE = 32
 
+    // Rating Slider
+    const val RATING_SLIDER_THUMB_SIZE = 28
+    const val RATING_SLIDER_THUMB_ELEVATION = 4
+    const val RATING_SLIDER_TRACK_HEIGHT = 12
+
     // Details
     const val DETAILS_TITLE_IMAGE_OFFSET_PERCENT = 0.7f
     const val DETAILS_CAST_PICTURE_SIZE = 100

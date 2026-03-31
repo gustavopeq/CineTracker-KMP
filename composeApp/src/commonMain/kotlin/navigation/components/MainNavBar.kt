@@ -50,11 +50,13 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
             NavigationBarItem(
                 selected = isSelected,
                 onClick = {
-                    AppHaptics.light()
-                    navigateToTopLevelDestination(
-                        navController = navController,
-                        destination = item.route
-                    )
+                    if (!isSelected) {
+                        AppHaptics.light()
+                        navigateToTopLevelDestination(
+                            navController = navController,
+                            destination = item.route
+                        )
+                    }
                 },
                 icon = {
                     Column(
