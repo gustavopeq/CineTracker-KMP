@@ -12,6 +12,7 @@ const val DEFAULT_COUNTRY = "US"
 
 actual object PlatformUtils {
     actual val isIOS: Boolean = true
+
     @OptIn(ExperimentalNativeApi::class)
     actual val isDebugBuild: Boolean = Platform.isDebugBinary
     actual fun getUserLanguage(): String {
