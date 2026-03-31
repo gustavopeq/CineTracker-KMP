@@ -96,6 +96,11 @@ CineTracker-KMP/
 │   └── rules/
 │       ├── style.md
 │       └── features_details.md
+├── .github/
+│   ├── SECRETS_SETUP.md
+│   └── workflows/
+│       ├── pr-checks.yml
+│       └── release.yml
 ├── build.gradle.kts
 ├── settings.gradle.kts
 ├── gradle.properties
