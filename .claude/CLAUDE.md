@@ -111,7 +111,6 @@ CineTracker-KMP/
 │
 ├── composeApp/
 │   ├── build.gradle.kts
-│   ├── google-services.json
 │   ├── proguard-rules.pro
 │   │
 │   ├── src/commonMain/
@@ -526,9 +525,6 @@ CineTracker-KMP/
 │   │           ├── Migration6To7Test.kt
 │   │           └── Migration7To8Test.kt
 │   │
-│   └── src/debug/
-│       └── google-services.json
-│
 └── iosApp/
     ├── Configuration/
     │   └── Config.xcconfig

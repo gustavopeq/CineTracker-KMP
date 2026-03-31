@@ -27,4 +27,4 @@
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
--keep class com.projects.moviemanager.network.models.** { *; }
+-keep class network.models.** { *; }

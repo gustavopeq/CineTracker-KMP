@@ -1,5 +1,7 @@
 package common.util.platform
 
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.Platform
 import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
@@ -10,6 +12,8 @@ const val DEFAULT_COUNTRY = "US"
 
 actual object PlatformUtils {
     actual val isIOS: Boolean = true
+    @OptIn(ExperimentalNativeApi::class)
+    actual val isDebugBuild: Boolean = Platform.isDebugBinary
     actual fun getUserLanguage(): String {
         val languageTag = (NSLocale.preferredLanguages.firstOrNull() as String?)
         return languageTag?.split("-")?.first() ?: DEFAULT_LANGUAGE

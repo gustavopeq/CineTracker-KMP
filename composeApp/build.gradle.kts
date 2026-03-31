@@ -13,9 +13,9 @@ plugins {
     alias(libs.plugins.buildKonfig)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.crashlytics)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.sentry.kmp)
+    alias(libs.plugins.sentry.android)
 }
 
 kotlin {
@@ -77,7 +77,6 @@ kotlin {
             implementation(libs.paging.compose)
             implementation(libs.multiplatform.settings)
             implementation(libs.sqlite.bundled)
-            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -142,6 +141,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     dependencies {
         debugImplementation(compose.uiTooling)
@@ -158,12 +158,24 @@ ktlint {
     }
 }
 
-// Firebase KTX artifacts have unresolved versions in the androidTest classpath
-// because the gitlive SDK relies on a BOM that isn't applied to the test variant.
-// Migration tests don't need Firebase, so exclude it from the test configuration.
-configurations.matching { it.name.contains("AndroidTest") }.configureEach {
-    exclude(group = "com.google.firebase")
-    exclude(group = "dev.gitlive")
+sentryKmp {
+    autoInstall {
+        enabled.set(true)
+        commonMain {
+            enabled.set(true)
+        }
+    }
+}
+
+sentry {
+    autoInstallation {
+        enabled.set(false)
+    }
+    org.set(getLocalProperty("SENTRY_ORG"))
+    projectName.set(getLocalProperty("SENTRY_PROJECT"))
+    authToken.set(getLocalProperty("SENTRY_AUTH_TOKEN"))
+    includeProguardMapping.set(true)
+    autoUploadProguardMapping.set(getLocalProperty("SENTRY_AUTH_TOKEN").isNotEmpty())
 }
 
 dependencies {
@@ -177,16 +189,17 @@ buildkonfig {
     packageName = "com.projects.cinetracker"
 
     defaultConfigs {
-        buildConfigField(STRING, "API_KEY", getApiKeyLocalProperties())
+        buildConfigField(STRING, "API_KEY", getLocalProperty("API_KEY"))
+        buildConfigField(STRING, "SENTRY_DSN", getLocalProperty("SENTRY_DSN"))
     }
 }
 
-fun getApiKeyLocalProperties(): String {
+fun getLocalProperty(key: String): String {
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         localProperties.load(FileInputStream(localPropertiesFile))
     }
 
-    return localProperties["API_KEY"] as? String ?: ""
+    return localProperties[key] as? String ?: ""
 }
