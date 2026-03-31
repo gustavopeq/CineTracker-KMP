@@ -26,14 +26,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run ktlintCheck
-        run: ./gradlew --quiet ktlintCheck
+        run: ./gradlew --stacktrace ktlintCheck
 
       - name: Run unit tests
-        run: ./gradlew --quiet :composeApp:testDebugUnitTest
+        run: ./gradlew --stacktrace :composeApp:testDebugUnitTest
 
   ios-compile-check:
     name: iOS Compile Check
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,8 +44,17 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Cache Kotlin/Native
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build iOS framework
-        run: ./gradlew --quiet :composeApp:linkDebugFrameworkIosSimulatorArm64
+        run: ./gradlew --stacktrace :composeApp:linkDebugFrameworkIosSimulatorArm64
+        env:
+          GRADLE_OPTS: -Dorg.gradle.workers.max=2

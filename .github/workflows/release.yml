@@ -25,6 +25,10 @@ jobs:
         run: |
           TAG="${GITHUB_REF#refs/tags/v}"
           IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG"
+          if ! [[ "$MAJOR" =~ ^[0-9]+$ && "$MINOR" =~ ^[0-9]+$ && "$PATCH" =~ ^[0-9]+$ ]]; then
+            echo "::error::Tag must follow vMAJOR.MINOR.PATCH format (e.g., v4.1.0)"
+            exit 1
+          fi
           VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
           echo "version-name=$TAG" >> "$GITHUB_OUTPUT"
           echo "version-code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
@@ -37,11 +41,19 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "API_KEY=${{ secrets.API_KEY }}" >> local.properties
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> local.properties
-          echo "SENTRY_ORG=${{ secrets.SENTRY_ORG }}" >> local.properties
-          echo "SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}" >> local.properties
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
+          cat > local.properties <<EOF
+          API_KEY=${API_KEY}
+          SENTRY_DSN=${SENTRY_DSN}
+          SENTRY_ORG=${SENTRY_ORG}
+          SENTRY_PROJECT=${SENTRY_PROJECT}
+          SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+          EOF
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -58,11 +70,15 @@ jobs:
 
       - name: Build signed AAB
         run: |
-          ./gradlew --quiet :composeApp:bundleRelease \
+          ./gradlew --stacktrace :composeApp:bundleRelease \
             -Pandroid.injected.signing.store.file=/tmp/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.store.password="${STORE_PASSWORD}" \
+            -Pandroid.injected.signing.key.alias="${KEY_ALIAS}" \
+            -Pandroid.injected.signing.key.password="${KEY_PASSWORD}"
+        env:
+          STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

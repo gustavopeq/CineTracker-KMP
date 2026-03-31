@@ -32,3 +32,11 @@ base64 path/to/your-release.keystore > keystore-base64.txt
 ```
 
 Copy the full contents of `keystore-base64.txt` into the `KEYSTORE_BASE64` secret. Delete `keystore-base64.txt` after.
+
+## Repository Workflow Permissions
+
+The release workflow creates version bump PRs automatically. For this to work:
+
+1. Go to **Settings > Actions > General > Workflow permissions**
+2. Select **Read and write permissions**
+3. Save
