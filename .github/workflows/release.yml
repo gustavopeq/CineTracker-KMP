@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   build-and-release:
@@ -74,3 +75,30 @@ jobs:
       - name: Clean up keystore
         if: always()
         run: rm -f /tmp/release.keystore
+
+  version-bump-pr:
+    name: Version Bump PR
+    runs-on: ubuntu-latest
+    needs: build-and-release
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Patch version in build.gradle.kts
+        run: |
+          sed -i "s/versionCode = [0-9]*/versionCode = ${{ needs.build-and-release.outputs.version-code }}/" composeApp/build.gradle.kts
+          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ needs.build-and-release.outputs.version-name }}\"/" composeApp/build.gradle.kts
+
+      - name: Create version bump PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: bump version to ${{ needs.build-and-release.outputs.version-name }}"
+          branch: "chore/bump-version-${{ needs.build-and-release.outputs.version-name }}"
+          title: "chore: bump version to ${{ needs.build-and-release.outputs.version-name }}"
+          body: |
+            Automated version bump to **${{ needs.build-and-release.outputs.version-name }}** (code: ${{ needs.build-and-release.outputs.version-code }}).
+
+            Triggered by tag `v${{ needs.build-and-release.outputs.version-name }}`.
+          labels: automated
