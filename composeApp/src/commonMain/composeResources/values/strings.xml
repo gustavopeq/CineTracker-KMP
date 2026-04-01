@@ -161,7 +161,7 @@
     <string name="details_overlay_cta">Got it</string>
 
     <!-- Add to List Bottom Sheet -->
-    <string name="add_to_list_sheet_title">Add to list</string>
+    <string name="add_to_list_sheet_title">Save to a list?</string>
     <string name="add_to_list_no_thanks">No, thanks</string>
 
 </resources>

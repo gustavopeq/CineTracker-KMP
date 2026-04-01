@@ -162,7 +162,7 @@
     <string name="details_overlay_cta">Entendi</string>
 
     <!-- Add to List Bottom Sheet -->
-    <string name="add_to_list_sheet_title">Adicionar à lista</string>
+    <string name="add_to_list_sheet_title">Salvar em uma lista?</string>
     <string name="add_to_list_no_thanks">Não, obrigado</string>
 
 </resources>
