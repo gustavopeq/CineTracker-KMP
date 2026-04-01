@@ -14,4 +14,6 @@ actual object PlatformUtils {
 
         return "$language-$country"
     }
+    actual fun getDisplayCountry(isoCode: String): String =
+        Locale("", isoCode).getDisplayCountry(Locale.getDefault()).ifEmpty { isoCode }
 }

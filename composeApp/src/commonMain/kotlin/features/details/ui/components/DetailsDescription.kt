@@ -335,7 +335,10 @@ private fun ProductionCountriesInfo(productionCountry: List<ProductionCountry?>)
         )
 
         productionCountry.forEach {
-            DetailDescriptionBody(it?.name.orEmpty())
+            val displayName = it?.iso_3166_1?.let { code ->
+                PlatformUtils.getDisplayCountry(code).ifEmpty { it.name.orEmpty() }
+            } ?: it?.name.orEmpty()
+            DetailDescriptionBody(displayName)
         }
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
