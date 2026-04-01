@@ -81,6 +81,9 @@ class DetailsViewModel(
     private val _showDetailsOverlay = MutableStateFlow<Boolean?>(null)
     val showDetailsOverlay: StateFlow<Boolean?> get() = _showDetailsOverlay
 
+    private val _showAddToListAfterRating = MutableStateFlow(false)
+    val showAddToListAfterRating: StateFlow<Boolean> get() = _showAddToListAfterRating
+
     private var allLists: List<ListItem> = emptyList()
 
     init {
@@ -133,7 +136,14 @@ class DetailsViewModel(
     fun setPersonalRating(rating: Float) {
         viewModelScope.launch(Dispatchers.IO) {
             detailsInteractor.setPersonalRating(contentId, mediaType, rating)
+            if (_contentInListStatus.value.values.none { it }) {
+                _showAddToListAfterRating.value = true
+            }
         }
+    }
+
+    fun dismissAddToListSheet() {
+        _showAddToListAfterRating.value = false
     }
 
     fun removePersonalRating() {
