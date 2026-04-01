@@ -33,9 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.content_details_status_label
 import cinetracker_kmp.composeapp.generated.resources.content_details_stream_label
 import cinetracker_kmp.composeapp.generated.resources.episodes
 import cinetracker_kmp.composeapp.generated.resources.movie_details_budget_label
+import cinetracker_kmp.composeapp.generated.resources.movie_details_director_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_genres_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_production_country_title
 import cinetracker_kmp.composeapp.generated.resources.movie_details_release_date_label
@@ -47,6 +49,7 @@ import cinetracker_kmp.composeapp.generated.resources.person_details_death_label
 import cinetracker_kmp.composeapp.generated.resources.personal_ratings_add_rating
 import cinetracker_kmp.composeapp.generated.resources.read_more_text
 import cinetracker_kmp.composeapp.generated.resources.seasons
+import cinetracker_kmp.composeapp.generated.resources.show_details_created_by_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_duration_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_first_air_date_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_last_air_date_label
@@ -186,6 +189,10 @@ fun DetailsDescriptionBody(contentDetails: DetailedContent) {
 
             RuntimeInfo(contentDetails.runtime)
 
+            DirectorInfo(contentDetails.directorNames, contentDetails.mediaType)
+
+            StatusInfo(contentDetails.status)
+
             ProductionCountriesInfo(contentDetails.productionCountries)
 
             FinanceInfo(
@@ -219,6 +226,10 @@ fun DetailsDescriptionBody(contentDetails: DetailedContent) {
                 seasonNumber = contentDetails.numberOfSeasons,
                 episodeNumber = contentDetails.numberOfEpisodes
             )
+
+            DirectorInfo(contentDetails.directorNames, contentDetails.mediaType)
+
+            StatusInfo(contentDetails.status)
 
             ProductionCountriesInfo(contentDetails.productionCountries)
 
@@ -371,6 +382,31 @@ private fun BornInInfo(bornIn: String) {
             stringResource(resource = Res.string.person_details_born_in_label)
         )
         DetailDescriptionBody(bornIn)
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+    }
+}
+
+@Composable
+private fun DirectorInfo(directorNames: List<String>, mediaType: MediaType) {
+    if (directorNames.isNotEmpty()) {
+        val label = when (mediaType) {
+            MediaType.MOVIE -> stringResource(resource = Res.string.movie_details_director_label)
+            MediaType.SHOW -> stringResource(resource = Res.string.show_details_created_by_label)
+            else -> return
+        }
+        DetailDescriptionLabel(label)
+        DetailDescriptionBody(directorNames.joinToString(", "))
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+    }
+}
+
+@Composable
+private fun StatusInfo(status: String) {
+    if (status.isNotEmpty()) {
+        DetailDescriptionLabel(
+            stringResource(resource = Res.string.content_details_status_label)
+        )
+        DetailDescriptionBody(status)
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
 }
