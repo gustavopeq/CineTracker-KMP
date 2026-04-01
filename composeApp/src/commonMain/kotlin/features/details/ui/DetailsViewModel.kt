@@ -81,6 +81,9 @@ class DetailsViewModel(
     private val _showDetailsOverlay = MutableStateFlow<Boolean?>(null)
     val showDetailsOverlay: StateFlow<Boolean?> get() = _showDetailsOverlay
 
+    private val _showAddToListAfterRating = MutableStateFlow(false)
+    val showAddToListAfterRating: StateFlow<Boolean> get() = _showAddToListAfterRating
+
     private var allLists: List<ListItem> = emptyList()
 
     init {
@@ -127,12 +130,16 @@ class DetailsViewModel(
                 snackbarDismiss()
             }
             is DetailsEvents.DismissDetailsOverlay -> dismissDetailsOverlay()
+            is DetailsEvents.DismissAddToListSheet -> dismissAddToListSheet()
         }
     }
 
     fun setPersonalRating(rating: Float) {
         viewModelScope.launch(Dispatchers.IO) {
             detailsInteractor.setPersonalRating(contentId, mediaType, rating)
+            if (_loadState.value == DataLoadStatus.Success && _contentInListStatus.value.values.none { it }) {
+                _showAddToListAfterRating.value = true
+            }
         }
     }
 
@@ -182,6 +189,16 @@ class DetailsViewModel(
             _loadState.value = DataLoadStatus.Failed
         } else {
             _contentCredits.value = castDetailsState.detailsCast.value
+
+            if (mediaType == MediaType.MOVIE) {
+                val directors = castDetailsState.directorNames.value
+                if (directors.isNotEmpty()) {
+                    _contentDetails.value = _contentDetails.value?.copy(
+                        directorNames = directors
+                    )
+                }
+            }
+
             _loadState.value = DataLoadStatus.Success
             checkDetailsOverlay()
         }
@@ -248,6 +265,10 @@ class DetailsViewModel(
     private fun dismissDetailsOverlay() {
         settingsRepository.setDetailsOverlaySeen()
         _showDetailsOverlay.value = false
+    }
+
+    private fun dismissAddToListSheet() {
+        _showAddToListAfterRating.value = false
     }
 
     fun getAllLists(): List<ListItem> = allLists

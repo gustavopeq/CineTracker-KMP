@@ -4,9 +4,11 @@ import common.domain.models.util.MediaType
 import common.util.fakeMovieResponse
 import common.util.fakeShowResponse
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import network.models.content.common.CastRoles
 import network.models.content.common.ContentCastResponse
 import network.models.content.common.PersonResponse
+import network.models.content.common.ShowCreatorResponse
 import org.junit.Test
 
 class DetailedContentMapperTest {
@@ -33,6 +35,31 @@ class DetailedContentMapperTest {
         assertEquals(836800000L, result.revenue)
     }
 
+    @Test
+    fun `MovieResponse toDetailedContent maps status field`() {
+        val movie = fakeMovieResponse().copy(status = "Released")
+
+        val result = movie.toDetailedContent()
+
+        assertEquals("Released", result.status)
+    }
+
+    @Test
+    fun `MovieResponse toDetailedContent maps null status to empty string`() {
+        val movie = fakeMovieResponse().copy(status = null)
+
+        val result = movie.toDetailedContent()
+
+        assertEquals("", result.status)
+    }
+
+    @Test
+    fun `MovieResponse toDetailedContent leaves directorNames empty`() {
+        val result = fakeMovieResponse().toDetailedContent()
+
+        assertTrue(result.directorNames.isEmpty())
+    }
+
     // ── ShowResponse.toDetailedContent ────────────────────────────────────────
 
     @Test
@@ -53,6 +80,62 @@ class DetailedContentMapperTest {
         assertEquals("2013-09-29", result.lastAirDate)
         assertEquals(5, result.numberOfSeasons)
         assertEquals(62, result.numberOfEpisodes)
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent maps created_by to directorNames`() {
+        val show = fakeShowResponse().copy(
+            created_by = listOf(
+                ShowCreatorResponse(id = 1, name = "Vince Gilligan"),
+                ShowCreatorResponse(id = 2, name = "Peter Gould")
+            )
+        )
+
+        val result = show.toDetailedContent()
+
+        assertEquals(listOf("Vince Gilligan", "Peter Gould"), result.directorNames)
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent filters null and empty creator names`() {
+        val show = fakeShowResponse().copy(
+            created_by = listOf(
+                ShowCreatorResponse(id = 1, name = "Valid Creator"),
+                ShowCreatorResponse(id = 2, name = null),
+                ShowCreatorResponse(id = 3, name = "")
+            )
+        )
+
+        val result = show.toDetailedContent()
+
+        assertEquals(listOf("Valid Creator"), result.directorNames)
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent maps null created_by to empty list`() {
+        val show = fakeShowResponse().copy(created_by = null)
+
+        val result = show.toDetailedContent()
+
+        assertTrue(result.directorNames.isEmpty())
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent maps status field`() {
+        val show = fakeShowResponse().copy(status = "Returning Series")
+
+        val result = show.toDetailedContent()
+
+        assertEquals("Returning Series", result.status)
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent maps null status to empty string`() {
+        val show = fakeShowResponse().copy(status = null)
+
+        val result = show.toDetailedContent()
+
+        assertEquals("", result.status)
     }
 
     // ── PersonResponse.toDetailedContent ──────────────────────────────────────

@@ -6,4 +6,5 @@ expect object PlatformUtils {
     fun getUserLanguage(): String
     fun getUserCountry(): String
     fun getLocale(): String
+    fun getDisplayCountry(isoCode: String): String
 }

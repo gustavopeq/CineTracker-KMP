@@ -446,6 +446,130 @@ class DetailsViewModelTest {
         coVerify { detailsInteractor.removePersonalRating(1, MediaType.MOVIE) }
     }
 
+    // ── showAddToListAfterRating ──────────────────────────────────────────────
+
+    @Test
+    fun `showAddToListAfterRating starts as false`() {
+        // Checks default value before init coroutines settle
+        stubSuccessfulMovieDetails()
+        val viewModel = createViewModel()
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `setPersonalRating sets showAddToListAfterRating to true when content is in no list`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertTrue(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `setPersonalRating does not set showAddToListAfterRating when loadState is not Success`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        // Do NOT call advanceUntilIdle — loadState is still Loading
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `setPersonalRating does not set showAddToListAfterRating to true when content is in at least one list`() =
+        runTest {
+            contentInListStatusFlow.value = mapOf(
+                DefaultLists.WATCHLIST.listId to true,
+                DefaultLists.WATCHED.listId to false
+            )
+            stubSuccessfulMovieDetails()
+            coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            viewModel.setPersonalRating(8.0f)
+            awaitIO()
+
+            assertFalse(viewModel.showAddToListAfterRating.value)
+        }
+
+    @Test
+    fun `setPersonalRating does not set showAddToListAfterRating to true when content is in a custom list`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false,
+            3 to true
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+        awaitIO() // let collectContentInListStatus IO coroutine update _contentInListStatus
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `DismissAddToListSheet sets showAddToListAfterRating back to false`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+        assertTrue(viewModel.showAddToListAfterRating.value)
+
+        viewModel.onEvent(DetailsEvents.DismissAddToListSheet)
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `removePersonalRating does not set showAddToListAfterRating to true`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.removePersonalRating(any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.removePersonalRating()
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
     // ── Details Onboarding Overlay ───────────────────────────────────────────
 
     @Test
@@ -502,5 +626,86 @@ class DetailsViewModelTest {
 
         assertEquals(false, viewModel.showDetailsOverlay.value)
         verify { settingsRepository.setDetailsOverlaySeen() }
+    }
+
+    // ── Director names and status flow ────────────────────────────────────────
+
+    @Test
+    fun `contentDetails includes director names for MOVIE after cast fetch`() = runTest {
+        val castState = DetailsState().apply {
+            directorNames.value = listOf("Christopher Nolan")
+        }
+        stubSuccessfulMovieDetails(castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(listOf("Christopher Nolan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `contentDetails includes creator names for SHOW from details response`() = runTest {
+        val showDetails = fakeDetailedContent(id = 1, name = "Test Show", mediaType = MediaType.SHOW).copy(
+            directorNames = listOf("Vince Gilligan")
+        )
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = showDetails
+        }
+        coEvery { detailsInteractor.getContentDetailsById(1, MediaType.SHOW) } returns detailsState
+        coEvery { detailsInteractor.getContentCastById(1, MediaType.SHOW) } returns DetailsState()
+        coEvery { detailsInteractor.getStreamingProviders(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.getContentVideosById(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.getRecommendationsContentById(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel(mediaType = MediaType.SHOW)
+        advanceUntilIdle()
+
+        assertEquals(listOf("Vince Gilligan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `contentDetails includes status from details response`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent().copy(status = "Released")
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals("Released", viewModel.contentDetails.value?.status)
+    }
+
+    @Test
+    fun `empty director names from cast do not overwrite existing directorNames in contentDetails`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent().copy(directorNames = listOf("Christopher Nolan"))
+        }
+        val castState = DetailsState().apply {
+            directorNames.value = emptyList()
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState, castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(listOf("Christopher Nolan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `MOVIE with empty crew directors leaves contentDetails directorNames as empty list`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent()
+        }
+        val castState = DetailsState().apply {
+            directorNames.value = emptyList()
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState, castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.contentDetails.value?.directorNames?.isEmpty() == true)
     }
 }

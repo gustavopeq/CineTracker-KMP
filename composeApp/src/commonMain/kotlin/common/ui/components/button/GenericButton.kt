@@ -7,11 +7,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import common.util.UiConstants.CLASSIC_BUTTON_BORDER_SIZE
 
 @Composable
-fun GenericButton(modifier: Modifier = Modifier, buttonText: String, enabled: Boolean = true, onClick: () -> Unit) {
+fun GenericButton(
+    modifier: Modifier = Modifier,
+    buttonText: String,
+    enabled: Boolean = true,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    onClick: () -> Unit
+) {
     Button(
         modifier = modifier,
         onClick = onClick,
@@ -23,7 +30,7 @@ fun GenericButton(modifier: Modifier = Modifier, buttonText: String, enabled: Bo
     ) {
         Text(
             text = buttonText,
-            style = MaterialTheme.typography.titleMedium,
+            style = textStyle,
             color = MaterialTheme.colorScheme.primary
         )
     }

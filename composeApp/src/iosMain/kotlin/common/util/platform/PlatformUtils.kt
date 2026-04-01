@@ -5,6 +5,7 @@ import kotlin.native.Platform
 import platform.Foundation.NSLocale
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
+import platform.Foundation.localizedStringForCountryCode
 import platform.Foundation.preferredLanguages
 
 const val DEFAULT_LANGUAGE = "en"
@@ -26,5 +27,10 @@ actual object PlatformUtils {
         val country = getUserCountry()
 
         return locale ?: "$language-$country"
+    }
+    actual fun getDisplayCountry(isoCode: String): String {
+        val preferredLanguage = (NSLocale.preferredLanguages.firstOrNull() as String?) ?: "en"
+        val locale = NSLocale(localeIdentifier = preferredLanguage)
+        return locale.localizedStringForCountryCode(isoCode) ?: isoCode
     }
 }

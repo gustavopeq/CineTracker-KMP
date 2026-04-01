@@ -102,6 +102,18 @@
     <string name="show_details_last_air_date_label">Last Air Date</string>
     <string name="movie_details_genres_label">Genres</string>
     <string name="movie_details_runtime_label">Runtime</string>
+    <string name="movie_details_director_label">Director</string>
+    <string name="show_details_created_by_label">Created By</string>
+    <string name="content_details_status_label">Status</string>
+    <string name="content_status_released">Released</string>
+    <string name="content_status_in_production">In Production</string>
+    <string name="content_status_post_production">Post Production</string>
+    <string name="content_status_planned">Planned</string>
+    <string name="content_status_rumored">Rumored</string>
+    <string name="content_status_canceled">Canceled</string>
+    <string name="content_status_returning_series">Returning Series</string>
+    <string name="content_status_ended">Ended</string>
+    <string name="content_status_pilot">Pilot</string>
     <string name="movie_details_budget_label">Budget</string>
     <string name="movie_details_revenue_label">Revenue</string>
     <string name="content_details_stream_label">Stream</string>
@@ -159,5 +171,9 @@
     <string name="details_overlay_title_show">Did you like this show?</string>
     <string name="details_overlay_subtitle">Make sure to add it to your list!</string>
     <string name="details_overlay_cta">Got it</string>
+
+    <!-- Add to List Bottom Sheet -->
+    <string name="add_to_list_sheet_title">Save to a list?</string>
+    <string name="add_to_list_no_thanks">No, thanks</string>
 
 </resources>

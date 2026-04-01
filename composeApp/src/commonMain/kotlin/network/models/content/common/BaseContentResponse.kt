@@ -36,14 +36,20 @@ sealed interface BaseContentResponse {
 data class MultiResponse(
     override val id: Int,
     override val adult: Boolean? = null,
+    @SerialName("original_title")
     override val originalTitle: String? = null,
     override val popularity: Double? = null,
+    @SerialName("poster_path")
     override val posterPath: String? = null,
+    @SerialName("profile_path")
     override val profilePath: String? = null,
+    @SerialName("backdrop_path")
     override val backdropPath: String? = null,
     override val title: String? = null,
     override val name: String? = null,
+    @SerialName("original_name")
     override val originalName: String? = null,
+    @SerialName("vote_average")
     override val voteAverage: Double? = null,
     override val overview: String? = null,
     val genre_ids: List<Int>? = null,
@@ -58,14 +64,20 @@ data class MultiResponse(
 data class MovieResponse(
     override val id: Int,
     override val adult: Boolean? = null,
+    @SerialName("original_title")
     override val originalTitle: String? = null,
     override val popularity: Double? = null,
+    @SerialName("poster_path")
     override val posterPath: String? = null,
+    @SerialName("profile_path")
     override val profilePath: String? = null,
+    @SerialName("backdrop_path")
     override val backdropPath: String? = null,
     override val title: String? = null,
     override val name: String? = null,
+    @SerialName("original_name")
     override val originalName: String? = null,
+    @SerialName("vote_average")
     override val voteAverage: Double? = null,
     override val overview: String? = null,
     val genre_ids: List<Int>? = null,
@@ -77,7 +89,8 @@ data class MovieResponse(
     val genres: List<ContentGenre?>? = null,
     val runtime: Int? = null,
     val budget: Long? = null,
-    val revenue: Long? = null
+    val revenue: Long? = null,
+    val status: String? = null
 ) : BaseContentResponse
 
 @Serializable
@@ -85,12 +98,18 @@ data class ShowResponse(
     override val id: Int,
     override val adult: Boolean? = null,
     override val popularity: Double? = null,
+    @SerialName("poster_path")
     override val posterPath: String? = null,
+    @SerialName("profile_path")
     override val profilePath: String? = null,
+    @SerialName("backdrop_path")
     override val backdropPath: String? = null,
+    @SerialName("original_title")
     override val originalTitle: String? = null,
     override val name: String? = null,
+    @SerialName("original_name")
     override val originalName: String? = null,
+    @SerialName("vote_average")
     override val voteAverage: Double? = null,
     override val overview: String? = null,
     val genre_ids: List<Int>? = null,
@@ -102,7 +121,9 @@ data class ShowResponse(
     val production_countries: List<ProductionCountry?>? = null,
     val genres: List<ContentGenre?>? = null,
     val number_of_seasons: Int? = null,
-    val number_of_episodes: Int? = null
+    val number_of_episodes: Int? = null,
+    val created_by: List<ShowCreatorResponse>? = null,
+    val status: String? = null
 ) : BaseContentResponse {
     override val title: String
         get() = name.orEmpty()
@@ -114,12 +135,18 @@ data class PersonResponse(
     override val adult: Boolean? = null,
     override val popularity: Double? = null,
     override val title: String? = null,
+    @SerialName("original_title")
     override val originalTitle: String? = null,
+    @SerialName("poster_path")
     override val posterPath: String? = null,
+    @SerialName("backdrop_path")
     override val backdropPath: String? = null,
+    @SerialName("profile_path")
     override val profilePath: String? = null,
     override val name: String? = null,
+    @SerialName("original_name")
     override val originalName: String? = null,
+    @SerialName("vote_average")
     override val voteAverage: Double? = null,
     override val overview: String? = null,
     val genre_ids: List<Int>? = null,
@@ -138,12 +165,18 @@ data class CastResponse(
     override val id: Int,
     override val adult: Boolean? = null,
     override val popularity: Double? = null,
+    @SerialName("poster_path")
     override val posterPath: String? = null,
+    @SerialName("profile_path")
     override val profilePath: String? = null,
+    @SerialName("backdrop_path")
     override val backdropPath: String? = null,
     override val name: String? = null,
+    @SerialName("original_title")
     override val originalTitle: String? = null,
+    @SerialName("original_name")
     override val originalName: String? = null,
+    @SerialName("vote_average")
     override val voteAverage: Double? = null,
     override val overview: String? = null,
     @SerialName("title")

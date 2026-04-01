@@ -49,7 +49,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Formatting Rules
 
-- **Run `./gradlew --quiet ktlintFormat` after making code changes** to ensure consistent formatting before committing.
+- **Run `./gradlew --quiet ktlintFormat` only before pushing changes**, not after every code edit.
 
 ## Code Navigation Rules
 
@@ -171,6 +171,7 @@ CineTracker-KMP/
 │   │       │   │   │   ├── SystemUtil.kt
 │   │       │   │   │   ├── bottomsheet/
 │   │       │   │   │   │   ├── GenericBottomSheet.kt
+│   │       │   │   │   │   ├── ManageListsBottomSheet.kt
 │   │       │   │   │   │   ├── ModalComponents.kt
 │   │       │   │   │   │   ├── RatingBottomSheet.kt
 │   │       │   │   │   │   └── SortBottomSheetComponents.kt
@@ -263,6 +264,7 @@ CineTracker-KMP/
 │   │       │   │       ├── DetailsView.kt
 │   │       │   │       ├── DetailsViewModel.kt
 │   │       │   │       ├── components/
+│   │       │   │       │   ├── AddToListBottomSheet.kt
 │   │       │   │       │   ├── ContentCredits.kt
 │   │       │   │       │   ├── DetailsBodyPlaceholder.kt
 │   │       │   │       │   ├── DetailsDescription.kt
@@ -273,8 +275,6 @@ CineTracker-KMP/
 │   │       │   │       │   │   ├── MoreOptionsTabItem.kt
 │   │       │   │       │   │   ├── PersonMoreOptionsTab.kt
 │   │       │   │       │   │   └── VideosList.kt
-│   │       │   │       │   ├── otherlists/
-│   │       │   │       │   │   └── OtherListsBottomSheet.kt
 │   │       │   │       │   └── showall/
 │   │       │   │       │       └── ShowAllContentView.kt
 │   │       │   │       └── util/
@@ -368,8 +368,10 @@ CineTracker-KMP/
 │   │           │   │   │   ├── BaseContentResponse.kt
 │   │           │   │   │   ├── ContentCastResponse.kt
 │   │           │   │   │   ├── ContentCreditsResponse.kt
+│   │           │   │   │   ├── ContentCrewResponse.kt
 │   │           │   │   │   ├── ContentGenre.kt
 │   │           │   │   │   ├── ProductionCountry.kt
+│   │           │   │   │   ├── ShowCreatorResponse.kt
 │   │           │   │   │   ├── VideoResponse.kt
 │   │           │   │   │   ├── VideosByIdResponse.kt
 │   │           │   │   │   └── WatchProvidersResponse.kt

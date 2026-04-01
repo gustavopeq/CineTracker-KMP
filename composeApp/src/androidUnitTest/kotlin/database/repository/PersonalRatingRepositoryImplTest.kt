@@ -56,6 +56,17 @@ class PersonalRatingRepositoryImplTest {
     }
 
     @Test
+    fun `setRating stores SHOW mediaType string for SHOW content`() = runTest {
+        repository.setRating(2, MediaType.SHOW, 6.0f)
+
+        coVerify {
+            personalRatingDao.insertRating(
+                match { it.contentId == 2 && it.rating == 6.0f && it.mediaType == "SHOW" }
+            )
+        }
+    }
+
+    @Test
     fun `getRating returns rating float from entity`() = runTest {
         every { personalRatingDao.getRating(1) } returns flowOf(
             PersonalRatingEntity(

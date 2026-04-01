@@ -32,6 +32,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.add_to_list_sheet_title
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_added_in_list
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
 import common.domain.models.content.DetailedContent
@@ -40,6 +41,7 @@ import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import common.ui.components.NetworkImage
+import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.popup.ClassicSnackbar
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
@@ -62,7 +64,6 @@ import features.details.ui.components.DetailsOnboardingOverlay
 import features.details.ui.components.DetailsTopBar
 import features.details.ui.components.moreoptions.MoreOptionsTab
 import features.details.ui.components.moreoptions.PersonMoreOptionsTab
-import features.details.ui.components.otherlists.OtherListsBottomSheet
 import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
 import features.watchlist.ui.model.DefaultLists
@@ -70,6 +71,7 @@ import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -118,6 +120,7 @@ private fun Details(
 
     // Onboarding overlay
     val showDetailsOverlay by viewModel.showDetailsOverlay.collectAsState()
+    val showAddToListAfterRating by viewModel.showAddToListAfterRating.collectAsState()
     var watchlistIconPosition by remember { mutableStateOf(Offset.Zero) }
 
     // Other Lists Panel
@@ -138,7 +141,6 @@ private fun Details(
     val onToggleWatchlist: (Int) -> Unit = { listId ->
         contentDetails?.let {
             AppHaptics.success()
-            updateShowOtherListsPanel(false)
             coroutineScope.launch {
                 delay(DELAY_TOGGLE_BOTTOM_SHEET_MS)
                 viewModel.onEvent(
@@ -245,13 +247,23 @@ private fun Details(
             }
 
             if (showOtherListsPanel) {
-                OtherListsBottomSheet(
+                ManageListsBottomSheet(
                     allLists = viewModel.getAllLists(),
                     contentInListStatus = contentInListStatus,
                     onToggleList = onToggleWatchlist,
                     onClosePanel = {
                         updateShowOtherListsPanel(false)
                     }
+                )
+            }
+
+            if (showAddToListAfterRating) {
+                ManageListsBottomSheet(
+                    allLists = viewModel.getAllLists(),
+                    contentInListStatus = contentInListStatus,
+                    onToggleList = onToggleWatchlist,
+                    onClosePanel = { viewModel.onEvent(DetailsEvents.DismissAddToListSheet) },
+                    headerText = stringResource(Res.string.add_to_list_sheet_title)
                 )
             }
         }

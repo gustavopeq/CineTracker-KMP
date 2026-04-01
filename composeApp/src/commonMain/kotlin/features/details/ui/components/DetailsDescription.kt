@@ -33,9 +33,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.content_details_status_label
 import cinetracker_kmp.composeapp.generated.resources.content_details_stream_label
+import cinetracker_kmp.composeapp.generated.resources.content_status_canceled
+import cinetracker_kmp.composeapp.generated.resources.content_status_ended
+import cinetracker_kmp.composeapp.generated.resources.content_status_in_production
+import cinetracker_kmp.composeapp.generated.resources.content_status_pilot
+import cinetracker_kmp.composeapp.generated.resources.content_status_planned
+import cinetracker_kmp.composeapp.generated.resources.content_status_post_production
+import cinetracker_kmp.composeapp.generated.resources.content_status_released
+import cinetracker_kmp.composeapp.generated.resources.content_status_returning_series
+import cinetracker_kmp.composeapp.generated.resources.content_status_rumored
 import cinetracker_kmp.composeapp.generated.resources.episodes
 import cinetracker_kmp.composeapp.generated.resources.movie_details_budget_label
+import cinetracker_kmp.composeapp.generated.resources.movie_details_director_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_genres_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_production_country_title
 import cinetracker_kmp.composeapp.generated.resources.movie_details_release_date_label
@@ -47,6 +58,7 @@ import cinetracker_kmp.composeapp.generated.resources.person_details_death_label
 import cinetracker_kmp.composeapp.generated.resources.personal_ratings_add_rating
 import cinetracker_kmp.composeapp.generated.resources.read_more_text
 import cinetracker_kmp.composeapp.generated.resources.seasons
+import cinetracker_kmp.composeapp.generated.resources.show_details_created_by_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_duration_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_first_air_date_label
 import cinetracker_kmp.composeapp.generated.resources.show_details_last_air_date_label
@@ -186,6 +198,10 @@ fun DetailsDescriptionBody(contentDetails: DetailedContent) {
 
             RuntimeInfo(contentDetails.runtime)
 
+            DirectorInfo(contentDetails.directorNames, contentDetails.mediaType)
+
+            StatusInfo(contentDetails.status)
+
             ProductionCountriesInfo(contentDetails.productionCountries)
 
             FinanceInfo(
@@ -219,6 +235,10 @@ fun DetailsDescriptionBody(contentDetails: DetailedContent) {
                 seasonNumber = contentDetails.numberOfSeasons,
                 episodeNumber = contentDetails.numberOfEpisodes
             )
+
+            DirectorInfo(contentDetails.directorNames, contentDetails.mediaType)
+
+            StatusInfo(contentDetails.status)
 
             ProductionCountriesInfo(contentDetails.productionCountries)
 
@@ -315,7 +335,10 @@ private fun ProductionCountriesInfo(productionCountry: List<ProductionCountry?>)
         )
 
         productionCountry.forEach {
-            DetailDescriptionBody(it?.name.orEmpty())
+            val displayName = it?.iso_3166_1?.let { code ->
+                PlatformUtils.getDisplayCountry(code).ifEmpty { it.name.orEmpty() }
+            } ?: it?.name.orEmpty()
+            DetailDescriptionBody(displayName)
         }
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
@@ -373,6 +396,46 @@ private fun BornInInfo(bornIn: String) {
         DetailDescriptionBody(bornIn)
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
+}
+
+@Composable
+private fun DirectorInfo(directorNames: List<String>, mediaType: MediaType) {
+    if (directorNames.isNotEmpty()) {
+        val label = when (mediaType) {
+            MediaType.MOVIE -> stringResource(resource = Res.string.movie_details_director_label)
+            MediaType.SHOW -> stringResource(resource = Res.string.show_details_created_by_label)
+            else -> return
+        }
+        DetailDescriptionLabel(label)
+        DetailDescriptionBody(directorNames.joinToString(", "))
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+    }
+}
+
+@Composable
+private fun StatusInfo(status: String) {
+    if (status.isNotEmpty()) {
+        val localizedStatus = localizeStatus(status)
+        DetailDescriptionLabel(
+            stringResource(resource = Res.string.content_details_status_label)
+        )
+        DetailDescriptionBody(localizedStatus)
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+    }
+}
+
+@Composable
+private fun localizeStatus(apiStatus: String): String = when (apiStatus) {
+    "Released" -> stringResource(resource = Res.string.content_status_released)
+    "In Production" -> stringResource(resource = Res.string.content_status_in_production)
+    "Post Production" -> stringResource(resource = Res.string.content_status_post_production)
+    "Planned" -> stringResource(resource = Res.string.content_status_planned)
+    "Rumored" -> stringResource(resource = Res.string.content_status_rumored)
+    "Canceled" -> stringResource(resource = Res.string.content_status_canceled)
+    "Returning Series" -> stringResource(resource = Res.string.content_status_returning_series)
+    "Ended" -> stringResource(resource = Res.string.content_status_ended)
+    "Pilot" -> stringResource(resource = Res.string.content_status_pilot)
+    else -> apiStatus
 }
 
 @Composable

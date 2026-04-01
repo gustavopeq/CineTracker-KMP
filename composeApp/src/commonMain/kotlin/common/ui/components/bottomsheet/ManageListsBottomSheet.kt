@@ -1,4 +1,4 @@
-package features.details.ui.components.otherlists
+package common.ui.components.bottomsheet
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,15 +35,16 @@ import features.watchlist.ui.model.DefaultLists
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun OtherListsBottomSheet(
+fun ManageListsBottomSheet(
     allLists: List<ListItem>,
     contentInListStatus: Map<Int, Boolean>,
     onToggleList: (Int) -> Unit,
-    onClosePanel: () -> Unit
+    onClosePanel: () -> Unit,
+    headerText: String = stringResource(resource = Res.string.manage_other_lists_header)
 ) {
     GenericBottomSheet(
         dismissBottomSheet = { onClosePanel() },
-        headerText = stringResource(resource = Res.string.manage_other_lists_header)
+        headerText = headerText
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth()

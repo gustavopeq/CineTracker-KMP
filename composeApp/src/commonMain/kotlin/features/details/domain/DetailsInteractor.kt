@@ -103,6 +103,14 @@ class DetailsInteractor(
                     }?.filterNot {
                         it.profilePoster.isEmpty()
                     }?.sortedBy { it.order ?: Int.MAX_VALUE }.orEmpty()
+
+                    if (mediaType == MediaType.MOVIE) {
+                        detailsState.directorNames.value = response.value.crew
+                            ?.filter { it.job == "Director" }
+                            ?.map { it.name }
+                            ?.filter { it.isNotEmpty() }
+                            .orEmpty()
+                    }
                 }
             }
         }

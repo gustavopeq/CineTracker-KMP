@@ -103,6 +103,18 @@
     <string name="show_details_last_air_date_label">Última fecha de emisión</string>
     <string name="movie_details_genres_label">Géneros</string>
     <string name="movie_details_runtime_label">Duración</string>
+    <string name="movie_details_director_label">Director</string>
+    <string name="show_details_created_by_label">Creado por</string>
+    <string name="content_details_status_label">Estado</string>
+    <string name="content_status_released">Estrenada</string>
+    <string name="content_status_in_production">En producción</string>
+    <string name="content_status_post_production">Posproducción</string>
+    <string name="content_status_planned">Planeada</string>
+    <string name="content_status_rumored">Rumoreada</string>
+    <string name="content_status_canceled">Cancelada</string>
+    <string name="content_status_returning_series">En emisión</string>
+    <string name="content_status_ended">Finalizada</string>
+    <string name="content_status_pilot">Piloto</string>
     <string name="movie_details_budget_label">Presupuesto</string>
     <string name="movie_details_revenue_label">Ingresos</string>
     <string name="content_details_stream_label">Stream</string>
@@ -160,5 +172,9 @@
     <string name="details_overlay_title_show">¿Te gustó esta serie?</string>
     <string name="details_overlay_subtitle">¡Agrégala a tu lista!</string>
     <string name="details_overlay_cta">Entendido</string>
+
+    <!-- Add to List Bottom Sheet -->
+    <string name="add_to_list_sheet_title">¿Guardar en una lista?</string>
+    <string name="add_to_list_no_thanks">No, gracias</string>
 
 </resources>
