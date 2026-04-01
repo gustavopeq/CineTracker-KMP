@@ -54,6 +54,7 @@ import common.util.platform.AppHaptics
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
 import features.details.events.DetailsEvents
+import features.details.ui.components.AddToListBottomSheet
 import features.details.ui.components.CastCarousel
 import features.details.ui.components.DetailBodyPlaceholder
 import features.details.ui.components.DetailsDescriptionBody
@@ -118,6 +119,7 @@ private fun Details(
 
     // Onboarding overlay
     val showDetailsOverlay by viewModel.showDetailsOverlay.collectAsState()
+    val showAddToListAfterRating by viewModel.showAddToListAfterRating.collectAsState()
     var watchlistIconPosition by remember { mutableStateOf(Offset.Zero) }
 
     // Other Lists Panel
@@ -252,6 +254,17 @@ private fun Details(
                     onClosePanel = {
                         updateShowOtherListsPanel(false)
                     }
+                )
+            }
+
+            if (showAddToListAfterRating) {
+                AddToListBottomSheet(
+                    lists = viewModel.getAllLists(),
+                    onListSelected = { listId ->
+                        onToggleWatchlist(listId)
+                        viewModel.onEvent(DetailsEvents.DismissAddToListSheet)
+                    },
+                    onDismiss = { viewModel.onEvent(DetailsEvents.DismissAddToListSheet) }
                 )
             }
         }
