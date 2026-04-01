@@ -6,4 +6,5 @@ sealed class DetailsEvents {
     data object OnSnackbarDismiss : DetailsEvents()
     data class ToggleContentFromList(val listId: Int) : DetailsEvents()
     data object DismissDetailsOverlay : DetailsEvents()
+    data object DismissAddToListSheet : DetailsEvents()
 }

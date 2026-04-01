@@ -446,6 +446,74 @@ class DetailsViewModelTest {
         coVerify { detailsInteractor.removePersonalRating(1, MediaType.MOVIE) }
     }
 
+    // ── showAddToListAfterRating ──────────────────────────────────────────────
+
+    @Test
+    fun `showAddToListAfterRating starts as false`() {
+        stubSuccessfulMovieDetails()
+        val viewModel = createViewModel()
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `setPersonalRating sets showAddToListAfterRating to true when content is in no list`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertTrue(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
+    fun `setPersonalRating does not set showAddToListAfterRating to true when content is in at least one list`() =
+        runTest {
+            contentInListStatusFlow.value = mapOf(
+                DefaultLists.WATCHLIST.listId to true,
+                DefaultLists.WATCHED.listId to false
+            )
+            stubSuccessfulMovieDetails()
+            coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+            awaitIO()
+
+            viewModel.setPersonalRating(8.0f)
+            awaitIO()
+
+            assertFalse(viewModel.showAddToListAfterRating.value)
+        }
+
+    @Test
+    fun `DismissAddToListSheet sets showAddToListAfterRating back to false`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+        assertTrue(viewModel.showAddToListAfterRating.value)
+
+        viewModel.onEvent(DetailsEvents.DismissAddToListSheet)
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
     // ── Details Onboarding Overlay ───────────────────────────────────────────
 
     @Test

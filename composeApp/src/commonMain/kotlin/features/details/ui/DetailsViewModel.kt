@@ -130,6 +130,7 @@ class DetailsViewModel(
                 snackbarDismiss()
             }
             is DetailsEvents.DismissDetailsOverlay -> dismissDetailsOverlay()
+            is DetailsEvents.DismissAddToListSheet -> dismissAddToListSheet()
         }
     }
 
@@ -140,10 +141,6 @@ class DetailsViewModel(
                 _showAddToListAfterRating.value = true
             }
         }
-    }
-
-    fun dismissAddToListSheet() {
-        _showAddToListAfterRating.value = false
     }
 
     fun removePersonalRating() {
@@ -258,6 +255,10 @@ class DetailsViewModel(
     private fun dismissDetailsOverlay() {
         settingsRepository.setDetailsOverlaySeen()
         _showDetailsOverlay.value = false
+    }
+
+    private fun dismissAddToListSheet() {
+        _showAddToListAfterRating.value = false
     }
 
     fun getAllLists(): List<ListItem> = allLists
