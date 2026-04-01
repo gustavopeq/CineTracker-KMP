@@ -53,6 +53,13 @@ class DetailedContentMapperTest {
         assertEquals("", result.status)
     }
 
+    @Test
+    fun `MovieResponse toDetailedContent leaves directorNames empty`() {
+        val result = fakeMovieResponse().toDetailedContent()
+
+        assertTrue(result.directorNames.isEmpty())
+    }
+
     // ── ShowResponse.toDetailedContent ────────────────────────────────────────
 
     @Test
@@ -120,6 +127,15 @@ class DetailedContentMapperTest {
         val result = show.toDetailedContent()
 
         assertEquals("Returning Series", result.status)
+    }
+
+    @Test
+    fun `ShowResponse toDetailedContent maps null status to empty string`() {
+        val show = fakeShowResponse().copy(status = null)
+
+        val result = show.toDetailedContent()
+
+        assertEquals("", result.status)
     }
 
     // ── PersonResponse.toDetailedContent ──────────────────────────────────────

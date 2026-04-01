@@ -22,26 +22,20 @@ fun fakePersonResponse(id: Int = 1, name: String = "Test Person") = PersonRespon
     biography = "Test bio"
 )
 
-fun fakeContentCreditsResponse(
-    vararg cast: ContentCastResponse,
-    crew: List<ContentCrewResponse> = emptyList()
-) = ContentCreditsResponse(
-    id = 1,
-    cast = cast.toList(),
-    crew = crew
-)
+fun fakeContentCreditsResponse(vararg cast: ContentCastResponse, crew: List<ContentCrewResponse> = emptyList()) =
+    ContentCreditsResponse(
+        id = 1,
+        cast = cast.toList(),
+        crew = crew
+    )
 
-fun fakeContentCrewResponse(
-    id: Int = 1,
-    name: String = "Crew Name",
-    job: String? = null,
-    department: String? = null
-) = ContentCrewResponse(
-    id = id,
-    name = name,
-    job = job,
-    department = department
-)
+fun fakeContentCrewResponse(id: Int = 1, name: String = "Crew Name", job: String? = null, department: String? = null) =
+    ContentCrewResponse(
+        id = id,
+        name = name,
+        job = job,
+        department = department
+    )
 
 fun fakeContentCastResponse(
     id: Int = 1,

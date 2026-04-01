@@ -35,13 +35,13 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.add_to_list_sheet_title
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_added_in_list
 import cinetracker_kmp.composeapp.generated.resources.snackbar_item_removed_from_list
-import org.jetbrains.compose.resources.stringResource
 import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import common.ui.components.NetworkImage
+import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.popup.ClassicSnackbar
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
@@ -64,7 +64,6 @@ import features.details.ui.components.DetailsOnboardingOverlay
 import features.details.ui.components.DetailsTopBar
 import features.details.ui.components.moreoptions.MoreOptionsTab
 import features.details.ui.components.moreoptions.PersonMoreOptionsTab
-import common.ui.components.bottomsheet.ManageListsBottomSheet
 import features.details.ui.components.showall.ShowAllContentList
 import features.details.util.mapValueToRange
 import features.watchlist.ui.model.DefaultLists
@@ -72,6 +71,7 @@ import features.watchlist.ui.model.DefaultLists.Companion.getListLocalizedName
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
