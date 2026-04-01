@@ -6,7 +6,7 @@ import common.util.platform.PlatformUtils
 import core.di.KoinInitializer
 import io.sentry.kotlin.multiplatform.Sentry
 
-fun MainViewController() = ComposeUIViewController(
+fun mainViewController() = ComposeUIViewController(
     configure = {
         KoinInitializer().init()
         initSentry()

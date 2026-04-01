@@ -12,6 +12,6 @@ fun ContentCastResponse.toContentCast(): ContentCast = ContentCast(
         ?.firstOrNull()
         ?.character
         .orEmpty(),
-    profilePoster = this.profile_path.orEmpty(),
+    profilePoster = this.profilePath.orEmpty(),
     order = this.order
 )

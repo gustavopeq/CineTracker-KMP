@@ -74,7 +74,7 @@ class HomeInteractorTest {
     @Test
     fun `getTrendingMulti filters out MultiResponse items without poster_path`() = runTest {
         val withPoster = fakeMultiResponse(id = 1)
-        val noPoster = fakeMultiResponse(id = 2).copy(poster_path = null)
+        val noPoster = fakeMultiResponse(id = 2).copy(posterPath = null)
         coEvery { homeRepository.getTrendingMulti() } returns successFlow(
             fakeMultiPagingResponse(withPoster, noPoster)
         )
@@ -172,7 +172,7 @@ class HomeInteractorTest {
     @Test
     fun `getMoviesComingSoon filters out MovieResponse items without poster_path`() = runTest {
         val withPoster = fakeMovieResponse(id = 1)
-        val noPoster = fakeMovieResponse(id = 2).copy(poster_path = null)
+        val noPoster = fakeMovieResponse(id = 2).copy(posterPath = null)
         coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns successFlow(
             fakeMoviePagingResponse(withPoster, noPoster)
         )

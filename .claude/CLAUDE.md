@@ -206,7 +206,7 @@ CineTracker-KMP/
 │   │       │       ├── UiConstants.kt
 │   │       │       └── platform/
 │   │       │           ├── DateUtils.kt          # expect
-│   │       │           ├── HapticFeedback.kt     # expect
+│   │       │           ├── AppHaptics.kt     # expect
 │   │       │           ├── PlatformUtils.kt      # expect
 │   │       │           ├── ScreenSizeInfo.kt     # expect
 │   │       │           └── StringFormat.kt       # expect
@@ -427,7 +427,7 @@ CineTracker-KMP/
 │   │   │   │       └── CoreApplication.kt
 │   │   │   ├── common/util/platform/
 │   │   │   │   ├── DateUtils.kt
-│   │   │   │   ├── HapticFeedback.kt
+│   │   │   │   ├── AppHaptics.kt
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt

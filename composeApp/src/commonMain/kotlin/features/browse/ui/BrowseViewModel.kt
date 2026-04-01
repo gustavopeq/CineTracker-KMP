@@ -30,7 +30,7 @@ class BrowseViewModel(private val interactor: BrowseInteractor) : ViewModel() {
     private var movieSortTypeSelected: ContentListType? = null
     private var showSortTypeSelected: ContentListType? = null
 
-    private val _mediaTypeSelected = MutableStateFlow(MediaType.MOVIE)
+    private val mediaTypeSelected = MutableStateFlow(MediaType.MOVIE)
 
     fun onEvent(event: BrowseEvent) {
         when (event) {
@@ -73,7 +73,7 @@ class BrowseViewModel(private val interactor: BrowseInteractor) : ViewModel() {
     }
 
     private fun updateMediaType(mediaType: MediaType) {
-        _mediaTypeSelected.value = mediaType
+        mediaTypeSelected.value = mediaType
     }
 
     private fun resetBrowse() {
