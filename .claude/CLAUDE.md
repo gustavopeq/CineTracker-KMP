@@ -368,8 +368,10 @@ CineTracker-KMP/
 │   │           │   │   │   ├── BaseContentResponse.kt
 │   │           │   │   │   ├── ContentCastResponse.kt
 │   │           │   │   │   ├── ContentCreditsResponse.kt
+│   │           │   │   │   ├── ContentCrewResponse.kt
 │   │           │   │   │   ├── ContentGenre.kt
 │   │           │   │   │   ├── ProductionCountry.kt
+│   │           │   │   │   ├── ShowCreatorResponse.kt
 │   │           │   │   │   ├── VideoResponse.kt
 │   │           │   │   │   ├── VideosByIdResponse.kt
 │   │           │   │   │   └── WatchProvidersResponse.kt
