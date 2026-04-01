@@ -261,6 +261,8 @@ private fun Details(
                 AddToListBottomSheet(
                     lists = viewModel.getAllLists(),
                     onListSelected = { listId ->
+                        // Dismiss first; onToggleWatchlist fires the DB update after a short
+                        // delay (DELAY_TOGGLE_BOTTOM_SHEET_MS) so the sheet can animate out first.
                         onToggleWatchlist(listId)
                         viewModel.onEvent(DetailsEvents.DismissAddToListSheet)
                     },
