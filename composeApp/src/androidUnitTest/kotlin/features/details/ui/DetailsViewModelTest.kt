@@ -450,6 +450,7 @@ class DetailsViewModelTest {
 
     @Test
     fun `showAddToListAfterRating starts as false`() {
+        // Checks default value before init coroutines settle
         stubSuccessfulMovieDetails()
         val viewModel = createViewModel()
         assertFalse(viewModel.showAddToListAfterRating.value)
@@ -485,13 +486,31 @@ class DetailsViewModelTest {
 
             val viewModel = createViewModel()
             advanceUntilIdle()
-            awaitIO()
 
             viewModel.setPersonalRating(8.0f)
             awaitIO()
 
             assertFalse(viewModel.showAddToListAfterRating.value)
         }
+
+    @Test
+    fun `setPersonalRating does not set showAddToListAfterRating to true when content is in a custom list`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false,
+            3 to true
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
 
     @Test
     fun `DismissAddToListSheet sets showAddToListAfterRating back to false`() = runTest {
