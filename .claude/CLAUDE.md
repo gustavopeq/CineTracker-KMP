@@ -263,6 +263,7 @@ CineTracker-KMP/
 │   │       │   │       ├── DetailsView.kt
 │   │       │   │       ├── DetailsViewModel.kt
 │   │       │   │       ├── components/
+│   │       │   │       │   ├── AddToListBottomSheet.kt
 │   │       │   │       │   ├── ContentCredits.kt
 │   │       │   │       │   ├── DetailsBodyPlaceholder.kt
 │   │       │   │       │   ├── DetailsDescription.kt
