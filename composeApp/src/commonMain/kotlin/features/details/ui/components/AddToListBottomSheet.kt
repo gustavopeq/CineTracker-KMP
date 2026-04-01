@@ -24,6 +24,7 @@ import common.domain.models.list.ListItem
 import common.ui.components.SystemNavBarSpacer
 import common.ui.components.bottomsheet.GenericBottomSheet
 import common.ui.theme.DividerGrey
+import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.LARGE_PADDING
 import common.util.UiConstants.SMALL_MARGIN
@@ -40,7 +41,7 @@ fun AddToListBottomSheet(lists: List<ListItem>, onListSelected: (Int) -> Unit, o
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(lists) { listItem ->
+            items(lists.filter { it.id != DefaultLists.ADD_NEW.listId }) { listItem ->
                 val listName = when {
                     listItem.isDefault -> stringResource(
                         DefaultLists.getListLocalizedName(DefaultLists.getListById(listItem.id))
@@ -54,6 +55,7 @@ fun AddToListBottomSheet(lists: List<ListItem>, onListSelected: (Int) -> Unit, o
                 HorizontalDivider(color = DividerGrey)
             }
             item {
+                HorizontalDivider(color = DividerGrey)
                 Spacer(modifier = Modifier.height(SMALL_MARGIN.dp))
                 TextButton(
                     onClick = { onDismiss() },
@@ -64,7 +66,7 @@ fun AddToListBottomSheet(lists: List<ListItem>, onListSelected: (Int) -> Unit, o
                     Text(
                         text = stringResource(resource = Res.string.add_to_list_no_thanks),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = SecondaryGreyColor
                     )
                 }
                 SystemNavBarSpacer()

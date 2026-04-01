@@ -161,4 +161,8 @@
     <string name="details_overlay_subtitle">¡Agrégala a tu lista!</string>
     <string name="details_overlay_cta">Entendido</string>
 
+    <!-- Add to List Bottom Sheet -->
+    <string name="add_to_list_sheet_title">Agregar a lista</string>
+    <string name="add_to_list_no_thanks">No, gracias</string>
+
 </resources>
