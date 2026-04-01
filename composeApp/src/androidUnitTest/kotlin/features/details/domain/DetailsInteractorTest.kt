@@ -12,6 +12,7 @@ import database.repository.PersonalRatingRepository
 import features.details.util.fakeCastResponse
 import features.details.util.fakeContentCastResponse
 import features.details.util.fakeContentCreditsResponse
+import features.details.util.fakeContentCrewResponse
 import features.details.util.fakePersonCreditsResponse
 import features.details.util.fakePersonImagesResponse
 import features.details.util.fakePersonResponse
@@ -233,6 +234,70 @@ class DetailsInteractorTest {
         assertTrue(result.detailsCast.value.isEmpty())
         coVerify(exactly = 0) { movieRepository.getMovieCreditsById(any()) }
         coVerify(exactly = 0) { showRepository.getShowCreditsById(any()) }
+    }
+
+    @Test
+    fun `getContentCastById extracts director names from crew for movies`() = runTest {
+        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+            fakeContentCreditsResponse(
+                fakeContentCastResponse(id = 1, name = "Actor", profilePath = "/p.jpg"),
+                crew = listOf(
+                    fakeContentCrewResponse(id = 10, name = "Steven Spielberg", job = "Director"),
+                    fakeContentCrewResponse(id = 11, name = "John Williams", job = "Composer"),
+                    fakeContentCrewResponse(id = 12, name = "Janusz Kaminski", job = "Director of Photography")
+                )
+            )
+        )
+
+        val result = interactor.getContentCastById(1, MediaType.MOVIE)
+
+        assertEquals(listOf("Steven Spielberg"), result.directorNames.value)
+    }
+
+    @Test
+    fun `getContentCastById extracts multiple director names`() = runTest {
+        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+            fakeContentCreditsResponse(
+                crew = listOf(
+                    fakeContentCrewResponse(id = 10, name = "Lana Wachowski", job = "Director"),
+                    fakeContentCrewResponse(id = 11, name = "Lilly Wachowski", job = "Director")
+                )
+            )
+        )
+
+        val result = interactor.getContentCastById(1, MediaType.MOVIE)
+
+        assertEquals(listOf("Lana Wachowski", "Lilly Wachowski"), result.directorNames.value)
+    }
+
+    @Test
+    fun `getContentCastById returns empty director names when no Director in crew`() = runTest {
+        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+            fakeContentCreditsResponse(
+                crew = listOf(
+                    fakeContentCrewResponse(id = 10, name = "John Williams", job = "Composer")
+                )
+            )
+        )
+
+        val result = interactor.getContentCastById(1, MediaType.MOVIE)
+
+        assertTrue(result.directorNames.value.isEmpty())
+    }
+
+    @Test
+    fun `getContentCastById does not extract director names for SHOW`() = runTest {
+        coEvery { showRepository.getShowCreditsById(1) } returns successFlow(
+            fakeContentCreditsResponse(
+                crew = listOf(
+                    fakeContentCrewResponse(id = 10, name = "Someone", job = "Director")
+                )
+            )
+        )
+
+        val result = interactor.getContentCastById(1, MediaType.SHOW)
+
+        assertTrue(result.directorNames.value.isEmpty())
     }
 
     // ── getContentVideosById ──────────────────────────────────────────────────

@@ -3,6 +3,7 @@ package features.details.util
 import network.models.content.common.CastResponse
 import network.models.content.common.ContentCastResponse
 import network.models.content.common.ContentCreditsResponse
+import network.models.content.common.ContentCrewResponse
 import network.models.content.common.CountryProviderResponse
 import network.models.content.common.PersonResponse
 import network.models.content.common.ProviderResponse
@@ -21,9 +22,25 @@ fun fakePersonResponse(id: Int = 1, name: String = "Test Person") = PersonRespon
     biography = "Test bio"
 )
 
-fun fakeContentCreditsResponse(vararg cast: ContentCastResponse) = ContentCreditsResponse(
+fun fakeContentCreditsResponse(
+    vararg cast: ContentCastResponse,
+    crew: List<ContentCrewResponse> = emptyList()
+) = ContentCreditsResponse(
     id = 1,
-    cast = cast.toList()
+    cast = cast.toList(),
+    crew = crew
+)
+
+fun fakeContentCrewResponse(
+    id: Int = 1,
+    name: String = "Crew Name",
+    job: String? = null,
+    department: String? = null
+) = ContentCrewResponse(
+    id = id,
+    name = name,
+    job = job,
+    department = department
 )
 
 fun fakeContentCastResponse(
