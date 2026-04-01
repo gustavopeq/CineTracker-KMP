@@ -2,6 +2,7 @@ package features.home.ui.components.featured
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -44,6 +46,7 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.HOME_BACKGROUND_ALPHA
 import common.util.UiConstants.POSTER_ASPECT_RATIO
+import common.util.UiConstants.SMALLER_DEVICES_WIDTH
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -79,24 +82,33 @@ fun FeaturedInfo(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    GenericButton(
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        buttonText = stringResource(resource = Res.string.see_details_button_text),
-                        onClick = {
-                            goToDetails(featuredContent.id, featuredContent.mediaType)
-                        }
-                    )
-                    Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
-                    MyListButton(
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        isInAnyList = isInAnyList,
-                        onClick = onMyListClick
-                    )
+                BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+                    val buttonTextStyle = if (maxWidth < SMALLER_DEVICES_WIDTH.dp) {
+                        MaterialTheme.typography.titleSmall
+                    } else {
+                        MaterialTheme.typography.titleMedium
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min)
+                    ) {
+                        GenericButton(
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                            buttonText = stringResource(resource = Res.string.see_details_button_text),
+                            textStyle = buttonTextStyle,
+                            onClick = {
+                                goToDetails(featuredContent.id, featuredContent.mediaType)
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(DEFAULT_PADDING.dp))
+                        MyListButton(
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                            isInAnyList = isInAnyList,
+                            textStyle = buttonTextStyle,
+                            onClick = onMyListClick
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
             }
@@ -105,7 +117,12 @@ fun FeaturedInfo(
 }
 
 @Composable
-private fun MyListButton(modifier: Modifier = Modifier, isInAnyList: Boolean, onClick: () -> Unit) {
+private fun MyListButton(
+    modifier: Modifier = Modifier,
+    isInAnyList: Boolean,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
         modifier = modifier,
@@ -125,7 +142,7 @@ private fun MyListButton(modifier: Modifier = Modifier, isInAnyList: Boolean, on
             text = stringResource(
                 if (isInAnyList) Res.string.home_in_my_list else Res.string.home_my_list
             ),
-            style = MaterialTheme.typography.titleMedium,
+            style = textStyle,
             color = PrimaryWhiteColor
         )
     }
