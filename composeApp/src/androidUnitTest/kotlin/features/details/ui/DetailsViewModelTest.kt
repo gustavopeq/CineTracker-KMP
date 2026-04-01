@@ -475,6 +475,24 @@ class DetailsViewModelTest {
     }
 
     @Test
+    fun `setPersonalRating does not set showAddToListAfterRating when loadState is not Success`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.setPersonalRating(any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        // Do NOT call advanceUntilIdle — loadState is still Loading
+
+        viewModel.setPersonalRating(8.0f)
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
+    @Test
     fun `setPersonalRating does not set showAddToListAfterRating to true when content is in at least one list`() =
         runTest {
             contentInListStatusFlow.value = mapOf(
@@ -656,5 +674,37 @@ class DetailsViewModelTest {
         advanceUntilIdle()
 
         assertEquals("Released", viewModel.contentDetails.value?.status)
+    }
+
+    @Test
+    fun `empty director names from cast do not overwrite existing directorNames in contentDetails`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent().copy(directorNames = listOf("Christopher Nolan"))
+        }
+        val castState = DetailsState().apply {
+            directorNames.value = emptyList()
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState, castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(listOf("Christopher Nolan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `MOVIE with empty crew directors leaves contentDetails directorNames as empty list`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent()
+        }
+        val castState = DetailsState().apply {
+            directorNames.value = emptyList()
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState, castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.contentDetails.value?.directorNames?.isEmpty() == true)
     }
 }

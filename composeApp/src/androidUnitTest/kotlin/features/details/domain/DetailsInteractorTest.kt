@@ -4,6 +4,7 @@ import common.domain.models.util.MediaType
 import common.util.errorFlow
 import common.util.fakeMoviePagingResponse
 import common.util.fakeMovieResponse
+import common.util.fakeShowPagingResponse
 import common.util.fakeShowResponse
 import common.util.successFlow
 import core.LanguageManager
@@ -286,6 +287,22 @@ class DetailsInteractorTest {
     }
 
     @Test
+    fun `getContentCastById filters director with empty name from crew`() = runTest {
+        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+            fakeContentCreditsResponse(
+                crew = listOf(
+                    fakeContentCrewResponse(id = 10, name = "", job = "Director"),
+                    fakeContentCrewResponse(id = 11, name = "Real Director", job = "Director")
+                )
+            )
+        )
+
+        val result = interactor.getContentCastById(1, MediaType.MOVIE)
+
+        assertEquals(listOf("Real Director"), result.directorNames.value)
+    }
+
+    @Test
     fun `getContentCastById does not extract director names for SHOW`() = runTest {
         coEvery { showRepository.getShowCreditsById(1) } returns successFlow(
             fakeContentCreditsResponse(
@@ -380,6 +397,22 @@ class DetailsInteractorTest {
         val result = interactor.getRecommendationsContentById(1, MediaType.MOVIE)
 
         assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `getRecommendationsContentById falls back to similar shows when show recommendations are empty`() = runTest {
+        val similar = fakeShowResponse(id = 2, name = "Similar Show")
+        coEvery { showRepository.getRecommendationsShowsById(1) } returns successFlow(
+            fakeShowPagingResponse()
+        )
+        coEvery { showRepository.getSimilarShowsById(1) } returns successFlow(
+            fakeShowPagingResponse(similar)
+        )
+
+        val result = interactor.getRecommendationsContentById(1, MediaType.SHOW)
+
+        assertEquals(1, result.size)
+        coVerify(exactly = 1) { showRepository.getSimilarShowsById(1) }
     }
 
     @Test
@@ -584,6 +617,30 @@ class DetailsInteractorTest {
 
         assertEquals(expected, result)
         verify { listInteractor.getAllLists() }
+    }
+
+    // ── getPersonalRating ─────────────────────────────────────────────────────
+
+    // ── setPersonalRating ─────────────────────────────────────────────────────
+
+    @Test
+    fun `setPersonalRating delegates to personalRatingRepository`() = runTest {
+        coEvery { personalRatingRepository.setRating(any(), any(), any()) } returns Unit
+
+        interactor.setPersonalRating(1, MediaType.MOVIE, 7.5f)
+
+        coVerify { personalRatingRepository.setRating(1, MediaType.MOVIE, 7.5f) }
+    }
+
+    // ── removePersonalRating ──────────────────────────────────────────────────
+
+    @Test
+    fun `removePersonalRating delegates to personalRatingRepository with null rating`() = runTest {
+        coEvery { personalRatingRepository.setRating(any(), any(), anyNullable()) } returns Unit
+
+        interactor.removePersonalRating(1, MediaType.SHOW)
+
+        coVerify { personalRatingRepository.setRating(1, MediaType.SHOW, null) }
     }
 
     // ── getPersonalRating ─────────────────────────────────────────────────────
