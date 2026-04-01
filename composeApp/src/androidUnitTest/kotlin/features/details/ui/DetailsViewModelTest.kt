@@ -608,4 +608,53 @@ class DetailsViewModelTest {
         assertEquals(false, viewModel.showDetailsOverlay.value)
         verify { settingsRepository.setDetailsOverlaySeen() }
     }
+
+    // ── Director names and status flow ────────────────────────────────────────
+
+    @Test
+    fun `contentDetails includes director names for MOVIE after cast fetch`() = runTest {
+        val castState = DetailsState().apply {
+            directorNames.value = listOf("Christopher Nolan")
+        }
+        stubSuccessfulMovieDetails(castState = castState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(listOf("Christopher Nolan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `contentDetails includes creator names for SHOW from details response`() = runTest {
+        val showDetails = fakeDetailedContent(id = 1, name = "Test Show", mediaType = MediaType.SHOW).copy(
+            directorNames = listOf("Vince Gilligan")
+        )
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = showDetails
+        }
+        coEvery { detailsInteractor.getContentDetailsById(1, MediaType.SHOW) } returns detailsState
+        coEvery { detailsInteractor.getContentCastById(1, MediaType.SHOW) } returns DetailsState()
+        coEvery { detailsInteractor.getStreamingProviders(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.getContentVideosById(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.getRecommendationsContentById(1, MediaType.SHOW) } returns emptyList()
+        coEvery { detailsInteractor.updateCachedFields(any(), any(), any(), any(), any()) } returns Unit
+
+        val viewModel = createViewModel(mediaType = MediaType.SHOW)
+        advanceUntilIdle()
+
+        assertEquals(listOf("Vince Gilligan"), viewModel.contentDetails.value?.directorNames)
+    }
+
+    @Test
+    fun `contentDetails includes status from details response`() = runTest {
+        val detailsState = DetailsState().apply {
+            detailsInfo.value = fakeDetailedContent().copy(status = "Released")
+        }
+        stubSuccessfulMovieDetails(detailsState = detailsState)
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals("Released", viewModel.contentDetails.value?.status)
+    }
 }
