@@ -189,6 +189,16 @@ class DetailsViewModel(
             _loadState.value = DataLoadStatus.Failed
         } else {
             _contentCredits.value = castDetailsState.detailsCast.value
+
+            if (mediaType == MediaType.MOVIE) {
+                val directors = castDetailsState.directorNames.value
+                if (directors.isNotEmpty()) {
+                    _contentDetails.value = _contentDetails.value?.copy(
+                        directorNames = directors
+                    )
+                }
+            }
+
             _loadState.value = DataLoadStatus.Success
             checkDetailsOverlay()
         }
