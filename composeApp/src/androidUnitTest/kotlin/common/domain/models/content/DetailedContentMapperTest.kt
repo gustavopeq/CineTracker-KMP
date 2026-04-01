@@ -84,8 +84,8 @@ class DetailedContentMapperTest {
         val movie = fakeMovieResponse().copy(
             title = null,
             overview = null,
-            poster_path = null,
-            backdrop_path = null,
+            posterPath = null,
+            backdropPath = null,
             release_date = null
         )
 
@@ -106,7 +106,7 @@ class DetailedContentMapperTest {
             id = 1,
             name = "Actor",
             character = null,
-            profile_path = "/pic.jpg",
+            profilePath = "/pic.jpg",
             roles = listOf(CastRoles(character = "Walter White"))
         )
 
@@ -121,7 +121,7 @@ class DetailedContentMapperTest {
             id = 1,
             name = "Actor",
             character = "Jesse Pinkman",
-            profile_path = "/pic.jpg"
+            profilePath = "/pic.jpg"
         )
 
         val result = response.toContentCast()

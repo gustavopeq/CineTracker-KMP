@@ -36,7 +36,7 @@ class GenericContentMapperTest {
 
     @Test
     fun `toGenericContent returns GenericContent for PersonResponse with profile_path`() {
-        val person = PersonResponse(id = 3, name = "Actor", profile_path = "/actor.jpg")
+        val person = PersonResponse(id = 3, name = "Actor", profilePath = "/actor.jpg")
 
         val result = person.toGenericContent()
 
@@ -67,7 +67,7 @@ class GenericContentMapperTest {
 
     @Test
     fun `toGenericContent returns null when poster_path is null`() {
-        val movie = fakeMovieResponse(id = 6).copy(poster_path = null)
+        val movie = fakeMovieResponse(id = 6).copy(posterPath = null)
 
         val result = movie.toGenericContent()
 

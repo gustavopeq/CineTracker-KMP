@@ -6,6 +6,6 @@ interface BaseMediaContent {
     val id: Int
     val title: String
     val overview: String
-    val poster_path: String
+    val posterPath: String
     val mediaType: MediaType
 }

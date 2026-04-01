@@ -1,0 +1,128 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build-and-release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    outputs:
+      version-name: ${{ steps.version.outputs.version-name }}
+      version-code: ${{ steps.version.outputs.version-code }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$TAG"
+          if ! [[ "$MAJOR" =~ ^[0-9]+$ && "$MINOR" =~ ^[0-9]+$ && "$PATCH" =~ ^[0-9]+$ ]]; then
+            echo "::error::Tag must follow vMAJOR.MINOR.PATCH format (e.g., v4.1.0)"
+            exit 1
+          fi
+          if [ "$MINOR" -gt 99 ] || [ "$PATCH" -gt 99 ]; then
+            echo "::error::MINOR and PATCH must be <= 99 for versionCode encoding"
+            exit 1
+          fi
+          VERSION_CODE=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+          echo "version-name=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version-code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "Extracted: versionName=$TAG, versionCode=$VERSION_CODE"
+
+      - name: Patch version in build.gradle.kts
+        run: |
+          sed -i "s/versionCode = [0-9]*/versionCode = ${{ steps.version.outputs.version-code }}/" composeApp/build.gradle.kts
+          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ steps.version.outputs.version-name }}\"/" composeApp/build.gradle.kts
+
+      - name: Create local.properties
+        run: |
+          cat > local.properties <<EOF
+          API_KEY=${API_KEY}
+          SENTRY_DSN=${SENTRY_DSN}
+          SENTRY_ORG=${SENTRY_ORG}
+          SENTRY_PROJECT=${SENTRY_PROJECT}
+          SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+          EOF
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode keystore
+        run: echo "${KEYSTORE_BASE64}" | base64 --decode > /tmp/release.keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+
+      - name: Build signed AAB
+        run: |
+          ./gradlew --stacktrace :composeApp:bundleRelease \
+            -Pandroid.injected.signing.store.file=/tmp/release.keystore \
+            -Pandroid.injected.signing.store.password="${STORE_PASSWORD}" \
+            -Pandroid.injected.signing.key.alias="${KEY_ALIAS}" \
+            -Pandroid.injected.signing.key.password="${KEY_PASSWORD}"
+        env:
+          STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Rename AAB artifact
+        run: mv composeApp/build/outputs/bundle/release/*.aab composeApp/build/outputs/bundle/release/cinetracker-v${{ steps.version.outputs.version-name }}.aab
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "v${{ steps.version.outputs.version-name }}"
+          files: composeApp/build/outputs/bundle/release/cinetracker-v${{ steps.version.outputs.version-name }}.aab
+          generate_release_notes: true
+
+      - name: Clean up keystore
+        if: always()
+        run: rm -f /tmp/release.keystore
+
+  version-bump-pr:
+    name: Version Bump PR
+    runs-on: ubuntu-latest
+    needs: build-and-release
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Patch version in build.gradle.kts
+        run: |
+          sed -i "s/versionCode = [0-9]*/versionCode = ${{ needs.build-and-release.outputs.version-code }}/" composeApp/build.gradle.kts
+          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ needs.build-and-release.outputs.version-name }}\"/" composeApp/build.gradle.kts
+
+      - name: Create version bump PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: bump version to ${{ needs.build-and-release.outputs.version-name }}"
+          branch: "chore/bump-version-${{ needs.build-and-release.outputs.version-name }}"
+          title: "chore: bump version to ${{ needs.build-and-release.outputs.version-name }}"
+          body: |
+            Automated version bump to **${{ needs.build-and-release.outputs.version-name }}** (code: ${{ needs.build-and-release.outputs.version-code }}).
+
+            Triggered by tag `v${{ needs.build-and-release.outputs.version-name }}`.
+          labels: automated

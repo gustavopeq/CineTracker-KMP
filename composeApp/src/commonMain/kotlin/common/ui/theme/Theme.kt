@@ -22,12 +22,7 @@ private val DarkColorPalette =
     )
 
 @Composable
-fun CineTrackerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content:
-    @Composable()
-    () -> Unit
-) {
+fun CineTrackerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = DarkColorPalette,
         typography = AppTypography,

@@ -320,7 +320,7 @@ class DetailsInteractorTest {
     @Test
     fun `getRecommendationsContentById filters out items without poster_path`() = runTest {
         val withPoster = fakeMovieResponse(id = 1, title = "Has Poster")
-        val noPoster = fakeMovieResponse(id = 2, title = "No Poster").copy(poster_path = null)
+        val noPoster = fakeMovieResponse(id = 2, title = "No Poster").copy(posterPath = null)
         coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
             fakeMoviePagingResponse(withPoster, noPoster)
         )

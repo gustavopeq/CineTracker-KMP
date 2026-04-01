@@ -211,7 +211,7 @@ class DetailsInteractor(
         response: Left<ContentPagingResponse<out BaseContentResponse>>
     ): List<GenericContent> = response.value.results
         .filter {
-            it.poster_path?.isNotEmpty() == true && it.title?.isNotEmpty() == true
+            it.posterPath?.isNotEmpty() == true && it.title?.isNotEmpty() == true
         }
         .mapNotNull {
             it.toGenericContent()

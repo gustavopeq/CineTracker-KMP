@@ -26,27 +26,27 @@ fun <T> errorFlow(code: String? = "404"): Flow<Either<T, ApiError>> = flow { emi
 fun fakeMovieResponse(id: Int = 1, title: String = "Test Movie") = MovieResponse(
     id = id,
     title = title,
-    poster_path = "/poster.jpg",
-    backdrop_path = "/backdrop.jpg",
-    vote_average = 7.5,
+    posterPath = "/poster.jpg",
+    backdropPath = "/backdrop.jpg",
+    voteAverage = 7.5,
     overview = "Test overview"
 )
 
 fun fakeShowResponse(id: Int = 1, name: String = "Test Show") = ShowResponse(
     id = id,
     name = name,
-    poster_path = "/poster.jpg",
-    backdrop_path = "/backdrop.jpg",
-    vote_average = 7.5,
+    posterPath = "/poster.jpg",
+    backdropPath = "/backdrop.jpg",
+    voteAverage = 7.5,
     overview = "Test overview"
 )
 
 fun fakeMultiResponse(id: Int = 1, title: String = "Test Movie", mediaType: String = "movie") = MultiResponse(
     id = id,
     title = title,
-    poster_path = "/poster.jpg",
-    backdrop_path = "/backdrop.jpg",
-    vote_average = 7.5,
+    posterPath = "/poster.jpg",
+    backdropPath = "/backdrop.jpg",
+    voteAverage = 7.5,
     overview = "Overview",
     media_type = mediaType
 )

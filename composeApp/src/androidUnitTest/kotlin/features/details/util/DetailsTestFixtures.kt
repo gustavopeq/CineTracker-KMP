@@ -17,7 +17,7 @@ import network.models.content.person.PersonProfileResponse
 fun fakePersonResponse(id: Int = 1, name: String = "Test Person") = PersonResponse(
     id = id,
     name = name,
-    profile_path = "/profile.jpg",
+    profilePath = "/profile.jpg",
     biography = "Test bio"
 )
 
@@ -34,7 +34,7 @@ fun fakeContentCastResponse(
 ) = ContentCastResponse(
     id = id,
     name = name,
-    profile_path = profilePath,
+    profilePath = profilePath,
     order = order
 )
 
@@ -71,7 +71,7 @@ fun fakeCastResponse(
 ) = CastResponse(
     id = id,
     name = name,
-    poster_path = posterPath,
+    posterPath = posterPath,
     _title = title
 )
 
