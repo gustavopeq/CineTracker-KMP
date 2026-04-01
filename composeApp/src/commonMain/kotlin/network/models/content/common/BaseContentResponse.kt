@@ -89,7 +89,8 @@ data class MovieResponse(
     val genres: List<ContentGenre?>? = null,
     val runtime: Int? = null,
     val budget: Long? = null,
-    val revenue: Long? = null
+    val revenue: Long? = null,
+    val status: String? = null
 ) : BaseContentResponse
 
 @Serializable
@@ -120,7 +121,10 @@ data class ShowResponse(
     val production_countries: List<ProductionCountry?>? = null,
     val genres: List<ContentGenre?>? = null,
     val number_of_seasons: Int? = null,
-    val number_of_episodes: Int? = null
+    val number_of_episodes: Int? = null,
+    @SerialName("created_by")
+    val created_by: List<ShowCreatorResponse>? = null,
+    val status: String? = null
 ) : BaseContentResponse {
     override val title: String
         get() = name.orEmpty()
