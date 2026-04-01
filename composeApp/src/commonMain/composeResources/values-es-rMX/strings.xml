@@ -103,6 +103,9 @@
     <string name="show_details_last_air_date_label">Última fecha de emisión</string>
     <string name="movie_details_genres_label">Géneros</string>
     <string name="movie_details_runtime_label">Duración</string>
+    <string name="movie_details_director_label">Director</string>
+    <string name="show_details_created_by_label">Creado por</string>
+    <string name="content_details_status_label">Estado</string>
     <string name="movie_details_budget_label">Presupuesto</string>
     <string name="movie_details_revenue_label">Ingresos</string>
     <string name="content_details_stream_label">Stream</string>
