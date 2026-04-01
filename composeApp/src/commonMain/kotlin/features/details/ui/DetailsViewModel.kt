@@ -137,7 +137,7 @@ class DetailsViewModel(
     fun setPersonalRating(rating: Float) {
         viewModelScope.launch(Dispatchers.IO) {
             detailsInteractor.setPersonalRating(contentId, mediaType, rating)
-            if (_contentInListStatus.value.values.none { it }) {
+            if (_loadState.value == DataLoadStatus.Success && _contentInListStatus.value.values.none { it }) {
                 _showAddToListAfterRating.value = true
             }
         }

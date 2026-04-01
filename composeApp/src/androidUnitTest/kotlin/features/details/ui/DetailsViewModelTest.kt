@@ -533,6 +533,24 @@ class DetailsViewModelTest {
         assertFalse(viewModel.showAddToListAfterRating.value)
     }
 
+    @Test
+    fun `removePersonalRating does not set showAddToListAfterRating to true`() = runTest {
+        contentInListStatusFlow.value = mapOf(
+            DefaultLists.WATCHLIST.listId to false,
+            DefaultLists.WATCHED.listId to false
+        )
+        stubSuccessfulMovieDetails()
+        coEvery { detailsInteractor.removePersonalRating(any(), any()) } returns Unit
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.removePersonalRating()
+        awaitIO()
+
+        assertFalse(viewModel.showAddToListAfterRating.value)
+    }
+
     // ── Details Onboarding Overlay ───────────────────────────────────────────
 
     @Test
