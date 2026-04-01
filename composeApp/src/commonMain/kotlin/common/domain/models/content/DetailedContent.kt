@@ -39,7 +39,9 @@ data class DetailedContent(
     val placeOfBirth: String = "",
     val numberOfSeasons: Int = 0,
     val numberOfEpisodes: Int = 0,
-    val streamProviders: List<StreamProvider> = emptyList()
+    val streamProviders: List<StreamProvider> = emptyList(),
+    val directorNames: List<String> = emptyList(),
+    val status: String = ""
 ) : GenericContentInterface
 
 fun MovieResponse.toDetailedContent(): DetailedContent = DetailedContent(
@@ -55,7 +57,8 @@ fun MovieResponse.toDetailedContent(): DetailedContent = DetailedContent(
     runtime = this.runtime ?: 0,
     releaseDate = this.release_date.orEmpty(),
     budget = this.budget ?: 0,
-    revenue = this.revenue ?: 0
+    revenue = this.revenue ?: 0,
+    status = this.status.orEmpty()
 )
 
 fun ShowResponse.toDetailedContent(): DetailedContent = DetailedContent(
@@ -71,7 +74,9 @@ fun ShowResponse.toDetailedContent(): DetailedContent = DetailedContent(
     firstAirDate = this.first_air_date.orEmpty(),
     lastAirDate = this.last_air_date.orEmpty(),
     numberOfSeasons = this.number_of_seasons ?: 0,
-    numberOfEpisodes = this.number_of_episodes ?: 0
+    numberOfEpisodes = this.number_of_episodes ?: 0,
+    directorNames = this.created_by?.mapNotNull { it.name }?.filter { it.isNotEmpty() } ?: emptyList(),
+    status = this.status.orEmpty()
 )
 
 fun PersonResponse.toDetailedContent(): DetailedContent = DetailedContent(
