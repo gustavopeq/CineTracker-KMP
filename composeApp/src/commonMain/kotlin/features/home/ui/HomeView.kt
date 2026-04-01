@@ -41,7 +41,7 @@ import common.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
-import features.details.ui.components.otherlists.OtherListsBottomSheet
+import common.ui.components.bottomsheet.ManageListsBottomSheet
 import features.home.events.HomeEvent
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
@@ -131,7 +131,7 @@ private fun Home(
         }
 
         if (showListBottomSheet) {
-            OtherListsBottomSheet(
+            ManageListsBottomSheet(
                 allLists = allLists,
                 contentInListStatus = featuredContentInListStatus,
                 onToggleList = { listId ->
