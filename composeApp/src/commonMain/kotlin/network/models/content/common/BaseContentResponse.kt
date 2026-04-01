@@ -122,7 +122,6 @@ data class ShowResponse(
     val genres: List<ContentGenre?>? = null,
     val number_of_seasons: Int? = null,
     val number_of_episodes: Int? = null,
-    @SerialName("created_by")
     val created_by: List<ShowCreatorResponse>? = null,
     val status: String? = null
 ) : BaseContentResponse {
