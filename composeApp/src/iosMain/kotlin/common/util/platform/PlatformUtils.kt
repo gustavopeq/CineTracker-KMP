@@ -28,6 +28,9 @@ actual object PlatformUtils {
 
         return locale ?: "$language-$country"
     }
-    actual fun getDisplayCountry(isoCode: String): String =
-        NSLocale.currentLocale.localizedStringForCountryCode(isoCode) ?: isoCode
+    actual fun getDisplayCountry(isoCode: String): String {
+        val preferredLanguage = (NSLocale.preferredLanguages.firstOrNull() as String?) ?: "en"
+        val locale = NSLocale(localeIdentifier = preferredLanguage)
+        return locale.localizedStringForCountryCode(isoCode) ?: isoCode
+    }
 }
