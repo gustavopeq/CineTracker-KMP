@@ -35,6 +35,15 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.content_details_status_label
 import cinetracker_kmp.composeapp.generated.resources.content_details_stream_label
+import cinetracker_kmp.composeapp.generated.resources.content_status_canceled
+import cinetracker_kmp.composeapp.generated.resources.content_status_ended
+import cinetracker_kmp.composeapp.generated.resources.content_status_in_production
+import cinetracker_kmp.composeapp.generated.resources.content_status_pilot
+import cinetracker_kmp.composeapp.generated.resources.content_status_planned
+import cinetracker_kmp.composeapp.generated.resources.content_status_post_production
+import cinetracker_kmp.composeapp.generated.resources.content_status_released
+import cinetracker_kmp.composeapp.generated.resources.content_status_returning_series
+import cinetracker_kmp.composeapp.generated.resources.content_status_rumored
 import cinetracker_kmp.composeapp.generated.resources.episodes
 import cinetracker_kmp.composeapp.generated.resources.movie_details_budget_label
 import cinetracker_kmp.composeapp.generated.resources.movie_details_director_label
@@ -403,12 +412,27 @@ private fun DirectorInfo(directorNames: List<String>, mediaType: MediaType) {
 @Composable
 private fun StatusInfo(status: String) {
     if (status.isNotEmpty()) {
+        val localizedStatus = localizeStatus(status)
         DetailDescriptionLabel(
             stringResource(resource = Res.string.content_details_status_label)
         )
-        DetailDescriptionBody(status)
+        DetailDescriptionBody(localizedStatus)
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
     }
+}
+
+@Composable
+private fun localizeStatus(apiStatus: String): String = when (apiStatus) {
+    "Released" -> stringResource(resource = Res.string.content_status_released)
+    "In Production" -> stringResource(resource = Res.string.content_status_in_production)
+    "Post Production" -> stringResource(resource = Res.string.content_status_post_production)
+    "Planned" -> stringResource(resource = Res.string.content_status_planned)
+    "Rumored" -> stringResource(resource = Res.string.content_status_rumored)
+    "Canceled" -> stringResource(resource = Res.string.content_status_canceled)
+    "Returning Series" -> stringResource(resource = Res.string.content_status_returning_series)
+    "Ended" -> stringResource(resource = Res.string.content_status_ended)
+    "Pilot" -> stringResource(resource = Res.string.content_status_pilot)
+    else -> apiStatus
 }
 
 @Composable

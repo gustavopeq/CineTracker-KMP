@@ -106,6 +106,15 @@
     <string name="movie_details_director_label">Diretor</string>
     <string name="show_details_created_by_label">Criado por</string>
     <string name="content_details_status_label">Status</string>
+    <string name="content_status_released">Lançado</string>
+    <string name="content_status_in_production">Em produção</string>
+    <string name="content_status_post_production">Pós-produção</string>
+    <string name="content_status_planned">Planejado</string>
+    <string name="content_status_rumored">Rumor</string>
+    <string name="content_status_canceled">Cancelado</string>
+    <string name="content_status_returning_series">Em exibição</string>
+    <string name="content_status_ended">Encerrado</string>
+    <string name="content_status_pilot">Piloto</string>
     <string name="movie_details_budget_label">Orçamento</string>
     <string name="movie_details_revenue_label">Receita</string>
     <string name="content_details_stream_label">Stream</string>
