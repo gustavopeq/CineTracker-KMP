@@ -22,6 +22,7 @@ Integrated with [The Movie DB](https://developer.themoviedb.org/docs/getting-sta
 * [Firebase Kotlin SDK (GitLive)](https://github.com/GitLiveApp/firebase-kotlin-sdk) - Analytics and crash reporting
 * [Multiplatform paging](https://github.com/cashapp/multiplatform-paging) - Efficient data pagination across Android and iOS
 * [Build Konfig](https://github.com/yshrsmz/BuildKonfig) - BuildConfig for KMP to read values from local properties
+* [Compottie](https://github.com/alexzhirkevich/compottie) - Lottie animations for Compose Multiplatform
 
 
 ## 🎨 Screenshots <img alt="Android" width="30px" src="https://github.com/devicons/devicon/blob/master/icons/android/android-original.svg"/> <img alt="Apple" width="30px" src="https://github.com/devicons/devicon/blob/master/icons/apple/apple-original.svg"/>

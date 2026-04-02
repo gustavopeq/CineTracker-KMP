@@ -35,9 +35,11 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
+import common.ui.SharedElementTag
 import common.ui.WatchlistSort
 import common.ui.components.popup.ClassicSnackbar
 import common.ui.components.tab.GenericTabRow
+import common.ui.sharedPosterKey
 import common.util.Constants.UNSELECTED_OPTION_INDEX
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SMALL_MARGIN
@@ -59,7 +61,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Watchlist(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
+fun Watchlist(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScreen: () -> Unit) {
     Watchlist(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
@@ -72,7 +74,7 @@ fun Watchlist(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit
 private fun Watchlist(
     viewModel: WatchlistViewModel,
     mainViewModel: MainViewModel,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
@@ -111,7 +113,7 @@ private fun AllListsLoadedState(
     loadState: DataLoadStatus,
     listContent: List<GenericContent>,
     selectedList: Int,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val selectedTabIndex by viewModel.selectedTabIndex.collectAsState()
@@ -267,7 +269,7 @@ private fun WatchlistBody(
     watchlistSort: WatchlistSort,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     removeItem: (Int, MediaType) -> Unit,
     moveItemToList: (Int, MediaType, Int) -> Unit
 ) {
@@ -292,7 +294,7 @@ private fun WatchlistContentLazyList(
     contentList: List<GenericContent>,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     removeItem: (Int, MediaType) -> Unit,
     moveItemToList: (Int, MediaType, Int) -> Unit
 ) {
@@ -324,8 +326,9 @@ private fun WatchlistContentLazyList(
                     mediaType = mediaInfo.mediaType,
                     selectedList = selectedList,
                     allLists = allLists,
+                    sharedElementKey = sharedPosterKey(SharedElementTag.WATCHLIST, mediaInfo.id, mediaInfo.mediaType),
                     onCardClick = {
-                        goToDetails(mediaInfo.id, mediaInfo.mediaType)
+                        goToDetails(mediaInfo.id, mediaInfo.mediaType, SharedElementTag.WATCHLIST, mediaInfo.posterPath)
                     },
                     onRemoveClick = {
                         removeItem(mediaInfo.id, mediaInfo.mediaType)

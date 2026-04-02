@@ -1,5 +1,6 @@
 package common.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,11 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,10 +20,9 @@ import common.ui.components.button.GenericButton
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.ERROR_ANIMATION_SIZE
 import common.util.UiConstants.SECTION_PADDING
-import kottie.KottieAnimation
-import kottie.KottieCompositionSpec
-import kottie.animateKottieCompositionAsState
-import kottie.rememberKottieComposition
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
@@ -57,25 +53,18 @@ fun ErrorScreen(onTryAgain: () -> Unit) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ErrorIconAnimation() {
-    var animation by remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        animation = Res.readBytes("files/erroranimation.json").decodeToString()
+    val composition by rememberLottieComposition {
+        LottieCompositionSpec.JsonString(
+            Res.readBytes("files/erroranimation.json").decodeToString()
+        )
     }
 
-    val composition = rememberKottieComposition(
-        spec = KottieCompositionSpec.File(animation)
-    )
-
-    val animationState by animateKottieCompositionAsState(
-        composition = composition,
-        iterations = 2
-    )
-
-    KottieAnimation(
-        modifier = Modifier.size(ERROR_ANIMATION_SIZE.dp),
-        composition = composition,
-        progress = { animationState.progress },
-        backgroundColor = MaterialTheme.colorScheme.primary
+    Image(
+        painter = rememberLottiePainter(
+            composition = composition,
+            iterations = 2
+        ),
+        contentDescription = null,
+        modifier = Modifier.size(ERROR_ANIMATION_SIZE.dp)
     )
 }

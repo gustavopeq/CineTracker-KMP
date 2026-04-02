@@ -55,7 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Home(
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     goToErrorScreen: () -> Unit
@@ -74,7 +74,7 @@ fun Home(
 private fun Home(
     viewModel: HomeViewModel,
     mainViewModel: MainViewModel,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     goToErrorScreen: () -> Unit
@@ -152,7 +152,7 @@ private fun HomeBody(
     trendingPersonList: List<PersonDetails>,
     moviesComingSoonList: List<GenericContent>,
     featuredContentInListStatus: Map<Int, Boolean>,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     onMyListClick: () -> Unit
@@ -187,6 +187,8 @@ private fun HomeBody(
         }
     }
 
+    val goToDetailsNoTag: (Int, MediaType) -> Unit = { id, mt -> goToDetails(id, mt, "", "") }
+
     Box {
         FeaturedBackgroundImage(
             imageUrl = homePosterUrl,
@@ -208,7 +210,7 @@ private fun HomeBody(
                 FeaturedInfo(
                     featuredContent = featuredItem,
                     isInAnyList = isInAnyList,
-                    goToDetails = goToDetails,
+                    goToDetails = goToDetailsNoTag,
                     onMyListClick = onMyListClick
                 )
                 Column(
@@ -229,7 +231,7 @@ private fun HomeBody(
                     )
                     SecondaryFeaturedInfo(
                         featuredItem = secondaryFeaturedItem,
-                        goToDetails = goToDetails
+                        goToDetails = goToDetailsNoTag
                     )
                     ComingSoonCarousel(
                         carouselHeaderRes = Res.string.coming_soon_header,
@@ -239,7 +241,7 @@ private fun HomeBody(
                     )
                     PersonFeaturedInfo(
                         trendingPerson = trendingPerson,
-                        goToDetails = goToDetails
+                        goToDetails = goToDetailsNoTag
                     )
                     HomeBrowseButton(
                         goToBrowse = goToBrowse

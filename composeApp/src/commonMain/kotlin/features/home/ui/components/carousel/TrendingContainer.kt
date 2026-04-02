@@ -20,7 +20,9 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.trending_today_header
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.SharedElementTag
 import common.ui.components.card.DefaultContentCard
+import common.ui.sharedPosterKey
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
 import common.util.UiConstants.CAROUSEL_RATING_STAR_SIZE
 import common.util.UiConstants.DEFAULT_MARGIN
@@ -34,7 +36,7 @@ import org.jetbrains.compose.resources.stringResource
 fun TrendingCarousel(
     trendingItems: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit
+    goToDetails: (Int, MediaType, String, String) -> Unit
 ) {
     if (trendingItems.isNotEmpty()) {
         ClassicCarousel(
@@ -55,8 +57,9 @@ fun TrendingCarousel(
                 rating = item.rating,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 ratingIconSize = CAROUSEL_RATING_STAR_SIZE,
+                sharedElementKey = sharedPosterKey(SharedElementTag.TRENDING, item.id, item.mediaType),
                 goToDetails = {
-                    goToDetails(item.id, item.mediaType)
+                    goToDetails(item.id, item.mediaType, SharedElementTag.TRENDING, item.posterPath)
                 }
             )
         }
@@ -71,9 +74,9 @@ fun ClassicCarousel(
     itemList: List<GenericContent>,
     currentScreenWidth: Float,
     itemSizeDp: Dp = CAROUSEL_CARDS_WIDTH.dp,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     headerAdditionalAction: @Composable () -> Unit = {},
-    contentCard: @Composable (GenericContent, (Int, MediaType) -> Unit) -> Unit
+    contentCard: @Composable (GenericContent, (Int, MediaType, String, String) -> Unit) -> Unit
 ) {
     val cardsCountInScreen = currentScreenWidth / itemSizeDp.value
 
