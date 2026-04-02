@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import common.ui.components.NetworkImage
-import common.ui.rememberSharedElementModifier
 import common.ui.components.RatingComponent
+import common.ui.rememberSharedElementModifier
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.RoundCornerShapes
 import common.util.Constants.BASE_500_IMAGE_URL

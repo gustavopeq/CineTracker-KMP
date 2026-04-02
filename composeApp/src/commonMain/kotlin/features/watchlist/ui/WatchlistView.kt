@@ -36,10 +36,10 @@ import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import common.ui.SharedElementTag
-import common.ui.sharedPosterKey
 import common.ui.WatchlistSort
 import common.ui.components.popup.ClassicSnackbar
 import common.ui.components.tab.GenericTabRow
+import common.ui.sharedPosterKey
 import common.util.Constants.UNSELECTED_OPTION_INDEX
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SMALL_MARGIN

@@ -1,7 +1,6 @@
 package features.details.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,9 +24,7 @@ import common.util.UiConstants.SMALL_PADDING
 import common.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
 
 @Composable
-fun DetailBodyPlaceholder(
-    titleScreenHeight: Float
-) {
+fun DetailBodyPlaceholder(titleScreenHeight: Float) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

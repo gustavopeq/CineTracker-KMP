@@ -43,9 +43,9 @@ import cinetracker_kmp.composeapp.generated.resources.movie_tag
 import cinetracker_kmp.composeapp.generated.resources.show_tag
 import common.domain.models.util.MediaType
 import common.ui.components.NetworkImage
-import common.ui.rememberSharedElementModifier
 import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
+import common.ui.rememberSharedElementModifier
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryYellowColor_90

@@ -21,8 +21,8 @@ import cinetracker_kmp.composeapp.generated.resources.trending_today_header
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
 import common.ui.SharedElementTag
-import common.ui.sharedPosterKey
 import common.ui.components.card.DefaultContentCard
+import common.ui.sharedPosterKey
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
 import common.util.UiConstants.CAROUSEL_RATING_STAR_SIZE
 import common.util.UiConstants.DEFAULT_MARGIN
