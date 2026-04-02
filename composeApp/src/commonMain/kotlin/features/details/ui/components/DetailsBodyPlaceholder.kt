@@ -1,5 +1,7 @@
 package features.details.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,8 +13,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import common.ui.components.ComponentPlaceholder
+import common.ui.components.GradientDirections
+import common.ui.components.classicVerticalGradientBrush
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.LARGE_MARGIN
 import common.util.UiConstants.SECTION_PADDING
@@ -20,25 +25,39 @@ import common.util.UiConstants.SMALL_PADDING
 import common.util.UiConstants.TEXT_PLACEHOLDER_CORNER_PERCENTAGE
 
 @Composable
-fun DetailBodyPlaceholder(posterHeight: Float) {
+fun DetailBodyPlaceholder(
+    titleScreenHeight: Float
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        ComponentPlaceholder(
+        Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .height((posterHeight * 0.85).dp)
+                .height(titleScreenHeight.dp)
         )
-        Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
-        TextLinePlaceholder(endPadding = LARGE_MARGIN)
-        TextLinePlaceholder(endPadding = LARGE_MARGIN)
-        TextLinePlaceholder(endPadding = LARGE_MARGIN)
-        TextLinePlaceholder(endPadding = LARGE_MARGIN * 2)
-        TextLinePlaceholder(endPadding = LARGE_MARGIN * 3)
-        CategoriesPlaceholder()
-        CategoriesPlaceholder()
-        CategoriesPlaceholder()
-        CategoriesPlaceholder()
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(92.dp)
+                .classicVerticalGradientBrush(direction = GradientDirections.UP)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+        ) {
+            Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
+            TextLinePlaceholder(endPadding = LARGE_MARGIN)
+            TextLinePlaceholder(endPadding = LARGE_MARGIN)
+            TextLinePlaceholder(endPadding = LARGE_MARGIN)
+            TextLinePlaceholder(endPadding = LARGE_MARGIN * 2)
+            TextLinePlaceholder(endPadding = LARGE_MARGIN * 3)
+            CategoriesPlaceholder()
+            CategoriesPlaceholder()
+            CategoriesPlaceholder()
+            CategoriesPlaceholder()
+        }
     }
 }
 

@@ -34,8 +34,8 @@ fun MainNavGraph(navController: NavHostController) {
                 composable<HomeRoute> {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         Home(
-                            goToDetails = { contentId, mediaType ->
-                                navController.navigate(DetailsRoute(contentId, mediaType.name))
+                            goToDetails = { contentId, mediaType, tag, posterPath ->
+                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
                             },
                             goToWatchlist = {
                                 navigateToTopLevelDestination(navController, WatchlistRoute)
@@ -90,6 +90,8 @@ fun MainNavGraph(navController: NavHostController) {
                         Details(
                             contentId = route.contentId,
                             mediaType = route.mediaType,
+                            sharedElementTag = route.sharedElementTag,
+                            posterPath = route.posterPath,
                             onBackPress = { navController.popBackStack() },
                             goToDetails = { contentId, mediaType ->
                                 navController.navigate(DetailsRoute(contentId, mediaType.name))

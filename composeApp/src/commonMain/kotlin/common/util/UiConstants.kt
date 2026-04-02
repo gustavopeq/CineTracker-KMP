@@ -22,6 +22,7 @@ object UiConstants {
     const val ERROR_ANIMATION_SIZE = 100
     const val DELAY_UPDATE_POPUP_TEXT_MS = 100L
     const val DELAY_TOGGLE_BOTTOM_SHEET_MS = 200L
+    const val SHARED_ELEMENT_ACTIVATION_DELAY_MS = 400L
     const val EMPTY_RATINGS = 0.0
     const val MEDIA_TYPE_TAG_CORNER_SIZE = 2
     const val TEXT_PLACEHOLDER_CORNER_PERCENTAGE = 30

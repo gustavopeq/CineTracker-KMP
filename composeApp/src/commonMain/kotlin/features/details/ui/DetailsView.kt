@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -45,10 +46,12 @@ import common.ui.MainViewModel
 import common.ui.components.NetworkImage
 import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.popup.ClassicSnackbar
-import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
+import common.ui.theme.RoundCornerShapes
+import common.util.Constants.BASE_500_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DELAY_TOGGLE_BOTTOM_SHEET_MS
+import common.util.UiConstants.SHARED_ELEMENT_ACTIVATION_DELAY_MS
 import common.util.UiConstants.DETAILS_TITLE_IMAGE_OFFSET_PERCENT
 import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.POSTER_ASPECT_RATIO
@@ -81,6 +84,8 @@ import org.koin.core.parameter.parametersOf
 fun Details(
     contentId: Int,
     mediaType: String,
+    sharedElementTag: String = "",
+    posterPath: String = "",
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit
@@ -89,6 +94,8 @@ fun Details(
         Details(
             viewModel = koinViewModel { parametersOf(contentId, MediaType.getType(mediaType)) },
             mainViewModel = koinViewModel(),
+            sharedElementTag = sharedElementTag,
+            posterPath = posterPath,
             onBackPress = onBackPress,
             goToDetails = goToDetails,
             goToErrorScreen = goToErrorScreen
@@ -100,12 +107,15 @@ fun Details(
 private fun Details(
     viewModel: DetailsViewModel,
     mainViewModel: MainViewModel,
+    sharedElementTag: String,
+    posterPath: String,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val contentDetails by viewModel.contentDetails.collectAsState()
     val contentInListStatus by viewModel.contentInListStatus.collectAsState()
+//    val loadState = DataLoadStatus.Loading
     val loadState by viewModel.loadState.collectAsState()
     val detailsFailedLoading by viewModel.detailsFailedLoading
     val snackbarState by viewModel.snackbarState
@@ -205,17 +215,20 @@ private fun Details(
             animationSpec = if (targetBlur > 0.dp) snap() else tween(300)
         )
 
-        val contentPosterUrl = contentDetails?.posterPath?.let { BASE_ORIGINAL_IMAGE_URL + it }.orEmpty()
-        val sharedElementKey = "poster_${viewModel.contentId}_${viewModel.mediaType.name}"
+        val titleScreenHeight = posterHeight * DETAILS_TITLE_IMAGE_OFFSET_PERCENT
+        val effectivePosterPath = posterPath.ifEmpty { contentDetails?.posterPath.orEmpty() }
+        val contentPosterUrl = if (effectivePosterPath.isNotEmpty()) BASE_500_IMAGE_URL + effectivePosterPath else ""
+        val sharedElementKey = "poster_${sharedElementTag}_${viewModel.contentId}_${viewModel.mediaType.name}"
+
+        // Enable shared element only after enter transition completes,
+        // so it only animates on back navigation (not forward).
+        var enableSharedElement by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+            delay(SHARED_ELEMENT_ACTIVATION_DELAY_MS)
+            enableSharedElement = true
+        }
 
         Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
-            BackgroundPoster(
-                posterHeight = posterHeight,
-                contentPosterUrl = contentPosterUrl,
-                titlePositionY = currentTitlePosY,
-                initialTitlePosY = initialTitlePosY,
-                sharedElementKey = sharedElementKey
-            )
             DetailsTopBar(
                 contentTitle = contentDetails?.name.orEmpty(),
                 currentHeaderPosY = currentTitlePosY,
@@ -232,9 +245,17 @@ private fun Details(
             ClassicSnackbar(
                 snackbarHostState = snackbarHostState
             ) {
+                BackgroundPoster(
+                    posterHeight = posterHeight,
+                    contentPosterUrl = contentPosterUrl,
+                    titlePositionY = currentTitlePosY,
+                    initialTitlePosY = initialTitlePosY,
+                    sharedElementKey = sharedElementKey,
+                    enableSharedElement = enableSharedElement
+                )
                 when (loadState) {
                     is DataLoadStatus.Loading -> {
-                        DetailBodyPlaceholder(posterHeight)
+                        DetailBodyPlaceholder(titleScreenHeight)
                     }
 
                     is DataLoadStatus.Success -> {
@@ -398,7 +419,8 @@ private fun BackgroundPoster(
     contentPosterUrl: String,
     titlePositionY: Float,
     initialTitlePosY: Float?,
-    sharedElementKey: String
+    sharedElementKey: String,
+    enableSharedElement: Boolean
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
@@ -407,6 +429,7 @@ private fun BackgroundPoster(
     }
 
     val sharedModifier: Modifier = run {
+        if (!enableSharedElement) return@run Modifier
         val scope = LocalSharedTransitionScope.current
         val visibilityScope = LocalAnimatedVisibilityScope.current
         if (scope != null && visibilityScope != null) {
@@ -445,9 +468,11 @@ private fun BackgroundPoster(
             .aspectRatio(POSTER_ASPECT_RATIO)
     }
 
-    NetworkImage(
-        imageUrl = contentPosterUrl,
-        modifier = sharedModifier.then(scaleModifier),
-        alpha = alpha
-    )
+    Box(modifier = sharedModifier.then(scaleModifier).clip(RoundCornerShapes.small)) {
+        NetworkImage(
+            imageUrl = contentPosterUrl,
+            modifier = Modifier.fillMaxSize(),
+            alpha = alpha
+        )
+    }
 }

@@ -1,5 +1,10 @@
 package navigation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +53,11 @@ fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel,
         Modifier
     }
 
-    if (showTopBar) {
+    AnimatedVisibility(
+        visible = showTopBar,
+        enter = fadeIn(spring(stiffness = Spring.StiffnessHigh)),
+        exit = fadeOut(spring(stiffness = Spring.StiffnessHigh))
+    ) {
         TopAppBar(
             title = {
                 if (isHomeScreen) {

@@ -15,7 +15,7 @@ data object WatchlistRoute
 data object SearchRoute
 
 @Serializable
-data class DetailsRoute(val contentId: Int, val mediaType: String)
+data class DetailsRoute(val contentId: Int, val mediaType: String, val sharedElementTag: String = "", val posterPath: String = "")
 
 @Serializable
 data object ErrorRoute

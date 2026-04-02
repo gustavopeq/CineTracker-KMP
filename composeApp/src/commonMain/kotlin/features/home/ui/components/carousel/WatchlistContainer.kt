@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 fun WatchlistCarousel(
     watchlist: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToWatchlist: () -> Unit
 ) {
     val carouselHeader = Res.string.home_my_watchlist_header
@@ -61,8 +61,8 @@ fun WatchlistCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = "poster_${item.id}_${item.mediaType.name}",
-                goToDetails = goToDetails
+                sharedElementKey = "poster_watchlist_${item.id}_${item.mediaType.name}",
+                goToDetails = { id, mediaType -> goToDetails(id, mediaType, "watchlist", item.posterPath) }
             )
         }
     } else {

@@ -18,7 +18,7 @@ fun ComingSoonCarousel(
     carouselHeaderRes: StringResource,
     comingSoonList: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit
+    goToDetails: (Int, MediaType, String, String) -> Unit
 ) {
     if (comingSoonList.isNotEmpty()) {
         ClassicCarousel(
@@ -35,8 +35,8 @@ fun ComingSoonCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = "poster_${item.id}_${item.mediaType.name}",
-                goToDetails = goToDetails
+                sharedElementKey = "poster_comingsoon_${item.id}_${item.mediaType.name}",
+                goToDetails = { id, mediaType -> goToDetails(id, mediaType, "comingsoon", item.posterPath) }
             )
         }
         Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))

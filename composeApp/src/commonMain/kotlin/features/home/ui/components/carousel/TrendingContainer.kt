@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 fun TrendingCarousel(
     trendingItems: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType) -> Unit
+    goToDetails: (Int, MediaType, String, String) -> Unit
 ) {
     if (trendingItems.isNotEmpty()) {
         ClassicCarousel(
@@ -55,9 +55,9 @@ fun TrendingCarousel(
                 rating = item.rating,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 ratingIconSize = CAROUSEL_RATING_STAR_SIZE,
-                sharedElementKey = "poster_${item.id}_${item.mediaType.name}",
+                sharedElementKey = "poster_trending_${item.id}_${item.mediaType.name}",
                 goToDetails = {
-                    goToDetails(item.id, item.mediaType)
+                    goToDetails(item.id, item.mediaType, "trending", item.posterPath)
                 }
             )
         }
@@ -72,9 +72,9 @@ fun ClassicCarousel(
     itemList: List<GenericContent>,
     currentScreenWidth: Float,
     itemSizeDp: Dp = CAROUSEL_CARDS_WIDTH.dp,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     headerAdditionalAction: @Composable () -> Unit = {},
-    contentCard: @Composable (GenericContent, (Int, MediaType) -> Unit) -> Unit
+    contentCard: @Composable (GenericContent, (Int, MediaType, String, String) -> Unit) -> Unit
 ) {
     val cardsCountInScreen = currentScreenWidth / itemSizeDp.value
 
