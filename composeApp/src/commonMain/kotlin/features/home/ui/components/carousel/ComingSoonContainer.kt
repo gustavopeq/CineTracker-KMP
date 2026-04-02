@@ -35,6 +35,7 @@ fun ComingSoonCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
+                sharedElementKey = "poster_${item.id}_${item.mediaType.name}",
                 goToDetails = goToDetails
             )
         }

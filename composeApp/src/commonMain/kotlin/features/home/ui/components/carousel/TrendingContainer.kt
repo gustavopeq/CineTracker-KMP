@@ -55,6 +55,7 @@ fun TrendingCarousel(
                 rating = item.rating,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 ratingIconSize = CAROUSEL_RATING_STAR_SIZE,
+                sharedElementKey = "poster_${item.id}_${item.mediaType.name}",
                 goToDetails = {
                     goToDetails(item.id, item.mediaType)
                 }
