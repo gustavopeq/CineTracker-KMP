@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.SharedElementTag
 import common.ui.sharedPosterKey
 import common.ui.components.card.ImageContentCard
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
@@ -36,8 +37,8 @@ fun ComingSoonCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = sharedPosterKey("comingsoon", item.id, item.mediaType),
-                goToDetails = { id, mediaType -> goToDetails(id, mediaType, "comingsoon", item.posterPath) }
+                sharedElementKey = sharedPosterKey(SharedElementTag.COMING_SOON, item.id, item.mediaType),
+                goToDetails = { id, mediaType -> goToDetails(id, mediaType, SharedElementTag.COMING_SOON, item.posterPath) }
             )
         }
         Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))

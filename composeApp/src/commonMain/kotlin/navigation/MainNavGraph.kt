@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import common.domain.models.util.MediaType
 import common.ui.LocalAnimatedVisibilityScope
 import common.ui.LocalSharedTransitionScope
 import common.ui.screen.ErrorScreen
@@ -23,6 +24,13 @@ import navigation.components.navigateToTopLevelDestination
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
+    val goToDetails: (Int, MediaType, String, String) -> Unit = { contentId, mediaType, tag, posterPath ->
+        navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
+    }
+    val goToErrorScreen: () -> Unit = {
+        navController.navigate(ErrorRoute) { launchSingleTop = true }
+    }
+
     SharedTransitionLayout {
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             NavHost(
@@ -34,54 +42,38 @@ fun MainNavGraph(navController: NavHostController) {
                 composable<HomeRoute> {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         Home(
-                            goToDetails = { contentId, mediaType, tag, posterPath ->
-                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
-                            },
+                            goToDetails = goToDetails,
                             goToWatchlist = {
                                 navigateToTopLevelDestination(navController, WatchlistRoute)
                             },
                             goToBrowse = {
                                 navigateToTopLevelDestination(navController, BrowseRoute)
                             },
-                            goToErrorScreen = {
-                                navController.navigate(ErrorRoute) { launchSingleTop = true }
-                            }
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }
                 composable<BrowseRoute> {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         Browse(
-                            goToDetails = { contentId, mediaType, tag, posterPath ->
-                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
-                            },
-                            goToErrorScreen = {
-                                navController.navigate(ErrorRoute) { launchSingleTop = true }
-                            }
+                            goToDetails = goToDetails,
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }
                 composable<WatchlistRoute> {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         Watchlist(
-                            goToDetails = { contentId, mediaType, tag, posterPath ->
-                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
-                            },
-                            goToErrorScreen = {
-                                navController.navigate(ErrorRoute) { launchSingleTop = true }
-                            }
+                            goToDetails = goToDetails,
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }
                 composable<SearchRoute> {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         Search(
-                            goToDetails = { contentId, mediaType, tag, posterPath ->
-                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
-                            },
-                            goToErrorScreen = {
-                                navController.navigate(ErrorRoute) { launchSingleTop = true }
-                            }
+                            goToDetails = goToDetails,
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }
@@ -102,9 +94,7 @@ fun MainNavGraph(navController: NavHostController) {
                             goToDetails = { contentId, mediaType ->
                                 navController.navigate(DetailsRoute(contentId, mediaType.name))
                             },
-                            goToErrorScreen = {
-                                navController.navigate(ErrorRoute) { launchSingleTop = true }
-                            }
+                            goToErrorScreen = goToErrorScreen
                         )
                     }
                 }

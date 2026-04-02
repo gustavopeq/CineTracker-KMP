@@ -38,6 +38,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import common.ui.MainViewModel
+import common.ui.SharedElementTag
 import common.ui.sharedPosterKey
 import common.ui.components.ComponentPlaceholder
 import common.ui.components.card.DefaultContentCard
@@ -229,8 +230,8 @@ private fun BrowseBody(
                                 imageUrl = content.posterPath,
                                 title = content.name,
                                 rating = content.rating,
-                                sharedElementKey = sharedPosterKey("browse", content.id, content.mediaType),
-                                goToDetails = { goToDetails(content.id, content.mediaType, "browse", content.posterPath) }
+                                sharedElementKey = sharedPosterKey(SharedElementTag.BROWSE, content.id, content.mediaType),
+                                goToDetails = { goToDetails(content.id, content.mediaType, SharedElementTag.BROWSE, content.posterPath) }
                             )
                         }
                     }

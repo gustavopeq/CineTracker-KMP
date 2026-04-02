@@ -35,6 +35,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
+import common.ui.SharedElementTag
 import common.ui.sharedPosterKey
 import common.ui.WatchlistSort
 import common.ui.components.popup.ClassicSnackbar
@@ -325,9 +326,9 @@ private fun WatchlistContentLazyList(
                     mediaType = mediaInfo.mediaType,
                     selectedList = selectedList,
                     allLists = allLists,
-                    sharedElementKey = sharedPosterKey("watchlistscreen", mediaInfo.id, mediaInfo.mediaType),
+                    sharedElementKey = sharedPosterKey(SharedElementTag.WATCHLIST, mediaInfo.id, mediaInfo.mediaType),
                     onCardClick = {
-                        goToDetails(mediaInfo.id, mediaInfo.mediaType, "watchlistscreen", mediaInfo.posterPath)
+                        goToDetails(mediaInfo.id, mediaInfo.mediaType, SharedElementTag.WATCHLIST, mediaInfo.posterPath)
                     },
                     onRemoveClick = {
                         removeItem(mediaInfo.id, mediaInfo.mediaType)

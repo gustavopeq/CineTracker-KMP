@@ -3,7 +3,6 @@ package common.util
 object Constants {
     const val BASE_URL_MOVIEDB = "https://api.themoviedb.org/3/"
     const val BASE_500_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
-    const val BASE_300_IMAGE_URL = "https://image.tmdb.org/t/p/w300"
     const val BASE_ORIGINAL_IMAGE_URL = "https://image.tmdb.org/t/p/original"
     const val BASE_YOUTUBE_THUMBAIL_URL = "https://img.youtube.com/vi/"
     const val YOUTUBE_THUMBAIL_RESOLUTION = "/maxresdefault.jpg"

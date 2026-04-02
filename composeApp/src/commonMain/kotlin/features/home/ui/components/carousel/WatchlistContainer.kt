@@ -23,6 +23,7 @@ import cinetracker_kmp.composeapp.generated.resources.ic_chevron_right
 import cinetracker_kmp.composeapp.generated.resources.watchlist_carousel_empty_message
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.SharedElementTag
 import common.ui.sharedPosterKey
 import common.ui.components.card.ImageContentCard
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
@@ -62,8 +63,8 @@ fun WatchlistCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = sharedPosterKey("watchlist", item.id, item.mediaType),
-                goToDetails = { id, mediaType -> goToDetails(id, mediaType, "watchlist", item.posterPath) }
+                sharedElementKey = sharedPosterKey(SharedElementTag.HOME_WATCHLIST, item.id, item.mediaType),
+                goToDetails = { id, mediaType -> goToDetails(id, mediaType, SharedElementTag.HOME_WATCHLIST, item.posterPath) }
             )
         }
     } else {
