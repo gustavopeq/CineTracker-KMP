@@ -39,6 +39,8 @@ import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
+import common.ui.LocalAnimatedVisibilityScope
+import common.ui.LocalSharedTransitionScope
 import common.ui.MainViewModel
 import common.ui.components.NetworkImage
 import common.ui.components.bottomsheet.ManageListsBottomSheet
@@ -297,7 +299,8 @@ private fun DetailsBody(
         posterHeight = posterHeight,
         contentPosterUrl = contentPosterUrl,
         titlePositionY = currentTitlePosY,
-        initialTitlePosY = initialTitlePosY
+        initialTitlePosY = initialTitlePosY,
+        sharedElementKey = contentDetails?.let { "poster_${it.id}_${it.mediaType.name}" }
     )
     contentDetails?.let { details ->
         DetailsComponent(
@@ -397,7 +400,8 @@ private fun BackgroundPoster(
     posterHeight: Float,
     contentPosterUrl: String,
     titlePositionY: Float,
-    initialTitlePosY: Float?
+    initialTitlePosY: Float?,
+    sharedElementKey: String? = null
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
@@ -405,7 +409,22 @@ private fun BackgroundPoster(
         1f
     }
 
-    // Scale modifier needed for Ios as the user is able to keep scrolling on top of the screen.
+    val sharedModifier: Modifier = run {
+        val scope = LocalSharedTransitionScope.current
+        val visibilityScope = LocalAnimatedVisibilityScope.current
+        if (scope != null && visibilityScope != null && sharedElementKey != null) {
+            with(scope) {
+                Modifier.sharedElement(
+                    sharedContentState = rememberSharedContentState(key = sharedElementKey),
+                    animatedVisibilityScope = visibilityScope
+                )
+            }
+        } else {
+            Modifier
+        }
+    }
+
+    // Scale modifier needed for iOS as the user is able to keep scrolling on top of the screen.
     val scaleModifier = if (PlatformUtils.isIOS &&
         initialTitlePosY != null &&
         titlePositionY > initialTitlePosY
@@ -428,9 +447,10 @@ private fun BackgroundPoster(
             .zIndex(BACKGROUND_INDEX)
             .aspectRatio(POSTER_ASPECT_RATIO)
     }
+
     NetworkImage(
         imageUrl = contentPosterUrl,
-        modifier = scaleModifier,
+        modifier = sharedModifier.then(scaleModifier),
         alpha = alpha
     )
 }
