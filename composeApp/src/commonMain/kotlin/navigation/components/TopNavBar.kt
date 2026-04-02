@@ -1,6 +1,7 @@
 package navigation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
@@ -56,7 +57,7 @@ fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel,
     AnimatedVisibility(
         visible = showTopBar,
         enter = fadeIn(spring(stiffness = Spring.StiffnessHigh)),
-        exit = fadeOut(spring(stiffness = Spring.StiffnessHigh))
+        exit = ExitTransition.None
     ) {
         TopAppBar(
             title = {
