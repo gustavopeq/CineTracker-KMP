@@ -112,8 +112,8 @@ android {
         applicationId = "gustavo.projects.restapi"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 404
-        versionName = "4.0.0"
+        versionCode = 50000
+        versionName = "5.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
