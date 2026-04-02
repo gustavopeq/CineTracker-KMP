@@ -43,12 +43,13 @@ import cinetracker_kmp.composeapp.generated.resources.movie_tag
 import cinetracker_kmp.composeapp.generated.resources.show_tag
 import common.domain.models.util.MediaType
 import common.ui.components.NetworkImage
+import common.ui.rememberSharedElementModifier
 import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryYellowColor_90
-import common.util.Constants.BASE_300_IMAGE_URL
+import common.util.Constants.BASE_500_IMAGE_URL
 import common.util.UiConstants.BROWSE_CARD_DEFAULT_ELEVATION
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.LARGE_MARGIN
@@ -71,13 +72,15 @@ fun WatchlistCard(
     mediaType: MediaType,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
+    sharedElementKey: String? = null,
     onCardClick: () -> Unit,
     onRemoveClick: () -> Unit,
     onMoveItemToList: (Int) -> Unit
 ) {
-    val fullImageUrl = BASE_300_IMAGE_URL + posterUrl
+    val fullImageUrl = BASE_500_IMAGE_URL + posterUrl
     val imageWidth = WATCHLIST_IMAGE_WIDTH.dp
     val imageHeight = imageWidth * POSTER_ASPECT_RATIO_MULTIPLY
+    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     var showPopupMenu by remember { mutableStateOf(false) }
     val updatePopUpMenuVisibility: (Boolean) -> Unit = { isVisible ->
@@ -151,6 +154,7 @@ fun WatchlistCard(
                 modifier = Modifier.height(imageHeight)
             ) {
                 NetworkImage(
+                    modifier = sharedModifier,
                     imageUrl = fullImageUrl,
                     widthDp = imageWidth,
                     heightDp = imageHeight

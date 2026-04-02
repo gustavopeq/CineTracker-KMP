@@ -369,6 +369,7 @@ private fun DetailsComponent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .fillParentMaxHeight()
                     .background(color = MaterialTheme.colorScheme.primary)
             ) {
                 Column(

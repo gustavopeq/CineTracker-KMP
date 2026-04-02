@@ -16,7 +16,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
 import common.ui.components.NetworkImage
 import common.ui.rememberSharedElementModifier
-import common.util.Constants.BASE_300_IMAGE_URL
+import common.util.Constants.BASE_500_IMAGE_URL
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 
@@ -28,7 +28,7 @@ fun ImageContentCard(
     sharedElementKey: String? = null,
     goToDetails: (Int, MediaType) -> Unit
 ) {
-    val fullImageUrl = BASE_300_IMAGE_URL + item.posterPath
+    val fullImageUrl = BASE_500_IMAGE_URL + item.posterPath
 
     val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 

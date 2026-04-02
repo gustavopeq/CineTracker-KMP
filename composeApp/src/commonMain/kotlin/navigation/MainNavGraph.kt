@@ -50,34 +50,40 @@ fun MainNavGraph(navController: NavHostController) {
                     }
                 }
                 composable<BrowseRoute> {
-                    Browse(
-                        goToDetails = { contentId, mediaType ->
-                            navController.navigate(DetailsRoute(contentId, mediaType.name))
-                        },
-                        goToErrorScreen = {
-                            navController.navigate(ErrorRoute) { launchSingleTop = true }
-                        }
-                    )
+                    CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
+                        Browse(
+                            goToDetails = { contentId, mediaType, tag, posterPath ->
+                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
+                            },
+                            goToErrorScreen = {
+                                navController.navigate(ErrorRoute) { launchSingleTop = true }
+                            }
+                        )
+                    }
                 }
                 composable<WatchlistRoute> {
-                    Watchlist(
-                        goToDetails = { contentId, mediaType ->
-                            navController.navigate(DetailsRoute(contentId, mediaType.name))
-                        },
-                        goToErrorScreen = {
-                            navController.navigate(ErrorRoute) { launchSingleTop = true }
-                        }
-                    )
+                    CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
+                        Watchlist(
+                            goToDetails = { contentId, mediaType, tag, posterPath ->
+                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
+                            },
+                            goToErrorScreen = {
+                                navController.navigate(ErrorRoute) { launchSingleTop = true }
+                            }
+                        )
+                    }
                 }
                 composable<SearchRoute> {
-                    Search(
-                        goToDetails = { contentId, mediaType ->
-                            navController.navigate(DetailsRoute(contentId, mediaType.name))
-                        },
-                        goToErrorScreen = {
-                            navController.navigate(ErrorRoute) { launchSingleTop = true }
-                        }
-                    )
+                    CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
+                        Search(
+                            goToDetails = { contentId, mediaType, tag, posterPath ->
+                                navController.navigate(DetailsRoute(contentId, mediaType.name, tag, posterPath))
+                            },
+                            goToErrorScreen = {
+                                navController.navigate(ErrorRoute) { launchSingleTop = true }
+                            }
+                        )
+                    }
                 }
                 composable<DetailsRoute>(
                     enterTransition = { fadeIn() },

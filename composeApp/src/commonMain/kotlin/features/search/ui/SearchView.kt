@@ -38,7 +38,7 @@ import features.search.ui.components.SearchTypeFilterItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Search(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
+fun Search(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScreen: () -> Unit) {
     Search(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
@@ -51,7 +51,7 @@ fun Search(goToDetails: (Int, MediaType) -> Unit, goToErrorScreen: () -> Unit) {
 private fun Search(
     viewModel: SearchViewModel,
     mainViewModel: MainViewModel,
-    goToDetails: (Int, MediaType) -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -126,7 +126,7 @@ private fun SearchBody(
     searchResults: LazyPagingItems<GenericContent>,
     isDebounceActive: Boolean,
     keyboardController: SoftwareKeyboardController?,
-    goToDetails: (Int, MediaType) -> Unit
+    goToDetails: (Int, MediaType, String, String) -> Unit
 ) {
     val density = LocalDensity.current
     val screenWidth = density.run { getScreenSizeInfo().widthPx }

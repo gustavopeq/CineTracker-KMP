@@ -22,6 +22,7 @@ import cinetracker_kmp.composeapp.generated.resources.search_error_title_message
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
 import common.ui.components.card.ImageContentCard
+import common.ui.sharedPosterKey
 import common.util.rememberNestedScrollConnection
 import org.jetbrains.compose.resources.stringResource
 
@@ -31,7 +32,7 @@ fun SearchResultsGrid(
     searchResults: LazyPagingItems<GenericContent>,
     adjustedCardSize: Dp,
     keyboardController: SoftwareKeyboardController?,
-    goToDetails: (Int, MediaType) -> Unit
+    goToDetails: (Int, MediaType, String, String) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -50,7 +51,8 @@ fun SearchResultsGrid(
                 ImageContentCard(
                     item = content,
                     adjustedCardSize = adjustedCardSize,
-                    goToDetails = goToDetails
+                    sharedElementKey = sharedPosterKey("search", content.id, content.mediaType),
+                    goToDetails = { id, mediaType -> goToDetails(id, mediaType, "search", content.posterPath) }
                 )
             }
         }
