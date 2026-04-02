@@ -16,7 +16,7 @@ kermit = "2.0.6"
 koin = "4.1.1"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-kottie = "2.3.0"
+compottie = "2.1.0"
 ksp = "2.3.2"
 ktlint = "14.2.0"
 ktor = "3.4.0"
@@ -58,7 +58,8 @@ koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
-kottie = { module = "io.github.ismai117:kottie", version.ref = "kottie" }
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
+compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
