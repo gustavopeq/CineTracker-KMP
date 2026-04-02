@@ -94,7 +94,6 @@ jobs:
           draft: true
           name: "v${{ steps.version.outputs.version-name }}"
           files: composeApp/build/outputs/bundle/release/cinetracker-v${{ steps.version.outputs.version-name }}.aab
-          generate_release_notes: true
 
       - name: Clean up keystore
         if: always()
