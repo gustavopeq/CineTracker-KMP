@@ -40,9 +40,9 @@ import common.domain.models.content.DetailedContent
 import common.domain.models.content.GenericContent
 import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
-import common.ui.LocalAnimatedVisibilityScope
-import common.ui.LocalSharedTransitionScope
 import common.ui.MainViewModel
+import common.ui.rememberSharedElementModifier
+import common.ui.sharedPosterKey
 import common.ui.components.NetworkImage
 import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.popup.ClassicSnackbar
@@ -115,7 +115,6 @@ private fun Details(
 ) {
     val contentDetails by viewModel.contentDetails.collectAsState()
     val contentInListStatus by viewModel.contentInListStatus.collectAsState()
-//    val loadState = DataLoadStatus.Loading
     val loadState by viewModel.loadState.collectAsState()
     val detailsFailedLoading by viewModel.detailsFailedLoading
     val snackbarState by viewModel.snackbarState
@@ -218,7 +217,7 @@ private fun Details(
         val titleScreenHeight = posterHeight * DETAILS_TITLE_IMAGE_OFFSET_PERCENT
         val effectivePosterPath = posterPath.ifEmpty { contentDetails?.posterPath.orEmpty() }
         val contentPosterUrl = if (effectivePosterPath.isNotEmpty()) BASE_500_IMAGE_URL + effectivePosterPath else ""
-        val sharedElementKey = "poster_${sharedElementTag}_${viewModel.contentId}_${viewModel.mediaType.name}"
+        val sharedElementKey = sharedPosterKey(sharedElementTag, viewModel.contentId, viewModel.mediaType)
 
         // Enable shared element only after enter transition completes,
         // so it only animates on back navigation (not forward).
@@ -250,8 +249,7 @@ private fun Details(
                     contentPosterUrl = contentPosterUrl,
                     titlePositionY = currentTitlePosY,
                     initialTitlePosY = initialTitlePosY,
-                    sharedElementKey = sharedElementKey,
-                    enableSharedElement = enableSharedElement
+                    sharedElementKey = if (enableSharedElement) sharedElementKey else null
                 )
                 when (loadState) {
                     is DataLoadStatus.Loading -> {
@@ -419,8 +417,7 @@ private fun BackgroundPoster(
     contentPosterUrl: String,
     titlePositionY: Float,
     initialTitlePosY: Float?,
-    sharedElementKey: String,
-    enableSharedElement: Boolean
+    sharedElementKey: String?
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
@@ -428,21 +425,7 @@ private fun BackgroundPoster(
         1f
     }
 
-    val sharedModifier: Modifier = run {
-        if (!enableSharedElement) return@run Modifier
-        val scope = LocalSharedTransitionScope.current
-        val visibilityScope = LocalAnimatedVisibilityScope.current
-        if (scope != null && visibilityScope != null) {
-            with(scope) {
-                Modifier.sharedElement(
-                    sharedContentState = rememberSharedContentState(key = sharedElementKey),
-                    animatedVisibilityScope = visibilityScope
-                )
-            }
-        } else {
-            Modifier
-        }
-    }
+    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     // Scale modifier needed for iOS as the user is able to keep scrolling on top of the screen.
     val scaleModifier = if (PlatformUtils.isIOS &&

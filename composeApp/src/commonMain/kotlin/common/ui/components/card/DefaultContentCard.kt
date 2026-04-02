@@ -17,9 +17,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import common.ui.LocalAnimatedVisibilityScope
-import common.ui.LocalSharedTransitionScope
 import common.ui.components.NetworkImage
+import common.ui.rememberSharedElementModifier
 import common.ui.components.RatingComponent
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.RoundCornerShapes
@@ -43,20 +42,7 @@ fun DefaultContentCard(
     val fullImageUrl = BASE_500_IMAGE_URL + imageUrl
     val imageHeight = cardWidth * POSTER_ASPECT_RATIO_MULTIPLY
 
-    val sharedModifier: Modifier = run {
-        val scope = LocalSharedTransitionScope.current
-        val visibilityScope = LocalAnimatedVisibilityScope.current
-        if (scope != null && visibilityScope != null && sharedElementKey != null) {
-            with(scope) {
-                Modifier.sharedElement(
-                    sharedContentState = rememberSharedContentState(key = sharedElementKey),
-                    animatedVisibilityScope = visibilityScope
-                )
-            }
-        } else {
-            Modifier
-        }
-    }
+    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     Card(
         modifier = modifier

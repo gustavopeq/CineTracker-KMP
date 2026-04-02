@@ -20,6 +20,7 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.trending_today_header
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.sharedPosterKey
 import common.ui.components.card.DefaultContentCard
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
 import common.util.UiConstants.CAROUSEL_RATING_STAR_SIZE
@@ -55,7 +56,7 @@ fun TrendingCarousel(
                 rating = item.rating,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 ratingIconSize = CAROUSEL_RATING_STAR_SIZE,
-                sharedElementKey = "poster_trending_${item.id}_${item.mediaType.name}",
+                sharedElementKey = sharedPosterKey("trending", item.id, item.mediaType),
                 goToDetails = {
                     goToDetails(item.id, item.mediaType, "trending", item.posterPath)
                 }
