@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
+import common.ui.LocalAnimatedVisibilityScope
+import common.ui.LocalSharedTransitionScope
 import common.ui.components.NetworkImage
 import common.util.Constants.BASE_300_IMAGE_URL
 import common.util.UiConstants.DEFAULT_PADDING
@@ -24,9 +26,26 @@ fun ImageContentCard(
     modifier: Modifier = Modifier,
     item: GenericContent,
     adjustedCardSize: Dp,
+    sharedElementKey: String? = null,
     goToDetails: (Int, MediaType) -> Unit
 ) {
     val fullImageUrl = BASE_300_IMAGE_URL + item.posterPath
+
+    val sharedModifier: Modifier = run {
+        val scope = LocalSharedTransitionScope.current
+        val visibilityScope = LocalAnimatedVisibilityScope.current
+        if (scope != null && visibilityScope != null && sharedElementKey != null) {
+            with(scope) {
+                Modifier.sharedElement(
+                    sharedContentState = rememberSharedContentState(key = sharedElementKey),
+                    animatedVisibilityScope = visibilityScope
+                )
+            }
+        } else {
+            Modifier
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -39,8 +58,7 @@ fun ImageContentCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NetworkImage(
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.medium),
+            modifier = sharedModifier.clip(MaterialTheme.shapes.medium),
             imageUrl = fullImageUrl,
             widthDp = adjustedCardSize,
             heightDp = adjustedCardSize * POSTER_ASPECT_RATIO_MULTIPLY
