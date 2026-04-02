@@ -205,7 +205,7 @@ private fun Details(
             animationSpec = if (targetBlur > 0.dp) snap() else tween(300)
         )
 
-        val contentPosterUrl = BASE_ORIGINAL_IMAGE_URL + (contentDetails?.posterPath ?: "")
+        val contentPosterUrl = contentDetails?.posterPath?.let { BASE_ORIGINAL_IMAGE_URL + it }.orEmpty()
         val sharedElementKey = "poster_${viewModel.contentId}_${viewModel.mediaType.name}"
 
         Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
@@ -398,7 +398,7 @@ private fun BackgroundPoster(
     contentPosterUrl: String,
     titlePositionY: Float,
     initialTitlePosY: Float?,
-    sharedElementKey: String? = null
+    sharedElementKey: String
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
@@ -409,7 +409,7 @@ private fun BackgroundPoster(
     val sharedModifier: Modifier = run {
         val scope = LocalSharedTransitionScope.current
         val visibilityScope = LocalAnimatedVisibilityScope.current
-        if (scope != null && visibilityScope != null && sharedElementKey != null) {
+        if (scope != null && visibilityScope != null) {
             with(scope) {
                 Modifier.sharedElement(
                     sharedContentState = rememberSharedContentState(key = sharedElementKey),
