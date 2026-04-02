@@ -205,7 +205,17 @@ private fun Details(
             animationSpec = if (targetBlur > 0.dp) snap() else tween(300)
         )
 
+        val contentPosterUrl = BASE_ORIGINAL_IMAGE_URL + (contentDetails?.posterPath ?: "")
+        val sharedElementKey = "poster_${viewModel.contentId}_${viewModel.mediaType.name}"
+
         Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
+            BackgroundPoster(
+                posterHeight = posterHeight,
+                contentPosterUrl = contentPosterUrl,
+                titlePositionY = currentTitlePosY,
+                initialTitlePosY = initialTitlePosY,
+                sharedElementKey = sharedElementKey
+            )
             DetailsTopBar(
                 contentTitle = contentDetails?.name.orEmpty(),
                 currentHeaderPosY = currentTitlePosY,
@@ -233,8 +243,6 @@ private fun Details(
                             viewModel = viewModel,
                             contentDetails = contentDetails,
                             personContentList = personContentList,
-                            initialTitlePosY = initialTitlePosY,
-                            currentTitlePosY = currentTitlePosY,
                             updateTitlePosition = updateTitlePosition,
                             goToDetails = goToDetails,
                             updateShowAllFlag = updateShowAllFlag
@@ -287,21 +295,10 @@ private fun DetailsBody(
     viewModel: DetailsViewModel,
     contentDetails: DetailedContent?,
     personContentList: List<GenericContent>,
-    currentTitlePosY: Float,
-    initialTitlePosY: Float?,
     updateTitlePosition: (Float) -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
     updateShowAllFlag: (Boolean, MediaType) -> Unit
 ) {
-    val contentPosterUrl = BASE_ORIGINAL_IMAGE_URL + contentDetails?.posterPath
-
-    BackgroundPoster(
-        posterHeight = posterHeight,
-        contentPosterUrl = contentPosterUrl,
-        titlePositionY = currentTitlePosY,
-        initialTitlePosY = initialTitlePosY,
-        sharedElementKey = contentDetails?.let { "poster_${it.id}_${it.mediaType.name}" }
-    )
     contentDetails?.let { details ->
         DetailsComponent(
             posterHeight = posterHeight,
