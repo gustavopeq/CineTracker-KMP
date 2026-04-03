@@ -28,6 +28,13 @@
         <receiver
             android:name="com.projects.cinetracker.notification.EngagementNotificationReceiver"
             android:exported="false" />
+        <receiver
+            android:name="com.projects.cinetracker.notification.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
