@@ -7,9 +7,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.engagement_reminders_channel_name
 import com.projects.cinetracker.notification.EngagementNotificationReceiver
 import common.util.EngagementMessages
 import java.util.Calendar
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
 
 private var appContext: Context? = null
 
@@ -20,9 +24,10 @@ fun initNotifications(context: Context) {
 
 private fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channelName = runBlocking { getString(Res.string.engagement_reminders_channel_name) }
         val channel = NotificationChannel(
             EngagementNotificationReceiver.CHANNEL_ID,
-            "Engagement Reminders",
+            channelName,
             NotificationManager.IMPORTANCE_DEFAULT
         )
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
