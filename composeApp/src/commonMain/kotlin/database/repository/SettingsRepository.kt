@@ -5,4 +5,6 @@ interface SettingsRepository {
     fun setOnboardingCompleted()
     fun hasSeenDetailsOverlay(): Boolean
     fun setDetailsOverlaySeen()
+    fun areEngagementRemindersEnabled(): Boolean
+    fun setEngagementRemindersEnabled(enabled: Boolean)
 }
