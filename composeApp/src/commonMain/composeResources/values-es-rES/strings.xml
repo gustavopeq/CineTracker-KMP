@@ -177,4 +177,23 @@
     <string name="add_to_list_sheet_title">¿Guardar en una lista?</string>
     <string name="add_to_list_no_thanks">No, gracias</string>
 
+    <!-- Engagement Notification Messages - Friday -->
+    <string name="notif_friday_1">¡Se acerca la noche de cine! ¿Qué vas a ver este fin de semana?</string>
+    <string name="notif_friday_2">¡Ya es fin de semana! Es hora de ponerte al día con tu lista</string>
+    <string name="notif_friday_3">¡Viernes! ¿Tienes alguna película o serie preparada?</string>
+
+    <!-- Engagement Notification Messages - Sunday -->
+    <string name="notif_sunday_1">¿Has visto algo divertido este finde? ¡No olvides añadirlo a tu lista de vistos!</string>
+    <string name="notif_sunday_2">El finde se acaba — ¡registra lo que has visto antes de que se te olvide!</string>
+    <string name="notif_sunday_3">¿Qué tal tu finde de pelis? ¡Actualiza tu lista de vistos!</string>
+
+    <!-- Notification Channel -->
+    <string name="engagement_reminders_channel_name">Recordatorios</string>
+
+    <!-- Onboarding Notification Screen -->
+    <string name="onboarding_notifications_title">No te pierdas ninguna peli</string>
+    <string name="onboarding_notifications_desc">Recibe recordatorios para actualizar tu lista de seguimiento y tus películas vistas durante la semana.</string>
+    <string name="onboarding_notifications_enable">Activar recordatorios</string>
+    <string name="onboarding_notifications_skip">Ahora no</string>
+
 </resources>

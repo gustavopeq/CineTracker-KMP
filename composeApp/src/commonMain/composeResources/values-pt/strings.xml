@@ -177,4 +177,23 @@
     <string name="add_to_list_sheet_title">Salvar em uma lista?</string>
     <string name="add_to_list_no_thanks">Não, obrigado</string>
 
+    <!-- Engagement Notification Messages - Friday -->
+    <string name="notif_friday_1">Noite de cinema chegando! O que você vai assistir neste fim de semana?</string>
+    <string name="notif_friday_2">Chegou o fim de semana! Hora de colocar a sua lista em dia</string>
+    <string name="notif_friday_3">Sextou! Tem algum filme ou série em mente?</string>
+
+    <!-- Engagement Notification Messages - Sunday -->
+    <string name="notif_sunday_1">Assistiu algo legal neste fim de semana? Não esqueça de adicionar à sua lista de assistidos!</string>
+    <string name="notif_sunday_2">Fim de semana acabando — registre o que assistiu antes de esquecer!</string>
+    <string name="notif_sunday_3">Como foi seu fim de semana de filmes? Atualize sua lista de assistidos!</string>
+
+    <!-- Notification Channel -->
+    <string name="engagement_reminders_channel_name">Lembretes</string>
+
+    <!-- Onboarding Notification Screen -->
+    <string name="onboarding_notifications_title">Não perca nenhum filme</string>
+    <string name="onboarding_notifications_desc">Receba lembretes para atualizar sua lista de acompanhamento e seus filmes assistidos durante a semana.</string>
+    <string name="onboarding_notifications_enable">Ativar lembretes</string>
+    <string name="onboarding_notifications_skip">Agora não</string>
+
 </resources>
