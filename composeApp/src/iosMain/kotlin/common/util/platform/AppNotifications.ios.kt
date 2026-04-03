@@ -37,12 +37,7 @@ actual object AppNotifications {
         )
     }
 
-    private fun scheduleWeekly(
-        center: UNUserNotificationCenter,
-        weekday: Long,
-        hour: Long,
-        identifier: String,
-    ) {
+    private fun scheduleWeekly(center: UNUserNotificationCenter, weekday: Long, hour: Long, identifier: String) {
         val messageRes = EngagementMessages.getRandomMessageForDayOfWeek(weekday.toInt()) ?: return
         val messageText = runBlocking { getString(messageRes) }
 

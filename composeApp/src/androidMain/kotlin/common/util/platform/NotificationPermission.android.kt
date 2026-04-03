@@ -7,9 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 
 @Composable
-actual fun rememberNotificationPermissionLauncher(
-    onResult: (Boolean) -> Unit,
-): () -> Unit {
+actual fun rememberNotificationPermissionLauncher(onResult: (Boolean) -> Unit): () -> Unit {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->

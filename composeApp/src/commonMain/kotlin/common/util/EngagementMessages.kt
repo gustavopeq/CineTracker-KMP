@@ -19,13 +19,13 @@ object EngagementMessages {
     fun getFridayMessages(): List<StringResource> = listOf(
         Res.string.notif_friday_1,
         Res.string.notif_friday_2,
-        Res.string.notif_friday_3,
+        Res.string.notif_friday_3
     )
 
     fun getSundayMessages(): List<StringResource> = listOf(
         Res.string.notif_sunday_1,
         Res.string.notif_sunday_2,
-        Res.string.notif_sunday_3,
+        Res.string.notif_sunday_3
     )
 
     fun getMessagesForDayOfWeek(dayOfWeek: Int): List<StringResource> = when (dayOfWeek) {

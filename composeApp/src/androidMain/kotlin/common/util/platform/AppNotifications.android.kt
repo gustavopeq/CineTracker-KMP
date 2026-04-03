@@ -23,7 +23,7 @@ private fun createNotificationChannel(context: Context) {
         val channel = NotificationChannel(
             EngagementNotificationReceiver.CHANNEL_ID,
             "Engagement Reminders",
-            NotificationManager.IMPORTANCE_DEFAULT,
+            NotificationManager.IMPORTANCE_DEFAULT
         )
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)
@@ -41,14 +41,14 @@ actual object AppNotifications {
             alarmManager = alarmManager,
             dayOfWeek = Calendar.FRIDAY,
             hour = EngagementMessages.FRIDAY_HOUR,
-            requestCode = REQUEST_CODE_FRIDAY,
+            requestCode = REQUEST_CODE_FRIDAY
         )
         scheduleWeeklyAlarm(
             context = context,
             alarmManager = alarmManager,
             dayOfWeek = Calendar.SUNDAY,
             hour = EngagementMessages.SUNDAY_HOUR,
-            requestCode = REQUEST_CODE_SUNDAY,
+            requestCode = REQUEST_CODE_SUNDAY
         )
     }
 
@@ -65,7 +65,7 @@ actual object AppNotifications {
         alarmManager: AlarmManager,
         dayOfWeek: Int,
         hour: Int,
-        requestCode: Int,
+        requestCode: Int
     ) {
         val calendar = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_WEEK, dayOfWeek)
@@ -85,23 +85,18 @@ actual object AppNotifications {
             context,
             requestCode,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             AlarmManager.INTERVAL_DAY * 7,
-            pendingIntent,
+            pendingIntent
         )
     }
 
-    private fun cancelAlarm(
-        context: Context,
-        alarmManager: AlarmManager,
-        dayOfWeek: Int,
-        requestCode: Int,
-    ) {
+    private fun cancelAlarm(context: Context, alarmManager: AlarmManager, dayOfWeek: Int, requestCode: Int) {
         val intent = Intent(context, EngagementNotificationReceiver::class.java).apply {
             putExtra(EngagementNotificationReceiver.EXTRA_DAY_OF_WEEK, dayOfWeek)
         }
@@ -109,7 +104,7 @@ actual object AppNotifications {
             context,
             requestCode,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }

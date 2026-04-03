@@ -16,8 +16,7 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         settings.putBoolean(KEY_DETAILS_OVERLAY_SEEN, true)
     }
 
-    override fun areEngagementRemindersEnabled(): Boolean =
-        settings.getBoolean(KEY_ENGAGEMENT_REMINDERS_ENABLED, false)
+    override fun areEngagementRemindersEnabled(): Boolean = settings.getBoolean(KEY_ENGAGEMENT_REMINDERS_ENABLED, false)
 
     override fun setEngagementRemindersEnabled(enabled: Boolean) {
         settings.putBoolean(KEY_ENGAGEMENT_REMINDERS_ENABLED, enabled)

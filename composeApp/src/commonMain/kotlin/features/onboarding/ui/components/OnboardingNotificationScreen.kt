@@ -35,9 +35,9 @@ import common.ui.theme.OnboardingButtonTextColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryGreyColor
 import common.ui.theme.PrimaryYellowColor
+import features.onboarding.ui.components.OnboardingConstants.DESCRIPTION_COLOR
 import features.onboarding.ui.components.OnboardingConstants.DESC_FONT_SIZE
 import features.onboarding.ui.components.OnboardingConstants.DESC_LINE_HEIGHT
-import features.onboarding.ui.components.OnboardingConstants.DESCRIPTION_COLOR
 import features.onboarding.ui.components.OnboardingConstants.SCREEN_HORIZONTAL_PADDING
 import features.onboarding.ui.components.OnboardingConstants.TITLE_DESC_SPACING
 import features.onboarding.ui.components.OnboardingConstants.TITLE_FONT_SIZE
@@ -55,10 +55,7 @@ private const val SKIP_TOP_SPACING = 16
 private const val SKIP_FONT_SIZE = 16
 
 @Composable
-fun OnboardingNotificationScreen(
-    onEnableReminders: () -> Unit,
-    onSkip: () -> Unit,
-) {
+fun OnboardingNotificationScreen(onEnableReminders: () -> Unit, onSkip: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,7 +67,7 @@ fun OnboardingNotificationScreen(
                 .align(Alignment.Center)
                 .padding(horizontal = SCREEN_HORIZONTAL_PADDING.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_notifications),
@@ -88,7 +85,7 @@ fun OnboardingNotificationScreen(
                 letterSpacing = TITLE_LETTER_SPACING.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(TITLE_DESC_SPACING.dp))
@@ -98,7 +95,7 @@ fun OnboardingNotificationScreen(
                 fontSize = DESC_FONT_SIZE.sp,
                 lineHeight = DESC_LINE_HEIGHT.sp,
                 color = DESCRIPTION_COLOR,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(ICON_BOTTOM_SPACING.dp))
@@ -125,7 +122,7 @@ fun OnboardingNotificationScreen(
                     text = stringResource(Res.string.onboarding_notifications_enable),
                     fontSize = BUTTON_FONT_SIZE.sp,
                     fontWeight = FontWeight.Bold,
-                    color = OnboardingButtonTextColor,
+                    color = OnboardingButtonTextColor
                 )
             }
 

@@ -9,7 +9,9 @@ import database.repository.SettingsRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class BootReceiver : BroadcastReceiver(), KoinComponent {
+class BootReceiver :
+    BroadcastReceiver(),
+    KoinComponent {
 
     private val settingsRepository: SettingsRepository by inject()
 
