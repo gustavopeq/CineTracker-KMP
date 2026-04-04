@@ -1,13 +1,8 @@
 package features.onboarding.ui
 
-import common.util.platform.AppNotifications
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
-import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.runs
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlin.test.assertTrue
@@ -24,9 +19,6 @@ class OnboardingViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        mockkObject(AppNotifications)
-        every { AppNotifications.scheduleEngagementReminders() } just runs
-        every { AppNotifications.cancelEngagementReminders() } just runs
         viewModel = OnboardingViewModel(settingsRepository)
     }
 
@@ -49,26 +41,5 @@ class OnboardingViewModelTest {
         viewModel.completeOnboarding { callbackInvoked = true }
 
         assertTrue(callbackInvoked)
-    }
-
-    @Test
-    fun `enableEngagementReminders saves preference as enabled`() {
-        viewModel.enableEngagementReminders()
-
-        verify { settingsRepository.setEngagementRemindersEnabled(true) }
-    }
-
-    @Test
-    fun `enableEngagementReminders schedules notifications`() {
-        viewModel.enableEngagementReminders()
-
-        verify { AppNotifications.scheduleEngagementReminders() }
-    }
-
-    @Test
-    fun `skipEngagementReminders saves preference as disabled`() {
-        viewModel.skipEngagementReminders()
-
-        verify { settingsRepository.setEngagementRemindersEnabled(false) }
     }
 }

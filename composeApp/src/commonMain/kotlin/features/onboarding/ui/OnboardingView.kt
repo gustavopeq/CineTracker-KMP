@@ -31,20 +31,18 @@ import cinetracker_kmp.composeapp.generated.resources.onboarding_next
 import common.ui.theme.OnboardingButtonTextColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryYellowColor
-import common.util.platform.rememberNotificationPermissionLauncher
 import features.onboarding.ui.components.OnboardingBrowseScreen
 import features.onboarding.ui.components.OnboardingConstants.CONTROLS_BOTTOM_PADDING
 import features.onboarding.ui.components.OnboardingConstants.CONTROLS_HORIZONTAL_PADDING
 import features.onboarding.ui.components.OnboardingConstants.CONTROLS_SPACING
 import features.onboarding.ui.components.OnboardingIndicator
-import features.onboarding.ui.components.OnboardingNotificationScreen
 import features.onboarding.ui.components.OnboardingWatchlistScreen
 import features.onboarding.ui.components.OnboardingWelcomeScreen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private const val PAGE_COUNT = 4
+private const val PAGE_COUNT = 3
 private const val BUTTON_HEIGHT = 56
 private const val BUTTON_CORNER_RADIUS = 12
 private const val BUTTON_FONT_SIZE = 18
@@ -55,15 +53,6 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
     val viewModel: OnboardingViewModel = koinViewModel()
     val pagerState = rememberPagerState(pageCount = { PAGE_COUNT })
     val coroutineScope = rememberCoroutineScope()
-
-    val requestPermission = rememberNotificationPermissionLauncher { granted ->
-        if (granted) {
-            viewModel.enableEngagementReminders()
-        } else {
-            viewModel.skipEngagementReminders()
-        }
-        viewModel.completeOnboarding(onOnboardingComplete)
-    }
 
     Box(
         modifier = Modifier
@@ -81,41 +70,32 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
                 0 -> OnboardingWelcomeScreen()
                 1 -> OnboardingBrowseScreen()
                 2 -> OnboardingWatchlistScreen()
-                3 -> OnboardingNotificationScreen(
-                    onEnableReminders = { requestPermission() },
-                    onSkip = {
-                        viewModel.skipEngagementReminders()
-                        viewModel.completeOnboarding(onOnboardingComplete)
-                    }
-                )
             }
         }
 
-        // Bottom controls (hidden on notification page which has its own buttons)
-        if (pagerState.currentPage < PAGE_COUNT - 1) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = CONTROLS_HORIZONTAL_PADDING.dp)
-                    .padding(bottom = CONTROLS_BOTTOM_PADDING.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CONTROLS_SPACING.dp)
-            ) {
-                OnboardingIndicator(
-                    pageCount = PAGE_COUNT,
-                    currentPage = pagerState.currentPage
-                )
+        // Bottom controls
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = CONTROLS_HORIZONTAL_PADDING.dp)
+                .padding(bottom = CONTROLS_BOTTOM_PADDING.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(CONTROLS_SPACING.dp)
+        ) {
+            OnboardingIndicator(
+                pageCount = PAGE_COUNT,
+                currentPage = pagerState.currentPage
+            )
 
-                OnboardingButton(
-                    text = stringResource(Res.string.onboarding_next),
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                        }
+            OnboardingButton(
+                text = stringResource(Res.string.onboarding_next),
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
