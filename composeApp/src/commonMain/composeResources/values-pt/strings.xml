@@ -145,10 +145,6 @@
     <string name="snackbar_item_moved_to_list">Movido para %1$s</string>
     <string name="snackbar_undo_text">Desfazer</string>
     <string name="undefined_ratings">N/D</string>
-    <string name="notification_request_dialog_title">Mantenha suas listas atualizadas!</string>
-    <string name="notification_request_dialog_message">Permita notificações para lembrar você de atualizar sua lista de assistidos.</string>
-    <string name="notification_request_dialog_allow">Sim</string>
-    <string name="notification_request_dialog_deny">Não, obrigado</string>
     <string name="rating_bottom_sheet_header">Avalie este conteúdo</string>
     <string name="rating_bottom_sheet_save_button">Salvar avaliação</string>
     <string name="personal_ratings_add_rating">Adicionar avaliação</string>
@@ -163,7 +159,6 @@
     <string name="onboarding_lists_title">Organize Suas\nListas</string>
     <string name="onboarding_lists_desc">Crie listas personalizadas, acompanhe o que já assistiu e planeje o que assistir depois.</string>
     <string name="onboarding_next">Próximo</string>
-    <string name="onboarding_get_started">Começar</string>
     <string name="onboarding_create_new_list">Criar Nova\nLista</string>
     <string name="onboarding_build_collection">Crie sua coleção</string>
 

@@ -91,8 +91,12 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
             OnboardingButton(
                 text = stringResource(Res.string.onboarding_next),
                 onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    if (pagerState.currentPage < PAGE_COUNT - 1) {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    } else {
+                        viewModel.completeOnboarding(onOnboardingComplete)
                     }
                 }
             )
