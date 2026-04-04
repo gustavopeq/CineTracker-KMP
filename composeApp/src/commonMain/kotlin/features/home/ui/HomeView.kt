@@ -32,6 +32,8 @@ import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
+import common.util.platform.rememberNotificationPermissionLauncher
+import features.home.ui.components.NotificationPromptDialog
 import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.button.GenericButton
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
@@ -87,6 +89,15 @@ private fun Home(
     val showListBottomSheet by viewModel.showListBottomSheet.collectAsState()
     val allLists by viewModel.allLists.collectAsState()
     val featuredContentInListStatus by viewModel.featuredContentInListStatus.collectAsState()
+    val shouldShowNotificationDialog by mainViewModel.shouldShowNotificationDialog.collectAsState()
+
+    val requestNotificationPermission = rememberNotificationPermissionLauncher { granted ->
+        if (granted) {
+            mainViewModel.enableEngagementReminders()
+        } else {
+            mainViewModel.skipEngagementReminders()
+        }
+    }
 
     LaunchedEffect(Unit) {
         if (loadState !is DataLoadStatus.Success) {
@@ -138,6 +149,13 @@ private fun Home(
                     viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId))
                 },
                 onClosePanel = { viewModel.onEvent(HomeEvent.CloseListBottomSheet) }
+            )
+        }
+
+        if (shouldShowNotificationDialog) {
+            NotificationPromptDialog(
+                onEnableReminders = { requestNotificationPermission() },
+                onSkip = { mainViewModel.skipEngagementReminders() }
             )
         }
     }
