@@ -190,10 +190,10 @@
     <!-- Notification Channel -->
     <string name="engagement_reminders_channel_name">Lembretes</string>
 
-    <!-- Onboarding Notification Screen -->
-    <string name="onboarding_notifications_title">Não perca nenhum filme</string>
-    <string name="onboarding_notifications_desc">Receba lembretes para atualizar sua lista de acompanhamento e seus filmes assistidos durante a semana.</string>
-    <string name="onboarding_notifications_enable">Ativar lembretes</string>
-    <string name="onboarding_notifications_skip">Agora não</string>
+    <!-- Notification Dialog -->
+    <string name="notif_dialog_title">Fique em dia</string>
+    <string name="notif_dialog_description">Receba lembretes semanais para atualizar sua lista e seu conteúdo.</string>
+    <string name="notif_dialog_enable">Ativar lembretes</string>
+    <string name="notif_dialog_skip">Agora não</string>
 
 </resources>

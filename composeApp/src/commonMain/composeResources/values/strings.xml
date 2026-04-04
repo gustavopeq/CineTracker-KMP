@@ -189,10 +189,10 @@
     <!-- Notification Channel -->
     <string name="engagement_reminders_channel_name">Engagement Reminders</string>
 
-    <!-- Onboarding Notification Screen -->
-    <string name="onboarding_notifications_title">Never Miss a Movie</string>
-    <string name="onboarding_notifications_desc">Get friendly reminders to update your watchlist and watched list throughout the week.</string>
-    <string name="onboarding_notifications_enable">Enable Reminders</string>
-    <string name="onboarding_notifications_skip">Not now</string>
+    <!-- Notification Dialog -->
+    <string name="notif_dialog_title">Stay on track</string>
+    <string name="notif_dialog_description">Get weekly reminders to update your watchlist and watched list.</string>
+    <string name="notif_dialog_enable">Enable reminders</string>
+    <string name="notif_dialog_skip">Not now</string>
 
 </resources>
