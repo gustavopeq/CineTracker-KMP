@@ -292,6 +292,7 @@ CineTracker-KMP/
 │   │       │   │       ├── HomeView.kt
 │   │       │   │       ├── HomeViewModel.kt
 │   │       │   │       ├── components/
+│   │       │   │       │   ├── NotificationPromptDialog.kt
 │   │       │   │       │   ├── carousel/
 │   │       │   │       │   │   ├── ComingSoonContainer.kt
 │   │       │   │       │   │   ├── TrendingContainer.kt
@@ -311,8 +312,7 @@ CineTracker-KMP/
 │   │       │   │           ├── OnboardingIndicator.kt
 │   │       │   │           ├── OnboardingWelcomeScreen.kt
 │   │       │   │           ├── OnboardingBrowseScreen.kt
-│   │       │   │           ├── OnboardingWatchlistScreen.kt
-│   │       │   │           └── OnboardingNotificationScreen.kt
+│   │       │   │           └── OnboardingWatchlistScreen.kt
 │   │       │   ├── search/
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── SearchInteractor.kt
