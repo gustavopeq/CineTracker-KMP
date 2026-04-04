@@ -3,13 +3,18 @@ package common.ui
 import androidx.compose.ui.text.input.TextFieldValue
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
+import common.util.platform.AppNotifications
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.runs
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
@@ -30,6 +35,7 @@ class MainViewModelTest {
     private val databaseRepository: DatabaseRepository = mockk()
     private val settingsRepository: SettingsRepository = mockk {
         every { hasCompletedOnboarding() } returns true
+        every { areEngagementRemindersEnabled() } returns false
     }
     private val testDispatcher = StandardTestDispatcher()
 
@@ -132,5 +138,48 @@ class MainViewModelTest {
 
         assertFalse(viewModel.isDuplicatedListName.value)
         assertEquals("new name", viewModel.newListTextFieldValue.value.text)
+    }
+
+    // ── shouldShowNotificationDialog ──────────────────────────────────────────────
+
+    @Test
+    fun `shouldShowNotificationDialog is true when reminders are not enabled`() {
+        every { settingsRepository.areEngagementRemindersEnabled() } returns false
+        val viewModel = createViewModel()
+
+        assertTrue(viewModel.shouldShowNotificationDialog.value)
+    }
+
+    @Test
+    fun `shouldShowNotificationDialog is false when reminders are already enabled`() {
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        val viewModel = createViewModel()
+
+        assertFalse(viewModel.shouldShowNotificationDialog.value)
+    }
+
+    @Test
+    fun `skipEngagementReminders dismisses the dialog`() {
+        every { settingsRepository.areEngagementRemindersEnabled() } returns false
+        val viewModel = createViewModel()
+
+        viewModel.skipEngagementReminders()
+
+        assertFalse(viewModel.shouldShowNotificationDialog.value)
+    }
+
+    @Test
+    fun `enableEngagementReminders saves preference, schedules reminders, and dismisses dialog`() {
+        mockkObject(AppNotifications)
+        every { AppNotifications.scheduleEngagementReminders() } just runs
+        every { settingsRepository.areEngagementRemindersEnabled() } returns false
+        every { settingsRepository.setEngagementRemindersEnabled(any()) } just runs
+        val viewModel = createViewModel()
+
+        viewModel.enableEngagementReminders()
+
+        verify { settingsRepository.setEngagementRemindersEnabled(true) }
+        verify { AppNotifications.scheduleEngagementReminders() }
+        assertFalse(viewModel.shouldShowNotificationDialog.value)
     }
 }

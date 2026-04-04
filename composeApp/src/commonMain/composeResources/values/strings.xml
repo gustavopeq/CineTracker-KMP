@@ -195,4 +195,10 @@
     <string name="notif_dialog_enable">Enable reminders</string>
     <string name="notif_dialog_skip">Not now</string>
 
+    <!-- Onboarding Notification Screen -->
+    <string name="onboarding_notifications_title">Never miss a thing</string>
+    <string name="onboarding_notifications_desc">Get weekly reminders to update your watchlist and track what you\'ve watched.</string>
+    <string name="onboarding_notifications_enable">Enable reminders</string>
+    <string name="onboarding_notifications_skip">Not now</string>
+
 </resources>

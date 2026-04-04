@@ -196,4 +196,10 @@
     <string name="notif_dialog_enable">Activar recordatorios</string>
     <string name="notif_dialog_skip">Ahora no</string>
 
+    <!-- Onboarding Notification Screen -->
+    <string name="onboarding_notifications_title">No te pierdas nada</string>
+    <string name="onboarding_notifications_desc">Recibe recordatorios semanales para actualizar tu lista y lo que has visto.</string>
+    <string name="onboarding_notifications_enable">Activar recordatorios</string>
+    <string name="onboarding_notifications_skip">Ahora no</string>
+
 </resources>
