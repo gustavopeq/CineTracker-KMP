@@ -17,7 +17,7 @@ object EngagementMessages {
     const val NOTIFICATION_MINUTE = 13
 
     fun getFridayMessages(): List<StringResource> = listOf(
-        Res.string.notif_sunday_1,
+        Res.string.notif_friday_1,
         Res.string.notif_friday_2,
         Res.string.notif_friday_3
     )
