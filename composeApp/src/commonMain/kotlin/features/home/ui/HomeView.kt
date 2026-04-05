@@ -32,8 +32,6 @@ import common.domain.models.util.DataLoadStatus
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
-import common.util.platform.rememberNotificationPermissionLauncher
-import features.home.ui.components.NotificationPromptDialog
 import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.button.GenericButton
 import common.util.Constants.BASE_ORIGINAL_IMAGE_URL
@@ -44,7 +42,9 @@ import common.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
+import common.util.platform.rememberNotificationPermissionLauncher
 import features.home.events.HomeEvent
+import features.home.ui.components.NotificationPromptDialog
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
 import features.home.ui.components.carousel.WatchlistCarousel

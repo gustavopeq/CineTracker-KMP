@@ -46,7 +46,7 @@ actual object AppNotifications {
         scheduleWeeklyAlarm(
             context = context,
             alarmManager = alarmManager,
-            dayOfWeek = Calendar.FRIDAY,
+            dayOfWeek = Calendar.SUNDAY,
             hour = EngagementMessages.FRIDAY_HOUR,
             requestCode = REQUEST_CODE_FRIDAY
         )

@@ -4,19 +4,21 @@ import common.util.EngagementMessages
 import io.sentry.kotlin.multiplatform.Sentry
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
-import platform.darwin.NSObject
 import platform.Foundation.NSDateComponents
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
-import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNNotificationResponse
+import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
 import platform.UserNotifications.UNUserNotificationCenterDelegateProtocol
+import platform.darwin.NSObject
 
 private val notificationDelegate = NotificationResponseDelegate()
 
-private class NotificationResponseDelegate : NSObject(), UNUserNotificationCenterDelegateProtocol {
+private class NotificationResponseDelegate :
+    NSObject(),
+    UNUserNotificationCenterDelegateProtocol {
     override fun userNotificationCenter(
         center: UNUserNotificationCenter,
         didReceiveNotificationResponse: UNNotificationResponse,
@@ -93,5 +95,4 @@ actual object AppNotifications {
 
         center.addNotificationRequest(request, withCompletionHandler = null)
     }
-
 }

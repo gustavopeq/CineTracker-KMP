@@ -39,10 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 private const val BELL_ICON_SIZE = 80
 
 @Composable
-fun NotificationPromptDialog(
-    onEnableReminders: () -> Unit,
-    onSkip: () -> Unit
-) {
+fun NotificationPromptDialog(onEnableReminders: () -> Unit, onSkip: () -> Unit) {
     Dialog(onDismissRequest = onSkip) {
         Column(
             modifier = Modifier
