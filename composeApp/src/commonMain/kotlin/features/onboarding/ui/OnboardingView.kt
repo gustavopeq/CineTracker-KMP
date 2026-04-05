@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cinetracker_kmp.composeapp.generated.resources.Res
-import cinetracker_kmp.composeapp.generated.resources.onboarding_get_started
 import cinetracker_kmp.composeapp.generated.resources.onboarding_next
 import common.ui.theme.OnboardingButtonTextColor
 import common.ui.theme.PrimaryBlackColor
@@ -90,18 +89,14 @@ fun OnboardingView(onOnboardingComplete: () -> Unit) {
             )
 
             OnboardingButton(
-                text = if (pagerState.currentPage == PAGE_COUNT - 1) {
-                    stringResource(Res.string.onboarding_get_started)
-                } else {
-                    stringResource(Res.string.onboarding_next)
-                },
+                text = stringResource(Res.string.onboarding_next),
                 onClick = {
-                    if (pagerState.currentPage == PAGE_COUNT - 1) {
-                        viewModel.completeOnboarding(onOnboardingComplete)
-                    } else {
+                    if (pagerState.currentPage < PAGE_COUNT - 1) {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         }
+                    } else {
+                        viewModel.completeOnboarding(onOnboardingComplete)
                     }
                 }
             )

@@ -6,6 +6,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
+import common.util.platform.AppNotifications
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import features.watchlist.ui.model.WatchlistRatingSort
@@ -22,12 +23,26 @@ class MainViewModel(
     private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
     val hasSeenOnboarding: StateFlow<Boolean?> get() = _hasSeenOnboarding
 
+    private val _shouldShowNotificationDialog = MutableStateFlow(false)
+    val shouldShowNotificationDialog: StateFlow<Boolean> get() = _shouldShowNotificationDialog
+
     init {
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
+        _shouldShowNotificationDialog.value = !settingsRepository.areEngagementRemindersEnabled()
     }
 
     fun updateOnboardingUiState() {
         _hasSeenOnboarding.value = true
+    }
+
+    fun enableEngagementReminders() {
+        settingsRepository.setEngagementRemindersEnabled(true)
+        AppNotifications.scheduleEngagementReminders()
+        _shouldShowNotificationDialog.value = false
+    }
+
+    fun skipEngagementReminders() {
+        _shouldShowNotificationDialog.value = false
     }
 
     private val _movieSortType = MutableStateFlow<SortTypeItem>(SortTypeItem.NowPlaying)

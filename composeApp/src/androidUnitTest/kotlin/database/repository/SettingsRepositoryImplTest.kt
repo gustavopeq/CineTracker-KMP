@@ -78,4 +78,36 @@ class SettingsRepositoryImplTest {
 
         verify { settings.putBoolean("details_overlay_seen", true) }
     }
+
+    @Test
+    fun `areEngagementRemindersEnabled returns false by default`() {
+        every { settings.getBoolean("engagement_reminders_enabled", false) } returns false
+
+        val result = repository.areEngagementRemindersEnabled()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `areEngagementRemindersEnabled returns true when enabled`() {
+        every { settings.getBoolean("engagement_reminders_enabled", false) } returns true
+
+        val result = repository.areEngagementRemindersEnabled()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `setEngagementRemindersEnabled stores true`() {
+        repository.setEngagementRemindersEnabled(true)
+
+        verify { settings.putBoolean("engagement_reminders_enabled", true) }
+    }
+
+    @Test
+    fun `setEngagementRemindersEnabled stores false`() {
+        repository.setEngagementRemindersEnabled(false)
+
+        verify { settings.putBoolean("engagement_reminders_enabled", false) }
+    }
 }

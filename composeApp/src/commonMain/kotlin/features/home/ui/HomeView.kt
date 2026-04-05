@@ -42,7 +42,9 @@ import common.util.UiConstants.HOME_BOTTOM_END_MARGIN
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
+import common.util.platform.rememberNotificationPermissionLauncher
 import features.home.events.HomeEvent
+import features.home.ui.components.NotificationPromptDialog
 import features.home.ui.components.carousel.ComingSoonCarousel
 import features.home.ui.components.carousel.TrendingCarousel
 import features.home.ui.components.carousel.WatchlistCarousel
@@ -87,6 +89,15 @@ private fun Home(
     val showListBottomSheet by viewModel.showListBottomSheet.collectAsState()
     val allLists by viewModel.allLists.collectAsState()
     val featuredContentInListStatus by viewModel.featuredContentInListStatus.collectAsState()
+    val shouldShowNotificationDialog by mainViewModel.shouldShowNotificationDialog.collectAsState()
+
+    val requestNotificationPermission = rememberNotificationPermissionLauncher { granted ->
+        if (granted) {
+            mainViewModel.enableEngagementReminders()
+        } else {
+            mainViewModel.skipEngagementReminders()
+        }
+    }
 
     LaunchedEffect(Unit) {
         if (loadState !is DataLoadStatus.Success) {
@@ -138,6 +149,13 @@ private fun Home(
                     viewModel.onEvent(HomeEvent.ToggleFeaturedFromList(listId))
                 },
                 onClosePanel = { viewModel.onEvent(HomeEvent.CloseListBottomSheet) }
+            )
+        }
+
+        if (shouldShowNotificationDialog) {
+            NotificationPromptDialog(
+                onEnableReminders = { requestNotificationPermission() },
+                onSkip = { mainViewModel.skipEngagementReminders() }
             )
         }
     }

@@ -145,10 +145,6 @@
     <string name="snackbar_item_moved_to_list">Movido a %1$s</string>
     <string name="snackbar_undo_text">Deshacer</string>
     <string name="undefined_ratings">N/D</string>
-    <string name="notification_request_dialog_title">¡Mantén tus listas actualizadas!</string>
-    <string name="notification_request_dialog_message">Permite notificaciones para recordarte actualizar tu lista de vistos.</string>
-    <string name="notification_request_dialog_allow">Sí</string>
-    <string name="notification_request_dialog_deny">No, gracias</string>
     <string name="rating_bottom_sheet_header">Califica este contenido</string>
     <string name="rating_bottom_sheet_save_button">Guardar calificación</string>
     <string name="personal_ratings_add_rating">Agregar calificación</string>
@@ -163,7 +159,6 @@
     <string name="onboarding_lists_title">Organiza Tu\nWatchlist</string>
     <string name="onboarding_lists_desc">Crea listas personalizadas, lleva un registro de lo que ya viste y planifica lo que ver a continuación.</string>
     <string name="onboarding_next">Siguiente</string>
-    <string name="onboarding_get_started">Comenzar</string>
     <string name="onboarding_create_new_list">Crear Nueva\nLista</string>
     <string name="onboarding_build_collection">Crea tu colección</string>
 
@@ -176,5 +171,24 @@
     <!-- Add to List Bottom Sheet -->
     <string name="add_to_list_sheet_title">¿Guardar en una lista?</string>
     <string name="add_to_list_no_thanks">No, gracias</string>
+
+    <!-- Engagement Notification Messages - Friday -->
+    <string name="notif_friday_1">¡Se acerca la noche de pelis! ¿Qué vas a ver este fin de semana?</string>
+    <string name="notif_friday_2">¡Ya es fin de semana! Es hora de ponerte al día con tu lista</string>
+    <string name="notif_friday_3">¡Viernes! ¿Tienes alguna película o serie en mente?</string>
+
+    <!-- Engagement Notification Messages - Sunday -->
+    <string name="notif_sunday_1">¿Viste algo chido este fin? ¡No olvides agregarlo a tu lista de vistos!</string>
+    <string name="notif_sunday_2">El fin se acaba — ¡registra lo que viste antes de que se te olvide!</string>
+    <string name="notif_sunday_3">¿Qué tal tu fin de pelis? ¡Actualiza tu lista de vistos!</string>
+
+    <!-- Notification Channel -->
+    <string name="engagement_reminders_channel_name">Recordatorios</string>
+
+    <!-- Notification Dialog -->
+    <string name="notif_dialog_title">Mantente al día</string>
+    <string name="notif_dialog_description">Recibe recordatorios semanales para actualizar tu lista y tu contenido.</string>
+    <string name="notif_dialog_enable">Activar recordatorios</string>
+    <string name="notif_dialog_skip">Ahora no</string>
 
 </resources>

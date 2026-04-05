@@ -144,10 +144,6 @@
     <string name="snackbar_item_moved_to_list">Moved to %1$s</string>
     <string name="snackbar_undo_text">Undo</string>
     <string name="undefined_ratings">N/A</string>
-    <string name="notification_request_dialog_title">Keep your lists up-to-date!</string>
-    <string name="notification_request_dialog_message">Allow notifications to remind you to update your watched list.</string>
-    <string name="notification_request_dialog_allow">Yes</string>
-    <string name="notification_request_dialog_deny">No, thanks</string>
     <string name="rating_bottom_sheet_header">Rate this content</string>
     <string name="rating_bottom_sheet_save_button">Save Rating</string>
     <string name="personal_ratings_add_rating">Add Rating</string>
@@ -162,7 +158,6 @@
     <string name="onboarding_lists_title">Organize Your\nWatchlist</string>
     <string name="onboarding_lists_desc">Create custom lists, track what you already watched, and plan what to watch next.</string>
     <string name="onboarding_next">Next</string>
-    <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_create_new_list">Create New\nList</string>
     <string name="onboarding_build_collection">Build your collection</string>
 
@@ -175,5 +170,24 @@
     <!-- Add to List Bottom Sheet -->
     <string name="add_to_list_sheet_title">Save to a list?</string>
     <string name="add_to_list_no_thanks">No, thanks</string>
+
+    <!-- Engagement Notification Messages - Friday -->
+    <string name="notif_friday_1">Movie night incoming! What are you watching this weekend?</string>
+    <string name="notif_friday_2">The weekend is here! Time to catch up on your watchlist</string>
+    <string name="notif_friday_3">Friday vibes! Got any movies or shows lined up?</string>
+
+    <!-- Engagement Notification Messages - Sunday -->
+    <string name="notif_sunday_1">Watched anything fun this weekend? Don't forget to add it to your watched list!</string>
+    <string name="notif_sunday_2">Weekend winding down — track what you watched before you forget!</string>
+    <string name="notif_sunday_3">How was your movie weekend? Update your watched list!</string>
+
+    <!-- Notification Channel -->
+    <string name="engagement_reminders_channel_name">Engagement Reminders</string>
+
+    <!-- Notification Dialog -->
+    <string name="notif_dialog_title">Stay on track</string>
+    <string name="notif_dialog_description">Get weekly reminders to update your watchlist and watched list.</string>
+    <string name="notif_dialog_enable">Enable reminders</string>
+    <string name="notif_dialog_skip">Not now</string>
 
 </resources>

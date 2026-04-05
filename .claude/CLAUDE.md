@@ -203,15 +203,18 @@ CineTracker-KMP/
 │   │       │       ├── CardsUtil.kt
 │   │       │       ├── Constants.kt
 │   │       │       ├── ConversionUtil.kt
+│   │       │       ├── EngagementMessages.kt
 │   │       │       ├── Extensions.kt
 │   │       │       ├── NestedScrollConnection.kt
 │   │       │       ├── UiConstants.kt
 │   │       │       └── platform/
-│   │       │           ├── DateUtils.kt          # expect
-│   │       │           ├── AppHaptics.kt     # expect
-│   │       │           ├── PlatformUtils.kt      # expect
-│   │       │           ├── ScreenSizeInfo.kt     # expect
-│   │       │           └── StringFormat.kt       # expect
+│   │       │           ├── AppHaptics.kt          # expect
+│   │       │           ├── AppNotifications.kt    # expect
+│   │       │           ├── DateUtils.kt           # expect
+│   │       │           ├── NotificationPermission.kt # expect
+│   │       │           ├── PlatformUtils.kt       # expect
+│   │       │           ├── ScreenSizeInfo.kt      # expect
+│   │       │           └── StringFormat.kt        # expect
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
 │   │       │   ├── backfill/
@@ -289,6 +292,7 @@ CineTracker-KMP/
 │   │       │   │       ├── HomeView.kt
 │   │       │   │       ├── HomeViewModel.kt
 │   │       │   │       ├── components/
+│   │       │   │       │   ├── NotificationPromptDialog.kt
 │   │       │   │       │   ├── carousel/
 │   │       │   │       │   │   ├── ComingSoonContainer.kt
 │   │       │   │       │   │   ├── TrendingContainer.kt
@@ -426,11 +430,16 @@ CineTracker-KMP/
 │   │   ├── kotlin/
 │   │   │   ├── com/projects/cinetracker/
 │   │   │   │   ├── MainActivity.kt
-│   │   │   │   └── core/
-│   │   │   │       └── CoreApplication.kt
+│   │   │   │   ├── core/
+│   │   │   │   │   └── CoreApplication.kt
+│   │   │   │   └── notification/
+│   │   │   │       ├── BootReceiver.kt
+│   │   │   │       └── EngagementNotificationReceiver.kt
 │   │   │   ├── common/util/platform/
-│   │   │   │   ├── DateUtils.kt
 │   │   │   │   ├── AppHaptics.kt
+│   │   │   │   ├── AppNotifications.android.kt
+│   │   │   │   ├── DateUtils.kt
+│   │   │   │   ├── NotificationPermission.android.kt
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt
@@ -445,6 +454,8 @@ CineTracker-KMP/
 │   │   │       │   └── ApiModule.android.kt
 │   │   │       └── NetworkClient.android.kt
 │   │   └── res/
+│   │       ├── drawable/
+│   │       │   └── ic_notification.xml
 │   │       └── values/
 │   │           ├── colors.xml
 │   │           ├── strings.xml
@@ -454,7 +465,9 @@ CineTracker-KMP/
 │   │   ├── MainViewController.kt
 │   │   ├── common/util/platform/
 │   │   │   ├── AppHaptics.kt
+│   │   │   ├── AppNotifications.ios.kt
 │   │   │   ├── DateUtils.kt
+│   │   │   ├── NotificationPermission.ios.kt
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt
 │   │   │   └── StringFormat.kt
@@ -477,6 +490,7 @@ CineTracker-KMP/
 │   │   │   ├── ui/
 │   │   │   │   └── MainViewModelTest.kt
 │   │   │   └── util/
+│   │   │       ├── EngagementMessagesTest.kt
 │   │   │       └── TestFixtures.kt              # Shared test helpers (flows, entities, responses)
 │   │   ├── database/
 │   │   │   ├── backfill/
