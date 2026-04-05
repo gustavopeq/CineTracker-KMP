@@ -10,7 +10,7 @@ import cinetracker_kmp.composeapp.generated.resources.notif_sunday_3
 import org.jetbrains.compose.resources.StringResource
 
 object EngagementMessages {
-    const val FRIDAY_DAY_OF_WEEK = 1
+    const val FRIDAY_DAY_OF_WEEK = 6
     const val SUNDAY_DAY_OF_WEEK = 1
     const val FRIDAY_HOUR = 18
     const val SUNDAY_HOUR = 19
