@@ -1,20 +1,48 @@
 package common.util.platform
 
 import common.util.EngagementMessages
+import io.sentry.kotlin.multiplatform.Sentry
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
+import platform.darwin.NSObject
 import platform.Foundation.NSDateComponents
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationRequest
 import platform.UserNotifications.UNNotificationSound
+import platform.UserNotifications.UNNotificationResponse
 import platform.UserNotifications.UNUserNotificationCenter
+import platform.UserNotifications.UNUserNotificationCenterDelegateProtocol
+
+private val notificationDelegate = NotificationResponseDelegate()
+
+private class NotificationResponseDelegate : NSObject(), UNUserNotificationCenterDelegateProtocol {
+    override fun userNotificationCenter(
+        center: UNUserNotificationCenter,
+        didReceiveNotificationResponse: UNNotificationResponse,
+        withCompletionHandler: () -> Unit
+    ) {
+        val identifier = didReceiveNotificationResponse.notification.request.identifier
+        if (identifier == AppNotifications.IDENTIFIER_FRIDAY || identifier == AppNotifications.IDENTIFIER_SUNDAY) {
+            Sentry.captureMessage("notification.opened")
+        }
+        withCompletionHandler()
+    }
+}
 
 actual object AppNotifications {
+
+    internal const val IDENTIFIER_FRIDAY = "engagement_friday"
+    internal const val IDENTIFIER_SUNDAY = "engagement_sunday"
+
+    fun setupNotificationDelegate() {
+        UNUserNotificationCenter.currentNotificationCenter().delegate = notificationDelegate
+    }
 
     actual fun scheduleEngagementReminders() {
         val center = UNUserNotificationCenter.currentNotificationCenter()
         center.removeAllPendingNotificationRequests()
+        Sentry.captureMessage("notification.scheduled")
 
         scheduleWeekly(
             center = center,
@@ -42,7 +70,6 @@ actual object AppNotifications {
         val messageText = runBlocking { getString(messageRes) }
 
         val content = UNMutableNotificationContent().apply {
-            setTitle("CineTracker")
             setBody(messageText)
             setSound(UNNotificationSound.defaultSound())
         }
@@ -67,6 +94,4 @@ actual object AppNotifications {
         center.addNotificationRequest(request, withCompletionHandler = null)
     }
 
-    private const val IDENTIFIER_FRIDAY = "engagement_friday"
-    private const val IDENTIFIER_SUNDAY = "engagement_sunday"
 }

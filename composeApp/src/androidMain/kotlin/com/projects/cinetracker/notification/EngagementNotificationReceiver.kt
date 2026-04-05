@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.projects.cinetracker.MainActivity
 import com.projects.cinetracker.R
 import common.util.EngagementMessages
+import io.sentry.kotlin.multiplatform.Sentry
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 
@@ -32,7 +33,6 @@ class EngagementNotificationReceiver : BroadcastReceiver() {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(context.getString(R.string.app_name))
             .setContentText(messageText)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -40,6 +40,7 @@ class EngagementNotificationReceiver : BroadcastReceiver() {
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(dayOfWeek, notification)
+        Sentry.captureMessage("notification.shown")
     }
 
     companion object {

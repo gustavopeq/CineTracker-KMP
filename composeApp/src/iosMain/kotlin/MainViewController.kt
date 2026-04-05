@@ -14,6 +14,7 @@ fun mainViewController() = ComposeUIViewController(
         KoinInitializer().init()
         initSentry()
         AppHaptics.warmUp()
+        AppNotifications.setupNotificationDelegate()
         rescheduleEngagementRemindersIfEnabled()
     }
 ) {

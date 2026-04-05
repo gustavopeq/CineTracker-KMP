@@ -11,6 +11,7 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.engagement_reminders_channel_name
 import com.projects.cinetracker.notification.EngagementNotificationReceiver
 import common.util.EngagementMessages
+import io.sentry.kotlin.multiplatform.Sentry
 import java.util.Calendar
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
@@ -40,6 +41,7 @@ actual object AppNotifications {
     actual fun scheduleEngagementReminders() {
         val context = appContext ?: return
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        Sentry.captureMessage("notification.scheduled")
 
         scheduleWeeklyAlarm(
             context = context,
