@@ -22,6 +22,7 @@ import features.browse.ui.Browse
 import features.details.ui.Details
 import features.home.ui.Home
 import features.search.ui.Search
+import features.settings.ui.SettingsScreen
 import features.watchlist.ui.Watchlist
 import navigation.components.navigateToTopLevelDestination
 
@@ -102,8 +103,10 @@ fun MainNavGraph(navController: NavHostController) {
                     }
                 }
                 composable<SettingsRoute> {
-                    // Temporary stub — replaced in Task 7
-                    Box(Modifier.fillMaxSize())
+                    SettingsScreen(
+                        goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
+                        goToRegionPicker = { navController.navigate(RegionPickerRoute) }
+                    )
                 }
                 composable<LanguagePickerRoute> {
                     // Temporary stub — replaced in Task 8
