@@ -3,6 +3,7 @@ package network.services.search
 import com.projects.moviemanager.network.util.Parameters.LANGUAGE
 import com.projects.moviemanager.network.util.Parameters.MATURE_ENABLED
 import com.projects.moviemanager.network.util.Parameters.PAGE_INDEX
+import com.projects.moviemanager.network.util.Parameters.REGION
 import com.projects.moviemanager.network.util.Parameters.SEARCH_QUERY
 import io.ktor.client.HttpClient
 import network.models.content.common.MovieResponse
@@ -27,6 +28,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
         query: String,
         matureEnabled: Boolean,
         language: String,
+        region: String,
         pageIndex: Int
     ): ApiResult<ContentPagingResponse<MultiResponse>> {
         val url = buildUrl(SEARCH_MULTI) {
@@ -34,6 +36,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
+                REGION to region,
                 PAGE_INDEX to pageIndex.toString()
             )
         }
@@ -45,6 +48,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
         query: String,
         matureEnabled: Boolean,
         language: String,
+        region: String,
         pageIndex: Int
     ): ApiResult<ContentPagingResponse<MovieResponse>> {
         val url = buildUrl(SEARCH_MOVIE) {
@@ -52,6 +56,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
+                REGION to region,
                 PAGE_INDEX to pageIndex.toString()
             )
         }
@@ -63,6 +68,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
         query: String,
         matureEnabled: Boolean,
         language: String,
+        region: String,
         pageIndex: Int
     ): ApiResult<ContentPagingResponse<ShowResponse>> {
         val url = buildUrl(SEARCH_TV) {
@@ -70,6 +76,7 @@ class SearchServiceImpl(private val client: HttpClient) : SearchService {
                 SEARCH_QUERY to query,
                 MATURE_ENABLED to matureEnabled.toString(),
                 LANGUAGE to language,
+                REGION to region,
                 PAGE_INDEX to pageIndex.toString()
             )
         }

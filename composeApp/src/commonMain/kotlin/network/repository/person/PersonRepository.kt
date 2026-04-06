@@ -8,9 +8,9 @@ import network.models.content.person.PersonImagesResponse
 import network.util.Either
 
 interface PersonRepository {
-    suspend fun getPersonDetailsById(personId: Int): Flow<Either<PersonResponse, ApiError>>
+    suspend fun getPersonDetailsById(personId: Int, language: String): Flow<Either<PersonResponse, ApiError>>
 
-    suspend fun getPersonCreditsById(personId: Int): Flow<Either<PersonCreditsResponse, ApiError>>
+    suspend fun getPersonCreditsById(personId: Int, language: String): Flow<Either<PersonCreditsResponse, ApiError>>
 
     suspend fun getPersonImagesById(personId: Int): Flow<Either<PersonImagesResponse, ApiError>>
 }

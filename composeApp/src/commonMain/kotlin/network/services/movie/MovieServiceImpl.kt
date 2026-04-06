@@ -2,6 +2,7 @@ package network.services.movie
 
 import com.projects.moviemanager.network.util.Parameters.LANGUAGE
 import com.projects.moviemanager.network.util.Parameters.PAGE_INDEX
+import com.projects.moviemanager.network.util.Parameters.REGION
 import io.ktor.client.HttpClient
 import network.models.content.common.ContentCreditsResponse
 import network.models.content.common.MovieResponse
@@ -17,13 +18,15 @@ class MovieServiceImpl(private val client: HttpClient) : MovieService {
     override suspend fun getMovieList(
         movieListType: String,
         pageIndex: Int,
-        language: String
+        language: String,
+        region: String
     ): ApiResult<ContentPagingResponse<MovieResponse>> {
         val path = "movie/$movieListType"
         val url = buildUrl(path) {
             mapOf(
                 PAGE_INDEX to pageIndex.toString(),
-                LANGUAGE to language
+                LANGUAGE to language,
+                REGION to region
             )
         }
 
@@ -91,12 +94,10 @@ class MovieServiceImpl(private val client: HttpClient) : MovieService {
         return client.getResult(url)
     }
 
-    override suspend fun getStreamingProviders(movieId: Int, language: String): ApiResult<WatchProvidersResponse> {
+    override suspend fun getStreamingProviders(movieId: Int): ApiResult<WatchProvidersResponse> {
         val path = "movie/$movieId/watch/providers"
         val url = buildUrl(path) {
-            mapOf(
-                LANGUAGE to language
-            )
+            emptyMap()
         }
 
         return client.getResult(url)

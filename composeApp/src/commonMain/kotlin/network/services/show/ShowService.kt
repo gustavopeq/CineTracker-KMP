@@ -1,6 +1,5 @@
 package network.services.show
 
-import core.LanguageManager.getUserLanguageTag
 import network.models.content.common.ContentCreditsResponse
 import network.models.content.common.ShowResponse
 import network.models.content.common.VideosByIdResponse
@@ -12,30 +11,30 @@ interface ShowService {
     suspend fun getShowList(
         contentListType: String,
         pageIndex: Int,
-        language: String = getUserLanguageTag()
+        language: String,
+        region: String
     ): ApiResult<ContentPagingResponse<ShowResponse>>
 
-    suspend fun getShowDetailsById(showId: Int, language: String = getUserLanguageTag()): ApiResult<ShowResponse>
+    suspend fun getShowDetailsById(showId: Int, language: String): ApiResult<ShowResponse>
 
     suspend fun getShowCreditsById(
         showId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentCreditsResponse>
 
-    suspend fun getShowVideosById(showId: Int, language: String = getUserLanguageTag()): ApiResult<VideosByIdResponse>
+    suspend fun getShowVideosById(showId: Int, language: String): ApiResult<VideosByIdResponse>
 
     suspend fun getRecommendationsShowsById(
         showId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>>
 
     suspend fun getSimilarShowsById(
         showId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>>
 
     suspend fun getStreamingProviders(
-        showId: Int,
-        language: String = getUserLanguageTag()
+        showId: Int
     ): ApiResult<WatchProvidersResponse>
 }

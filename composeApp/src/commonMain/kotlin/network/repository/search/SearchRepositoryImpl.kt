@@ -14,33 +14,47 @@ import network.util.asFlow
 class SearchRepositoryImpl(private val searchService: SearchService) : SearchRepository {
     override suspend fun onSearchMultiByQuery(
         query: String,
-        page: Int
+        page: Int,
+        language: String,
+        region: String
     ): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>> = searchService.searchMultiByQuery(
         query = query,
-        pageIndex = page
+        pageIndex = page,
+        language = language,
+        region = region
     ).asFlow()
 
     override suspend fun onSearchMovieByQuery(
         query: String,
-        page: Int
+        page: Int,
+        language: String,
+        region: String
     ): Flow<Either<ContentPagingResponse<MovieResponse>, ApiError>> = searchService.searchMovieByQuery(
         query = query,
-        pageIndex = page
+        pageIndex = page,
+        language = language,
+        region = region
     ).asFlow()
 
     override suspend fun onSearchShowByQuery(
         query: String,
-        page: Int
+        page: Int,
+        language: String,
+        region: String
     ): Flow<Either<ContentPagingResponse<ShowResponse>, ApiError>> = searchService.searchShowByQuery(
         query = query,
-        pageIndex = page
+        pageIndex = page,
+        language = language,
+        region = region
     ).asFlow()
 
     override suspend fun onSearchPersonByQuery(
         query: String,
-        page: Int
+        page: Int,
+        language: String
     ): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>> = searchService.searchPersonByQuery(
         query = query,
-        pageIndex = page
+        pageIndex = page,
+        language = language
     ).asFlow()
 }

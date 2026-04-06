@@ -32,12 +32,10 @@ class PersonServiceImpl(private val client: HttpClient) : PersonService {
         return client.getResult(url)
     }
 
-    override suspend fun getPersonImagesById(personId: Int, language: String): ApiResult<PersonImagesResponse> {
+    override suspend fun getPersonImagesById(personId: Int): ApiResult<PersonImagesResponse> {
         val path = "person/$personId/images"
         val url = buildUrl(path) {
-            mapOf(
-                Parameters.LANGUAGE to language
-            )
+            emptyMap()
         }
 
         return client.getResult(url)

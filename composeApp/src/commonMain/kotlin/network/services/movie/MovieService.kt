@@ -1,6 +1,5 @@
 package network.services.movie
 
-import core.LanguageManager.getUserLanguageTag
 import network.models.content.common.ContentCreditsResponse
 import network.models.content.common.MovieResponse
 import network.models.content.common.VideosByIdResponse
@@ -12,30 +11,30 @@ interface MovieService {
     suspend fun getMovieList(
         movieListType: String,
         pageIndex: Int,
-        language: String = getUserLanguageTag()
+        language: String,
+        region: String
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
-    suspend fun getMovieDetailsById(movieId: Int, language: String = getUserLanguageTag()): ApiResult<MovieResponse>
+    suspend fun getMovieDetailsById(movieId: Int, language: String): ApiResult<MovieResponse>
 
     suspend fun getMovieCreditsById(
         movieId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentCreditsResponse>
 
-    suspend fun getMovieVideosById(movieId: Int, language: String = getUserLanguageTag()): ApiResult<VideosByIdResponse>
+    suspend fun getMovieVideosById(movieId: Int, language: String): ApiResult<VideosByIdResponse>
 
     suspend fun getRecommendationsMoviesById(
         movieId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
     suspend fun getSimilarMoviesById(
         movieId: Int,
-        language: String = getUserLanguageTag()
+        language: String
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
     suspend fun getStreamingProviders(
-        movieId: Int,
-        language: String = getUserLanguageTag()
+        movieId: Int
     ): ApiResult<WatchProvidersResponse>
 }
