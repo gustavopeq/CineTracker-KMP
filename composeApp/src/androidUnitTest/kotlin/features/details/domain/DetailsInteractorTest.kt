@@ -7,7 +7,6 @@ import common.util.fakeMovieResponse
 import common.util.fakeShowPagingResponse
 import common.util.fakeShowResponse
 import common.util.successFlow
-import core.LanguageManager
 import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.util.fakeCastResponse
@@ -20,12 +19,12 @@ import features.details.util.fakePersonResponse
 import features.details.util.fakeProviderResponse
 import features.details.util.fakeVideosByIdResponse
 import features.details.util.fakeWatchProvidersResponse
+import features.settings.domain.SettingsInteractor
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlin.test.assertEquals
@@ -54,14 +53,15 @@ class DetailsInteractorTest {
     private val listInteractor: features.watchlist.domain.ListInteractor = mockk()
     private val personalRatingRepository: PersonalRatingRepository = mockk()
     private val databaseRepository: DatabaseRepository = mockk()
+    private val settingsInteractor: SettingsInteractor = mockk()
 
     private lateinit var interactor: DetailsInteractor
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        mockkObject(LanguageManager)
-        every { LanguageManager.getUserCountryCode() } returns "US"
+        every { settingsInteractor.getAppLanguage() } returns "en-US"
+        every { settingsInteractor.getAppRegion() } returns "US"
 
         interactor = DetailsInteractor(
             movieRepository = movieRepository,
@@ -69,7 +69,8 @@ class DetailsInteractorTest {
             personRepository = personRepository,
             listInteractor = listInteractor,
             personalRatingRepository = personalRatingRepository,
-            databaseRepository = databaseRepository
+            databaseRepository = databaseRepository,
+            settingsInteractor = settingsInteractor
         )
     }
 
@@ -82,7 +83,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentDetailsById returns movie details when mediaType is MOVIE`() = runTest {
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse(id = 1))
+        coEvery { movieRepository.getMovieDetailsById(1, any()) } returns successFlow(fakeMovieResponse(id = 1))
         coEvery { movieRepository.getStreamingProviders(1) } returns successFlow(
             WatchProvidersResponse(id = 1, results = emptyMap())
         )
@@ -96,7 +97,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentDetailsById returns show details when mediaType is SHOW`() = runTest {
-        coEvery { showRepository.getShowDetailsById(1) } returns successFlow(fakeShowResponse(id = 1))
+        coEvery { showRepository.getShowDetailsById(1, any()) } returns successFlow(fakeShowResponse(id = 1))
         coEvery { showRepository.getStreamingProviders(1) } returns successFlow(
             WatchProvidersResponse(id = 1, results = emptyMap())
         )
@@ -110,7 +111,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentDetailsById returns person details when mediaType is PERSON`() = runTest {
-        coEvery { personRepository.getPersonDetailsById(1) } returns successFlow(fakePersonResponse(id = 1))
+        coEvery { personRepository.getPersonDetailsById(1, any()) } returns successFlow(fakePersonResponse(id = 1))
 
         val result = interactor.getContentDetailsById(1, MediaType.PERSON)
 
@@ -121,7 +122,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentDetailsById sets error state on API error`() = runTest {
-        coEvery { movieRepository.getMovieDetailsById(1) } returns errorFlow("500")
+        coEvery { movieRepository.getMovieDetailsById(1, any()) } returns errorFlow("500")
         coEvery { movieRepository.getStreamingProviders(any()) } returns successFlow(
             WatchProvidersResponse(id = 1, results = emptyMap())
         )
@@ -139,14 +140,14 @@ class DetailsInteractorTest {
         assertFalse(result.isFailed())
         assertNull(result.detailsInfo.value)
         verify(exactly = 0) { movieRepository.hashCode() } // no repo interaction
-        coVerify(exactly = 0) { movieRepository.getMovieDetailsById(any()) }
-        coVerify(exactly = 0) { showRepository.getShowDetailsById(any()) }
-        coVerify(exactly = 0) { personRepository.getPersonDetailsById(any()) }
+        coVerify(exactly = 0) { movieRepository.getMovieDetailsById(any(), any()) }
+        coVerify(exactly = 0) { showRepository.getShowDetailsById(any(), any()) }
+        coVerify(exactly = 0) { personRepository.getPersonDetailsById(any(), any()) }
     }
 
     @Test
     fun `getContentDetailsById injects streaming providers when country code matches`() = runTest {
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse())
+        coEvery { movieRepository.getMovieDetailsById(1, any()) } returns successFlow(fakeMovieResponse())
         coEvery { movieRepository.getStreamingProviders(1) } returns successFlow(
             fakeWatchProvidersResponse(countryCode = "US")
         )
@@ -158,7 +159,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentDetailsById leaves streamProviders empty when country not in results`() = runTest {
-        coEvery { movieRepository.getMovieDetailsById(1) } returns successFlow(fakeMovieResponse())
+        coEvery { movieRepository.getMovieDetailsById(1, any()) } returns successFlow(fakeMovieResponse())
         coEvery { movieRepository.getStreamingProviders(1) } returns successFlow(
             fakeWatchProvidersResponse(countryCode = "BR")
         )
@@ -172,7 +173,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById filters out cast with empty profile_path`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 fakeContentCastResponse(id = 1, name = "Actor A", profilePath = "/profile.jpg"),
                 fakeContentCastResponse(id = 2, name = "Actor B", profilePath = ""),
@@ -188,7 +189,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById sorts remaining cast by order ascending`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 fakeContentCastResponse(id = 1, name = "Third", profilePath = "/p.jpg", order = 5),
                 fakeContentCastResponse(id = 2, name = "First", profilePath = "/p.jpg", order = 1),
@@ -204,7 +205,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById places null-order entries last`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 fakeContentCastResponse(id = 1, name = "NoOrder", profilePath = "/p.jpg", order = null),
                 fakeContentCastResponse(id = 2, name = "Second", profilePath = "/p.jpg", order = 2),
@@ -220,7 +221,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById sets error state on API error`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns errorFlow("503")
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns errorFlow("503")
 
         val result = interactor.getContentCastById(1, MediaType.MOVIE)
 
@@ -233,13 +234,13 @@ class DetailsInteractorTest {
 
         assertFalse(result.isFailed())
         assertTrue(result.detailsCast.value.isEmpty())
-        coVerify(exactly = 0) { movieRepository.getMovieCreditsById(any()) }
-        coVerify(exactly = 0) { showRepository.getShowCreditsById(any()) }
+        coVerify(exactly = 0) { movieRepository.getMovieCreditsById(any(), any()) }
+        coVerify(exactly = 0) { showRepository.getShowCreditsById(any(), any()) }
     }
 
     @Test
     fun `getContentCastById extracts director names from crew for movies`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 fakeContentCastResponse(id = 1, name = "Actor", profilePath = "/p.jpg"),
                 crew = listOf(
@@ -257,7 +258,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById extracts multiple director names`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 crew = listOf(
                     fakeContentCrewResponse(id = 10, name = "Lana Wachowski", job = "Director"),
@@ -273,7 +274,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById returns empty director names when no Director in crew`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 crew = listOf(
                     fakeContentCrewResponse(id = 10, name = "John Williams", job = "Composer")
@@ -288,7 +289,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById filters director with empty name from crew`() = runTest {
-        coEvery { movieRepository.getMovieCreditsById(1) } returns successFlow(
+        coEvery { movieRepository.getMovieCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 crew = listOf(
                     fakeContentCrewResponse(id = 10, name = "", job = "Director"),
@@ -304,7 +305,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentCastById does not extract director names for SHOW`() = runTest {
-        coEvery { showRepository.getShowCreditsById(1) } returns successFlow(
+        coEvery { showRepository.getShowCreditsById(1, any()) } returns successFlow(
             fakeContentCreditsResponse(
                 crew = listOf(
                     fakeContentCrewResponse(id = 10, name = "Someone", job = "Director")
@@ -321,7 +322,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentVideosById returns video list for MOVIE`() = runTest {
-        coEvery { movieRepository.getMovieVideosById(1) } returns successFlow(fakeVideosByIdResponse(count = 2))
+        coEvery { movieRepository.getMovieVideosById(1, any()) } returns successFlow(fakeVideosByIdResponse(count = 2))
 
         val result = interactor.getContentVideosById(1, MediaType.MOVIE)
 
@@ -330,7 +331,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentVideosById returns video list for SHOW`() = runTest {
-        coEvery { showRepository.getShowVideosById(1) } returns successFlow(fakeVideosByIdResponse(count = 3))
+        coEvery { showRepository.getShowVideosById(1, any()) } returns successFlow(fakeVideosByIdResponse(count = 3))
 
         val result = interactor.getContentVideosById(1, MediaType.SHOW)
 
@@ -339,7 +340,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getContentVideosById returns empty list on API error`() = runTest {
-        coEvery { movieRepository.getMovieVideosById(1) } returns errorFlow()
+        coEvery { movieRepository.getMovieVideosById(1, any()) } returns errorFlow()
 
         val result = interactor.getContentVideosById(1, MediaType.MOVIE)
 
@@ -351,7 +352,7 @@ class DetailsInteractorTest {
         val result = interactor.getContentVideosById(1, MediaType.PERSON)
 
         assertTrue(result.isEmpty())
-        coVerify(exactly = 0) { movieRepository.getMovieVideosById(any()) }
+        coVerify(exactly = 0) { movieRepository.getMovieVideosById(any(), any()) }
     }
 
     // ── getRecommendationsContentById ─────────────────────────────────────────
@@ -359,38 +360,38 @@ class DetailsInteractorTest {
     @Test
     fun `getRecommendationsContentById returns recommendations when non-empty`() = runTest {
         val movie = fakeMovieResponse(id = 1, title = "Rec Movie")
-        coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getRecommendationsMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse(movie)
         )
 
         val result = interactor.getRecommendationsContentById(1, MediaType.MOVIE)
 
         assertEquals(1, result.size)
-        coVerify(exactly = 0) { movieRepository.getSimilarMoviesById(any()) }
+        coVerify(exactly = 0) { movieRepository.getSimilarMoviesById(any(), any()) }
     }
 
     @Test
     fun `getRecommendationsContentById falls back to similar when recommendations empty`() = runTest {
         val similar = fakeMovieResponse(id = 2, title = "Similar Movie")
-        coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getRecommendationsMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse()
         )
-        coEvery { movieRepository.getSimilarMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getSimilarMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse(similar)
         )
 
         val result = interactor.getRecommendationsContentById(1, MediaType.MOVIE)
 
         assertEquals(1, result.size)
-        coVerify(exactly = 1) { movieRepository.getSimilarMoviesById(1) }
+        coVerify(exactly = 1) { movieRepository.getSimilarMoviesById(1, any()) }
     }
 
     @Test
     fun `getRecommendationsContentById returns empty list when both recommendations and similar are empty`() = runTest {
-        coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getRecommendationsMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse()
         )
-        coEvery { movieRepository.getSimilarMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getSimilarMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse()
         )
 
@@ -402,24 +403,24 @@ class DetailsInteractorTest {
     @Test
     fun `getRecommendationsContentById falls back to similar shows when show recommendations are empty`() = runTest {
         val similar = fakeShowResponse(id = 2, name = "Similar Show")
-        coEvery { showRepository.getRecommendationsShowsById(1) } returns successFlow(
+        coEvery { showRepository.getRecommendationsShowsById(1, any()) } returns successFlow(
             fakeShowPagingResponse()
         )
-        coEvery { showRepository.getSimilarShowsById(1) } returns successFlow(
+        coEvery { showRepository.getSimilarShowsById(1, any()) } returns successFlow(
             fakeShowPagingResponse(similar)
         )
 
         val result = interactor.getRecommendationsContentById(1, MediaType.SHOW)
 
         assertEquals(1, result.size)
-        coVerify(exactly = 1) { showRepository.getSimilarShowsById(1) }
+        coVerify(exactly = 1) { showRepository.getSimilarShowsById(1, any()) }
     }
 
     @Test
     fun `getRecommendationsContentById filters out items without poster_path`() = runTest {
         val withPoster = fakeMovieResponse(id = 1, title = "Has Poster")
         val noPoster = fakeMovieResponse(id = 2, title = "No Poster").copy(posterPath = null)
-        coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getRecommendationsMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse(withPoster, noPoster)
         )
 
@@ -433,7 +434,7 @@ class DetailsInteractorTest {
     fun `getRecommendationsContentById filters out items without title`() = runTest {
         val withTitle = fakeMovieResponse(id = 1, title = "Good Title")
         val noTitle = fakeMovieResponse(id = 2).copy(title = null)
-        coEvery { movieRepository.getRecommendationsMoviesById(1) } returns successFlow(
+        coEvery { movieRepository.getRecommendationsMoviesById(1, any()) } returns successFlow(
             fakeMoviePagingResponse(withTitle, noTitle)
         )
 
@@ -491,7 +492,7 @@ class DetailsInteractorTest {
     @Test
     fun `getPersonCreditsById filters out entries with empty name`() = runTest {
         // GenericContent.name = castResponse.title = (_title ?: name). Set title=null, name="" to get empty name.
-        coEvery { personRepository.getPersonCreditsById(1) } returns successFlow(
+        coEvery { personRepository.getPersonCreditsById(1, any()) } returns successFlow(
             fakePersonCreditsResponse(
                 fakeCastResponse(id = 1, name = "Valid Name", posterPath = "/p.jpg", title = "Valid Title"),
                 fakeCastResponse(id = 2, name = "", posterPath = "/p.jpg", title = null)
@@ -506,7 +507,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getPersonCreditsById filters out entries with empty posterPath`() = runTest {
-        coEvery { personRepository.getPersonCreditsById(1) } returns successFlow(
+        coEvery { personRepository.getPersonCreditsById(1, any()) } returns successFlow(
             fakePersonCreditsResponse(
                 fakeCastResponse(id = 1, name = "Actor A", posterPath = "/p.jpg"),
                 fakeCastResponse(id = 2, name = "Actor B", posterPath = null)
@@ -520,7 +521,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getPersonCreditsById returns entries passing all filters`() = runTest {
-        coEvery { personRepository.getPersonCreditsById(1) } returns successFlow(
+        coEvery { personRepository.getPersonCreditsById(1, any()) } returns successFlow(
             fakePersonCreditsResponse(
                 fakeCastResponse(id = 1, name = "Actor A", posterPath = "/p.jpg"),
                 fakeCastResponse(id = 2, name = "Actor B", posterPath = "/p2.jpg")
@@ -534,7 +535,7 @@ class DetailsInteractorTest {
 
     @Test
     fun `getPersonCreditsById returns empty list on error`() = runTest {
-        coEvery { personRepository.getPersonCreditsById(1) } returns errorFlow()
+        coEvery { personRepository.getPersonCreditsById(1, any()) } returns errorFlow()
 
         val result = interactor.getPersonCreditsById(1)
 

@@ -53,14 +53,16 @@ class MediaContentPagingSourceTest {
         movieRepository = movieRepository,
         showRepository = showRepository,
         contentListType = ContentListType.MOVIE_POPULAR,
-        mediaType = mediaType
+        mediaType = mediaType,
+        language = "en-US",
+        region = "US"
     )
 
     // ── MOVIE ─────────────────────────────────────────────────────────────────
 
     @Test
     fun `load returns Page with mapped items for MOVIE`() = runTest {
-        coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
+        coEvery { movieRepository.getMovieList(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse(id = 1))
         )
 
@@ -72,7 +74,7 @@ class MediaContentPagingSourceTest {
 
     @Test
     fun `load returns Error when MOVIE API fails`() = runTest {
-        coEvery { movieRepository.getMovieList(any(), any()) } returns errorFlow()
+        coEvery { movieRepository.getMovieList(any(), any(), any(), any()) } returns errorFlow()
 
         val result = buildSource(MediaType.MOVIE).load(refreshParams)
 
@@ -83,7 +85,7 @@ class MediaContentPagingSourceTest {
 
     @Test
     fun `load returns Page with mapped items for SHOW`() = runTest {
-        coEvery { showRepository.getShowList(any(), any()) } returns successFlow(
+        coEvery { showRepository.getShowList(any(), any(), any(), any()) } returns successFlow(
             fakeShowPagingResponse(fakeShowResponse(id = 1))
         )
 
@@ -95,7 +97,7 @@ class MediaContentPagingSourceTest {
 
     @Test
     fun `load returns Error when SHOW API fails`() = runTest {
-        coEvery { showRepository.getShowList(any(), any()) } returns errorFlow()
+        coEvery { showRepository.getShowList(any(), any(), any(), any()) } returns errorFlow()
 
         val result = buildSource(MediaType.SHOW).load(refreshParams)
 
@@ -115,7 +117,7 @@ class MediaContentPagingSourceTest {
 
     @Test
     fun `prevKey is null on first page`() = runTest {
-        coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
+        coEvery { movieRepository.getMovieList(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse())
         )
 
@@ -127,7 +129,7 @@ class MediaContentPagingSourceTest {
 
     @Test
     fun `prevKey and nextKey are correct on page 2`() = runTest {
-        coEvery { movieRepository.getMovieList(any(), any()) } returns successFlow(
+        coEvery { movieRepository.getMovieList(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse())
         )
 

@@ -47,14 +47,16 @@ class SearchPagingSourceTest {
     private fun buildSource(query: String = "test", mediaType: MediaType? = null) = SearchPagingSource(
         searchRepository = searchRepository,
         query = query,
-        mediaType = mediaType
+        mediaType = mediaType,
+        language = "en-US",
+        region = "US"
     )
 
     // ── mediaType routing ─────────────────────────────────────────────────────
 
     @Test
     fun `load calls onSearchMovieByQuery for MOVIE mediaType`() = runTest {
-        coEvery { searchRepository.onSearchMovieByQuery(any(), any()) } returns successFlow(
+        coEvery { searchRepository.onSearchMovieByQuery(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse(id = 1))
         )
 
@@ -66,7 +68,7 @@ class SearchPagingSourceTest {
 
     @Test
     fun `load calls onSearchShowByQuery for SHOW mediaType`() = runTest {
-        coEvery { searchRepository.onSearchShowByQuery(any(), any()) } returns successFlow(
+        coEvery { searchRepository.onSearchShowByQuery(any(), any(), any(), any()) } returns successFlow(
             fakeShowPagingResponse(fakeShowResponse(id = 1))
         )
 
@@ -78,7 +80,7 @@ class SearchPagingSourceTest {
 
     @Test
     fun `load calls onSearchPersonByQuery for PERSON mediaType`() = runTest {
-        coEvery { searchRepository.onSearchPersonByQuery(any(), any()) } returns successFlow(
+        coEvery { searchRepository.onSearchPersonByQuery(any(), any(), any()) } returns successFlow(
             fakePersonPagingResponse(fakePersonResponse(id = 1, name = "Actor"))
         )
 
@@ -89,7 +91,7 @@ class SearchPagingSourceTest {
 
     @Test
     fun `load calls onSearchMultiByQuery for null mediaType`() = runTest {
-        coEvery { searchRepository.onSearchMultiByQuery(any(), any()) } returns successFlow(
+        coEvery { searchRepository.onSearchMultiByQuery(any(), any(), any(), any()) } returns successFlow(
             fakeMultiPagingResponse()
         )
 
@@ -102,7 +104,7 @@ class SearchPagingSourceTest {
 
     @Test
     fun `load returns Error on API failure`() = runTest {
-        coEvery { searchRepository.onSearchMovieByQuery(any(), any()) } returns errorFlow()
+        coEvery { searchRepository.onSearchMovieByQuery(any(), any(), any(), any()) } returns errorFlow()
 
         val result = buildSource(mediaType = MediaType.MOVIE).load(refreshParams)
 
@@ -113,7 +115,7 @@ class SearchPagingSourceTest {
 
     @Test
     fun `prevKey is null on page 1 and nextKey is 2`() = runTest {
-        coEvery { searchRepository.onSearchMovieByQuery(any(), any()) } returns successFlow(
+        coEvery { searchRepository.onSearchMovieByQuery(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse())
         )
 

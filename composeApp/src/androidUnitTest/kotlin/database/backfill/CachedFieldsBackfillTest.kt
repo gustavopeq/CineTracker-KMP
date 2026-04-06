@@ -6,9 +6,11 @@ import common.util.fakeMovieResponse
 import common.util.fakeShowResponse
 import common.util.successFlow
 import database.repository.DatabaseRepository
+import features.settings.domain.SettingsInteractor
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
@@ -31,6 +33,7 @@ class CachedFieldsBackfillTest {
     private val databaseRepository: DatabaseRepository = mockk()
     private val movieRepository: MovieRepository = mockk()
     private val showRepository: ShowRepository = mockk()
+    private val settingsInteractor: SettingsInteractor = mockk()
     private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var backfill: CachedFieldsBackfill
@@ -39,7 +42,8 @@ class CachedFieldsBackfillTest {
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
-        backfill = CachedFieldsBackfill(databaseRepository, movieRepository, showRepository)
+        every { settingsInteractor.getAppLanguage() } returns "en-US"
+        backfill = CachedFieldsBackfill(databaseRepository, movieRepository, showRepository, settingsInteractor)
     }
 
     @After
@@ -61,7 +65,7 @@ class CachedFieldsBackfillTest {
     fun `backfillIfNeeded fetches and updates cached fields for movie entity`() = runTest {
         val staleEntity = fakeContentEntity(contentId = 100, mediaType = "MOVIE", posterPath = null)
         coEvery { databaseRepository.getEntitiesWithMissingCachedFields() } returns listOf(staleEntity)
-        coEvery { movieRepository.getMovieDetailsById(100) } returns successFlow(
+        coEvery { movieRepository.getMovieDetailsById(100, any()) } returns successFlow(
             fakeMovieResponse(id = 100, title = "Test Movie")
         )
         coEvery { databaseRepository.updateCachedFields(any(), any(), any(), any(), any()) } just runs
@@ -83,7 +87,7 @@ class CachedFieldsBackfillTest {
     fun `backfillIfNeeded fetches and updates cached fields for show entity`() = runTest {
         val staleEntity = fakeContentEntity(contentId = 200, mediaType = "SHOW", posterPath = null)
         coEvery { databaseRepository.getEntitiesWithMissingCachedFields() } returns listOf(staleEntity)
-        coEvery { showRepository.getShowDetailsById(200) } returns successFlow(
+        coEvery { showRepository.getShowDetailsById(200, any()) } returns successFlow(
             fakeShowResponse(id = 200, name = "Test Show")
         )
         coEvery { databaseRepository.updateCachedFields(any(), any(), any(), any(), any()) } just runs
@@ -106,14 +110,14 @@ class CachedFieldsBackfillTest {
         val entity1 = fakeContentEntity(contentId = 100, mediaType = "MOVIE", listId = 1, posterPath = null)
         val entity2 = fakeContentEntity(contentId = 100, mediaType = "MOVIE", listId = 2, posterPath = null)
         coEvery { databaseRepository.getEntitiesWithMissingCachedFields() } returns listOf(entity1, entity2)
-        coEvery { movieRepository.getMovieDetailsById(100) } returns successFlow(
+        coEvery { movieRepository.getMovieDetailsById(100, any()) } returns successFlow(
             fakeMovieResponse(id = 100)
         )
         coEvery { databaseRepository.updateCachedFields(any(), any(), any(), any(), any()) } just runs
 
         backfill.backfillIfNeeded()
 
-        coVerify(exactly = 1) { movieRepository.getMovieDetailsById(100) }
+        coVerify(exactly = 1) { movieRepository.getMovieDetailsById(100, any()) }
         coVerify(exactly = 1) { databaseRepository.updateCachedFields(any(), any(), any(), any(), any()) }
     }
 }
