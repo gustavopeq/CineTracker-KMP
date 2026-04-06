@@ -8,12 +8,7 @@ import network.util.ApiResult
 interface PersonService {
     suspend fun getPersonDetailsById(personId: Int, language: String): ApiResult<PersonResponse>
 
-    suspend fun getPersonCreditsById(
-        personId: Int,
-        language: String
-    ): ApiResult<PersonCreditsResponse>
+    suspend fun getPersonCreditsById(personId: Int, language: String): ApiResult<PersonCreditsResponse>
 
-    suspend fun getPersonImagesById(
-        personId: Int
-    ): ApiResult<PersonImagesResponse>
+    suspend fun getPersonImagesById(personId: Int): ApiResult<PersonImagesResponse>
 }

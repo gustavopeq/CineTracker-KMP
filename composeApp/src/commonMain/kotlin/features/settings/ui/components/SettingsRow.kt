@@ -20,11 +20,7 @@ import common.util.UiConstants.DEFAULT_PADDING
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SettingsRow(
-    label: String,
-    value: String,
-    onClick: () -> Unit
-) {
+fun SettingsRow(label: String, value: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

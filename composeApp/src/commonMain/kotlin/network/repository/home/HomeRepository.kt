@@ -9,13 +9,9 @@ import network.models.content.search.ContentPagingResponse
 import network.util.Either
 
 interface HomeRepository {
-    suspend fun getTrendingMulti(
-        language: String
-    ): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>>
+    suspend fun getTrendingMulti(language: String): Flow<Either<ContentPagingResponse<MultiResponse>, ApiError>>
 
-    suspend fun getTrendingPerson(
-        language: String
-    ): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>>
+    suspend fun getTrendingPerson(language: String): Flow<Either<ContentPagingResponse<PersonResponse>, ApiError>>
 
     suspend fun getMoviesComingSoon(
         language: String,

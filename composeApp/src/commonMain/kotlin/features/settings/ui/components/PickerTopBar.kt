@@ -22,10 +22,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun PickerTopBar(
-    title: StringResource,
-    onBack: () -> Unit
-) {
+fun PickerTopBar(title: StringResource, onBack: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

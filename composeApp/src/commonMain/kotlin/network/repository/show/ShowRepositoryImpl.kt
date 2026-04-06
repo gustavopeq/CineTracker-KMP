@@ -24,10 +24,7 @@ class ShowRepositoryImpl(private val showService: ShowService) : ShowRepository 
         region = region
     ).asFlow()
 
-    override suspend fun getShowDetailsById(
-        showId: Int,
-        language: String
-    ): Flow<Either<ShowResponse, ApiError>> =
+    override suspend fun getShowDetailsById(showId: Int, language: String): Flow<Either<ShowResponse, ApiError>> =
         showService.getShowDetailsById(
             showId = showId,
             language = language
@@ -36,16 +33,12 @@ class ShowRepositoryImpl(private val showService: ShowService) : ShowRepository 
     override suspend fun getShowCreditsById(
         showId: Int,
         language: String
-    ): Flow<Either<ContentCreditsResponse, ApiError>> =
-        showService.getShowCreditsById(
-            showId = showId,
-            language = language
-        ).asFlow()
+    ): Flow<Either<ContentCreditsResponse, ApiError>> = showService.getShowCreditsById(
+        showId = showId,
+        language = language
+    ).asFlow()
 
-    override suspend fun getShowVideosById(
-        showId: Int,
-        language: String
-    ): Flow<Either<VideosByIdResponse, ApiError>> =
+    override suspend fun getShowVideosById(showId: Int, language: String): Flow<Either<VideosByIdResponse, ApiError>> =
         showService.getShowVideosById(
             showId = showId,
             language = language
@@ -62,11 +55,10 @@ class ShowRepositoryImpl(private val showService: ShowService) : ShowRepository 
     override suspend fun getSimilarShowsById(
         showId: Int,
         language: String
-    ): Flow<Either<ContentPagingResponse<ShowResponse>, ApiError>> =
-        showService.getSimilarShowsById(
-            showId = showId,
-            language = language
-        ).asFlow()
+    ): Flow<Either<ContentPagingResponse<ShowResponse>, ApiError>> = showService.getSimilarShowsById(
+        showId = showId,
+        language = language
+    ).asFlow()
 
     override suspend fun getStreamingProviders(showId: Int): Flow<Either<WatchProvidersResponse, ApiError>> =
         showService.getStreamingProviders(

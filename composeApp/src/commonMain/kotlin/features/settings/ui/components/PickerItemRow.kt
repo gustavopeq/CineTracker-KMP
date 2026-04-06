@@ -18,11 +18,7 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.SMALL_PADDING
 
 @Composable
-fun PickerItemRow(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
+fun PickerItemRow(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

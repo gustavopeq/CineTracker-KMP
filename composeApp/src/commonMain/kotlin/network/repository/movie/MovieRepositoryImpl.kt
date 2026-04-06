@@ -25,10 +25,7 @@ class MovieRepositoryImpl(private val movieService: MovieService) : MovieReposit
         region = region
     ).asFlow()
 
-    override suspend fun getMovieDetailsById(
-        movieId: Int,
-        language: String
-    ): Flow<Either<MovieResponse, ApiError>> =
+    override suspend fun getMovieDetailsById(movieId: Int, language: String): Flow<Either<MovieResponse, ApiError>> =
         movieService.getMovieDetailsById(
             movieId = movieId,
             language = language
@@ -37,20 +34,18 @@ class MovieRepositoryImpl(private val movieService: MovieService) : MovieReposit
     override suspend fun getMovieCreditsById(
         movieId: Int,
         language: String
-    ): Flow<Either<ContentCreditsResponse, ApiError>> =
-        movieService.getMovieCreditsById(
-            movieId = movieId,
-            language = language
-        ).asFlow()
+    ): Flow<Either<ContentCreditsResponse, ApiError>> = movieService.getMovieCreditsById(
+        movieId = movieId,
+        language = language
+    ).asFlow()
 
     override suspend fun getMovieVideosById(
         movieId: Int,
         language: String
-    ): Flow<Either<VideosByIdResponse, ApiError>> =
-        movieService.getMovieVideosById(
-            movieId = movieId,
-            language = language
-        ).asFlow()
+    ): Flow<Either<VideosByIdResponse, ApiError>> = movieService.getMovieVideosById(
+        movieId = movieId,
+        language = language
+    ).asFlow()
 
     override suspend fun getRecommendationsMoviesById(
         movieId: Int,

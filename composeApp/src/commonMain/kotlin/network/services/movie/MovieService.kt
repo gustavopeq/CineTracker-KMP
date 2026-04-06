@@ -17,10 +17,7 @@ interface MovieService {
 
     suspend fun getMovieDetailsById(movieId: Int, language: String): ApiResult<MovieResponse>
 
-    suspend fun getMovieCreditsById(
-        movieId: Int,
-        language: String
-    ): ApiResult<ContentCreditsResponse>
+    suspend fun getMovieCreditsById(movieId: Int, language: String): ApiResult<ContentCreditsResponse>
 
     suspend fun getMovieVideosById(movieId: Int, language: String): ApiResult<VideosByIdResponse>
 
@@ -29,12 +26,7 @@ interface MovieService {
         language: String
     ): ApiResult<ContentPagingResponse<MovieResponse>>
 
-    suspend fun getSimilarMoviesById(
-        movieId: Int,
-        language: String
-    ): ApiResult<ContentPagingResponse<MovieResponse>>
+    suspend fun getSimilarMoviesById(movieId: Int, language: String): ApiResult<ContentPagingResponse<MovieResponse>>
 
-    suspend fun getStreamingProviders(
-        movieId: Int
-    ): ApiResult<WatchProvidersResponse>
+    suspend fun getStreamingProviders(movieId: Int): ApiResult<WatchProvidersResponse>
 }

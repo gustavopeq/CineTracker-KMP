@@ -6,9 +6,7 @@ import features.settings.domain.SettingsInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SettingsViewModel(
-    private val settingsInteractor: SettingsInteractor,
-) : ViewModel() {
+class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
 
     private val _currentLanguageDisplay = MutableStateFlow("")
     val currentLanguageDisplay: StateFlow<String> = _currentLanguageDisplay

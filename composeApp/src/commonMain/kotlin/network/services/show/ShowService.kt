@@ -17,10 +17,7 @@ interface ShowService {
 
     suspend fun getShowDetailsById(showId: Int, language: String): ApiResult<ShowResponse>
 
-    suspend fun getShowCreditsById(
-        showId: Int,
-        language: String
-    ): ApiResult<ContentCreditsResponse>
+    suspend fun getShowCreditsById(showId: Int, language: String): ApiResult<ContentCreditsResponse>
 
     suspend fun getShowVideosById(showId: Int, language: String): ApiResult<VideosByIdResponse>
 
@@ -29,12 +26,7 @@ interface ShowService {
         language: String
     ): ApiResult<ContentPagingResponse<ShowResponse>>
 
-    suspend fun getSimilarShowsById(
-        showId: Int,
-        language: String
-    ): ApiResult<ContentPagingResponse<ShowResponse>>
+    suspend fun getSimilarShowsById(showId: Int, language: String): ApiResult<ContentPagingResponse<ShowResponse>>
 
-    suspend fun getStreamingProviders(
-        showId: Int
-    ): ApiResult<WatchProvidersResponse>
+    suspend fun getStreamingProviders(showId: Int): ApiResult<WatchProvidersResponse>
 }

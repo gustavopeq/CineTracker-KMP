@@ -37,7 +37,7 @@ class SettingsViewModelTest {
     private fun setupDefaultMocks(
         language: String = "en-US",
         region: String = "US",
-        notificationsEnabled: Boolean = false,
+        notificationsEnabled: Boolean = false
     ) {
         every { settingsInteractor.getAppLanguage() } returns language
         every { settingsInteractor.getAppRegion() } returns region
@@ -45,18 +45,16 @@ class SettingsViewModelTest {
         every { settingsInteractor.getSupportedLanguages() } returns listOf(
             LanguageItem("en-US", "English (US)"),
             LanguageItem("pt-BR", "Portugu\u00eas (Brasil)"),
-            LanguageItem("es-ES", "Espa\u00f1ol (Espa\u00f1a)"),
+            LanguageItem("es-ES", "Espa\u00f1ol (Espa\u00f1a)")
         )
         every { settingsInteractor.getSupportedRegions() } returns listOf(
             RegionItem("US", "United States"),
             RegionItem("BR", "Brazil"),
-            RegionItem("ES", "Spain"),
+            RegionItem("ES", "Spain")
         )
     }
 
-    private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(settingsInteractor)
-    }
+    private fun createViewModel(): SettingsViewModel = SettingsViewModel(settingsInteractor)
 
     @Test
     fun `init loads current language display name`() {

@@ -18,11 +18,7 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 
 @Composable
-fun SettingsToggleRow(
-    label: String,
-    checked: Boolean,
-    onToggle: (Boolean) -> Unit
-) {
+fun SettingsToggleRow(label: String, checked: Boolean, onToggle: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

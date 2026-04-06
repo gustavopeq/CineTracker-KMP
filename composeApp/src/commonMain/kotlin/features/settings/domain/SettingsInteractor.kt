@@ -3,19 +3,11 @@ package features.settings.domain
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
 
-data class LanguageItem(
-    val tag: String,
-    val displayName: String,
-)
+data class LanguageItem(val tag: String, val displayName: String)
 
-data class RegionItem(
-    val code: String,
-    val displayName: String,
-)
+data class RegionItem(val code: String, val displayName: String)
 
-class SettingsInteractor(
-    private val settingsRepository: SettingsRepository,
-) {
+class SettingsInteractor(private val settingsRepository: SettingsRepository) {
 
     fun getAppLanguage(): String {
         val stored = settingsRepository.getAppLanguage()
@@ -50,18 +42,14 @@ class SettingsInteractor(
 
     fun getSupportedLanguages(): List<LanguageItem> = SUPPORTED_LANGUAGES
 
-    fun getSupportedRegions(): List<RegionItem> {
-        return supportedRegionCodes.map { code ->
-            RegionItem(
-                code = code,
-                displayName = PlatformUtils.getDisplayCountry(code),
-            )
-        }.sortedBy { it.displayName }
-    }
+    fun getSupportedRegions(): List<RegionItem> = supportedRegionCodes.map { code ->
+        RegionItem(
+            code = code,
+            displayName = PlatformUtils.getDisplayCountry(code)
+        )
+    }.sortedBy { it.displayName }
 
-    fun areNotificationsEnabled(): Boolean {
-        return settingsRepository.areEngagementRemindersEnabled()
-    }
+    fun areNotificationsEnabled(): Boolean = settingsRepository.areEngagementRemindersEnabled()
 
     fun setNotificationsEnabled(enabled: Boolean) {
         settingsRepository.setEngagementRemindersEnabled(enabled)
@@ -83,7 +71,7 @@ class SettingsInteractor(
             LanguageItem("es-PR", "Espa\u00f1ol (Puerto Rico)"),
             LanguageItem("es-UY", "Espa\u00f1ol (Uruguay)"),
             LanguageItem("es-VE", "Espa\u00f1ol (Venezuela)"),
-            LanguageItem("es-CR", "Espa\u00f1ol (Costa Rica)"),
+            LanguageItem("es-CR", "Espa\u00f1ol (Costa Rica)")
         )
 
         private val supportedLanguageTags = SUPPORTED_LANGUAGES.map { it.tag }.toSet()
@@ -94,7 +82,7 @@ class SettingsInteractor(
             "FR", "DE", "IT", "NL", "BE", "AT", "CH",
             "JP", "KR", "IN", "CN",
             "SE", "NO", "DK", "FI",
-            "PL", "RU", "ZA", "TR",
+            "PL", "RU", "ZA", "TR"
         )
     }
 }

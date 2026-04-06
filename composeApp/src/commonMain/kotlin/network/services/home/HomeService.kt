@@ -7,13 +7,9 @@ import network.models.content.search.ContentPagingResponse
 import network.util.ApiResult
 
 interface HomeService {
-    suspend fun getDayTrendingMulti(
-        language: String
-    ): ApiResult<ContentPagingResponse<MultiResponse>>
+    suspend fun getDayTrendingMulti(language: String): ApiResult<ContentPagingResponse<MultiResponse>>
 
-    suspend fun getDayTrendingPerson(
-        language: String
-    ): ApiResult<ContentPagingResponse<PersonResponse>>
+    suspend fun getDayTrendingPerson(language: String): ApiResult<ContentPagingResponse<PersonResponse>>
 
     suspend fun getMoviesComingSoon(
         language: String,
