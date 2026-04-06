@@ -24,6 +24,7 @@ import common.util.platform.AppHaptics
 import navigation.BrowseRoute
 import navigation.HomeRoute
 import navigation.SearchRoute
+import navigation.SettingsRoute
 import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -45,6 +46,7 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
                 is MainNavBarItem.Browse -> currentDestination?.hasRoute<BrowseRoute>() == true
                 is MainNavBarItem.Watchlist -> currentDestination?.hasRoute<WatchlistRoute>() == true
                 is MainNavBarItem.Search -> currentDestination?.hasRoute<SearchRoute>() == true
+                is MainNavBarItem.Settings -> currentDestination?.hasRoute<SettingsRoute>() == true
             }
 
             NavigationBarItem(

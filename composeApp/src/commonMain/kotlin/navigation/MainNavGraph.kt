@@ -5,8 +5,11 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -97,6 +100,18 @@ fun MainNavGraph(navController: NavHostController) {
                             goToErrorScreen = goToErrorScreen
                         )
                     }
+                }
+                composable<SettingsRoute> {
+                    // Temporary stub — replaced in Task 7
+                    Box(Modifier.fillMaxSize())
+                }
+                composable<LanguagePickerRoute> {
+                    // Temporary stub — replaced in Task 8
+                    Box(Modifier.fillMaxSize())
+                }
+                composable<RegionPickerRoute> {
+                    // Temporary stub — replaced in Task 8
+                    Box(Modifier.fillMaxSize())
                 }
                 composable<ErrorRoute> {
                     ErrorScreen(onTryAgain = { navController.popBackStack() })

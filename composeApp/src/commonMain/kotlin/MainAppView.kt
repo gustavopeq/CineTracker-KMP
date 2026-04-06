@@ -184,5 +184,6 @@ val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
-    MainNavBarItem.Search
+    MainNavBarItem.Search,
+    MainNavBarItem.Settings
 )

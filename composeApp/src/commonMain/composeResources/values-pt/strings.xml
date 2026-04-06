@@ -6,6 +6,7 @@
     <string name="main_nav_browse">Explorar</string>
     <string name="main_nav_watchlist">Listas</string>
     <string name="main_nav_search">Busca</string>
+    <string name="main_nav_settings">Ajustes</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">Ver Detalhes</string>
@@ -190,5 +191,13 @@
     <string name="notif_dialog_description">Receba lembretes semanais para atualizar sua lista e seu conteúdo.</string>
     <string name="notif_dialog_enable">Ativar lembretes</string>
     <string name="notif_dialog_skip">Agora não</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_app_language">Idioma do App</string>
+    <string name="settings_region">Regi\u00e3o</string>
+    <string name="settings_notifications">Notifica\u00e7\u00f5es</string>
+    <string name="settings_language_picker_title">Idioma do App</string>
+    <string name="settings_region_picker_title">Regi\u00e3o</string>
 
 </resources>
