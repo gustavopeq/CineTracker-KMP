@@ -22,9 +22,23 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         settings.putBoolean(KEY_ENGAGEMENT_REMINDERS_ENABLED, enabled)
     }
 
+    override fun getAppLanguage(): String? = settings.getStringOrNull(KEY_APP_LANGUAGE)
+
+    override fun setAppLanguage(languageTag: String) {
+        settings.putString(KEY_APP_LANGUAGE, languageTag)
+    }
+
+    override fun getAppRegion(): String? = settings.getStringOrNull(KEY_APP_REGION)
+
+    override fun setAppRegion(regionCode: String) {
+        settings.putString(KEY_APP_REGION, regionCode)
+    }
+
     companion object {
         private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         private const val KEY_DETAILS_OVERLAY_SEEN = "details_overlay_seen"
         private const val KEY_ENGAGEMENT_REMINDERS_ENABLED = "engagement_reminders_enabled"
+        private const val KEY_APP_LANGUAGE = "app_language"
+        private const val KEY_APP_REGION = "app_region"
     }
 }

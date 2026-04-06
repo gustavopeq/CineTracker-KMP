@@ -7,4 +7,8 @@ interface SettingsRepository {
     fun setDetailsOverlaySeen()
     fun areEngagementRemindersEnabled(): Boolean
     fun setEngagementRemindersEnabled(enabled: Boolean)
+    fun getAppLanguage(): String?
+    fun setAppLanguage(languageTag: String)
+    fun getAppRegion(): String?
+    fun setAppRegion(regionCode: String)
 }
