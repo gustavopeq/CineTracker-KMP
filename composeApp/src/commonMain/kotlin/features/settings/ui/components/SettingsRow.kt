@@ -3,6 +3,7 @@ package features.settings.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -17,6 +18,7 @@ import cinetracker_kmp.composeapp.generated.resources.ic_chevron_right
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SETTINGS_ROW_HEIGHT
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -24,8 +26,9 @@ fun SettingsRow(label: String, value: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(SETTINGS_ROW_HEIGHT.dp)
             .clickable(onClick = onClick)
-            .padding(horizontal = DEFAULT_MARGIN.dp, vertical = DEFAULT_PADDING.dp),
+            .padding(horizontal = DEFAULT_MARGIN.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

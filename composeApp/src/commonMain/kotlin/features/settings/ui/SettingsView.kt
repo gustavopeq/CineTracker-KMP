@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,6 +19,9 @@ import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.settings_app_language
 import cinetracker_kmp.composeapp.generated.resources.settings_notifications
 import cinetracker_kmp.composeapp.generated.resources.settings_region
+import cinetracker_kmp.composeapp.generated.resources.settings_version
+import com.projects.cinetracker.BuildKonfig
+import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.RETURN_TOP_BAR_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
@@ -106,5 +110,15 @@ private fun SettingsContent(
         )
 
         HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = "${stringResource(Res.string.settings_version)} v${BuildKonfig.VERSION_NAME}",
+            style = MaterialTheme.typography.bodySmall,
+            color = SecondaryGreyColor
+        )
+
+        Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
     }
 }

@@ -1,5 +1,7 @@
 package common.util.platform
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.projects.cinetracker.BuildConfig
 import java.util.Locale
 
@@ -16,4 +18,7 @@ actual object PlatformUtils {
     }
     actual fun getDisplayCountry(isoCode: String): String =
         Locale("", isoCode).getDisplayCountry(Locale.getDefault()).ifEmpty { isoCode }
+    actual fun applyAppLocale(languageTag: String) {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageTag))
+    }
 }

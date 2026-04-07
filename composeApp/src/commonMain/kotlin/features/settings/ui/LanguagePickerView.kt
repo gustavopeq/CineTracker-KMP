@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,6 +27,14 @@ fun LanguagePickerScreen(onBack: () -> Unit) {
     val languages = remember { settingsInteractor.getSupportedLanguages() }
     val selectedTag = remember { mutableStateOf(settingsInteractor.getAppLanguage()) }
 
+    val initialTag = remember { settingsInteractor.getAppLanguage() }
+    val orderedLanguages = remember {
+        val sel = languages.find { it.tag == initialTag }
+        val rest = languages.filter { it.tag != initialTag }.sortedBy { it.displayName }
+        if (sel != null) listOf(sel) + rest else languages.sortedBy { it.displayName }
+    }
+    val hasInitialSelection = remember { languages.any { it.tag == initialTag } }
+
     DisposableEffect(Unit) {
         onDispose {
             settingsInteractor.setAppLanguage(selectedTag.value)
@@ -39,30 +47,19 @@ fun LanguagePickerScreen(onBack: () -> Unit) {
             onBack = onBack
         )
 
-        val selectedItem = languages.find { it.tag == selectedTag.value }
-        val otherItems = languages.filter { it.tag != selectedTag.value }.sortedBy { it.displayName }
-
         LazyColumn {
-            if (selectedItem != null) {
-                item {
-                    PickerItemRow(
-                        text = selectedItem.displayName,
-                        isSelected = true,
-                        onClick = {}
-                    )
+            itemsIndexed(orderedLanguages, key = { _, item -> item.tag }) { index, item ->
+                PickerItemRow(
+                    text = item.displayName,
+                    isSelected = item.tag == selectedTag.value,
+                    onClick = { selectedTag.value = item.tag }
+                )
+                if (index == 0 && hasInitialSelection) {
                     HorizontalDivider(
                         color = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
                     )
                 }
-            }
-
-            items(otherItems, key = { it.tag }) { item ->
-                PickerItemRow(
-                    text = item.displayName,
-                    isSelected = false,
-                    onClick = { selectedTag.value = item.tag }
-                )
             }
         }
     }

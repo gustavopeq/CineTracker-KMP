@@ -199,5 +199,6 @@
     <string name="settings_notifications">Notificaciones</string>
     <string name="settings_language_picker_title">Idioma de la App</string>
     <string name="settings_region_picker_title">Regi\u00f3n</string>
+    <string name="settings_version">Versi\u00f3n</string>
 
 </resources>

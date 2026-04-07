@@ -1,10 +1,12 @@
 package features.settings.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import common.util.platform.AppNotifications
 import features.settings.domain.SettingsInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
 
@@ -19,6 +21,9 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
 
     init {
         refreshSettings()
+        viewModelScope.launch {
+            settingsInteractor.settingsChanged.collect { refreshSettings() }
+        }
     }
 
     fun refreshSettings() {

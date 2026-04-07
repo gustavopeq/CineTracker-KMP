@@ -2,12 +2,17 @@ package features.settings.domain
 
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 data class LanguageItem(val tag: String, val displayName: String)
 
 data class RegionItem(val code: String, val displayName: String)
 
 class SettingsInteractor(private val settingsRepository: SettingsRepository) {
+
+    private val _settingsChanged = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val settingsChanged: SharedFlow<Unit> = _settingsChanged
 
     fun getAppLanguage(): String {
         val stored = settingsRepository.getAppLanguage()
@@ -25,7 +30,12 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
     }
 
     fun setAppLanguage(languageTag: String) {
+        val previousLanguage = getAppLanguage()
         settingsRepository.setAppLanguage(languageTag)
+        _settingsChanged.tryEmit(Unit)
+        if (previousLanguage != languageTag) {
+            PlatformUtils.applyAppLocale(languageTag)
+        }
     }
 
     fun getAppRegion(): String {
@@ -38,6 +48,7 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
 
     fun setAppRegion(regionCode: String) {
         settingsRepository.setAppRegion(regionCode)
+        _settingsChanged.tryEmit(Unit)
     }
 
     fun getSupportedLanguages(): List<LanguageItem> = SUPPORTED_LANGUAGES
@@ -57,21 +68,9 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
 
     companion object {
         private val SUPPORTED_LANGUAGES = listOf(
-            LanguageItem("en-US", "English (US)"),
-            LanguageItem("en-CA", "English (Canada)"),
-            LanguageItem("pt-BR", "Portugu\u00eas (Brasil)"),
-            LanguageItem("es-ES", "Espa\u00f1ol (Espa\u00f1a)"),
-            LanguageItem("es-MX", "Espa\u00f1ol (M\u00e9xico)"),
-            LanguageItem("es-BO", "Espa\u00f1ol (Bolivia)"),
-            LanguageItem("es-CL", "Espa\u00f1ol (Chile)"),
-            LanguageItem("es-CO", "Espa\u00f1ol (Colombia)"),
-            LanguageItem("es-EC", "Espa\u00f1ol (Ecuador)"),
-            LanguageItem("es-PY", "Espa\u00f1ol (Paraguay)"),
-            LanguageItem("es-PE", "Espa\u00f1ol (Per\u00fa)"),
-            LanguageItem("es-PR", "Espa\u00f1ol (Puerto Rico)"),
-            LanguageItem("es-UY", "Espa\u00f1ol (Uruguay)"),
-            LanguageItem("es-VE", "Espa\u00f1ol (Venezuela)"),
-            LanguageItem("es-CR", "Espa\u00f1ol (Costa Rica)")
+            LanguageItem("en-US", "English"),
+            LanguageItem("es-ES", "Espa\u00f1ol"),
+            LanguageItem("pt-BR", "Portugu\u00eas")
         )
 
         private val supportedLanguageTags = SUPPORTED_LANGUAGES.map { it.tag }.toSet()

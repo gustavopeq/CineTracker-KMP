@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,6 +27,14 @@ fun RegionPickerScreen(onBack: () -> Unit) {
     val regions = remember { settingsInteractor.getSupportedRegions() }
     val selectedCode = remember { mutableStateOf(settingsInteractor.getAppRegion()) }
 
+    val initialCode = remember { settingsInteractor.getAppRegion() }
+    val orderedRegions = remember {
+        val sel = regions.find { it.code == initialCode }
+        val rest = regions.filter { it.code != initialCode }
+        if (sel != null) listOf(sel) + rest else regions
+    }
+    val hasInitialSelection = remember { regions.any { it.code == initialCode } }
+
     DisposableEffect(Unit) {
         onDispose {
             settingsInteractor.setAppRegion(selectedCode.value)
@@ -39,30 +47,19 @@ fun RegionPickerScreen(onBack: () -> Unit) {
             onBack = onBack
         )
 
-        val selectedItem = regions.find { it.code == selectedCode.value }
-        val otherItems = regions.filter { it.code != selectedCode.value }
-
         LazyColumn {
-            if (selectedItem != null) {
-                item {
-                    PickerItemRow(
-                        text = selectedItem.displayName,
-                        isSelected = true,
-                        onClick = {}
-                    )
+            itemsIndexed(orderedRegions, key = { _, item -> item.code }) { index, item ->
+                PickerItemRow(
+                    text = item.displayName,
+                    isSelected = item.code == selectedCode.value,
+                    onClick = { selectedCode.value = item.code }
+                )
+                if (index == 0 && hasInitialSelection) {
                     HorizontalDivider(
                         color = MaterialTheme.colorScheme.inverseSurface,
                         modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
                     )
                 }
-            }
-
-            items(otherItems, key = { it.code }) { item ->
-                PickerItemRow(
-                    text = item.displayName,
-                    isSelected = false,
-                    onClick = { selectedCode.value = item.code }
-                )
             }
         }
     }

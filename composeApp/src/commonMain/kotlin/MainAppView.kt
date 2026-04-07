@@ -42,7 +42,9 @@ import features.onboarding.ui.OnboardingView
 import features.watchlist.ui.components.CreateListBottomSheet
 import navigation.DetailsRoute
 import navigation.ErrorRoute
+import navigation.LanguagePickerRoute
 import navigation.MainNavGraph
+import navigation.RegionPickerRoute
 import navigation.SearchRoute
 import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
@@ -177,8 +179,10 @@ fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold:
     }
 }
 
-private fun NavDestination?.isStandalone(): Boolean =
-    this?.hasRoute<DetailsRoute>() == true || this?.hasRoute<ErrorRoute>() == true
+private fun NavDestination?.isStandalone(): Boolean = this?.hasRoute<DetailsRoute>() == true ||
+    this?.hasRoute<ErrorRoute>() == true ||
+    this?.hasRoute<LanguagePickerRoute>() == true ||
+    this?.hasRoute<RegionPickerRoute>() == true
 
 val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,

@@ -13,16 +13,27 @@ import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
 
+    private val testDispatcher = StandardTestDispatcher()
     private val settingsInteractor: SettingsInteractor = mockk(relaxUnitFun = true)
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this)
         mockkObject(AppNotifications)
         every { AppNotifications.scheduleEngagementReminders() } returns Unit
@@ -31,21 +42,24 @@ class SettingsViewModelTest {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
         unmockkAll()
     }
 
     private fun setupDefaultMocks(
         language: String = "en-US",
         region: String = "US",
-        notificationsEnabled: Boolean = false
+        notificationsEnabled: Boolean = false,
+        settingsChangedFlow: MutableSharedFlow<Unit> = MutableSharedFlow()
     ) {
         every { settingsInteractor.getAppLanguage() } returns language
         every { settingsInteractor.getAppRegion() } returns region
         every { settingsInteractor.areNotificationsEnabled() } returns notificationsEnabled
+        every { settingsInteractor.settingsChanged } returns settingsChangedFlow
         every { settingsInteractor.getSupportedLanguages() } returns listOf(
-            LanguageItem("en-US", "English (US)"),
-            LanguageItem("pt-BR", "Portugu\u00eas (Brasil)"),
-            LanguageItem("es-ES", "Espa\u00f1ol (Espa\u00f1a)")
+            LanguageItem("en-US", "English"),
+            LanguageItem("pt-BR", "Portugu\u00eas"),
+            LanguageItem("es-ES", "Espa\u00f1ol")
         )
         every { settingsInteractor.getSupportedRegions() } returns listOf(
             RegionItem("US", "United States"),
@@ -62,7 +76,7 @@ class SettingsViewModelTest {
 
         val viewModel = createViewModel()
 
-        assertEquals("Portugu\u00eas (Brasil)", viewModel.currentLanguageDisplay.value)
+        assertEquals("Portugu\u00eas", viewModel.currentLanguageDisplay.value)
     }
 
     @Test
@@ -123,7 +137,7 @@ class SettingsViewModelTest {
         setupDefaultMocks(language = "en-US", region = "US")
         val viewModel = createViewModel()
 
-        assertEquals("English (US)", viewModel.currentLanguageDisplay.value)
+        assertEquals("English", viewModel.currentLanguageDisplay.value)
         assertEquals("United States", viewModel.currentRegionDisplay.value)
 
         every { settingsInteractor.getAppLanguage() } returns "pt-BR"
@@ -131,7 +145,39 @@ class SettingsViewModelTest {
 
         viewModel.refreshSettings()
 
-        assertEquals("Portugu\u00eas (Brasil)", viewModel.currentLanguageDisplay.value)
+        assertEquals("Portugu\u00eas", viewModel.currentLanguageDisplay.value)
+        assertEquals("Brazil", viewModel.currentRegionDisplay.value)
+    }
+
+    @Test
+    fun `settingsChanged emission triggers auto-refresh of language display`() = runTest {
+        val settingsChangedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        setupDefaultMocks(language = "en-US", region = "US", settingsChangedFlow = settingsChangedFlow)
+        val viewModel = createViewModel()
+        advanceUntilIdle() // allow the collect coroutine in init to start
+
+        assertEquals("English", viewModel.currentLanguageDisplay.value)
+
+        every { settingsInteractor.getAppLanguage() } returns "pt-BR"
+        settingsChangedFlow.emit(Unit)
+        advanceUntilIdle()
+
+        assertEquals("Portugu\u00eas", viewModel.currentLanguageDisplay.value)
+    }
+
+    @Test
+    fun `settingsChanged emission triggers auto-refresh of region display`() = runTest {
+        val settingsChangedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        setupDefaultMocks(language = "en-US", region = "US", settingsChangedFlow = settingsChangedFlow)
+        val viewModel = createViewModel()
+        advanceUntilIdle() // allow the collect coroutine in init to start
+
+        assertEquals("United States", viewModel.currentRegionDisplay.value)
+
+        every { settingsInteractor.getAppRegion() } returns "BR"
+        settingsChangedFlow.emit(Unit)
+        advanceUntilIdle()
+
         assertEquals("Brazil", viewModel.currentRegionDisplay.value)
     }
 }

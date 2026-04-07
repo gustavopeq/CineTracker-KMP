@@ -4,8 +4,10 @@ import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.runs
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlin.test.assertEquals
@@ -25,6 +27,7 @@ class SettingsInteractorTest {
     fun setUp() {
         MockKAnnotations.init(this)
         mockkObject(PlatformUtils)
+        every { PlatformUtils.applyAppLocale(any()) } just runs
         interactor = SettingsInteractor(settingsRepository)
     }
 
@@ -47,11 +50,11 @@ class SettingsInteractorTest {
     @Test
     fun `getAppLanguage returns device locale when stored is null and locale is supported`() {
         every { settingsRepository.getAppLanguage() } returns null
-        every { PlatformUtils.getLocale() } returns "es-MX"
+        every { PlatformUtils.getLocale() } returns "pt-BR"
 
         val result = interactor.getAppLanguage()
 
-        assertEquals("es-MX", result)
+        assertEquals("pt-BR", result)
     }
 
     @Test
@@ -93,9 +96,29 @@ class SettingsInteractorTest {
 
     @Test
     fun `setAppLanguage delegates to repository`() {
-        interactor.setAppLanguage("es-MX")
+        every { settingsRepository.getAppLanguage() } returns "en-US"
 
-        verify { settingsRepository.setAppLanguage("es-MX") }
+        interactor.setAppLanguage("es-ES")
+
+        verify { settingsRepository.setAppLanguage("es-ES") }
+    }
+
+    @Test
+    fun `setAppLanguage applies locale when language changes`() {
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.setAppLanguage("pt-BR")
+
+        verify { PlatformUtils.applyAppLocale("pt-BR") }
+    }
+
+    @Test
+    fun `setAppLanguage skips locale application when language unchanged`() {
+        every { settingsRepository.getAppLanguage() } returns "pt-BR"
+
+        interactor.setAppLanguage("pt-BR")
+
+        verify(exactly = 0) { PlatformUtils.applyAppLocale(any()) }
     }
 
     // endregion
@@ -147,10 +170,10 @@ class SettingsInteractorTest {
     // region getSupportedLanguages
 
     @Test
-    fun `getSupportedLanguages returns 15 entries`() {
+    fun `getSupportedLanguages returns 3 entries`() {
         val languages = interactor.getSupportedLanguages()
 
-        assertEquals(15, languages.size)
+        assertEquals(3, languages.size)
     }
 
     @Test
@@ -158,7 +181,7 @@ class SettingsInteractorTest {
         val languages = interactor.getSupportedLanguages()
         val enUS = languages.find { it.tag == "en-US" }
 
-        assertEquals("English (US)", enUS?.displayName)
+        assertEquals("English", enUS?.displayName)
     }
 
     @Test
@@ -166,7 +189,7 @@ class SettingsInteractorTest {
         val languages = interactor.getSupportedLanguages()
         val ptBR = languages.find { it.tag == "pt-BR" }
 
-        assertEquals("Portugu\u00eas (Brasil)", ptBR?.displayName)
+        assertEquals("Portugu\u00eas", ptBR?.displayName)
     }
 
     // endregion

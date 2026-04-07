@@ -7,4 +7,5 @@ expect object PlatformUtils {
     fun getUserCountry(): String
     fun getLocale(): String
     fun getDisplayCountry(isoCode: String): String
+    fun applyAppLocale(languageTag: String)
 }

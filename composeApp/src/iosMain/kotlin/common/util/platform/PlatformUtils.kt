@@ -2,7 +2,9 @@ package common.util.platform
 
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.Platform
+import kotlin.system.exitProcess
 import platform.Foundation.NSLocale
+import platform.Foundation.NSUserDefaults
 import platform.Foundation.countryCode
 import platform.Foundation.currentLocale
 import platform.Foundation.localizedStringForCountryCode
@@ -32,5 +34,9 @@ actual object PlatformUtils {
         val preferredLanguage = (NSLocale.preferredLanguages.firstOrNull() as String?) ?: "en"
         val locale = NSLocale(localeIdentifier = preferredLanguage)
         return locale.localizedStringForCountryCode(isoCode) ?: isoCode
+    }
+    actual fun applyAppLocale(languageTag: String) {
+        NSUserDefaults.standardUserDefaults.setObject(listOf(languageTag), forKey = "AppleLanguages")
+        NSUserDefaults.standardUserDefaults.synchronize()
     }
 }

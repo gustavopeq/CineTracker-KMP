@@ -2,6 +2,7 @@ package features.settings.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -15,14 +16,15 @@ import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
-import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SETTINGS_ROW_HEIGHT
 
 @Composable
 fun SettingsToggleRow(label: String, checked: Boolean, onToggle: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = DEFAULT_MARGIN.dp, vertical = DEFAULT_PADDING.dp),
+            .height(SETTINGS_ROW_HEIGHT.dp)
+            .padding(horizontal = DEFAULT_MARGIN.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
