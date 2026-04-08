@@ -67,11 +67,9 @@ private fun SettingsContent(
             .padding(top = RETURN_TOP_BAR_HEIGHT.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
-
         ProfileAvatar()
 
-        Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
+        Spacer(modifier = Modifier.height(SECTION_PADDING.dp * 2))
 
         HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
 

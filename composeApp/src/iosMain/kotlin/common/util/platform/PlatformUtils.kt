@@ -2,7 +2,6 @@ package common.util.platform
 
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.Platform
-import kotlin.system.exitProcess
 import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
 import platform.Foundation.countryCode
