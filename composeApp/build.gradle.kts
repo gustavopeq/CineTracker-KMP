@@ -54,6 +54,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
+            implementation(libs.ui.backhandler)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 

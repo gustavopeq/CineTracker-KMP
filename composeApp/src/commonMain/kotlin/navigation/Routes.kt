@@ -23,6 +23,9 @@ data class DetailsRoute(
 )
 
 @Serializable
+data object SettingsGraphRoute
+
+@Serializable
 data object SettingsRoute
 
 @Serializable

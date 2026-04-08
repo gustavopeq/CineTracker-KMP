@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import common.ui.theme.MainBarGreyColor
@@ -24,7 +25,7 @@ import common.util.platform.AppHaptics
 import navigation.BrowseRoute
 import navigation.HomeRoute
 import navigation.SearchRoute
-import navigation.SettingsRoute
+import navigation.SettingsGraphRoute
 import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -46,7 +47,8 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
                 is MainNavBarItem.Browse -> currentDestination?.hasRoute<BrowseRoute>() == true
                 is MainNavBarItem.Watchlist -> currentDestination?.hasRoute<WatchlistRoute>() == true
                 is MainNavBarItem.Search -> currentDestination?.hasRoute<SearchRoute>() == true
-                is MainNavBarItem.Settings -> currentDestination?.hasRoute<SettingsRoute>() == true
+                is MainNavBarItem.Settings -> currentDestination?.hierarchy
+                    ?.any { it.hasRoute<SettingsGraphRoute>() } == true
             }
 
             NavigationBarItem(

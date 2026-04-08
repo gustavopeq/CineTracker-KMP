@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import common.domain.models.util.MediaType
 import common.ui.LocalAnimatedVisibilityScope
@@ -101,21 +102,23 @@ fun MainNavGraph(navController: NavHostController) {
                         )
                     }
                 }
-                composable<SettingsRoute> {
-                    SettingsScreen(
-                        goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
-                        goToRegionPicker = { navController.navigate(RegionPickerRoute) }
-                    )
-                }
-                composable<LanguagePickerRoute> {
-                    LanguagePickerScreen(
-                        onBack = { navController.popBackStack() }
-                    )
-                }
-                composable<RegionPickerRoute> {
-                    RegionPickerScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                navigation<SettingsGraphRoute>(startDestination = SettingsRoute) {
+                    composable<SettingsRoute> {
+                        SettingsScreen(
+                            goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
+                            goToRegionPicker = { navController.navigate(RegionPickerRoute) }
+                        )
+                    }
+                    composable<LanguagePickerRoute> {
+                        LanguagePickerScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+                    composable<RegionPickerRoute> {
+                        RegionPickerScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable<ErrorRoute> {
                     ErrorScreen(onTryAgain = { navController.popBackStack() })

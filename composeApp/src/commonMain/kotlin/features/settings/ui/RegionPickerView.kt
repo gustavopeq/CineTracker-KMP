@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
@@ -21,11 +23,12 @@ import features.settings.ui.components.PickerItemRow
 import features.settings.ui.components.PickerTopBar
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegionPickerScreen(onBack: () -> Unit) {
     val settingsInteractor: SettingsInteractor = koinInject()
     val regions = remember { settingsInteractor.getSupportedRegions() }
-    val selectedCode = remember { mutableStateOf(settingsInteractor.getAppRegion()) }
+    val selectedCode = rememberSaveable { mutableStateOf(settingsInteractor.getAppRegion()) }
 
     val initialCode = remember { settingsInteractor.getAppRegion() }
     val orderedRegions = remember {
@@ -35,16 +38,19 @@ fun RegionPickerScreen(onBack: () -> Unit) {
     }
     val hasInitialSelection = remember { regions.any { it.code == initialCode } }
 
-    DisposableEffect(Unit) {
-        onDispose {
+    val saveAndGoBack = remember(onBack) {
+        {
             settingsInteractor.setAppRegion(selectedCode.value)
+            onBack()
         }
     }
+
+    BackHandler { saveAndGoBack() }
 
     Column(modifier = Modifier.fillMaxSize()) {
         PickerTopBar(
             title = Res.string.settings_region_picker_title,
-            onBack = onBack
+            onBack = saveAndGoBack
         )
 
         LazyColumn {

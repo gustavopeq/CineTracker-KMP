@@ -8,10 +8,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.settings_language_picker_title
@@ -21,11 +23,12 @@ import features.settings.ui.components.PickerItemRow
 import features.settings.ui.components.PickerTopBar
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LanguagePickerScreen(onBack: () -> Unit) {
     val settingsInteractor: SettingsInteractor = koinInject()
     val languages = remember { settingsInteractor.getSupportedLanguages() }
-    val selectedTag = remember { mutableStateOf(settingsInteractor.getAppLanguage()) }
+    val selectedTag = rememberSaveable { mutableStateOf(settingsInteractor.getAppLanguage()) }
 
     val initialTag = remember { settingsInteractor.getAppLanguage() }
     val orderedLanguages = remember {
@@ -35,16 +38,19 @@ fun LanguagePickerScreen(onBack: () -> Unit) {
     }
     val hasInitialSelection = remember { languages.any { it.tag == initialTag } }
 
-    DisposableEffect(Unit) {
-        onDispose {
+    val saveAndGoBack = remember(onBack) {
+        {
             settingsInteractor.setAppLanguage(selectedTag.value)
+            onBack()
         }
     }
+
+    BackHandler { saveAndGoBack() }
 
     Column(modifier = Modifier.fillMaxSize()) {
         PickerTopBar(
             title = Res.string.settings_language_picker_title,
-            onBack = onBack
+            onBack = saveAndGoBack
         )
 
         LazyColumn {

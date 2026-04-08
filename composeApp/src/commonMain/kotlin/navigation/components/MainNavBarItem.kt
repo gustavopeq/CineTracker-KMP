@@ -14,7 +14,7 @@ import cinetracker_kmp.composeapp.generated.resources.main_nav_watchlist
 import navigation.BrowseRoute
 import navigation.HomeRoute
 import navigation.SearchRoute
-import navigation.SettingsRoute
+import navigation.SettingsGraphRoute
 import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -41,7 +41,7 @@ sealed class MainNavBarItem(val route: Any, val labelResId: StringResource, val 
         iconResId = Res.drawable.ic_nav_search
     )
     data object Settings : MainNavBarItem(
-        route = SettingsRoute,
+        route = SettingsGraphRoute,
         labelResId = Res.string.main_nav_settings,
         iconResId = Res.drawable.ic_nav_settings
     )
