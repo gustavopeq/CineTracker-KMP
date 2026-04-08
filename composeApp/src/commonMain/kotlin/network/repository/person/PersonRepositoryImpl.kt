@@ -10,11 +10,14 @@ import network.util.Either
 import network.util.asFlow
 
 class PersonRepositoryImpl(private val personService: PersonService) : PersonRepository {
-    override suspend fun getPersonDetailsById(personId: Int): Flow<Either<PersonResponse, ApiError>> =
-        personService.getPersonDetailsById(personId).asFlow()
+    override suspend fun getPersonDetailsById(personId: Int, language: String): Flow<Either<PersonResponse, ApiError>> =
+        personService.getPersonDetailsById(personId, language = language).asFlow()
 
-    override suspend fun getPersonCreditsById(personId: Int): Flow<Either<PersonCreditsResponse, ApiError>> =
-        personService.getPersonCreditsById(personId).asFlow()
+    override suspend fun getPersonCreditsById(
+        personId: Int,
+        language: String
+    ): Flow<Either<PersonCreditsResponse, ApiError>> =
+        personService.getPersonCreditsById(personId, language = language).asFlow()
 
     override suspend fun getPersonImagesById(personId: Int): Flow<Either<PersonImagesResponse, ApiError>> =
         personService.getPersonImagesById(personId).asFlow()

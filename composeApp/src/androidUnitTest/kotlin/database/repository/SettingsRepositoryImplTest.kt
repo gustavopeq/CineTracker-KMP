@@ -6,7 +6,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import org.junit.After
 import org.junit.Before
@@ -109,5 +111,55 @@ class SettingsRepositoryImplTest {
         repository.setEngagementRemindersEnabled(false)
 
         verify { settings.putBoolean("engagement_reminders_enabled", false) }
+    }
+
+    @Test
+    fun `getAppLanguage returns stored value when present`() {
+        every { settings.getStringOrNull("app_language") } returns "pt-BR"
+
+        val result = repository.getAppLanguage()
+
+        assertEquals("pt-BR", result)
+    }
+
+    @Test
+    fun `getAppLanguage returns null when no value stored`() {
+        every { settings.getStringOrNull("app_language") } returns null
+
+        val result = repository.getAppLanguage()
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `setAppLanguage stores value`() {
+        repository.setAppLanguage("es-MX")
+
+        verify { settings.putString("app_language", "es-MX") }
+    }
+
+    @Test
+    fun `getAppRegion returns stored value when present`() {
+        every { settings.getStringOrNull("app_region") } returns "BR"
+
+        val result = repository.getAppRegion()
+
+        assertEquals("BR", result)
+    }
+
+    @Test
+    fun `getAppRegion returns null when no value stored`() {
+        every { settings.getStringOrNull("app_region") } returns null
+
+        val result = repository.getAppRegion()
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `setAppRegion stores value`() {
+        repository.setAppRegion("US")
+
+        verify { settings.putString("app_region", "US") }
     }
 }

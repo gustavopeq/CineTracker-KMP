@@ -8,11 +8,16 @@ import common.domain.models.util.ContentListType
 import common.domain.models.util.MediaType
 import common.util.Constants.PAGE_SIZE
 import features.browse.ui.paging.MediaContentPagingSource
+import features.settings.domain.SettingsInteractor
 import kotlinx.coroutines.flow.Flow
 import network.repository.movie.MovieRepository
 import network.repository.show.ShowRepository
 
-class BrowseInteractor(private val movieRepository: MovieRepository, private val showRepository: ShowRepository) {
+class BrowseInteractor(
+    private val movieRepository: MovieRepository,
+    private val showRepository: ShowRepository,
+    private val settingsInteractor: SettingsInteractor
+) {
     fun getMediaContentListPager(
         contentListType: ContentListType,
         mediaType: MediaType
@@ -21,7 +26,9 @@ class BrowseInteractor(private val movieRepository: MovieRepository, private val
             movieRepository,
             showRepository,
             contentListType,
-            mediaType
+            mediaType,
+            language = settingsInteractor.getAppLanguage(),
+            region = settingsInteractor.getAppRegion()
         )
     }.flow
 }

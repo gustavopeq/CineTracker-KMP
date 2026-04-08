@@ -19,7 +19,9 @@ class MediaContentPagingSource(
     private val movieRepository: MovieRepository,
     private val showRepository: ShowRepository,
     private val contentListType: ContentListType,
-    private val mediaType: MediaType
+    private val mediaType: MediaType,
+    private val language: String,
+    private val region: String
 ) : PagingSource<Int, GenericContent>() {
     companion object {
         private const val TAG = "MediaContentPagingSource"
@@ -35,9 +37,19 @@ class MediaContentPagingSource(
             }
 
             val apiResponse = when (mediaType) {
-                MediaType.MOVIE -> movieRepository.getMovieList(contentListType, pageNumber).first()
+                MediaType.MOVIE -> movieRepository.getMovieList(
+                    contentListType,
+                    pageNumber,
+                    language = language,
+                    region = region
+                ).first()
                 MediaType.SHOW -> {
-                    showRepository.getShowList(contentListType.type, pageNumber).first()
+                    showRepository.getShowList(
+                        contentListType.type,
+                        pageNumber,
+                        language = language,
+                        region = region
+                    ).first()
                 }
                 else -> {
                     throw IllegalStateException("Invalid media type for paging source: $mediaType")

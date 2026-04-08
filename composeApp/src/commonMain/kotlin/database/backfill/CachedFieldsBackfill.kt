@@ -5,6 +5,7 @@ import common.domain.models.content.GenericContent
 import common.domain.models.content.toGenericContent
 import common.domain.models.util.MediaType
 import database.repository.DatabaseRepository
+import features.settings.domain.SettingsInteractor
 import network.models.content.common.MovieResponse
 import network.models.content.common.ShowResponse
 import network.repository.movie.MovieRepository
@@ -14,7 +15,8 @@ import network.util.Left
 class CachedFieldsBackfill(
     private val databaseRepository: DatabaseRepository,
     private val movieRepository: MovieRepository,
-    private val showRepository: ShowRepository
+    private val showRepository: ShowRepository,
+    private val settingsInteractor: SettingsInteractor
 ) {
     companion object {
         private const val TAG = "CachedFieldsBackfill"
@@ -46,9 +48,10 @@ class CachedFieldsBackfill(
     }
 
     private suspend fun fetchDetails(contentId: Int, mediaType: MediaType): GenericContent? {
+        val language = settingsInteractor.getAppLanguage()
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
-            MediaType.SHOW -> showRepository.getShowDetailsById(contentId)
+            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getShowDetailsById(contentId, language = language)
             else -> return null
         }
 

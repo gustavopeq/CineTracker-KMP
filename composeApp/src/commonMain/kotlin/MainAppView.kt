@@ -177,12 +177,13 @@ fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold:
     }
 }
 
-private fun NavDestination?.isStandalone(): Boolean =
-    this?.hasRoute<DetailsRoute>() == true || this?.hasRoute<ErrorRoute>() == true
+private fun NavDestination?.isStandalone(): Boolean = this?.hasRoute<DetailsRoute>() == true ||
+    this?.hasRoute<ErrorRoute>() == true
 
 val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
-    MainNavBarItem.Search
+    MainNavBarItem.Search,
+    MainNavBarItem.Settings
 )

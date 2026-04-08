@@ -3,6 +3,7 @@ package common.util
 object UiConstants {
     // Common
     const val BUTTON_NAVIGATION_BAR_HEIGHT = 60
+    const val SETTINGS_ROW_HEIGHT = 56
     const val SMALL_PADDING = 4
     const val DEFAULT_PADDING = 8
     const val LARGE_PADDING = 12

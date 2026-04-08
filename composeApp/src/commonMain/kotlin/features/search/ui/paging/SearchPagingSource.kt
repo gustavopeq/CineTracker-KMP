@@ -14,7 +14,9 @@ import network.util.Right
 class SearchPagingSource(
     private val searchRepository: SearchRepository,
     private val query: String,
-    private val mediaType: MediaType?
+    private val mediaType: MediaType?,
+    private val language: String,
+    private val region: String
 ) : PagingSource<Int, GenericContent>() {
     companion object {
         private const val TAG = "SearchPagingSource"
@@ -33,25 +35,32 @@ class SearchPagingSource(
                 MediaType.MOVIE -> {
                     searchRepository.onSearchMovieByQuery(
                         query = query,
-                        page = pageNumber
+                        page = pageNumber,
+                        language = language,
+                        region = region
                     ).first()
                 }
                 MediaType.SHOW -> {
                     searchRepository.onSearchShowByQuery(
                         query = query,
-                        page = pageNumber
+                        page = pageNumber,
+                        language = language,
+                        region = region
                     ).first()
                 }
                 MediaType.PERSON -> {
                     searchRepository.onSearchPersonByQuery(
                         query = query,
-                        page = pageNumber
+                        page = pageNumber,
+                        language = language
                     ).first()
                 }
                 else -> {
                     searchRepository.onSearchMultiByQuery(
                         query = query,
-                        page = pageNumber
+                        page = pageNumber,
+                        language = language,
+                        region = region
                     ).first()
                 }
             }

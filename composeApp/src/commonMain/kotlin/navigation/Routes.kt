@@ -23,4 +23,16 @@ data class DetailsRoute(
 )
 
 @Serializable
+data object SettingsGraphRoute
+
+@Serializable
+data object SettingsRoute
+
+@Serializable
+data object LanguagePickerRoute
+
+@Serializable
+data object RegionPickerRoute
+
+@Serializable
 data object ErrorRoute

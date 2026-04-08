@@ -1,6 +1,7 @@
 package network.services.home
 
 import com.projects.moviemanager.network.util.Parameters.LANGUAGE
+import com.projects.moviemanager.network.util.Parameters.REGION
 import com.projects.moviemanager.network.util.Parameters.RELEASE_DATE_GTE
 import com.projects.moviemanager.network.util.Parameters.RELEASE_DATE_LTE
 import io.ktor.client.HttpClient
@@ -41,12 +42,14 @@ class HomeServiceImpl(private val client: HttpClient) : HomeService {
 
     override suspend fun getMoviesComingSoon(
         language: String,
+        region: String,
         releaseDateGte: String,
         releaseDateLte: String
     ): ApiResult<ContentPagingResponse<MovieResponse>> {
         val url = buildUrl(MOVIES_COMING_SOON) {
             mapOf(
                 LANGUAGE to language,
+                REGION to region,
                 RELEASE_DATE_GTE to releaseDateGte,
                 RELEASE_DATE_LTE to releaseDateLte
             )

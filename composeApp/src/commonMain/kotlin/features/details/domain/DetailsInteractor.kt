@@ -14,10 +14,10 @@ import common.domain.models.list.ListItem
 import common.domain.models.person.PersonImage
 import common.domain.models.person.toPersonImage
 import common.domain.models.util.MediaType
-import core.LanguageManager.getUserCountryCode
 import database.repository.DatabaseRepository
 import database.repository.PersonalRatingRepository
 import features.details.state.DetailsState
+import features.settings.domain.SettingsInteractor
 import features.watchlist.domain.ListInteractor
 import kotlinx.coroutines.flow.Flow
 import network.models.content.common.BaseContentResponse
@@ -37,17 +37,19 @@ class DetailsInteractor(
     private val personRepository: PersonRepository,
     private val listInteractor: ListInteractor,
     private val personalRatingRepository: PersonalRatingRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
+    private val settingsInteractor: SettingsInteractor
 ) {
     companion object {
         private const val TAG = "DetailsInteractor"
     }
     suspend fun getContentDetailsById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
+        val language = settingsInteractor.getAppLanguage()
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId)
-            MediaType.SHOW -> showRepository.getShowDetailsById(contentId)
-            MediaType.PERSON -> personRepository.getPersonDetailsById(contentId)
+            MediaType.MOVIE -> movieRepository.getMovieDetailsById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getShowDetailsById(contentId, language = language)
+            MediaType.PERSON -> personRepository.getPersonDetailsById(contentId, language = language)
             else -> return detailsState
         }
 
@@ -84,10 +86,11 @@ class DetailsInteractor(
 
     suspend fun getContentCastById(contentId: Int, mediaType: MediaType): DetailsState {
         val detailsState = DetailsState()
+        val language = settingsInteractor.getAppLanguage()
 
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieCreditsById(contentId)
-            MediaType.SHOW -> showRepository.getShowCreditsById(contentId)
+            MediaType.MOVIE -> movieRepository.getMovieCreditsById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getShowCreditsById(contentId, language = language)
             else -> return detailsState
         }
 
@@ -118,9 +121,10 @@ class DetailsInteractor(
     }
 
     suspend fun getContentVideosById(contentId: Int, mediaType: MediaType): List<Videos> {
+        val language = settingsInteractor.getAppLanguage()
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getMovieVideosById(contentId)
-            MediaType.SHOW -> showRepository.getShowVideosById(contentId)
+            MediaType.MOVIE -> movieRepository.getMovieVideosById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getShowVideosById(contentId, language = language)
             else -> return emptyList()
         }
 
@@ -142,9 +146,10 @@ class DetailsInteractor(
     }
 
     suspend fun getRecommendationsContentById(contentId: Int, mediaType: MediaType): List<GenericContent> {
+        val language = settingsInteractor.getAppLanguage()
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getRecommendationsMoviesById(contentId)
-            MediaType.SHOW -> showRepository.getRecommendationsShowsById(contentId)
+            MediaType.MOVIE -> movieRepository.getRecommendationsMoviesById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getRecommendationsShowsById(contentId, language = language)
             else -> return emptyList()
         }
 
@@ -169,9 +174,10 @@ class DetailsInteractor(
     }
 
     private suspend fun getSimilarContentById(contentId: Int, mediaType: MediaType): List<GenericContent> {
+        val language = settingsInteractor.getAppLanguage()
         val result = when (mediaType) {
-            MediaType.MOVIE -> movieRepository.getSimilarMoviesById(contentId)
-            MediaType.SHOW -> showRepository.getSimilarShowsById(contentId)
+            MediaType.MOVIE -> movieRepository.getSimilarMoviesById(contentId, language = language)
+            MediaType.SHOW -> showRepository.getSimilarShowsById(contentId, language = language)
             else -> return emptyList()
         }
 
@@ -203,7 +209,7 @@ class DetailsInteractor(
                     Logger.e(TAG) { "getStreamingProviders failed with error: ${response.error}" }
                 }
                 is Left -> {
-                    val userCountryCode = getUserCountryCode()
+                    val userCountryCode = settingsInteractor.getAppRegion()
                     streamProviderList = response.value.results?.get(
                         userCountryCode
                     )?.flatrate?.map {
@@ -226,7 +232,8 @@ class DetailsInteractor(
         }
 
     suspend fun getPersonCreditsById(personId: Int): List<GenericContent> {
-        val result = personRepository.getPersonCreditsById(personId)
+        val language = settingsInteractor.getAppLanguage()
+        val result = personRepository.getPersonCreditsById(personId, language = language)
 
         var mediaContentList: List<GenericContent> = emptyList()
         result.collect { response ->

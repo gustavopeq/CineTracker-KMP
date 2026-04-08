@@ -4,6 +4,8 @@ import java.util.Properties
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+val appVersionName = "5.1.0"
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -42,6 +44,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.appcompat)
             implementation(libs.androidx.room.android)
 
             implementation(libs.ktor.client.okhttp)
@@ -51,6 +54,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
+            implementation(libs.ui.backhandler)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
 
@@ -114,7 +118,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 50100
-        versionName = "5.1.0"
+        versionName = appVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
@@ -192,6 +196,7 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(STRING, "API_KEY", getLocalProperty("API_KEY"))
         buildConfigField(STRING, "SENTRY_DSN", getLocalProperty("SENTRY_DSN"))
+        buildConfigField(STRING, "VERSION_NAME", appVersionName)
     }
 }
 

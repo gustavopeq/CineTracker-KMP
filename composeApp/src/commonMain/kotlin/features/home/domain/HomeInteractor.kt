@@ -9,6 +9,7 @@ import common.domain.models.util.MediaType
 import common.util.platform.DateUtils
 import database.repository.DatabaseRepository
 import features.home.ui.state.HomeState
+import features.settings.domain.SettingsInteractor
 import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,14 +17,19 @@ import network.repository.home.HomeRepository
 import network.util.Left
 import network.util.Right
 
-class HomeInteractor(private val homeRepository: HomeRepository, private val databaseRepository: DatabaseRepository) {
+class HomeInteractor(
+    private val homeRepository: HomeRepository,
+    private val databaseRepository: DatabaseRepository,
+    private val settingsInteractor: SettingsInteractor
+) {
     companion object {
         private const val TAG = "HomeInteractor"
     }
 
     suspend fun getTrendingMulti(): HomeState {
         val homeState = HomeState()
-        val result = homeRepository.getTrendingMulti()
+        val language = settingsInteractor.getAppLanguage()
+        val result = homeRepository.getTrendingMulti(language = language)
 
         result.collect { response ->
             when (response) {
@@ -57,7 +63,8 @@ class HomeInteractor(private val homeRepository: HomeRepository, private val dat
         }
 
     suspend fun getTrendingPerson(): List<PersonDetails> {
-        val result = homeRepository.getTrendingPerson()
+        val language = settingsInteractor.getAppLanguage()
+        val result = homeRepository.getTrendingPerson(language = language)
 
         var listResults: List<PersonDetails> = emptyList()
         result.collect { response ->
@@ -77,8 +84,12 @@ class HomeInteractor(private val homeRepository: HomeRepository, private val dat
 
     suspend fun getMoviesComingSoon(): List<GenericContent> {
         val (releaseDateGte, releaseDateLte) = DateUtils.getComingSoonDates()
+        val language = settingsInteractor.getAppLanguage()
+        val region = settingsInteractor.getAppRegion()
 
         val result = homeRepository.getMoviesComingSoon(
+            language = language,
+            region = region,
             releaseDateGte = releaseDateGte,
             releaseDateLte = releaseDateLte
         )

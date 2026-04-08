@@ -26,6 +26,7 @@ import common.util.UiConstants.SMALLER_DEVICES_WIDTH
 import common.util.platform.getScreenSizeInfo
 import navigation.BrowseRoute
 import navigation.HomeRoute
+import navigation.SettingsRoute
 import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -36,14 +37,16 @@ fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel,
     val isHomeScreen = currentDestination?.hasRoute<HomeRoute>() == true
     val isBrowseScreen = currentDestination?.hasRoute<BrowseRoute>() == true
     val isWatchlistScreen = currentDestination?.hasRoute<WatchlistRoute>() == true
+    val isSettingsScreen = currentDestination?.hasRoute<SettingsRoute>() == true
 
-    val showTopBar = isHomeScreen || isBrowseScreen || isWatchlistScreen
+    val showTopBar = isHomeScreen || isBrowseScreen || isWatchlistScreen || isSettingsScreen
     val showSortIcon = isBrowseScreen || isWatchlistScreen
 
     val title = when {
         isHomeScreen -> null
         isBrowseScreen -> stringResource(resource = MainNavBarItem.Browse.labelResId)
         isWatchlistScreen -> stringResource(resource = MainNavBarItem.Watchlist.labelResId)
+        isSettingsScreen -> stringResource(resource = MainNavBarItem.Settings.labelResId)
         else -> null
     }
 

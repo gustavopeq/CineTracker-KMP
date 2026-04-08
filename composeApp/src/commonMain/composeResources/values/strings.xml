@@ -7,6 +7,7 @@
     <string name="main_nav_browse">Browse</string>
     <string name="main_nav_watchlist">My Lists</string>
     <string name="main_nav_search">Search</string>
+    <string name="main_nav_settings">Settings</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">See Details</string>
@@ -189,5 +190,14 @@
     <string name="notif_dialog_description">Get weekly reminders to update your watchlist and watched list.</string>
     <string name="notif_dialog_enable">Enable reminders</string>
     <string name="notif_dialog_skip">Not now</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_app_language">App Language</string>
+    <string name="settings_region">Region</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_language_picker_title">App Language</string>
+    <string name="settings_region_picker_title">Region</string>
+    <string name="settings_version">Version</string>
 
 </resources>

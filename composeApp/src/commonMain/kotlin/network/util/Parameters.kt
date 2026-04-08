@@ -5,6 +5,7 @@ object Parameters {
     const val LANGUAGE = "language"
     const val RELEASE_DATE_GTE = "primary_release_date.gte"
     const val RELEASE_DATE_LTE = "primary_release_date.lte"
+    const val REGION = "region"
     const val SEARCH_QUERY = "query"
     const val MATURE_ENABLED = "include_adult"
 }

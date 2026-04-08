@@ -133,7 +133,6 @@ CineTracker-KMP/
 │   │       ├── MainAppView.kt
 │   │       ├── core/
 │   │       │   ├── ImageLoader.kt
-│   │       │   ├── LanguageManager.kt
 │   │       │   └── di/
 │   │       │       ├── KoinInitializer.kt
 │   │       │       └── modules/
@@ -328,6 +327,22 @@ CineTracker-KMP/
 │   │       │   │       │   └── SearchTypeFilterItem.kt
 │   │       │   │       └── paging/
 │   │       │   │           └── SearchPagingSource.kt
+│   │       │   ├── settings/
+│   │       │   │   ├── domain/
+│   │       │   │   │   └── SettingsInteractor.kt
+│   │       │   │   ├── events/
+│   │       │   │   │   └── SettingsEvent.kt
+│   │       │   │   └── ui/
+│   │       │   │       ├── SettingsView.kt
+│   │       │   │       ├── SettingsViewModel.kt
+│   │       │   │       ├── LanguagePickerView.kt
+│   │       │   │       ├── RegionPickerView.kt
+│   │       │   │       └── components/
+│   │       │   │           ├── PickerItemRow.kt
+│   │       │   │           ├── PickerTopBar.kt
+│   │       │   │           ├── ProfileAvatar.kt
+│   │       │   │           ├── SettingsRow.kt
+│   │       │   │           └── SettingsToggleRow.kt
 │   │       │   └── watchlist/
 │   │       │       ├── domain/
 │   │       │       │   ├── ListInteractor.kt
@@ -530,11 +545,16 @@ CineTracker-KMP/
 │   │       ├── onboarding/
 │   │       │   └── ui/
 │   │       │       └── OnboardingViewModelTest.kt
-│   │       └── search/
+│   │       ├── search/
+│   │       │   └── ui/
+│   │       │       ├── paging/
+│   │       │       │   └── SearchPagingSourceTest.kt
+│   │       │       └── SearchViewModelTest.kt
+│   │       └── settings/
+│   │           ├── domain/
+│   │           │   └── SettingsInteractorTest.kt
 │   │           └── ui/
-│   │               ├── paging/
-│   │               │   └── SearchPagingSourceTest.kt
-│   │               └── SearchViewModelTest.kt
+│   │               └── SettingsViewModelTest.kt
 │   │
 │   ├── src/androidInstrumentedTest/kotlin/
 │   │   └── database/

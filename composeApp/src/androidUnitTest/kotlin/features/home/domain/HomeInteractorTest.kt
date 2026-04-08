@@ -11,6 +11,7 @@ import common.util.fakePersonPagingResponse
 import common.util.successFlow
 import database.repository.DatabaseRepository
 import features.details.util.fakePersonResponse
+import features.settings.domain.SettingsInteractor
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
@@ -31,15 +32,19 @@ class HomeInteractorTest {
 
     private val homeRepository: HomeRepository = mockk()
     private val databaseRepository: DatabaseRepository = mockk()
+    private val settingsInteractor: SettingsInteractor = mockk()
 
     private lateinit var interactor: HomeInteractor
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        every { settingsInteractor.getAppLanguage() } returns "en-US"
+        every { settingsInteractor.getAppRegion() } returns "US"
         interactor = HomeInteractor(
             homeRepository = homeRepository,
-            databaseRepository = databaseRepository
+            databaseRepository = databaseRepository,
+            settingsInteractor = settingsInteractor
         )
     }
 
@@ -52,7 +57,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getTrendingMulti returns HomeState with populated trendingList on success`() = runTest {
-        coEvery { homeRepository.getTrendingMulti() } returns successFlow(
+        coEvery { homeRepository.getTrendingMulti(any()) } returns successFlow(
             fakeMultiPagingResponse(fakeMultiResponse(id = 1))
         )
 
@@ -64,7 +69,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getTrendingMulti returns error state on API failure`() = runTest {
-        coEvery { homeRepository.getTrendingMulti() } returns errorFlow("500")
+        coEvery { homeRepository.getTrendingMulti(any()) } returns errorFlow("500")
 
         val result = interactor.getTrendingMulti()
 
@@ -75,7 +80,7 @@ class HomeInteractorTest {
     fun `getTrendingMulti filters out MultiResponse items without poster_path`() = runTest {
         val withPoster = fakeMultiResponse(id = 1)
         val noPoster = fakeMultiResponse(id = 2).copy(posterPath = null)
-        coEvery { homeRepository.getTrendingMulti() } returns successFlow(
+        coEvery { homeRepository.getTrendingMulti(any()) } returns successFlow(
             fakeMultiPagingResponse(withPoster, noPoster)
         )
 
@@ -128,7 +133,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getTrendingPerson returns list of PersonDetails on success`() = runTest {
-        coEvery { homeRepository.getTrendingPerson() } returns successFlow(
+        coEvery { homeRepository.getTrendingPerson(any()) } returns successFlow(
             fakePersonPagingResponse(fakePersonResponse(id = 1, name = "Actor A"))
         )
 
@@ -140,7 +145,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getTrendingPerson returns empty list on API error`() = runTest {
-        coEvery { homeRepository.getTrendingPerson() } returns errorFlow()
+        coEvery { homeRepository.getTrendingPerson(any()) } returns errorFlow()
 
         val result = interactor.getTrendingPerson()
 
@@ -151,7 +156,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getMoviesComingSoon returns list of GenericContent on success`() = runTest {
-        coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns successFlow(
+        coEvery { homeRepository.getMoviesComingSoon(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(fakeMovieResponse(id = 1))
         )
 
@@ -162,7 +167,7 @@ class HomeInteractorTest {
 
     @Test
     fun `getMoviesComingSoon returns empty list on API error`() = runTest {
-        coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns errorFlow()
+        coEvery { homeRepository.getMoviesComingSoon(any(), any(), any(), any()) } returns errorFlow()
 
         val result = interactor.getMoviesComingSoon()
 
@@ -173,7 +178,7 @@ class HomeInteractorTest {
     fun `getMoviesComingSoon filters out MovieResponse items without poster_path`() = runTest {
         val withPoster = fakeMovieResponse(id = 1)
         val noPoster = fakeMovieResponse(id = 2).copy(posterPath = null)
-        coEvery { homeRepository.getMoviesComingSoon(any(), any()) } returns successFlow(
+        coEvery { homeRepository.getMoviesComingSoon(any(), any(), any(), any()) } returns successFlow(
             fakeMoviePagingResponse(withPoster, noPoster)
         )
 

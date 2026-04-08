@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
 import common.domain.models.util.MediaType
 import common.ui.LocalAnimatedVisibilityScope
@@ -19,6 +20,9 @@ import features.browse.ui.Browse
 import features.details.ui.Details
 import features.home.ui.Home
 import features.search.ui.Search
+import features.settings.ui.LanguagePickerScreen
+import features.settings.ui.RegionPickerScreen
+import features.settings.ui.SettingsScreen
 import features.watchlist.ui.Watchlist
 import navigation.components.navigateToTopLevelDestination
 
@@ -95,6 +99,24 @@ fun MainNavGraph(navController: NavHostController) {
                                 navController.navigate(DetailsRoute(contentId, mediaType.name))
                             },
                             goToErrorScreen = goToErrorScreen
+                        )
+                    }
+                }
+                navigation<SettingsGraphRoute>(startDestination = SettingsRoute) {
+                    composable<SettingsRoute> {
+                        SettingsScreen(
+                            goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
+                            goToRegionPicker = { navController.navigate(RegionPickerRoute) }
+                        )
+                    }
+                    composable<LanguagePickerRoute> {
+                        LanguagePickerScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+                    composable<RegionPickerRoute> {
+                        RegionPickerScreen(
+                            onBack = { navController.popBackStack() }
                         )
                     }
                 }

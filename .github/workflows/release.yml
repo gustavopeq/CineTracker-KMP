@@ -41,7 +41,7 @@ jobs:
       - name: Patch version in build.gradle.kts
         run: |
           sed -i "s/versionCode = [0-9]*/versionCode = ${{ steps.version.outputs.version-code }}/" composeApp/build.gradle.kts
-          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ steps.version.outputs.version-name }}\"/" composeApp/build.gradle.kts
+          sed -i "s/val appVersionName = \"[^\"]*\"/val appVersionName = \"${{ steps.version.outputs.version-name }}\"/" composeApp/build.gradle.kts
 
       - name: Create local.properties
         run: |
@@ -112,7 +112,7 @@ jobs:
       - name: Patch version in build.gradle.kts
         run: |
           sed -i "s/versionCode = [0-9]*/versionCode = ${{ needs.build-and-release.outputs.version-code }}/" composeApp/build.gradle.kts
-          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ needs.build-and-release.outputs.version-name }}\"/" composeApp/build.gradle.kts
+          sed -i "s/val appVersionName = \"[^\"]*\"/val appVersionName = \"${{ needs.build-and-release.outputs.version-name }}\"/" composeApp/build.gradle.kts
 
       - name: Create version bump PR
         uses: peter-evans/create-pull-request@v7
