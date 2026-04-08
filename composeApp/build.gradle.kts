@@ -4,7 +4,7 @@ import java.util.Properties
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-val appVersionName = "5.0.0"
+val appVersionName = "5.1.0"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -116,7 +116,7 @@ android {
         applicationId = "gustavo.projects.restapi"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 50000
+        versionCode = 50100
         versionName = appVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
