@@ -47,8 +47,9 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
                 is MainNavBarItem.Browse -> currentDestination?.hasRoute<BrowseRoute>() == true
                 is MainNavBarItem.Watchlist -> currentDestination?.hasRoute<WatchlistRoute>() == true
                 is MainNavBarItem.Search -> currentDestination?.hasRoute<SearchRoute>() == true
-                is MainNavBarItem.Settings -> currentDestination?.hierarchy
-                    ?.any { it.hasRoute<SettingsGraphRoute>() } == true
+                is MainNavBarItem.Settings ->
+                    currentDestination?.hierarchy
+                        ?.any { it.hasRoute<SettingsGraphRoute>() } == true
             }
 
             NavigationBarItem(
