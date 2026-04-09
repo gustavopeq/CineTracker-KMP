@@ -214,6 +214,23 @@ CineTracker-KMP/
 │   │       │           ├── PlatformUtils.kt       # expect
 │   │       │           ├── ScreenSizeInfo.kt      # expect
 │   │       │           └── StringFormat.kt        # expect
+│   │       ├── auth/
+│   │       │   ├── model/
+│   │       │   │   ├── AuthState.kt
+│   │       │   │   ├── AuthTokens.kt
+│   │       │   │   ├── SignInResult.kt
+│   │       │   │   └── SupabaseDto.kt
+│   │       │   ├── network/
+│   │       │   │   └── SupabaseClient.kt          # expect
+│   │       │   ├── platform/
+│   │       │   │   ├── PlatformSignInProvider.kt   # expect
+│   │       │   │   └── TokenStorage.kt             # expect
+│   │       │   ├── repository/
+│   │       │   │   ├── AuthRepository.kt
+│   │       │   │   └── AuthRepositoryImpl.kt
+│   │       │   └── service/
+│   │       │       ├── SupabaseAuthService.kt
+│   │       │       └── SupabaseAuthServiceImpl.kt
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
 │   │       │   ├── backfill/
@@ -458,6 +475,13 @@ CineTracker-KMP/
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt
+│   │   │   ├── auth/
+│   │   │   │   ├── network/
+│   │   │   │   │   └── SupabaseClient.android.kt
+│   │   │   │   └── platform/
+│   │   │   │       ├── AuthCallbackHandler.kt
+│   │   │   │       ├── PlatformSignInProvider.android.kt
+│   │   │   │       └── TokenStorage.android.kt
 │   │   │   ├── core/di/
 │   │   │   │   └── KoinInitializer.android.kt
 │   │   │   ├── database/
@@ -486,6 +510,12 @@ CineTracker-KMP/
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt
 │   │   │   └── StringFormat.kt
+│   │   ├── auth/
+│   │   │   ├── network/
+│   │   │   │   └── SupabaseClient.ios.kt
+│   │   │   └── platform/
+│   │   │       ├── PlatformSignInProvider.ios.kt
+│   │   │       └── TokenStorage.ios.kt
 │   │   ├── core/di/
 │   │   │   └── KoinInitializer.ios.kt
 │   │   ├── database/
@@ -498,6 +528,9 @@ CineTracker-KMP/
 │   │       └── NetworkClient.ios.kt
 │   │
 │   ├── src/androidUnitTest/kotlin/
+│   │   ├── auth/
+│   │   │   └── repository/
+│   │   │       └── AuthRepositoryImplTest.kt
 │   │   ├── common/
 │   │   │   ├── domain/models/content/
 │   │   │   │   ├── GenericContentMapperTest.kt
