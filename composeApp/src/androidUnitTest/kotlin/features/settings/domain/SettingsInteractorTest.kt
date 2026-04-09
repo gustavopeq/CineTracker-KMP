@@ -1,5 +1,6 @@
 package features.settings.domain
 
+import app.cash.turbine.test
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
@@ -13,6 +14,7 @@ import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -121,6 +123,26 @@ class SettingsInteractorTest {
         verify(exactly = 0) { PlatformUtils.applyAppLocale(any()) }
     }
 
+    @Test
+    fun `setAppLanguage emits settingsChanged when language changes`() = runTest {
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.settingsChanged.test {
+            interactor.setAppLanguage("pt-BR")
+            awaitItem()
+        }
+    }
+
+    @Test
+    fun `setAppLanguage does not emit settingsChanged when language unchanged`() = runTest {
+        every { settingsRepository.getAppLanguage() } returns "pt-BR"
+
+        interactor.settingsChanged.test {
+            interactor.setAppLanguage("pt-BR")
+            expectNoEvents()
+        }
+    }
+
     // endregion
 
     // region getAppRegion
@@ -160,9 +182,34 @@ class SettingsInteractorTest {
 
     @Test
     fun `setAppRegion delegates to repository`() {
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
         interactor.setAppRegion("BR")
 
         verify { settingsRepository.setAppRegion("BR") }
+    }
+
+    @Test
+    fun `setAppRegion emits settingsChanged when region changes`() = runTest {
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
+        interactor.settingsChanged.test {
+            interactor.setAppRegion("BR")
+            awaitItem()
+        }
+    }
+
+    @Test
+    fun `setAppRegion does not emit settingsChanged when region unchanged`() = runTest {
+        every { settingsRepository.getAppRegion() } returns "BR"
+        every { PlatformUtils.getUserCountry() } returns "BR"
+
+        interactor.settingsChanged.test {
+            interactor.setAppRegion("BR")
+            expectNoEvents()
+        }
     }
 
     // endregion

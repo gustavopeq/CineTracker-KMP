@@ -32,8 +32,8 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
     fun setAppLanguage(languageTag: String) {
         val previousLanguage = getAppLanguage()
         settingsRepository.setAppLanguage(languageTag)
-        _settingsChanged.tryEmit(Unit)
         if (previousLanguage != languageTag) {
+            _settingsChanged.tryEmit(Unit)
             PlatformUtils.applyAppLocale(languageTag)
         }
     }
@@ -47,8 +47,11 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
     }
 
     fun setAppRegion(regionCode: String) {
+        val previousRegion = getAppRegion()
         settingsRepository.setAppRegion(regionCode)
-        _settingsChanged.tryEmit(Unit)
+        if (previousRegion != regionCode) {
+            _settingsChanged.tryEmit(Unit)
+        }
     }
 
     fun getSupportedLanguages(): List<LanguageItem> = SUPPORTED_LANGUAGES

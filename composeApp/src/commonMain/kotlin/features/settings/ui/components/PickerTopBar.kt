@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.back_arrow_description
 import cinetracker_kmp.composeapp.generated.resources.ic_back_arrow
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.RETURN_TOP_BAR_HEIGHT
+import common.util.UiConstants.SETTINGS_BACK_ICON_SIZE
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -32,10 +34,10 @@ fun PickerTopBar(title: StringResource, onBack: () -> Unit) {
     ) {
         Icon(
             painter = painterResource(Res.drawable.ic_back_arrow),
-            contentDescription = null,
+            contentDescription = stringResource(resource = Res.string.back_arrow_description),
             tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
-                .size(24.dp)
+                .size(SETTINGS_BACK_ICON_SIZE.dp)
                 .clickable(onClick = onBack)
         )
         Text(

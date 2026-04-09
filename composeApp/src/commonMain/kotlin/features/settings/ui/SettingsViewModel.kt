@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import common.util.platform.AppNotifications
 import features.settings.domain.SettingsInteractor
+import features.settings.events.SettingsEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,7 +27,14 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         }
     }
 
-    fun refreshSettings() {
+    fun onEvent(event: SettingsEvent) {
+        when (event) {
+            is SettingsEvent.NotificationPermissionResult -> handlePermissionResult(event.granted)
+            SettingsEvent.DisableNotifications -> disableNotifications()
+        }
+    }
+
+    private fun refreshSettings() {
         val currentLanguage = settingsInteractor.getAppLanguage()
         _currentLanguageDisplay.value = settingsInteractor.getSupportedLanguages()
             .find { it.tag == currentLanguage }?.displayName ?: currentLanguage
@@ -38,7 +46,7 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         _notificationsEnabled.value = settingsInteractor.areNotificationsEnabled()
     }
 
-    fun onNotificationPermissionResult(granted: Boolean) {
+    private fun handlePermissionResult(granted: Boolean) {
         if (granted) {
             settingsInteractor.setNotificationsEnabled(true)
             AppNotifications.scheduleEngagementReminders()
@@ -46,7 +54,7 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         }
     }
 
-    fun disableNotifications() {
+    private fun disableNotifications() {
         settingsInteractor.setNotificationsEnabled(false)
         AppNotifications.cancelEngagementReminders()
         _notificationsEnabled.value = false

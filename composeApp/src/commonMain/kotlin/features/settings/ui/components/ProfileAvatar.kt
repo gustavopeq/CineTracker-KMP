@@ -14,19 +14,21 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.avatar
 import common.ui.theme.MainBarGreyColor
+import common.util.UiConstants.PROFILE_AVATAR_IMAGE_FRACTION
+import common.util.UiConstants.PROFILE_AVATAR_SIZE
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ProfileAvatar(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .size(145.dp)
+            .size(PROFILE_AVATAR_SIZE.dp)
             .clip(CircleShape)
             .background(MainBarGreyColor),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.fillMaxSize(fraction = 0.8f),
+            modifier = Modifier.fillMaxSize(fraction = PROFILE_AVATAR_IMAGE_FRACTION),
             painter = painterResource(Res.drawable.avatar),
             contentDescription = null
         )

@@ -18,6 +18,7 @@ import cinetracker_kmp.composeapp.generated.resources.ic_chevron_right
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.SETTINGS_CHEVRON_ICON_SIZE
 import common.util.UiConstants.SETTINGS_ROW_HEIGHT
 import org.jetbrains.compose.resources.painterResource
 
@@ -47,7 +48,7 @@ fun SettingsRow(label: String, value: String, onClick: () -> Unit) {
             painter = painterResource(Res.drawable.ic_chevron_right),
             contentDescription = null,
             tint = SecondaryGreyColor,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(SETTINGS_CHEVRON_ICON_SIZE.dp)
         )
     }
 }
