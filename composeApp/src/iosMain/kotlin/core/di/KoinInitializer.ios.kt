@@ -1,5 +1,7 @@
 package core.di
 
+import auth.di.authModule
+import auth.di.platformAuthModule
 import core.di.modules.interactorModule
 import core.di.modules.viewModelModule
 import database.di.daoModule
@@ -23,7 +25,9 @@ actual class KoinInitializer {
                 settingsModule(),
                 apiModule,
                 serviceModule,
-                repositoryModule
+                repositoryModule,
+                platformAuthModule(),
+                authModule
             )
         }
     }
