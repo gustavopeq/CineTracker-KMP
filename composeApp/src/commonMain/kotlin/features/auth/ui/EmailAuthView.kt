@@ -2,6 +2,7 @@ package features.auth.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -114,7 +116,7 @@ fun EmailAuthScreen(
             Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
 
             GenericButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
                 buttonText = stringResource(
                     if (isCreateMode) {
                         Res.string.auth_create_account
@@ -141,7 +143,7 @@ fun EmailAuthScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
 
             Text(
                 text = stringResource(
@@ -153,20 +155,25 @@ fun EmailAuthScreen(
                 ),
                 style = MaterialTheme.typography.bodySmall,
                 color = PrimaryYellowColor,
-                modifier = Modifier.clickable {
-                    viewModel.onEvent(AuthEvent.ToggleMode)
-                }
+                modifier = Modifier
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { viewModel.onEvent(AuthEvent.ToggleMode) }
+                    .padding(vertical = DEFAULT_MARGIN.dp)
             )
 
             if (!isCreateMode) {
-                Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
                 Text(
                     text = stringResource(Res.string.auth_forgot_password),
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryGreyColor,
-                    modifier = Modifier.clickable {
-                        viewModel.onEvent(AuthEvent.ResetPassword)
-                    }
+                    modifier = Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { viewModel.onEvent(AuthEvent.ResetPassword) }
+                        .padding(vertical = DEFAULT_MARGIN.dp)
                 )
             }
         }

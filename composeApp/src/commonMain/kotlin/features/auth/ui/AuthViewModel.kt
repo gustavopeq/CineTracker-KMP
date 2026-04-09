@@ -69,7 +69,7 @@ class AuthViewModel(
             _isLoading.value = true
             when (val result = authRepository.signInWithGoogle()) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _snackbarError.value = result.message
+                is AuthResult.Error -> _snackbarError.value = GENERIC_SIGN_IN_ERROR
             }
             _isLoading.value = false
         }
@@ -85,7 +85,7 @@ class AuthViewModel(
             )
             when (result) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _formError.value = result.message
+                is AuthResult.Error -> _formError.value = GENERIC_SIGN_UP_ERROR
             }
             _isLoading.value = false
         }
@@ -100,10 +100,15 @@ class AuthViewModel(
             )
             when (result) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _formError.value = result.message
+                is AuthResult.Error -> _formError.value = GENERIC_SIGN_IN_ERROR
             }
             _isLoading.value = false
         }
+    }
+
+    companion object {
+        private const val GENERIC_SIGN_IN_ERROR = "Unable to sign in. Please try again."
+        private const val GENERIC_SIGN_UP_ERROR = "Unable to create account. Please try again."
     }
 
     private fun toggleMode() {

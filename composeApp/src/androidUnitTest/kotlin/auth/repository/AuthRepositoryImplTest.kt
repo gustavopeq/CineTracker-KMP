@@ -192,6 +192,36 @@ class AuthRepositoryImplTest {
         assertIs<AuthState.LoggedIn>(state)
     }
 
+    @Test
+    fun `signInWithGoogle returns error when provider throws exception`() = runTest {
+        coEvery {
+            signInProvider.signInWithGoogle()
+        } throws Exception("No credentials available")
+
+        val result = repository.signInWithGoogle()
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("No credentials available", result.message)
+        assertIs<AuthState.LoggedOut>(repository.authState.value)
+    }
+
+    // endregion
+
+    // region signInWithApple
+
+    @Test
+    fun `signInWithApple returns error when provider throws exception`() = runTest {
+        coEvery {
+            signInProvider.signInWithApple()
+        } throws Exception("Apple sign-in cancelled")
+
+        val result = repository.signInWithApple()
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Apple sign-in cancelled", result.message)
+        assertIs<AuthState.LoggedOut>(repository.authState.value)
+    }
+
     // endregion
 
     // region signOut

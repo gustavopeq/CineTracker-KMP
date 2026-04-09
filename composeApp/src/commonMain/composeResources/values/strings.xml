@@ -211,7 +211,7 @@
     <string name="auth_email_hint">Email</string>
     <string name="auth_password_hint">Password</string>
     <string name="auth_already_have_account">Already have an account? Sign in</string>
-    <string name="auth_no_account">Don\'t have an account? Create one</string>
+    <string name="auth_no_account">Don't have an account? Create one</string>
     <string name="auth_forgot_password">Forgot Password?</string>
     <string name="auth_reset_email_sent">Password reset email sent</string>
     <string name="settings_sign_in">Sign In / Create Account</string>

@@ -46,6 +46,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Never hardcode user-facing strings in code.** All strings must be defined in `composeResources/values/strings.xml`.
 - **Every new string added to `strings.xml` must also be added to all locale files:** `values-es-rES/strings.xml` (Spanish - Spain), `values-es-rMX/strings.xml` (Spanish - Mexico), and `values-pt/strings.xml` (Portuguese - Brazil). Provide best-effort translations for each.
+- **Never use backslash escapes for apostrophes** (`\'`) in Compose Resources string XML files. Compose Resources renders the backslash literally. Use the plain apostrophe character (`'`) directly.
 
 ## Formatting Rules
 
@@ -55,6 +56,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Prefer `Grep` over `Read`** when searching for a specific function, class, or pattern — only use `Read` when the full file context is needed.
 - **When using `Read` on a large file**, use `offset` + `limit` to read only the relevant section.
+
+## Platform UI Guidelines
+
+- **Always alert the user** when you spot a UI element that doesn't follow the platform touch target guidelines in `.claude/rules/style.md`.
 
 ## Kotlin Coding Rules
 

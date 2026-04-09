@@ -58,11 +58,19 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signInWithGoogle(): AuthResult<Unit> {
-        return handlePlatformSignIn(signInProvider.signInWithGoogle())
+        return try {
+            handlePlatformSignIn(signInProvider.signInWithGoogle())
+        } catch (e: Exception) {
+            AuthResult.Error(e.message ?: "Google sign-in failed")
+        }
     }
 
     override suspend fun signInWithApple(): AuthResult<Unit> {
-        return handlePlatformSignIn(signInProvider.signInWithApple())
+        return try {
+            handlePlatformSignIn(signInProvider.signInWithApple())
+        } catch (e: Exception) {
+            AuthResult.Error(e.message ?: "Apple sign-in failed")
+        }
     }
 
     override suspend fun signOut(): AuthResult<Unit> {

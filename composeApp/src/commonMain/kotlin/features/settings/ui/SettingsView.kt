@@ -86,33 +86,27 @@ fun SettingsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileAvatar()
-
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
         if (isLoggedIn && !displayName.isNullOrBlank()) {
-            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
             Text(
                 text = displayName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = PrimaryWhiteColor,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
         } else {
-            Spacer(modifier = Modifier.height(SETTINGS_AVATAR_BOTTOM_SPACING.dp))
+            Text(
+                text = stringResource(Res.string.settings_sign_in),
+                style = MaterialTheme.typography.bodyMedium,
+                color = PrimaryYellowColor,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.clickable(onClick = goToAuth)
+            )
         }
+        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+
 
         HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
-
-        if (!isLoggedIn) {
-            SettingsRow(
-                label = stringResource(Res.string.settings_sign_in),
-                value = "",
-                onClick = goToAuth
-            )
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.inverseSurface,
-                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-            )
-        }
 
         SettingsRow(
             label = stringResource(Res.string.settings_app_language),
@@ -150,6 +144,30 @@ fun SettingsScreen(
 
         HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
 
+        if (isLoggedIn) {
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.inverseSurface,
+                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+            )
+
+            SettingsRow(
+                label = stringResource(Res.string.settings_delete_account),
+                value = "",
+                onClick = { showDeleteDialog = true }
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.inverseSurface,
+                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+            )
+
+            SettingsRow(
+                label = stringResource(Res.string.settings_sign_out),
+                value = "",
+                onClick = { showSignOutDialog = true }
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
@@ -157,30 +175,6 @@ fun SettingsScreen(
             style = MaterialTheme.typography.bodySmall,
             color = SecondaryGreyColor
         )
-
-        if (isLoggedIn) {
-            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
-
-            Text(
-                text = stringResource(Res.string.settings_sign_out),
-                style = MaterialTheme.typography.bodyMedium,
-                color = PrimaryWhiteColor,
-                modifier = Modifier
-                    .clickable { showSignOutDialog = true }
-                    .padding(DEFAULT_PADDING.dp)
-            )
-
-            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
-
-            Text(
-                text = stringResource(Res.string.settings_delete_account),
-                style = MaterialTheme.typography.bodyMedium,
-                color = PrimaryRedColor,
-                modifier = Modifier
-                    .clickable { showDeleteDialog = true }
-                    .padding(DEFAULT_PADDING.dp)
-            )
-        }
 
         Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
     }

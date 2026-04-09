@@ -145,7 +145,7 @@ class AuthViewModelTest {
         advanceUntilIdle()
 
         assertFalse(viewModel.isLoading.value)
-        assertEquals("Google sign-in failed", viewModel.snackbarError.value)
+        assertEquals("Unable to sign in. Please try again.", viewModel.snackbarError.value)
         assertFalse(viewModel.authSuccess.value)
     }
 
@@ -178,7 +178,7 @@ class AuthViewModelTest {
         viewModel.onEvent(AuthEvent.SignUpWithEmail)
         advanceUntilIdle()
 
-        assertEquals("Email already in use", viewModel.formError.value)
+        assertEquals("Unable to create account. Please try again.", viewModel.formError.value)
         assertFalse(viewModel.authSuccess.value)
         assertFalse(viewModel.isLoading.value)
     }
@@ -210,7 +210,7 @@ class AuthViewModelTest {
         viewModel.onEvent(AuthEvent.SignInWithEmail)
         advanceUntilIdle()
 
-        assertEquals("Invalid credentials", viewModel.formError.value)
+        assertEquals("Unable to sign in. Please try again.", viewModel.formError.value)
         assertFalse(viewModel.authSuccess.value)
         assertFalse(viewModel.isLoading.value)
     }

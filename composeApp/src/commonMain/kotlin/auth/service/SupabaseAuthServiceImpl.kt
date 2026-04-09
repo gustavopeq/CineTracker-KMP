@@ -7,6 +7,7 @@ import auth.model.SupabaseRefreshRequest
 import auth.model.SupabaseSessionResponse
 import auth.model.SupabaseSignUpMetadata
 import auth.model.SupabaseSignUpRequest
+import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.bearerAuth
@@ -21,6 +22,7 @@ import kotlinx.serialization.json.put
 
 class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthService {
 
+    private val log = Logger.withTag("SupabaseAuth")
     private val lenientJson = Json { ignoreUnknownKeys = true; isLenient = true }
 
     override suspend fun signUpWithEmail(
@@ -119,12 +121,16 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
         return try {
             val response = block()
             if (response.status.isSuccess()) {
+                log.d { "Auth request succeeded: ${response.status}" }
                 AuthResult.Success(response.body<T>())
             } else {
-                val error = parseError(response.bodyAsText())
+                val body = response.bodyAsText()
+                log.e { "Auth request failed: ${response.status} - $body" }
+                val error = parseError(body)
                 AuthResult.Error(error)
             }
         } catch (e: Exception) {
+            log.e(e) { "Auth request exception: ${e.message}" }
             AuthResult.Error(e.message ?: "Unknown error")
         }
     }

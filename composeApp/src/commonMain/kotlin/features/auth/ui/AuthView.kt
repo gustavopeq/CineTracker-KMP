@@ -3,6 +3,7 @@ package features.auth.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -119,14 +120,6 @@ fun AuthScreen(
 
             Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
 
-            GoogleSignInButton(
-                text = stringResource(Res.string.auth_continue_google),
-                isLoading = isLoading,
-                onClick = { viewModel.onEvent(AuthEvent.SignInWithGoogle) }
-            )
-
-            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
-
             OutlinedButton(
                 onClick = goToEmailAuth,
                 colors = ButtonDefaults.outlinedButtonColors(
@@ -151,16 +144,29 @@ fun AuthScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
+
+            GoogleSignInButton(
+                text = stringResource(Res.string.auth_continue_google),
+                isLoading = isLoading,
+                onClick = { viewModel.onEvent(AuthEvent.SignInWithGoogle) }
+            )
+
+            Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
 
             Text(
                 text = stringResource(Res.string.auth_continue_without_account),
                 style = MaterialTheme.typography.bodyMedium,
                 color = SecondaryGreyColor,
                 modifier = Modifier
-                    .clickable { onDismiss() }
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onDismiss() }
                     .padding(DEFAULT_MARGIN.dp)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

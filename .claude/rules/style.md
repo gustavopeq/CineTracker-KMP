@@ -196,6 +196,13 @@ Both platforms run edge-to-edge. Bar colors are managed by `SystemBarsContainer`
 - **iOS:** `ContentView.swift` uses `.ignoresSafeArea(edges: .all)` so ComposeView fills the entire screen.
 - **Scaffold** uses `contentWindowInsets = WindowInsets(0, 0, 0, 0)` to prevent double inset application on iOS.
 
+## Platform Touch Target Guidelines
+
+- **Minimum touch target size:** 48dp on Android (Material Design), 44pt on iOS (HIG). Every tappable element must meet this minimum — use `Modifier.padding` or `Modifier.size` to achieve it if the visual element is smaller.
+- **Spacing between tappable elements:** At least 8dp between adjacent touch targets to prevent accidental taps.
+- **Text-only clickable items** (links, inline actions) must have enough vertical padding to reach 48dp total tap area (e.g., `padding(vertical = 16.dp)` for a 16sp text element).
+- **No click ripple on text links** — use `Modifier.clickable(indication = null, interactionSource = remember { MutableInteractionSource() })` for inline text links and ghost buttons where ripple looks out of place.
+
 ## UI Patterns
 
 - **Cards:** `MainBarGreyColor` background + 2dp elevation. Image on top (cropped, 1.5x aspect), text below.
