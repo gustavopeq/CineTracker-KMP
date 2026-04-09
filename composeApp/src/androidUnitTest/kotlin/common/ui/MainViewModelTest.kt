@@ -3,6 +3,8 @@ package common.ui
 import androidx.compose.ui.text.input.TextFieldValue
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
@@ -21,6 +23,7 @@ import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -37,12 +40,15 @@ class MainViewModelTest {
         every { hasCompletedOnboarding() } returns true
         every { areEngagementRemindersEnabled() } returns false
     }
+    private val authRepository: AuthRepository = mockk(relaxUnitFun = true)
+    private val authStateFlow = MutableStateFlow<AuthState>(AuthState.LoggedOut)
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
+        every { authRepository.authState } returns authStateFlow
     }
 
     @After
@@ -51,7 +57,7 @@ class MainViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel() = MainViewModel(databaseRepository, settingsRepository)
+    private fun createViewModel() = MainViewModel(databaseRepository, settingsRepository, authRepository)
 
     // ── updateSortType ────────────────────────────────────────────────────────
 

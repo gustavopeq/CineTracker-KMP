@@ -1,6 +1,9 @@
 package features.settings.ui
 
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
+import database.repository.DatabaseRepository
 import features.settings.domain.LanguageItem
 import features.settings.domain.RegionItem
 import features.settings.domain.SettingsInteractor
@@ -17,6 +20,7 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -31,6 +35,9 @@ class SettingsViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val settingsInteractor: SettingsInteractor = mockk(relaxUnitFun = true)
+    private val authRepository: AuthRepository = mockk(relaxUnitFun = true)
+    private val databaseRepository: DatabaseRepository = mockk(relaxUnitFun = true)
+    private val authStateFlow = MutableStateFlow<AuthState>(AuthState.LoggedOut)
 
     @Before
     fun setUp() {
@@ -39,6 +46,7 @@ class SettingsViewModelTest {
         mockkObject(AppNotifications)
         every { AppNotifications.scheduleEngagementReminders() } returns Unit
         every { AppNotifications.cancelEngagementReminders() } returns Unit
+        every { authRepository.authState } returns authStateFlow
     }
 
     @After
@@ -69,7 +77,11 @@ class SettingsViewModelTest {
         )
     }
 
-    private fun createViewModel(): SettingsViewModel = SettingsViewModel(settingsInteractor)
+    private fun createViewModel(): SettingsViewModel = SettingsViewModel(
+        settingsInteractor,
+        authRepository,
+        databaseRepository
+    )
 
     @Test
     fun `init loads current language display name`() {
