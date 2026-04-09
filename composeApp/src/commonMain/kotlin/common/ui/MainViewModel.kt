@@ -4,6 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import common.util.platform.AppNotifications
@@ -17,7 +19,8 @@ data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: Watch
 
 class MainViewModel(
     private val databaseRepository: DatabaseRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
@@ -26,9 +29,12 @@ class MainViewModel(
     private val _shouldShowNotificationDialog = MutableStateFlow(false)
     val shouldShowNotificationDialog: StateFlow<Boolean> get() = _shouldShowNotificationDialog
 
+    val authState: StateFlow<AuthState> = authRepository.authState
+
     init {
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
         _shouldShowNotificationDialog.value = !settingsRepository.areEngagementRemindersEnabled()
+        authRepository.restoreSession()
     }
 
     fun updateOnboardingUiState() {
