@@ -200,4 +200,29 @@
     <string name="settings_region_picker_title">Region</string>
     <string name="settings_version">Version</string>
 
+    <!-- Auth -->
+    <string name="auth_sign_in_title">Sign in to CineTracker</string>
+    <string name="auth_continue_google">Continue with Google</string>
+    <string name="auth_continue_email">Continue with Email</string>
+    <string name="auth_continue_without_account">Continue without account</string>
+    <string name="auth_create_account">Create Account</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_name_hint">Name</string>
+    <string name="auth_email_hint">Email</string>
+    <string name="auth_password_hint">Password</string>
+    <string name="auth_already_have_account">Already have an account? Sign in</string>
+    <string name="auth_no_account">Don\'t have an account? Create one</string>
+    <string name="auth_forgot_password">Forgot Password?</string>
+    <string name="auth_reset_email_sent">Password reset email sent</string>
+    <string name="settings_sign_in">Sign In / Create Account</string>
+    <string name="settings_sign_out">Sign Out</string>
+    <string name="settings_delete_account">Delete Account</string>
+    <string name="settings_sign_out_confirm">Sign out of your account?</string>
+    <string name="settings_delete_confirm">Delete your account? Your cloud data will be removed.</string>
+    <string name="settings_delete_keep_data">Keep your lists on this device?</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_keep">Keep</string>
+    <string name="dialog_remove">Remove</string>
+    <string name="dialog_delete">Delete</string>
+
 </resources>

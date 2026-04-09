@@ -201,4 +201,29 @@
     <string name="settings_region_picker_title">Regi\u00f3n</string>
     <string name="settings_version">Versi\u00f3n</string>
 
+    <!-- Auth -->
+    <string name="auth_sign_in_title">Inicia sesión en CineTracker</string>
+    <string name="auth_continue_google">Continuar con Google</string>
+    <string name="auth_continue_email">Continuar con Email</string>
+    <string name="auth_continue_without_account">Continuar sin cuenta</string>
+    <string name="auth_create_account">Crear Cuenta</string>
+    <string name="auth_sign_in">Iniciar Sesión</string>
+    <string name="auth_name_hint">Nombre</string>
+    <string name="auth_email_hint">Email</string>
+    <string name="auth_password_hint">Contraseña</string>
+    <string name="auth_already_have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="auth_no_account">¿No tienes cuenta? Crea una</string>
+    <string name="auth_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="auth_reset_email_sent">Email de recuperación enviado</string>
+    <string name="settings_sign_in">Iniciar Sesión / Crear Cuenta</string>
+    <string name="settings_sign_out">Cerrar Sesión</string>
+    <string name="settings_delete_account">Eliminar Cuenta</string>
+    <string name="settings_sign_out_confirm">¿Cerrar sesión de tu cuenta?</string>
+    <string name="settings_delete_confirm">¿Eliminar tu cuenta? Tus datos en la nube serán eliminados.</string>
+    <string name="settings_delete_keep_data">¿Mantener tus listas en este dispositivo?</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_keep">Mantener</string>
+    <string name="dialog_remove">Eliminar</string>
+    <string name="dialog_delete">Eliminar</string>
+
 </resources>
