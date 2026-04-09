@@ -36,3 +36,12 @@ data object RegionPickerRoute
 
 @Serializable
 data object ErrorRoute
+
+@Serializable
+data object AuthGraphRoute
+
+@Serializable
+data object AuthRoute
+
+@Serializable
+data object EmailAuthRoute
