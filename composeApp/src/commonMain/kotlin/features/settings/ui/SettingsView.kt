@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SettingsScreen(goToLanguagePicker: () -> Unit, goToRegionPicker: () -> Unit) {
+fun SettingsScreen(goToLanguagePicker: () -> Unit, goToRegionPicker: () -> Unit, goToAuth: () -> Unit) {
     val viewModel: SettingsViewModel = koinViewModel()
     val currentLanguage by viewModel.currentLanguageDisplay.collectAsState()
     val currentRegion by viewModel.currentRegionDisplay.collectAsState()

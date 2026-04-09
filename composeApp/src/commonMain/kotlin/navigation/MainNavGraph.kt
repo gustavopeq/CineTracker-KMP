@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +17,9 @@ import common.domain.models.util.MediaType
 import common.ui.LocalAnimatedVisibilityScope
 import common.ui.LocalSharedTransitionScope
 import common.ui.screen.ErrorScreen
+import features.auth.ui.AuthScreen
+import features.auth.ui.AuthViewModel
+import features.auth.ui.EmailAuthScreen
 import features.browse.ui.Browse
 import features.details.ui.Details
 import features.home.ui.Home
@@ -25,6 +29,7 @@ import features.settings.ui.RegionPickerScreen
 import features.settings.ui.SettingsScreen
 import features.watchlist.ui.Watchlist
 import navigation.components.navigateToTopLevelDestination
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
@@ -106,7 +111,8 @@ fun MainNavGraph(navController: NavHostController) {
                     composable<SettingsRoute> {
                         SettingsScreen(
                             goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
-                            goToRegionPicker = { navController.navigate(RegionPickerRoute) }
+                            goToRegionPicker = { navController.navigate(RegionPickerRoute) },
+                            goToAuth = { navController.navigate(AuthGraphRoute) }
                         )
                     }
                     composable<LanguagePickerRoute> {
@@ -117,6 +123,39 @@ fun MainNavGraph(navController: NavHostController) {
                     composable<RegionPickerRoute> {
                         RegionPickerScreen(
                             onBack = { navController.popBackStack() }
+                        )
+                    }
+                }
+                navigation<AuthGraphRoute>(startDestination = AuthRoute) {
+                    composable<AuthRoute> {
+                        val parentEntry = remember(it) {
+                            navController.getBackStackEntry(AuthGraphRoute)
+                        }
+                        val authViewModel: AuthViewModel =
+                            koinViewModel(viewModelStoreOwner = parentEntry)
+                        AuthScreen(
+                            viewModel = authViewModel,
+                            goToEmailAuth = { navController.navigate(EmailAuthRoute) },
+                            onDismiss = {
+                                navController.popBackStack(AuthGraphRoute, inclusive = true)
+                            },
+                            onAuthSuccess = {
+                                navController.popBackStack(AuthGraphRoute, inclusive = true)
+                            }
+                        )
+                    }
+                    composable<EmailAuthRoute> {
+                        val parentEntry = remember(it) {
+                            navController.getBackStackEntry(AuthGraphRoute)
+                        }
+                        val authViewModel: AuthViewModel =
+                            koinViewModel(viewModelStoreOwner = parentEntry)
+                        EmailAuthScreen(
+                            viewModel = authViewModel,
+                            onBack = { navController.popBackStack() },
+                            onAuthSuccess = {
+                                navController.popBackStack(AuthGraphRoute, inclusive = true)
+                            }
                         )
                     }
                 }
