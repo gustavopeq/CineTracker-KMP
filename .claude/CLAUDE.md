@@ -215,6 +215,8 @@ CineTracker-KMP/
 │   │       │           ├── ScreenSizeInfo.kt      # expect
 │   │       │           └── StringFormat.kt        # expect
 │   │       ├── auth/
+│   │       │   ├── di/
+│   │       │   │   └── AuthModule.kt              # expect
 │   │       │   ├── model/
 │   │       │   │   ├── AuthState.kt
 │   │       │   │   ├── AuthTokens.kt
@@ -476,6 +478,8 @@ CineTracker-KMP/
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt
 │   │   │   ├── auth/
+│   │   │   │   ├── di/
+│   │   │   │   │   └── AuthModule.android.kt
 │   │   │   │   ├── network/
 │   │   │   │   │   └── SupabaseClient.android.kt
 │   │   │   │   └── platform/
@@ -511,6 +515,8 @@ CineTracker-KMP/
 │   │   │   ├── ScreenSizeInfo.ios.kt
 │   │   │   └── StringFormat.kt
 │   │   ├── auth/
+│   │   │   ├── di/
+│   │   │   │   └── AuthModule.ios.kt
 │   │   │   ├── network/
 │   │   │   │   └── SupabaseClient.ios.kt
 │   │   │   └── platform/
