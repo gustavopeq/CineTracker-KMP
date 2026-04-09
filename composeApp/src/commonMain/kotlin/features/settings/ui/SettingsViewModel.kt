@@ -2,14 +2,22 @@ package features.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
+import database.repository.DatabaseRepository
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
+class SettingsViewModel(
+    private val settingsInteractor: SettingsInteractor,
+    private val authRepository: AuthRepository,
+    private val databaseRepository: DatabaseRepository
+) : ViewModel() {
 
     private val _currentLanguageDisplay = MutableStateFlow("")
     val currentLanguageDisplay: StateFlow<String> = _currentLanguageDisplay
@@ -19,6 +27,8 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
 
     private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled
+
+    val authState: StateFlow<AuthState> = authRepository.authState
 
     init {
         refreshSettings()
@@ -31,6 +41,8 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         when (event) {
             is SettingsEvent.NotificationPermissionResult -> handlePermissionResult(event.granted)
             SettingsEvent.DisableNotifications -> disableNotifications()
+            SettingsEvent.SignOut -> signOut()
+            is SettingsEvent.DeleteAccount -> deleteAccount(event.keepLocalData)
         }
     }
 
@@ -58,5 +70,22 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         settingsInteractor.setNotificationsEnabled(false)
         AppNotifications.cancelEngagementReminders()
         _notificationsEnabled.value = false
+    }
+
+    private fun signOut() {
+        viewModelScope.launch {
+            authRepository.signOut()
+        }
+    }
+
+    private fun deleteAccount(keepLocalData: Boolean) {
+        viewModelScope.launch {
+            authRepository.deleteAccount()
+            if (!keepLocalData) {
+                databaseRepository.getAllLists().first().forEach { list ->
+                    databaseRepository.deleteList(list.listId)
+                }
+            }
+        }
     }
 }

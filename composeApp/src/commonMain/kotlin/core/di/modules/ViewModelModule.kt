@@ -19,7 +19,7 @@ val viewModelModule = module {
     viewModel { BrowseViewModel(get()) }
     viewModel { WatchlistViewModel(get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get(), get()) }
     viewModel { (contentId: Int, mediaType: MediaType) ->
         DetailsViewModel(contentId, mediaType, get(), get())
     }
