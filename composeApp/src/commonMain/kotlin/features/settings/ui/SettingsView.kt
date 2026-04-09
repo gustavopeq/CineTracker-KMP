@@ -9,7 +9,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,7 +24,9 @@ import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.RETURN_TOP_BAR_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
+import common.util.UiConstants.SETTINGS_AVATAR_BOTTOM_SPACING
 import common.util.platform.rememberNotificationPermissionLauncher
+import features.settings.events.SettingsEvent
 import features.settings.ui.components.ProfileAvatar
 import features.settings.ui.components.SettingsRow
 import features.settings.ui.components.SettingsToggleRow
@@ -35,30 +36,12 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SettingsScreen(goToLanguagePicker: () -> Unit, goToRegionPicker: () -> Unit) {
     val viewModel: SettingsViewModel = koinViewModel()
-
-    LaunchedEffect(Unit) {
-        viewModel.refreshSettings()
-    }
-
-    SettingsContent(
-        viewModel = viewModel,
-        goToLanguagePicker = goToLanguagePicker,
-        goToRegionPicker = goToRegionPicker
-    )
-}
-
-@Composable
-private fun SettingsContent(
-    viewModel: SettingsViewModel,
-    goToLanguagePicker: () -> Unit,
-    goToRegionPicker: () -> Unit
-) {
     val currentLanguage by viewModel.currentLanguageDisplay.collectAsState()
     val currentRegion by viewModel.currentRegionDisplay.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
 
     val requestPermission = rememberNotificationPermissionLauncher { granted ->
-        viewModel.onNotificationPermissionResult(granted)
+        viewModel.onEvent(SettingsEvent.NotificationPermissionResult(granted))
     }
 
     Column(
@@ -69,7 +52,7 @@ private fun SettingsContent(
     ) {
         ProfileAvatar()
 
-        Spacer(modifier = Modifier.height(SECTION_PADDING.dp * 2))
+        Spacer(modifier = Modifier.height(SETTINGS_AVATAR_BOTTOM_SPACING.dp))
 
         HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
 
@@ -102,7 +85,7 @@ private fun SettingsContent(
                 if (isEnabling) {
                     requestPermission()
                 } else {
-                    viewModel.disableNotifications()
+                    viewModel.onEvent(SettingsEvent.DisableNotifications)
                 }
             }
         )

@@ -213,3 +213,41 @@
 - **Watchlist toggle snackbar:** 500ms delay (`DELAY_UPDATE_POPUP_TEXT_MS`) before updating `contentInListStatus` to show feedback first
 - **Multi-list support:** `OtherListsBottomSheet` shows all lists with checkmarks; `contentInListStatus` map tracks membership per list
 - **ViewModel injection:** Uses `koinViewModel { parametersOf(contentId, mediaType) }` — `contentId` and `mediaType` are constructor parameters
+
+---
+
+## Settings
+
+**Route:** Nested navigation graph under `SettingsGraphRoute` with 3 sub-routes: `SettingsRoute`, `LanguagePickerRoute`, `RegionPickerRoute`.
+**Purpose:** User preferences for app language, content region, and engagement notifications.
+
+### Structure
+- `SettingsEvent.kt` — `NotificationPermissionResult(granted)`, `DisableNotifications`
+- `SettingsInteractor.kt` — Language/region fallback logic, notification state, settings persistence
+- `SettingsViewModel.kt` — Manages display state for language, region, notifications; uses `onEvent()` pattern
+- `SettingsView.kt` — Main settings screen (avatar, language row, region row, notifications toggle, version)
+- `LanguagePickerView.kt` — Radio-button language selection with save-on-back
+- `RegionPickerView.kt` — Radio-button region selection with save-on-back
+- `components/` — `ProfileAvatar`, `SettingsRow`, `SettingsToggleRow`, `PickerItemRow`, `PickerTopBar`
+
+### State (StateFlows on SettingsViewModel)
+| Field | Type | Description |
+|---|---|---|
+| `currentLanguageDisplay` | `String` | Display name of current language (e.g., "Português") |
+| `currentRegionDisplay` | `String` | Display name of current region (e.g., "Brazil") |
+| `notificationsEnabled` | `Boolean` | Whether engagement reminders are on |
+
+### Data Flow
+1. `init` → `refreshSettings()` reads current language/region/notification state from `SettingsInteractor`
+2. `settingsInteractor.settingsChanged` SharedFlow collected in `init` → auto-refreshes display when pickers save changes
+3. Picker screens inject `SettingsInteractor` directly via `koinInject()` — they are leaf screens that read/write settings without observing ViewModel state
+4. Picker save (`setAppLanguage`/`setAppRegion`) emits `settingsChanged` → SettingsViewModel auto-refreshes
+
+### Special Behaviors
+- **Language fallback chain:** stored value → device locale (if supported) → language family mapping (`pt` → `pt-BR`, `es` → `es-ES`) → `en-US`
+- **Region fallback chain:** stored value → device country (if in supported list) → `US`
+- **Supported languages:** en-US, es-ES, pt-BR (3 languages)
+- **Supported regions:** 40 country codes across Americas, Europe, Asia, Africa
+- **Notification toggle:** Enabling requests runtime permission; granted → schedules reminders, denied → no-op
+- **Settings change emission:** `settingsChanged` only emits when the value actually changes, preventing no-op refresh cycles
+- **Picker ordering:** Current selection shown first, remaining items sorted alphabetically below a divider

@@ -83,6 +83,13 @@ object UiConstants {
     const val PERSON_FEATURED_TITLE_MAX_LINES = 2
     const val CAROUSEL_RATING_STAR_SIZE = 18
 
+    // Settings
+    const val PROFILE_AVATAR_SIZE = 145
+    const val PROFILE_AVATAR_IMAGE_FRACTION = 0.8f
+    const val SETTINGS_AVATAR_BOTTOM_SPACING = 48
+    const val SETTINGS_BACK_ICON_SIZE = 24
+    const val SETTINGS_CHEVRON_ICON_SIZE = 20
+
     // IOS
     const val SYSTEM_BAR_HEIGHT = 150
 }

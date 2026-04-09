@@ -4,6 +4,7 @@ import common.util.platform.AppNotifications
 import features.settings.domain.LanguageItem
 import features.settings.domain.RegionItem
 import features.settings.domain.SettingsInteractor
+import features.settings.events.SettingsEvent
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk
@@ -98,11 +99,11 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `enabling notifications calls interactor and schedules reminders`() {
+    fun `NotificationPermissionResult granted enables notifications and schedules reminders`() {
         setupDefaultMocks()
         val viewModel = createViewModel()
 
-        viewModel.onNotificationPermissionResult(true)
+        viewModel.onEvent(SettingsEvent.NotificationPermissionResult(granted = true))
 
         verify { settingsInteractor.setNotificationsEnabled(true) }
         verify { AppNotifications.scheduleEngagementReminders() }
@@ -110,11 +111,11 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `disabling notifications calls interactor and cancels reminders`() {
+    fun `DisableNotifications disables notifications and cancels reminders`() {
         setupDefaultMocks(notificationsEnabled = true)
         val viewModel = createViewModel()
 
-        viewModel.disableNotifications()
+        viewModel.onEvent(SettingsEvent.DisableNotifications)
 
         verify { settingsInteractor.setNotificationsEnabled(false) }
         verify { AppNotifications.cancelEngagementReminders() }
@@ -122,31 +123,14 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `denied notification permission does not enable notifications`() {
+    fun `NotificationPermissionResult denied does not enable notifications`() {
         setupDefaultMocks()
         val viewModel = createViewModel()
 
-        viewModel.onNotificationPermissionResult(false)
+        viewModel.onEvent(SettingsEvent.NotificationPermissionResult(granted = false))
 
         verify(exactly = 0) { settingsInteractor.setNotificationsEnabled(any()) }
         assertFalse(viewModel.notificationsEnabled.value)
-    }
-
-    @Test
-    fun `refreshSettings updates display values after language change`() {
-        setupDefaultMocks(language = "en-US", region = "US")
-        val viewModel = createViewModel()
-
-        assertEquals("English", viewModel.currentLanguageDisplay.value)
-        assertEquals("United States", viewModel.currentRegionDisplay.value)
-
-        every { settingsInteractor.getAppLanguage() } returns "pt-BR"
-        every { settingsInteractor.getAppRegion() } returns "BR"
-
-        viewModel.refreshSettings()
-
-        assertEquals("Portugu\u00eas", viewModel.currentLanguageDisplay.value)
-        assertEquals("Brazil", viewModel.currentRegionDisplay.value)
     }
 
     @Test
@@ -154,7 +138,7 @@ class SettingsViewModelTest {
         val settingsChangedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
         setupDefaultMocks(language = "en-US", region = "US", settingsChangedFlow = settingsChangedFlow)
         val viewModel = createViewModel()
-        advanceUntilIdle() // allow the collect coroutine in init to start
+        advanceUntilIdle()
 
         assertEquals("English", viewModel.currentLanguageDisplay.value)
 
@@ -170,7 +154,7 @@ class SettingsViewModelTest {
         val settingsChangedFlow = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
         setupDefaultMocks(language = "en-US", region = "US", settingsChangedFlow = settingsChangedFlow)
         val viewModel = createViewModel()
-        advanceUntilIdle() // allow the collect coroutine in init to start
+        advanceUntilIdle()
 
         assertEquals("United States", viewModel.currentRegionDisplay.value)
 

@@ -504,6 +504,7 @@ class DetailsViewModelTest {
 
             val viewModel = createViewModel()
             advanceUntilIdle()
+            awaitIO() // let collectContentInListStatus IO coroutine update _contentInListStatus
 
             viewModel.setPersonalRating(8.0f)
             awaitIO()
