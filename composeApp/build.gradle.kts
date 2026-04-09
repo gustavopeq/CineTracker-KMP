@@ -49,6 +49,12 @@ kotlin {
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play)
+            implementation(libs.androidx.browser)
+            implementation(libs.androidx.security.crypto)
+            implementation(libs.google.id)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -197,6 +203,9 @@ buildkonfig {
         buildConfigField(STRING, "API_KEY", getLocalProperty("API_KEY"))
         buildConfigField(STRING, "SENTRY_DSN", getLocalProperty("SENTRY_DSN"))
         buildConfigField(STRING, "VERSION_NAME", appVersionName)
+        buildConfigField(STRING, "SUPABASE_URL", getLocalProperty("SUPABASE_URL"))
+        buildConfigField(STRING, "SUPABASE_ANON_KEY", getLocalProperty("SUPABASE_ANON_KEY"))
+        buildConfigField(STRING, "GOOGLE_WEB_CLIENT_ID", getLocalProperty("GOOGLE_WEB_CLIENT_ID"))
     }
 }
 
