@@ -5,15 +5,23 @@ import cinetracker_kmp.composeapp.generated.resources.animal_avatar_1
 import cinetracker_kmp.composeapp.generated.resources.animal_avatar_2
 import cinetracker_kmp.composeapp.generated.resources.animal_avatar_3
 import cinetracker_kmp.composeapp.generated.resources.animal_avatar_4
+import cinetracker_kmp.composeapp.generated.resources.animal_avatar_5
+import cinetracker_kmp.composeapp.generated.resources.animal_avatar_6
 import cinetracker_kmp.composeapp.generated.resources.anonymous_avatar
 import cinetracker_kmp.composeapp.generated.resources.boy_avatar_1
 import cinetracker_kmp.composeapp.generated.resources.boy_avatar_2
 import cinetracker_kmp.composeapp.generated.resources.boy_avatar_3
 import cinetracker_kmp.composeapp.generated.resources.boy_avatar_4
+import cinetracker_kmp.composeapp.generated.resources.boy_avatar_5
+import cinetracker_kmp.composeapp.generated.resources.boy_avatar_6
+import cinetracker_kmp.composeapp.generated.resources.boy_avatar_7
 import cinetracker_kmp.composeapp.generated.resources.girl_avatar_1
 import cinetracker_kmp.composeapp.generated.resources.girl_avatar_2
 import cinetracker_kmp.composeapp.generated.resources.girl_avatar_3
 import cinetracker_kmp.composeapp.generated.resources.girl_avatar_4
+import cinetracker_kmp.composeapp.generated.resources.girl_avatar_5
+import cinetracker_kmp.composeapp.generated.resources.girl_avatar_6
+import cinetracker_kmp.composeapp.generated.resources.girl_avatar_7
 import org.jetbrains.compose.resources.DrawableResource
 
 data class AvatarItem(val key: String, val drawableRes: DrawableResource)
@@ -29,19 +37,27 @@ private val avatarsByCategory = linkedMapOf(
         AvatarItem("boy_avatar_1", Res.drawable.boy_avatar_1),
         AvatarItem("boy_avatar_2", Res.drawable.boy_avatar_2),
         AvatarItem("boy_avatar_3", Res.drawable.boy_avatar_3),
-        AvatarItem("boy_avatar_4", Res.drawable.boy_avatar_4)
+        AvatarItem("boy_avatar_4", Res.drawable.boy_avatar_4),
+        AvatarItem("boy_avatar_5", Res.drawable.boy_avatar_5),
+        AvatarItem("boy_avatar_6", Res.drawable.boy_avatar_6),
+        AvatarItem("boy_avatar_7", Res.drawable.boy_avatar_7)
     ),
     AvatarCategory.HEROINES to listOf(
         AvatarItem("girl_avatar_1", Res.drawable.girl_avatar_1),
         AvatarItem("girl_avatar_2", Res.drawable.girl_avatar_2),
         AvatarItem("girl_avatar_3", Res.drawable.girl_avatar_3),
-        AvatarItem("girl_avatar_4", Res.drawable.girl_avatar_4)
+        AvatarItem("girl_avatar_4", Res.drawable.girl_avatar_4),
+        AvatarItem("girl_avatar_5", Res.drawable.girl_avatar_5),
+        AvatarItem("girl_avatar_6", Res.drawable.girl_avatar_6),
+        AvatarItem("girl_avatar_7", Res.drawable.girl_avatar_7)
     ),
     AvatarCategory.CRITTERS to listOf(
         AvatarItem("animal_avatar_1", Res.drawable.animal_avatar_1),
         AvatarItem("animal_avatar_2", Res.drawable.animal_avatar_2),
         AvatarItem("animal_avatar_3", Res.drawable.animal_avatar_3),
-        AvatarItem("animal_avatar_4", Res.drawable.animal_avatar_4)
+        AvatarItem("animal_avatar_4", Res.drawable.animal_avatar_4),
+        AvatarItem("animal_avatar_5", Res.drawable.animal_avatar_5),
+        AvatarItem("animal_avatar_6", Res.drawable.animal_avatar_6)
     )
 )
 
@@ -52,14 +68,22 @@ fun getDrawableForAvatarKey(key: String): DrawableResource = when (key) {
     "animal_avatar_2" -> Res.drawable.animal_avatar_2
     "animal_avatar_3" -> Res.drawable.animal_avatar_3
     "animal_avatar_4" -> Res.drawable.animal_avatar_4
+    "animal_avatar_5" -> Res.drawable.animal_avatar_5
+    "animal_avatar_6" -> Res.drawable.animal_avatar_6
     "boy_avatar_1" -> Res.drawable.boy_avatar_1
     "boy_avatar_2" -> Res.drawable.boy_avatar_2
     "boy_avatar_3" -> Res.drawable.boy_avatar_3
     "boy_avatar_4" -> Res.drawable.boy_avatar_4
+    "boy_avatar_5" -> Res.drawable.boy_avatar_5
+    "boy_avatar_6" -> Res.drawable.boy_avatar_6
+    "boy_avatar_7" -> Res.drawable.boy_avatar_7
     "girl_avatar_1" -> Res.drawable.girl_avatar_1
     "girl_avatar_2" -> Res.drawable.girl_avatar_2
     "girl_avatar_3" -> Res.drawable.girl_avatar_3
     "girl_avatar_4" -> Res.drawable.girl_avatar_4
+    "girl_avatar_5" -> Res.drawable.girl_avatar_5
+    "girl_avatar_6" -> Res.drawable.girl_avatar_6
+    "girl_avatar_7" -> Res.drawable.girl_avatar_7
     else -> Res.drawable.anonymous_avatar
 }
 

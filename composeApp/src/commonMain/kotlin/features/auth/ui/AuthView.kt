@@ -106,6 +106,7 @@ fun AuthScreen(
                     Brush.verticalGradient(
                         colors = listOf(
                             PrimaryYellowColor.copy(alpha = 0.2f),
+                            PrimaryYellowColor.copy(alpha = 0.2f),
                             PrimaryBlackColor
                         )
                     )
