@@ -238,11 +238,10 @@
     <string name="dialog_delete">Excluir</string>
 
     <!-- Account Announcement -->
-    <string name="announcement_title">Faça backup das suas listas</string>
-    <string name="announcement_benefit_safe">Mantenha suas listas e avaliações seguras</string>
-    <string name="announcement_benefit_restore">Restaure seus dados em um novo dispositivo</string>
-    <string name="announcement_benefit_free">É grátis e leva poucos segundos</string>
-    <string name="announcement_reassurance">Suas listas e avaliações atuais serão salvas na sua conta</string>
+    <string name="announcement_tag">Armazenamento seguro</string>
+    <string name="announcement_title">Suas listas,</string>
+    <string name="announcement_title_accent">preservadas.</string>
+    <string name="announcement_body">Salve com segurança suas listas e avaliações na nuvem. Suas coleções serão transferidas automaticamente, e você nunca vai perder nenhum item.</string>
     <string name="announcement_maybe_later">Talvez depois</string>
 
 </resources>

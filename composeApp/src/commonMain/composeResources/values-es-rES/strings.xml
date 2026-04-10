@@ -238,11 +238,10 @@
     <string name="dialog_delete">Eliminar</string>
 
     <!-- Account Announcement -->
-    <string name="announcement_title">Haz una copia de tus listas</string>
-    <string name="announcement_benefit_safe">Mantén tus listas y valoraciones a salvo</string>
-    <string name="announcement_benefit_restore">Restaura tus datos en un nuevo dispositivo</string>
-    <string name="announcement_benefit_free">Es gratis y solo tarda unos segundos</string>
-    <string name="announcement_reassurance">Tus listas y valoraciones actuales se guardarán en tu cuenta</string>
+    <string name="announcement_tag">Almacenamiento seguro</string>
+    <string name="announcement_title">Tus listas,</string>
+    <string name="announcement_title_accent">preservadas.</string>
+    <string name="announcement_body">Guarda de forma segura tus listas y valoraciones en la nube. Tus colecciones se transferirán automáticamente, así nunca perderás ni un solo elemento.</string>
     <string name="announcement_maybe_later">Quizás más tarde</string>
 
 </resources>
