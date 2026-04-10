@@ -1,9 +1,11 @@
 package features.announcement.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +42,7 @@ import cinetracker_kmp.composeapp.generated.resources.announcement_reassurance
 import cinetracker_kmp.composeapp.generated.resources.announcement_title
 import cinetracker_kmp.composeapp.generated.resources.auth_create_account
 import cinetracker_kmp.composeapp.generated.resources.ic_star
+import cinetracker_kmp.composeapp.generated.resources.space_bg
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryGreyColor
 import common.ui.theme.PrimaryYellowColor
@@ -50,15 +55,22 @@ fun AccountAnnouncementView(
     onCreateAccount: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PrimaryBlackColor)
-            .windowInsetsPadding(WindowInsets.systemBars)
-            .padding(horizontal = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(PrimaryBlackColor)) {
+        Image(
+            painter = painterResource(Res.drawable.space_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize().alpha(0.3f),
+            contentScale = ContentScale.Crop
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
         Icon(
             painter = painterResource(Res.drawable.ic_star),
             contentDescription = null,
@@ -123,6 +135,7 @@ fun AccountAnnouncementView(
                 ) { onDismiss() }
                 .padding(vertical = 16.dp)
         )
+        }
     }
 }
 
