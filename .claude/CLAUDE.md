@@ -225,6 +225,7 @@ CineTracker-KMP/
 │   │       │   ├── model/
 │   │       │   │   ├── AuthState.kt
 │   │       │   │   ├── AuthTokens.kt
+│   │       │   │   ├── CloudSyncDto.kt
 │   │       │   │   ├── SignInResult.kt
 │   │       │   │   └── SupabaseDto.kt
 │   │       │   ├── network/
@@ -237,7 +238,9 @@ CineTracker-KMP/
 │   │       │   │   └── AuthRepositoryImpl.kt
 │   │       │   └── service/
 │   │       │       ├── SupabaseAuthService.kt
-│   │       │       └── SupabaseAuthServiceImpl.kt
+│   │       │       ├── SupabaseAuthServiceImpl.kt
+│   │       │       ├── SyncService.kt
+│   │       │       └── SyncServiceImpl.kt
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
 │   │       │   ├── backfill/
@@ -265,6 +268,9 @@ CineTracker-KMP/
 │   │       │       ├── SettingsRepository.kt
 │   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
+│   │       │   ├── announcement/
+│   │       │   │   └── ui/
+│   │       │   │       └── AccountAnnouncementView.kt
 │   │       │   ├── browse/
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── BrowseInteractor.kt
@@ -543,8 +549,10 @@ CineTracker-KMP/
 │   │
 │   ├── src/androidUnitTest/kotlin/
 │   │   ├── auth/
-│   │   │   └── repository/
-│   │   │       └── AuthRepositoryImplTest.kt
+│   │   │   ├── repository/
+│   │   │   │   └── AuthRepositoryImplTest.kt
+│   │   │   └── service/
+│   │   │       └── SyncServiceImplTest.kt
 │   │   ├── common/
 │   │   │   ├── domain/models/content/
 │   │   │   │   ├── GenericContentMapperTest.kt
