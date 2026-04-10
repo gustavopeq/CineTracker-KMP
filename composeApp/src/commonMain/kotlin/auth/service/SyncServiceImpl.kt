@@ -13,6 +13,7 @@ import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
 import database.dao.PersonalRatingDao
 import database.repository.SettingsRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,9 +38,15 @@ class SyncServiceImpl(
         uploadJob?.cancel()
         uploadJob = scope.launch {
             delay(UPLOAD_DEBOUNCE_MS)
-            val result = performUpload(accessToken)
-            if (result is AuthResult.Success) {
-                settingsRepository.setHasLocalChanges(false)
+            try {
+                val result = performUpload(accessToken)
+                if (result is AuthResult.Success) {
+                    settingsRepository.setHasLocalChanges(false)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                log.e(e) { "Upload failed with exception" }
             }
         }
     }

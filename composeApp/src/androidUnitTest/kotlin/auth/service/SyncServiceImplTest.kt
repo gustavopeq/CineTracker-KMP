@@ -247,5 +247,21 @@ class SyncServiceImplTest {
         coVerify(exactly = 0) { settingsRepository.setHasLocalChanges(false) }
     }
 
+    @Test
+    fun `requestUpload debounces multiple rapid calls`() = testScope.runTest {
+        every { tokenStorage.getAccessToken() } returns "test-token"
+        coEvery { listEntityDao.getAllSnapshot() } returns emptyList()
+        coEvery { contentEntityDao.getAllSnapshot() } returns emptyList()
+        coEvery { personalRatingDao.getAllSnapshot() } returns emptyList()
+        coEvery { authService.uploadSnapshot(any(), any()) } returns AuthResult.Success(Unit)
+
+        syncService.requestUpload()
+        syncService.requestUpload()
+        syncService.requestUpload()
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { authService.uploadSnapshot(any(), any()) }
+    }
+
     // endregion
 }
