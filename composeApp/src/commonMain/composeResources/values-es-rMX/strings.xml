@@ -237,4 +237,12 @@
     <string name="dialog_remove">Eliminar</string>
     <string name="dialog_delete">Eliminar</string>
 
+    <!-- Account Announcement -->
+    <string name="announcement_title">Respalda tus listas</string>
+    <string name="announcement_benefit_safe">Mantén tus listas y calificaciones seguras</string>
+    <string name="announcement_benefit_restore">Restaura tus datos en un nuevo dispositivo</string>
+    <string name="announcement_benefit_free">Es gratis y solo toma unos segundos</string>
+    <string name="announcement_reassurance">Tus listas y calificaciones actuales se guardarán en tu cuenta</string>
+    <string name="announcement_maybe_later">Quizás más tarde</string>
+
 </resources>

@@ -236,4 +236,12 @@
     <string name="dialog_remove">Remove</string>
     <string name="dialog_delete">Delete</string>
 
+    <!-- Account Announcement -->
+    <string name="announcement_title">Back up your lists</string>
+    <string name="announcement_benefit_safe">Keep your watchlists and ratings safe</string>
+    <string name="announcement_benefit_restore">Restore your data on a new device</string>
+    <string name="announcement_benefit_free">It's free and takes seconds</string>
+    <string name="announcement_reassurance">Your existing lists and ratings will be saved to your account</string>
+    <string name="announcement_maybe_later">Maybe Later</string>
+
 </resources>
