@@ -1,5 +1,8 @@
 package auth.service
 
+import auth.model.CloudContentDownload
+import auth.model.CloudListDownload
+import auth.model.CloudRatingDownload
 import auth.model.SupabaseEmailSignInRequest
 import auth.model.SupabaseErrorResponse
 import auth.model.SupabaseIdTokenRequest
@@ -7,6 +10,7 @@ import auth.model.SupabaseRefreshRequest
 import auth.model.SupabaseSessionResponse
 import auth.model.SupabaseSignUpMetadata
 import auth.model.SupabaseSignUpRequest
+import auth.model.UploadSnapshotRequest
 import auth.model.UserPreferencesDto
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
@@ -145,6 +149,53 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
             }
         } catch (e: Exception) {
             AuthResult.Error(e.message ?: "Failed to save preferences")
+        }
+    }
+
+    override suspend fun uploadSnapshot(
+        accessToken: String,
+        request: UploadSnapshotRequest
+    ): AuthResult<Unit> {
+        return try {
+            val response = client.post("rest/v1/rpc/upload_snapshot") {
+                bearerAuth(accessToken)
+                setBody(request)
+            }
+            if (response.status.isSuccess()) {
+                AuthResult.Success(Unit)
+            } else {
+                val error = parseError(response.bodyAsText())
+                AuthResult.Error(error)
+            }
+        } catch (e: Exception) {
+            AuthResult.Error(e.message ?: "Upload snapshot failed")
+        }
+    }
+
+    override suspend fun fetchCloudLists(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudListDownload>> = safeCall {
+        client.get("rest/v1/cloud_lists?user_id=eq.$userId&select=*") {
+            bearerAuth(accessToken)
+        }
+    }
+
+    override suspend fun fetchCloudContent(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudContentDownload>> = safeCall {
+        client.get("rest/v1/cloud_content?user_id=eq.$userId&select=*") {
+            bearerAuth(accessToken)
+        }
+    }
+
+    override suspend fun fetchCloudRatings(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudRatingDownload>> = safeCall {
+        client.get("rest/v1/cloud_ratings?user_id=eq.$userId&select=*") {
+            bearerAuth(accessToken)
         }
     }
 

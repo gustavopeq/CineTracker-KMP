@@ -1,6 +1,10 @@
 package auth.service
 
+import auth.model.CloudContentDownload
+import auth.model.CloudListDownload
+import auth.model.CloudRatingDownload
 import auth.model.SupabaseSessionResponse
+import auth.model.UploadSnapshotRequest
 import auth.model.UserPreferencesDto
 
 sealed class AuthResult<out T> {
@@ -37,4 +41,24 @@ interface SupabaseAuthService {
         accessToken: String,
         dto: UserPreferencesDto
     ): AuthResult<Unit>
+
+    suspend fun uploadSnapshot(
+        accessToken: String,
+        request: UploadSnapshotRequest
+    ): AuthResult<Unit>
+
+    suspend fun fetchCloudLists(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudListDownload>>
+
+    suspend fun fetchCloudContent(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudContentDownload>>
+
+    suspend fun fetchCloudRatings(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<CloudRatingDownload>>
 }
