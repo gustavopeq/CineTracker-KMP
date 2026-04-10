@@ -2,6 +2,7 @@ package features.auth.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,10 +45,12 @@ import cinetracker_kmp.composeapp.generated.resources.ic_mail
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryWhiteColor
+import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.CARD_ROUND_CORNER
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
 import features.auth.events.AuthEvent
 import features.auth.ui.components.GoogleSignInButton
@@ -65,6 +69,7 @@ fun AuthScreen(
     val authSuccess by viewModel.authSuccess.collectAsState()
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarErrorText = snackbarError?.let { stringResource(it) }
 
     LaunchedEffect(authSuccess) {
         if (authSuccess) {
@@ -73,14 +78,14 @@ fun AuthScreen(
     }
 
     LaunchedEffect(snackbarError) {
-        if (snackbarError.isNotEmpty()) {
-            snackbarHostState.showSnackbar(snackbarError)
+        if (snackbarErrorText != null) {
+            snackbarHostState.showSnackbar(snackbarErrorText)
             viewModel.onEvent(AuthEvent.DismissError)
         }
     }
 
     Scaffold(
-        containerColor = PrimaryBlackColor,
+        containerColor = Color.Transparent,
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -97,6 +102,14 @@ fun AuthScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            PrimaryYellowColor.copy(alpha = 0.2f),
+                            PrimaryBlackColor
+                        )
+                    )
+                )
                 .padding(paddingValues)
                 .padding(horizontal = DEFAULT_MARGIN.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -106,7 +119,7 @@ fun AuthScreen(
             Image(
                 painter = painterResource(Res.drawable.cinetracker_name_logo),
                 contentDescription = stringResource(Res.string.app_logo_image_description),
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(275.dp)
             )
 
             Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
@@ -129,7 +142,7 @@ fun AuthScreen(
                 shape = RoundedCornerShape(CARD_ROUND_CORNER.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(FORM_FIELD_HEIGHT.dp)
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_mail),

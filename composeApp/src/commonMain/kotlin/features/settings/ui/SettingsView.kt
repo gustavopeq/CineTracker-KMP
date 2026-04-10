@@ -1,6 +1,7 @@
 package features.settings.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import cinetracker_kmp.composeapp.generated.resources.settings_sign_out
 import cinetracker_kmp.composeapp.generated.resources.settings_sign_out_confirm
 import cinetracker_kmp.composeapp.generated.resources.settings_version
 import com.projects.cinetracker.BuildKonfig
+import common.ui.components.ClassicLoadingIndicator
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryWhiteColor
@@ -67,6 +69,7 @@ fun SettingsScreen(
     val currentRegion by viewModel.currentRegionDisplay.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val authState by viewModel.authState.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -79,6 +82,7 @@ fun SettingsScreen(
         viewModel.onEvent(SettingsEvent.NotificationPermissionResult(granted))
     }
 
+    Box(modifier = Modifier.fillMaxSize()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,7 +96,8 @@ fun SettingsScreen(
                 text = displayName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = PrimaryWhiteColor,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
             )
         } else {
             Text(
@@ -178,6 +183,16 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
     }
+
+    if (isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            ClassicLoadingIndicator()
+        }
+    }
+    } // Box
 
     if (showSignOutDialog) {
         AlertDialog(

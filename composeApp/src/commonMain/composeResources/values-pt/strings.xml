@@ -215,6 +215,13 @@
     <string name="auth_no_account">Não tem uma conta? Crie uma</string>
     <string name="auth_forgot_password">Esqueceu a senha?</string>
     <string name="auth_reset_email_sent">Email de recuperação enviado</string>
+    <string name="auth_error_invalid_email">Digite um endereço de email válido.</string>
+    <string name="auth_error_password_too_short">A senha deve ter pelo menos 6 caracteres.</string>
+    <string name="auth_error_email_already_registered">Já existe uma conta com este email.</string>
+    <string name="auth_error_incorrect_credentials">Email ou senha incorretos.</string>
+    <string name="auth_error_email_not_confirmed">Verifique seu email para o link de verificação.</string>
+    <string name="auth_error_generic_sign_up">Não foi possível criar a conta. Tente novamente.</string>
+    <string name="auth_error_generic_sign_in">Não foi possível entrar. Tente novamente.</string>
     <string name="settings_sign_in">Entrar / Criar Conta</string>
     <string name="settings_sign_out">Sair</string>
     <string name="settings_delete_account">Excluir Conta</string>

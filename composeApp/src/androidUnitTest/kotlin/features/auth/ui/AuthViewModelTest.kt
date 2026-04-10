@@ -1,8 +1,14 @@
 package features.auth.ui
 
-import auth.model.AuthState
 import auth.repository.AuthRepository
 import auth.service.AuthResult
+import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.auth_error_email_already_registered
+import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_in
+import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_up
+import cinetracker_kmp.composeapp.generated.resources.auth_error_incorrect_credentials
+import cinetracker_kmp.composeapp.generated.resources.auth_error_invalid_email
+import cinetracker_kmp.composeapp.generated.resources.auth_error_password_too_short
 import features.auth.events.AuthEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -10,12 +16,14 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import kotlinx.coroutines.delay
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -23,6 +31,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import auth.model.AuthState
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -80,16 +89,16 @@ class AuthViewModelTest {
     @Test
     fun `ToggleMode clears form error`() = runTest {
         coEvery { authRepository.signInWithEmail(any(), any()) } returns
-            AuthResult.Error("Invalid credentials")
+            AuthResult.Error("Invalid login credentials")
         val viewModel = createViewModel()
         viewModel.onEvent(AuthEvent.ToggleMode)
         viewModel.onEvent(AuthEvent.SignInWithEmail)
         advanceUntilIdle()
-        assertTrue(viewModel.formError.value.isNotEmpty())
+        assertNotNull(viewModel.formError.value)
 
         viewModel.onEvent(AuthEvent.ToggleMode)
 
-        assertTrue(viewModel.formError.value.isEmpty())
+        assertNull(viewModel.formError.value)
     }
 
     @Test
@@ -145,7 +154,7 @@ class AuthViewModelTest {
         advanceUntilIdle()
 
         assertFalse(viewModel.isLoading.value)
-        assertEquals("Unable to sign in. Please try again.", viewModel.snackbarError.value)
+        assertEquals(Res.string.auth_error_generic_sign_in, viewModel.snackbarError.value)
         assertFalse(viewModel.authSuccess.value)
     }
 
@@ -167,9 +176,41 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `SignUpWithEmail sets formError on failure`() = runTest {
+    fun `SignUpWithEmail sets formError for invalid email`() = runTest {
         coEvery { authRepository.signUpWithEmail(any(), any(), any()) } returns
-            AuthResult.Error("Email already in use")
+            AuthResult.Error("Unable to validate email address: invalid format")
+        val viewModel = createViewModel()
+        viewModel.updateName("John")
+        viewModel.updateEmail("bad-email")
+        viewModel.updatePassword("password123")
+
+        viewModel.onEvent(AuthEvent.SignUpWithEmail)
+        advanceUntilIdle()
+
+        assertEquals(Res.string.auth_error_invalid_email, viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+    }
+
+    @Test
+    fun `SignUpWithEmail sets formError for short password`() = runTest {
+        coEvery { authRepository.signUpWithEmail(any(), any(), any()) } returns
+            AuthResult.Error("Password should be at least 6 characters")
+        val viewModel = createViewModel()
+        viewModel.updateName("John")
+        viewModel.updateEmail("john@example.com")
+        viewModel.updatePassword("123")
+
+        viewModel.onEvent(AuthEvent.SignUpWithEmail)
+        advanceUntilIdle()
+
+        assertEquals(Res.string.auth_error_password_too_short, viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+    }
+
+    @Test
+    fun `SignUpWithEmail sets formError for already registered email`() = runTest {
+        coEvery { authRepository.signUpWithEmail(any(), any(), any()) } returns
+            AuthResult.Error("User already registered")
         val viewModel = createViewModel()
         viewModel.updateName("John")
         viewModel.updateEmail("john@example.com")
@@ -178,7 +219,23 @@ class AuthViewModelTest {
         viewModel.onEvent(AuthEvent.SignUpWithEmail)
         advanceUntilIdle()
 
-        assertEquals("Unable to create account. Please try again.", viewModel.formError.value)
+        assertEquals(Res.string.auth_error_email_already_registered, viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+    }
+
+    @Test
+    fun `SignUpWithEmail sets generic formError for unknown error`() = runTest {
+        coEvery { authRepository.signUpWithEmail(any(), any(), any()) } returns
+            AuthResult.Error("Some unexpected error")
+        val viewModel = createViewModel()
+        viewModel.updateName("John")
+        viewModel.updateEmail("john@example.com")
+        viewModel.updatePassword("password123")
+
+        viewModel.onEvent(AuthEvent.SignUpWithEmail)
+        advanceUntilIdle()
+
+        assertEquals(Res.string.auth_error_generic_sign_up, viewModel.formError.value)
         assertFalse(viewModel.authSuccess.value)
         assertFalse(viewModel.isLoading.value)
     }
@@ -200,9 +257,9 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `SignInWithEmail sets formError on failure`() = runTest {
+    fun `SignInWithEmail sets formError for incorrect credentials`() = runTest {
         coEvery { authRepository.signInWithEmail(any(), any()) } returns
-            AuthResult.Error("Invalid credentials")
+            AuthResult.Error("Invalid login credentials")
         val viewModel = createViewModel()
         viewModel.updateEmail("john@example.com")
         viewModel.updatePassword("wrong")
@@ -210,7 +267,23 @@ class AuthViewModelTest {
         viewModel.onEvent(AuthEvent.SignInWithEmail)
         advanceUntilIdle()
 
-        assertEquals("Unable to sign in. Please try again.", viewModel.formError.value)
+        assertEquals(Res.string.auth_error_incorrect_credentials, viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+        assertFalse(viewModel.isLoading.value)
+    }
+
+    @Test
+    fun `SignInWithEmail sets generic formError for unknown error`() = runTest {
+        coEvery { authRepository.signInWithEmail(any(), any()) } returns
+            AuthResult.Error("Some unexpected error")
+        val viewModel = createViewModel()
+        viewModel.updateEmail("john@example.com")
+        viewModel.updatePassword("wrong")
+
+        viewModel.onEvent(AuthEvent.SignInWithEmail)
+        advanceUntilIdle()
+
+        assertEquals(Res.string.auth_error_generic_sign_in, viewModel.formError.value)
         assertFalse(viewModel.authSuccess.value)
         assertFalse(viewModel.isLoading.value)
     }
@@ -232,21 +305,21 @@ class AuthViewModelTest {
         coEvery { authRepository.signInWithGoogle() } returns
             AuthResult.Error("Google sign-in failed")
         coEvery { authRepository.signInWithEmail(any(), any()) } returns
-            AuthResult.Error("Invalid credentials")
+            AuthResult.Error("Invalid login credentials")
         val viewModel = createViewModel()
 
         viewModel.onEvent(AuthEvent.SignInWithGoogle)
         advanceUntilIdle()
-        assertTrue(viewModel.snackbarError.value.isNotEmpty())
+        assertNotNull(viewModel.snackbarError.value)
 
         viewModel.onEvent(AuthEvent.ToggleMode)
         viewModel.onEvent(AuthEvent.SignInWithEmail)
         advanceUntilIdle()
-        assertTrue(viewModel.formError.value.isNotEmpty())
+        assertNotNull(viewModel.formError.value)
 
         viewModel.onEvent(AuthEvent.DismissError)
 
-        assertTrue(viewModel.snackbarError.value.isEmpty())
-        assertTrue(viewModel.formError.value.isEmpty())
+        assertNull(viewModel.snackbarError.value)
+        assertNull(viewModel.formError.value)
     }
 }

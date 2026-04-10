@@ -2,13 +2,17 @@ package features.settings.ui
 
 import auth.model.AuthState
 import auth.repository.AuthRepository
+import auth.service.AuthResult
 import common.util.platform.AppNotifications
+import database.model.ListEntity
 import database.repository.DatabaseRepository
 import features.settings.domain.LanguageItem
 import features.settings.domain.RegionItem
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -21,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -175,5 +180,67 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals("Brazil", viewModel.currentRegionDisplay.value)
+    }
+
+    @Test
+    fun `DeleteAccount with removeData clears default lists and deletes custom lists`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        coEvery { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                ListEntity(listId = 1, listName = "Watchlist", isDefault = true),
+                ListEntity(listId = 2, listName = "Watched", isDefault = true),
+                ListEntity(listId = 3, listName = "Horror", isDefault = false),
+                ListEntity(listId = 4, listName = "Comedy", isDefault = false)
+            )
+        )
+        coEvery { databaseRepository.clearList(any()) } returns Unit
+        coEvery { databaseRepository.deleteList(any()) } returns Unit
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount(keepLocalData = false))
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { databaseRepository.clearList(1) }
+        coVerify(exactly = 1) { databaseRepository.clearList(2) }
+        coVerify(exactly = 0) { databaseRepository.deleteList(1) }
+        coVerify(exactly = 0) { databaseRepository.deleteList(2) }
+        coVerify(exactly = 1) { databaseRepository.deleteList(3) }
+        coVerify(exactly = 1) { databaseRepository.deleteList(4) }
+    }
+
+    @Test
+    fun `DeleteAccount with removeData clears but never deletes default lists`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        coEvery { databaseRepository.getAllLists() } returns flowOf(
+            listOf(
+                ListEntity(listId = 1, listName = "Watchlist", isDefault = true),
+                ListEntity(listId = 2, listName = "Watched", isDefault = true)
+            )
+        )
+        coEvery { databaseRepository.clearList(any()) } returns Unit
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount(keepLocalData = false))
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { databaseRepository.clearList(1) }
+        coVerify(exactly = 1) { databaseRepository.clearList(2) }
+        coVerify(exactly = 0) { databaseRepository.deleteList(any()) }
+    }
+
+    @Test
+    fun `DeleteAccount with keepData does not touch any lists`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount(keepLocalData = true))
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) { databaseRepository.getAllLists() }
+        coVerify(exactly = 0) { databaseRepository.clearList(any()) }
+        coVerify(exactly = 0) { databaseRepository.deleteList(any()) }
     }
 }

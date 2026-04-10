@@ -4,10 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import auth.repository.AuthRepository
 import auth.service.AuthResult
+import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.auth_error_email_already_registered
+import cinetracker_kmp.composeapp.generated.resources.auth_error_email_not_confirmed
+import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_in
+import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_up
+import cinetracker_kmp.composeapp.generated.resources.auth_error_incorrect_credentials
+import cinetracker_kmp.composeapp.generated.resources.auth_error_invalid_email
+import cinetracker_kmp.composeapp.generated.resources.auth_error_password_too_short
 import features.auth.events.AuthEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class AuthViewModel(
     private val authRepository: AuthRepository
@@ -16,8 +25,8 @@ class AuthViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _snackbarError = MutableStateFlow("")
-    val snackbarError: StateFlow<String> = _snackbarError
+    private val _snackbarError = MutableStateFlow<StringResource?>(null)
+    val snackbarError: StateFlow<StringResource?> = _snackbarError
 
     private val _isCreateMode = MutableStateFlow(true)
     val isCreateMode: StateFlow<Boolean> = _isCreateMode
@@ -34,8 +43,8 @@ class AuthViewModel(
     private val _isPasswordVisible = MutableStateFlow(false)
     val isPasswordVisible: StateFlow<Boolean> = _isPasswordVisible
 
-    private val _formError = MutableStateFlow("")
-    val formError: StateFlow<String> = _formError
+    private val _formError = MutableStateFlow<StringResource?>(null)
+    val formError: StateFlow<StringResource?> = _formError
 
     private val _authSuccess = MutableStateFlow(false)
     val authSuccess: StateFlow<Boolean> = _authSuccess
@@ -69,7 +78,8 @@ class AuthViewModel(
             _isLoading.value = true
             when (val result = authRepository.signInWithGoogle()) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _snackbarError.value = GENERIC_SIGN_IN_ERROR
+                is AuthResult.Error -> _snackbarError.value =
+                    Res.string.auth_error_generic_sign_in
             }
             _isLoading.value = false
         }
@@ -85,7 +95,7 @@ class AuthViewModel(
             )
             when (result) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _formError.value = GENERIC_SIGN_UP_ERROR
+                is AuthResult.Error -> _formError.value = mapSignUpError(result.message)
             }
             _isLoading.value = false
         }
@@ -100,20 +110,34 @@ class AuthViewModel(
             )
             when (result) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _formError.value = GENERIC_SIGN_IN_ERROR
+                is AuthResult.Error -> _formError.value = mapSignInError(result.message)
             }
             _isLoading.value = false
         }
     }
 
-    companion object {
-        private const val GENERIC_SIGN_IN_ERROR = "Unable to sign in. Please try again."
-        private const val GENERIC_SIGN_UP_ERROR = "Unable to create account. Please try again."
+    private fun mapSignUpError(apiError: String): StringResource {
+        val lower = apiError.lowercase()
+        return when {
+            "email" in lower && "invalid" in lower -> Res.string.auth_error_invalid_email
+            "at least" in lower && "character" in lower -> Res.string.auth_error_password_too_short
+            "already registered" in lower -> Res.string.auth_error_email_already_registered
+            else -> Res.string.auth_error_generic_sign_up
+        }
+    }
+
+    private fun mapSignInError(apiError: String): StringResource {
+        val lower = apiError.lowercase()
+        return when {
+            "invalid login credentials" in lower -> Res.string.auth_error_incorrect_credentials
+            "email not confirmed" in lower -> Res.string.auth_error_email_not_confirmed
+            else -> Res.string.auth_error_generic_sign_in
+        }
     }
 
     private fun toggleMode() {
         _isCreateMode.value = !_isCreateMode.value
-        _formError.value = ""
+        _formError.value = null
     }
 
     private fun togglePasswordVisibility() {
@@ -127,7 +151,7 @@ class AuthViewModel(
     }
 
     private fun dismissError() {
-        _snackbarError.value = ""
-        _formError.value = ""
+        _snackbarError.value = null
+        _formError.value = null
     }
 }

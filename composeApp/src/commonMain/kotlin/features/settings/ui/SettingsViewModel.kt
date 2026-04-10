@@ -19,6 +19,9 @@ class SettingsViewModel(
     private val databaseRepository: DatabaseRepository
 ) : ViewModel() {
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     private val _currentLanguageDisplay = MutableStateFlow("")
     val currentLanguageDisplay: StateFlow<String> = _currentLanguageDisplay
 
@@ -74,18 +77,26 @@ class SettingsViewModel(
 
     private fun signOut() {
         viewModelScope.launch {
+            _isLoading.value = true
             authRepository.signOut()
+            _isLoading.value = false
         }
     }
 
     private fun deleteAccount(keepLocalData: Boolean) {
         viewModelScope.launch {
+            _isLoading.value = true
             authRepository.deleteAccount()
             if (!keepLocalData) {
                 databaseRepository.getAllLists().first().forEach { list ->
-                    databaseRepository.deleteList(list.listId)
+                    if (list.isDefault) {
+                        databaseRepository.clearList(list.listId)
+                    } else {
+                        databaseRepository.deleteList(list.listId)
+                    }
                 }
             }
+            _isLoading.value = false
         }
     }
 }

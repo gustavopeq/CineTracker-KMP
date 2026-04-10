@@ -23,6 +23,7 @@ import common.ui.theme.PrimaryWhiteColor
 import common.ui.theme.PrimaryYellowColor
 import common.util.UiConstants.CARD_ROUND_CORNER
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.FORM_FIELD_HEIGHT
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -42,7 +43,7 @@ fun GoogleSignInButton(
         shape = RoundedCornerShape(CARD_ROUND_CORNER.dp),
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(FORM_FIELD_HEIGHT.dp)
     ) {
         if (isLoading) {
             CircularProgressIndicator(

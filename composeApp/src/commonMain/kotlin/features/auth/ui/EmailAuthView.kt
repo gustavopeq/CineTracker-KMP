@@ -33,8 +33,10 @@ import common.ui.components.button.GenericButton
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
+import common.util.UiConstants.AUTH_NAME_MAX_LENGTH
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
+import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.LARGE_MARGIN
 import features.auth.events.AuthEvent
 import features.auth.ui.components.AuthTextField
@@ -52,6 +54,7 @@ fun EmailAuthScreen(
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
     val formError by viewModel.formError.collectAsState()
     val authSuccess by viewModel.authSuccess.collectAsState()
 
@@ -65,7 +68,8 @@ fun EmailAuthScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         PickerTopBar(
             title = if (isCreateMode) {
@@ -87,7 +91,8 @@ fun EmailAuthScreen(
                     AuthTextField(
                         value = name,
                         onValueChange = viewModel::updateName,
-                        placeholder = stringResource(Res.string.auth_name_hint)
+                        placeholder = stringResource(Res.string.auth_name_hint),
+                        maxLength = AUTH_NAME_MAX_LENGTH
                     )
                     Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
                 }
@@ -116,7 +121,7 @@ fun EmailAuthScreen(
             Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
 
             GenericButton(
-                modifier = Modifier.fillMaxWidth().height(48.dp),
+                modifier = Modifier.fillMaxWidth().height(FORM_FIELD_HEIGHT.dp),
                 buttonText = stringResource(
                     if (isCreateMode) {
                         Res.string.auth_create_account
@@ -125,6 +130,7 @@ fun EmailAuthScreen(
                     }
                 ),
                 enabled = isFormValid,
+                isLoading = isLoading,
                 onClick = {
                     if (isCreateMode) {
                         viewModel.onEvent(AuthEvent.SignUpWithEmail)
@@ -134,10 +140,10 @@ fun EmailAuthScreen(
                 }
             )
 
-            if (formError.isNotBlank()) {
+            formError?.let { error ->
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
                 Text(
-                    text = formError,
+                    text = stringResource(error),
                     style = MaterialTheme.typography.bodySmall,
                     color = PrimaryRedColor
                 )

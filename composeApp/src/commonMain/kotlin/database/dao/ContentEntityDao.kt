@@ -32,6 +32,9 @@ interface ContentEntityDao {
     )
     suspend fun getItem(contentId: Int, mediaType: String, listId: Int): ContentEntity?
 
+    @Query("DELETE FROM content_entity WHERE listId = :listId")
+    suspend fun deleteAllByListId(listId: Int)
+
     @Query("SELECT * FROM content_entity WHERE posterPath IS NULL")
     suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity>
 

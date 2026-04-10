@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -40,7 +41,9 @@ import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
 import features.onboarding.ui.OnboardingView
 import features.watchlist.ui.components.CreateListBottomSheet
+import navigation.AuthRoute
 import navigation.DetailsRoute
+import navigation.EmailAuthRoute
 import navigation.ErrorRoute
 import navigation.MainNavGraph
 import navigation.SearchRoute
@@ -178,7 +181,9 @@ fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold:
 }
 
 private fun NavDestination?.isStandalone(): Boolean = this?.hasRoute<DetailsRoute>() == true ||
-    this?.hasRoute<ErrorRoute>() == true
+    this?.hasRoute<ErrorRoute>() == true ||
+    this?.hasRoute<AuthRoute>() == true ||
+    this?.hasRoute<EmailAuthRoute>() == true
 
 val mainNavBarItems = listOf<MainNavBarItem>(
     MainNavBarItem.Home,

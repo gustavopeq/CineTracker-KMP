@@ -214,6 +214,13 @@
     <string name="auth_no_account">Don't have an account? Create one</string>
     <string name="auth_forgot_password">Forgot Password?</string>
     <string name="auth_reset_email_sent">Password reset email sent</string>
+    <string name="auth_error_invalid_email">Please enter a valid email address.</string>
+    <string name="auth_error_password_too_short">Password must be at least 6 characters.</string>
+    <string name="auth_error_email_already_registered">An account with this email already exists.</string>
+    <string name="auth_error_incorrect_credentials">Incorrect email or password.</string>
+    <string name="auth_error_email_not_confirmed">Please check your email for a verification link.</string>
+    <string name="auth_error_generic_sign_up">Unable to create account. Please try again.</string>
+    <string name="auth_error_generic_sign_in">Unable to sign in. Please try again.</string>
     <string name="settings_sign_in">Sign In / Create Account</string>
     <string name="settings_sign_out">Sign Out</string>
     <string name="settings_delete_account">Delete Account</string>

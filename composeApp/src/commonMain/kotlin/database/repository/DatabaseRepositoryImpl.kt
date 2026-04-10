@@ -94,6 +94,10 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
         }
     }
 
+    override suspend fun clearList(listId: Int) {
+        contentEntityDao.deleteAllByListId(listId)
+    }
+
     override suspend fun deleteList(listId: Int) {
         listEntityDao.deleteList(listId)
     }
