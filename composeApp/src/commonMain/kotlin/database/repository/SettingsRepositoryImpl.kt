@@ -44,6 +44,19 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         settings.remove(KEY_USER_AVATAR)
     }
 
+    override fun hasLocalChanges(): Boolean = settings.getBoolean(KEY_HAS_LOCAL_CHANGES, false)
+
+    override fun setHasLocalChanges(value: Boolean) {
+        settings.putBoolean(KEY_HAS_LOCAL_CHANGES, value)
+    }
+
+    override fun hasSeenAccountAnnouncement(): Boolean =
+        settings.getBoolean(KEY_ACCOUNT_ANNOUNCEMENT_SEEN, false)
+
+    override fun setAccountAnnouncementSeen() {
+        settings.putBoolean(KEY_ACCOUNT_ANNOUNCEMENT_SEEN, true)
+    }
+
     companion object {
         private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         private const val KEY_DETAILS_OVERLAY_SEEN = "details_overlay_seen"
@@ -51,5 +64,7 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         private const val KEY_APP_LANGUAGE = "app_language"
         private const val KEY_APP_REGION = "app_region"
         private const val KEY_USER_AVATAR = "user_avatar"
+        private const val KEY_HAS_LOCAL_CHANGES = "has_local_changes"
+        private const val KEY_ACCOUNT_ANNOUNCEMENT_SEEN = "account_announcement_seen"
     }
 }

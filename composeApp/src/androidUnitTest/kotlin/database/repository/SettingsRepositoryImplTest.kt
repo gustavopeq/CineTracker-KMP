@@ -162,4 +162,39 @@ class SettingsRepositoryImplTest {
 
         verify { settings.putString("app_region", "US") }
     }
+
+    @Test
+    fun `hasLocalChanges defaults to false`() {
+        every { settings.getBoolean("has_local_changes", false) } returns false
+
+        assertFalse(repository.hasLocalChanges())
+    }
+
+    @Test
+    fun `setHasLocalChanges stores true`() {
+        repository.setHasLocalChanges(true)
+
+        verify { settings.putBoolean("has_local_changes", true) }
+    }
+
+    @Test
+    fun `setHasLocalChanges stores false`() {
+        repository.setHasLocalChanges(false)
+
+        verify { settings.putBoolean("has_local_changes", false) }
+    }
+
+    @Test
+    fun `hasSeenAccountAnnouncement defaults to false`() {
+        every { settings.getBoolean("account_announcement_seen", false) } returns false
+
+        assertFalse(repository.hasSeenAccountAnnouncement())
+    }
+
+    @Test
+    fun `setAccountAnnouncementSeen stores true`() {
+        repository.setAccountAnnouncementSeen()
+
+        verify { settings.putBoolean("account_announcement_seen", true) }
+    }
 }

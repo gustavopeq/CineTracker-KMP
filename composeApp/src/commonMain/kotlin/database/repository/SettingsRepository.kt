@@ -14,4 +14,8 @@ interface SettingsRepository {
     fun getUserAvatar(): String?
     fun setUserAvatar(avatarKey: String)
     fun clearUserAvatar()
+    fun hasLocalChanges(): Boolean
+    fun setHasLocalChanges(value: Boolean)
+    fun hasSeenAccountAnnouncement(): Boolean
+    fun setAccountAnnouncementSeen()
 }
