@@ -61,6 +61,9 @@ class AuthRepositoryImplTest {
         mockkObject(PlatformUtils)
         every { PlatformUtils.applyAppLocale(any()) } just runs
         mockkStatic("features.settings.ui.model.AvatarItemKt")
+        coEvery { syncService.performUpload(any()) } returns AuthResult.Success(Unit)
+        coEvery { syncService.hasCloudData(any(), any()) } returns false
+        coEvery { syncService.performDownload(any(), any()) } returns AuthResult.Success(Unit)
         repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository, syncService)
     }
 
@@ -435,6 +438,83 @@ class AuthRepositoryImplTest {
                 }
             )
         }
+    }
+
+    // endregion
+
+    // region auth sync integration
+
+    @Test
+    fun `signUpWithEmail calls performUpload on success`() = runTest {
+        coEvery {
+            service.signUpWithEmail("test@test.com", "password", "Test")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        repository.signUpWithEmail("test@test.com", "password", "Test")
+
+        coVerify { syncService.performUpload(testSession.accessToken) }
+    }
+
+    @Test
+    fun `signInWithEmail downloads when cloud data exists`() = runTest {
+        coEvery {
+            service.signInWithEmail("test@test.com", "password")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns null
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+        coEvery { syncService.hasCloudData(testSession.accessToken, "user-123") } returns true
+
+        repository.signInWithEmail("test@test.com", "password")
+
+        coVerify { syncService.performDownload(testSession.accessToken, "user-123") }
+    }
+
+    @Test
+    fun `signInWithEmail uploads when no cloud data`() = runTest {
+        coEvery {
+            service.signInWithEmail("test@test.com", "password")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns null
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+        coEvery { syncService.hasCloudData(testSession.accessToken, "user-123") } returns false
+
+        repository.signInWithEmail("test@test.com", "password")
+
+        coVerify { syncService.performUpload(testSession.accessToken) }
     }
 
     // endregion

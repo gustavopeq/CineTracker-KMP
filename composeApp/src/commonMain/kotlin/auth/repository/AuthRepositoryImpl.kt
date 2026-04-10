@@ -56,6 +56,7 @@ class AuthRepositoryImpl(
                     region = settingsRepository.getAppRegion() ?: "US"
                 )
                 emitLoggedIn(result.data)
+                syncService.performUpload(result.data.accessToken)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> result
@@ -68,6 +69,7 @@ class AuthRepositoryImpl(
                 saveSession(result.data)
                 fetchAndApplyPreferences()
                 emitLoggedIn(result.data)
+                handlePostSignInSync(result.data.accessToken, result.data.user.id)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> result
@@ -210,9 +212,24 @@ class AuthRepositoryImpl(
                 saveSession(sessionResult.data)
                 fetchAndApplyPreferences()
                 emitLoggedIn(sessionResult.data)
+                handlePostSignInSync(sessionResult.data.accessToken, sessionResult.data.user.id)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> sessionResult
+        }
+    }
+
+    private suspend fun handlePostSignInSync(accessToken: String, userId: String) {
+        if (syncService.hasCloudData(accessToken, userId)) {
+            val result = syncService.performDownload(accessToken, userId)
+            if (result is AuthResult.Error) {
+                log.e { "Failed to restore cloud data: ${result.message}" }
+            }
+        } else {
+            val result = syncService.performUpload(accessToken)
+            if (result is AuthResult.Error) {
+                log.e { "Failed to upload local data: ${result.message}" }
+            }
         }
     }
 
