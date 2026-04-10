@@ -1,14 +1,18 @@
 package database.repository
 
 import common.domain.models.util.MediaType
+import auth.service.SyncService
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
 import database.model.ContentEntity
 import database.model.ListEntity
 import kotlinx.coroutines.flow.Flow
 
-class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, private val listEntityDao: ListEntityDao) :
-    DatabaseRepository {
+class DatabaseRepositoryImpl(
+    private val contentEntityDao: ContentEntityDao,
+    private val listEntityDao: ListEntityDao,
+    private val syncService: SyncService
+) : DatabaseRepository {
 
     override suspend fun insertItem(
         contentId: Int,
@@ -27,6 +31,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
             voteAverage = voteAverage
         )
         contentEntityDao.insert(item)
+        syncService.requestUpload()
     }
 
     override suspend fun deleteItem(contentId: Int, mediaType: MediaType, listId: Int): ContentEntity? {
@@ -41,6 +46,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
                 mediaType = mediaType.name,
                 listId = listId
             )
+            syncService.requestUpload()
         }
         return itemRemoved
     }
@@ -74,6 +80,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
 
     override suspend fun reinsertItem(contentEntity: ContentEntity) {
         contentEntityDao.insert(contentEntity)
+        syncService.requestUpload()
     }
 
     override fun getAllLists(): Flow<List<ListEntity>> = listEntityDao.getAllLists()
@@ -90,16 +97,19 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
                     listName = newListName
                 )
             )
+            syncService.requestUpload()
             true
         }
     }
 
     override suspend fun clearList(listId: Int) {
         contentEntityDao.deleteAllByListId(listId)
+        syncService.requestUpload()
     }
 
     override suspend fun deleteList(listId: Int) {
         listEntityDao.deleteList(listId)
+        syncService.requestUpload()
     }
 
     override suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity> =

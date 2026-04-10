@@ -1,5 +1,6 @@
 package database.repository
 
+import auth.service.SyncService
 import common.domain.models.util.MediaType
 import common.util.fakeContentEntity
 import common.util.fakeListEntity
@@ -31,13 +32,14 @@ class DatabaseRepositoryImplTest {
 
     private val contentEntityDao: ContentEntityDao = mockk(relaxUnitFun = true)
     private val listEntityDao: ListEntityDao = mockk(relaxUnitFun = true)
+    private val syncService: SyncService = mockk(relaxUnitFun = true)
 
     private lateinit var repository: DatabaseRepositoryImpl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        repository = DatabaseRepositoryImpl(contentEntityDao, listEntityDao)
+        repository = DatabaseRepositoryImpl(contentEntityDao, listEntityDao, syncService)
     }
 
     @After

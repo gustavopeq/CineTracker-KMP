@@ -9,6 +9,7 @@ import auth.platform.PlatformSignInProvider
 import auth.platform.TokenStorage
 import auth.service.AuthResult
 import auth.service.SupabaseAuthService
+import auth.service.SyncService
 import co.touchlab.kermit.Logger
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
@@ -21,7 +22,8 @@ class AuthRepositoryImpl(
     private val service: SupabaseAuthService,
     private val tokenStorage: TokenStorage,
     private val signInProvider: PlatformSignInProvider,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val syncService: SyncService
 ) : AuthRepository {
 
     private val log = Logger.withTag("AuthRepository")

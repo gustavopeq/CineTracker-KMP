@@ -1,5 +1,6 @@
 package database.repository
 
+import auth.service.SyncService
 import common.domain.models.util.MediaType
 import database.dao.PersonalRatingDao
 import database.model.PersonalRatingEntity
@@ -21,13 +22,14 @@ import org.junit.Test
 class PersonalRatingRepositoryImplTest {
 
     private val personalRatingDao: PersonalRatingDao = mockk(relaxUnitFun = true)
+    private val syncService: SyncService = mockk(relaxUnitFun = true)
 
     private lateinit var repository: PersonalRatingRepositoryImpl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        repository = PersonalRatingRepositoryImpl(personalRatingDao)
+        repository = PersonalRatingRepositoryImpl(personalRatingDao, syncService)
     }
 
     @After

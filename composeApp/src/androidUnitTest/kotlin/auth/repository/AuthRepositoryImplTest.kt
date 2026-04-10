@@ -11,6 +11,7 @@ import auth.platform.PlatformSignInProvider
 import auth.platform.TokenStorage
 import auth.service.AuthResult
 import auth.service.SupabaseAuthService
+import auth.service.SyncService
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
@@ -39,6 +40,7 @@ class AuthRepositoryImplTest {
     private val tokenStorage: TokenStorage = mockk(relaxUnitFun = true)
     private val signInProvider: PlatformSignInProvider = mockk()
     private val settingsRepository: SettingsRepository = mockk(relaxUnitFun = true)
+    private val syncService: SyncService = mockk(relaxUnitFun = true)
 
     private lateinit var repository: AuthRepositoryImpl
 
@@ -59,7 +61,7 @@ class AuthRepositoryImplTest {
         mockkObject(PlatformUtils)
         every { PlatformUtils.applyAppLocale(any()) } just runs
         mockkStatic("features.settings.ui.model.AvatarItemKt")
-        repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository)
+        repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository, syncService)
     }
 
     @After

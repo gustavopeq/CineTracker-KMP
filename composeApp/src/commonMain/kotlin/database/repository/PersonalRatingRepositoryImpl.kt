@@ -1,12 +1,16 @@
 package database.repository
 
+import auth.service.SyncService
 import common.domain.models.util.MediaType
 import database.dao.PersonalRatingDao
 import database.model.PersonalRatingEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PersonalRatingRepositoryImpl(private val personalRatingDao: PersonalRatingDao) : PersonalRatingRepository {
+class PersonalRatingRepositoryImpl(
+    private val personalRatingDao: PersonalRatingDao,
+    private val syncService: SyncService
+) : PersonalRatingRepository {
 
     override fun getRating(contentId: Int): Flow<Float?> = personalRatingDao.getRating(contentId).map { it?.rating }
 
@@ -26,5 +30,6 @@ class PersonalRatingRepositoryImpl(private val personalRatingDao: PersonalRating
         } else {
             personalRatingDao.deleteRating(contentId)
         }
+        syncService.requestUpload()
     }
 }
