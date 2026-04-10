@@ -15,6 +15,7 @@ import database.repository.SettingsRepository
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
@@ -33,12 +34,24 @@ class MainViewModel(
 
     val authState: StateFlow<AuthState> = authRepository.authState
 
+    private val _shouldShowAnnouncement = MutableStateFlow(false)
+    val shouldShowAnnouncement: StateFlow<Boolean> = _shouldShowAnnouncement.asStateFlow()
+
+    private val _pendingAuthNavigation = MutableStateFlow(false)
+    val pendingAuthNavigation: StateFlow<Boolean> = _pendingAuthNavigation.asStateFlow()
+
     init {
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
         _shouldShowNotificationDialog.value = !settingsRepository.areEngagementRemindersEnabled()
         authRepository.restoreSession()
         if (authRepository.authState.value is AuthState.LoggedIn) {
             viewModelScope.launch { authRepository.fetchAndApplyPreferences() }
+        }
+        if (settingsRepository.hasCompletedOnboarding()
+            && !settingsRepository.hasSeenAccountAnnouncement()
+            && authRepository.authState.value is AuthState.LoggedOut
+        ) {
+            _shouldShowAnnouncement.value = true
         }
     }
 
@@ -121,5 +134,20 @@ class MainViewModel(
         } else {
             _isDuplicatedListName.value = true
         }
+    }
+
+    fun onAnnouncementCreateAccount() {
+        settingsRepository.setAccountAnnouncementSeen()
+        _shouldShowAnnouncement.value = false
+        _pendingAuthNavigation.value = true
+    }
+
+    fun onAnnouncementDismiss() {
+        settingsRepository.setAccountAnnouncementSeen()
+        _shouldShowAnnouncement.value = false
+    }
+
+    fun onAuthNavigationHandled() {
+        _pendingAuthNavigation.value = false
     }
 }

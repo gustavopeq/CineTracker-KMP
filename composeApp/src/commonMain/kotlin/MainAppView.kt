@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,8 +40,10 @@ import common.ui.theme.CineTrackerTheme
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
+import features.announcement.ui.AccountAnnouncementView
 import features.onboarding.ui.OnboardingView
 import features.watchlist.ui.components.CreateListBottomSheet
+import navigation.AuthGraphRoute
 import navigation.AuthRoute
 import navigation.DetailsRoute
 import navigation.EmailAuthRoute
@@ -77,7 +80,15 @@ fun MainAppView() {
                 )
             }
             true -> {
-                MainAppContent(mainViewModel)
+                val shouldShowAnnouncement by mainViewModel.shouldShowAnnouncement.collectAsState()
+                if (shouldShowAnnouncement) {
+                    AccountAnnouncementView(
+                        onCreateAccount = { mainViewModel.onAnnouncementCreateAccount() },
+                        onDismiss = { mainViewModel.onAnnouncementDismiss() }
+                    )
+                } else {
+                    MainAppContent(mainViewModel)
+                }
             }
         }
     }
@@ -86,6 +97,15 @@ fun MainAppView() {
 @Composable
 private fun MainAppContent(mainViewModel: MainViewModel) {
     val navController = rememberNavController()
+
+    val pendingAuthNavigation by mainViewModel.pendingAuthNavigation.collectAsState()
+    LaunchedEffect(pendingAuthNavigation) {
+        if (pendingAuthNavigation) {
+            navController.navigate(AuthGraphRoute)
+            mainViewModel.onAuthNavigationHandled()
+        }
+    }
+
     val navItems = mainNavBarItems
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination

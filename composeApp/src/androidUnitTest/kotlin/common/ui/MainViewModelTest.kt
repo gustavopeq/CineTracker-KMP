@@ -41,6 +41,8 @@ class MainViewModelTest {
     private val settingsRepository: SettingsRepository = mockk {
         every { hasCompletedOnboarding() } returns true
         every { areEngagementRemindersEnabled() } returns false
+        every { hasSeenAccountAnnouncement() } returns true
+        every { setAccountAnnouncementSeen() } just runs
     }
     private val authRepository: AuthRepository = mockk(relaxUnitFun = true)
     private val authStateFlow = MutableStateFlow<AuthState>(AuthState.LoggedOut)
@@ -209,5 +211,72 @@ class MainViewModelTest {
         advanceUntilIdle()
 
         coVerify(exactly = 0) { authRepository.fetchAndApplyPreferences() }
+    }
+
+    // ── shouldShowAnnouncement ───────────────────────────────────────────────
+
+    @Test
+    fun `shouldShowAnnouncement is true when onboarding complete and announcement not seen and logged out`() {
+        every { settingsRepository.hasCompletedOnboarding() } returns true
+        every { settingsRepository.hasSeenAccountAnnouncement() } returns false
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        every { authRepository.authState } returns MutableStateFlow(AuthState.LoggedOut)
+
+        val viewModel = MainViewModel(databaseRepository, settingsRepository, authRepository)
+
+        assertTrue(viewModel.shouldShowAnnouncement.value)
+    }
+
+    @Test
+    fun `shouldShowAnnouncement is false when already seen`() {
+        every { settingsRepository.hasCompletedOnboarding() } returns true
+        every { settingsRepository.hasSeenAccountAnnouncement() } returns true
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        every { authRepository.authState } returns MutableStateFlow(AuthState.LoggedOut)
+
+        val viewModel = MainViewModel(databaseRepository, settingsRepository, authRepository)
+
+        assertFalse(viewModel.shouldShowAnnouncement.value)
+    }
+
+    @Test
+    fun `shouldShowAnnouncement is false when logged in`() {
+        every { settingsRepository.hasCompletedOnboarding() } returns true
+        every { settingsRepository.hasSeenAccountAnnouncement() } returns false
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        every { authRepository.authState } returns MutableStateFlow(AuthState.LoggedIn("user-1", "Test"))
+
+        val viewModel = MainViewModel(databaseRepository, settingsRepository, authRepository)
+
+        assertFalse(viewModel.shouldShowAnnouncement.value)
+    }
+
+    @Test
+    fun `onAnnouncementDismiss sets flag and hides announcement`() {
+        every { settingsRepository.hasCompletedOnboarding() } returns true
+        every { settingsRepository.hasSeenAccountAnnouncement() } returns false
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        every { authRepository.authState } returns MutableStateFlow(AuthState.LoggedOut)
+
+        val viewModel = MainViewModel(databaseRepository, settingsRepository, authRepository)
+        viewModel.onAnnouncementDismiss()
+
+        assertFalse(viewModel.shouldShowAnnouncement.value)
+        verify { settingsRepository.setAccountAnnouncementSeen() }
+    }
+
+    @Test
+    fun `onAnnouncementCreateAccount sets pending auth navigation`() {
+        every { settingsRepository.hasCompletedOnboarding() } returns true
+        every { settingsRepository.hasSeenAccountAnnouncement() } returns false
+        every { settingsRepository.areEngagementRemindersEnabled() } returns true
+        every { authRepository.authState } returns MutableStateFlow(AuthState.LoggedOut)
+
+        val viewModel = MainViewModel(databaseRepository, settingsRepository, authRepository)
+        viewModel.onAnnouncementCreateAccount()
+
+        assertFalse(viewModel.shouldShowAnnouncement.value)
+        assertTrue(viewModel.pendingAuthNavigation.value)
+        verify { settingsRepository.setAccountAnnouncementSeen() }
     }
 }
