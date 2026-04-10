@@ -83,7 +83,14 @@ fun AccountAnnouncementView(
                 .background(
                     Brush.radialGradient(
                         colors = listOf(GradientBlue.copy(alpha = 0.4f), Color.Transparent),
-                        center = Offset.Unspecified,
+                        center = Offset(0f, Float.MAX_VALUE),
+                        radius = GRADIENT_RADIUS
+                    )
+                )
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(GradientBlue.copy(alpha = 0.4f), Color.Transparent),
+                        center = Offset(Float.MAX_VALUE, 0f),
                         radius = GRADIENT_RADIUS
                     )
                 )
