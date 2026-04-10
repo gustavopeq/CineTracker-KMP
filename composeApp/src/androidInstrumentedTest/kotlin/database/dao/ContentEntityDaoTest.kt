@@ -238,6 +238,37 @@ class ContentEntityDaoTest {
 
     // ── getEntitiesWithMissingCachedFields ────────────────────────────────────
 
+    // ── getAllSnapshot ─────────────────────────────────────────────────────────
+
+    @Test
+    fun getAllSnapshot_returnsAllItemsAcrossLists() = runBlocking {
+        dao.insert(ContentEntity(contentId = 100, mediaType = "MOVIE", listId = 1))
+        dao.insert(ContentEntity(contentId = 200, mediaType = "SHOW", listId = 2))
+
+        val snapshot = dao.getAllSnapshot()
+
+        assertEquals(2, snapshot.size)
+        assertTrue(snapshot.any { it.contentId == 100 })
+        assertTrue(snapshot.any { it.contentId == 200 })
+    }
+
+    // ── insertAll ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun insertAll_insertsMultipleEntities() = runBlocking {
+        val entities = listOf(
+            ContentEntity(contentId = 100, mediaType = "MOVIE", listId = 1),
+            ContentEntity(contentId = 200, mediaType = "SHOW", listId = 1)
+        )
+
+        dao.insertAll(entities)
+
+        val snapshot = dao.getAllSnapshot()
+        assertEquals(2, snapshot.size)
+    }
+
+    // ── getEntitiesWithMissingCachedFields ────────────────────────────────────
+
     @Test
     fun getEntitiesWithMissingCachedFields_returnsOnlyNullPosterPathEntities() = runBlocking {
         dao.insert(ContentEntity(contentId = 800, mediaType = "MOVIE", listId = 1, posterPath = null))

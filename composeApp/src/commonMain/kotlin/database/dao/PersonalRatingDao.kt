@@ -20,4 +20,13 @@ interface PersonalRatingDao {
 
     @Query("SELECT * FROM personal_ratings")
     fun getAllRatings(): Flow<List<PersonalRatingEntity>>
+
+    @Query("SELECT * FROM personal_ratings")
+    suspend fun getAllSnapshot(): List<PersonalRatingEntity>
+
+    @Query("DELETE FROM personal_ratings")
+    suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(ratings: List<PersonalRatingEntity>)
 }
