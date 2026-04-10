@@ -199,6 +199,10 @@
     <string name="settings_notifications">Notifica\u00e7\u00f5es</string>
     <string name="settings_language_picker_title">Idioma do App</string>
     <string name="settings_region_picker_title">Regi\u00e3o</string>
+    <string name="settings_avatar_picker_title">Escolha Avatar</string>
+    <string name="avatar_category_critters">Criaturas</string>
+    <string name="avatar_category_heroes">Her\u00f3is</string>
+    <string name="avatar_category_heroines">Hero\u00ednas</string>
     <string name="settings_version">Vers\u00e3o</string>
 
     <!-- Auth -->

@@ -63,11 +63,13 @@ class SettingsViewModelTest {
     private fun setupDefaultMocks(
         language: String = "en-US",
         region: String = "US",
+        avatarKey: String = "anonymous_avatar",
         notificationsEnabled: Boolean = false,
         settingsChangedFlow: MutableSharedFlow<Unit> = MutableSharedFlow()
     ) {
         every { settingsInteractor.getAppLanguage() } returns language
         every { settingsInteractor.getAppRegion() } returns region
+        every { settingsInteractor.getUserAvatar() } returns avatarKey
         every { settingsInteractor.areNotificationsEnabled() } returns notificationsEnabled
         every { settingsInteractor.settingsChanged } returns settingsChangedFlow
         every { settingsInteractor.getSupportedLanguages() } returns listOf(
@@ -242,5 +244,29 @@ class SettingsViewModelTest {
         coVerify(exactly = 0) { databaseRepository.getAllLists() }
         coVerify(exactly = 0) { databaseRepository.clearList(any()) }
         coVerify(exactly = 0) { databaseRepository.deleteList(any()) }
+    }
+
+    @Test
+    fun `init loads avatar key`() {
+        setupDefaultMocks(avatarKey = "boy_avatar_2")
+
+        val viewModel = createViewModel()
+
+        assertEquals("boy_avatar_2", viewModel.currentAvatarKey.value)
+    }
+
+    @Test
+    fun `auth state change refreshes avatar`() = runTest {
+        setupDefaultMocks(avatarKey = "anonymous_avatar")
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals("anonymous_avatar", viewModel.currentAvatarKey.value)
+
+        every { settingsInteractor.getUserAvatar() } returns "girl_avatar_1"
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        advanceUntilIdle()
+
+        assertEquals("girl_avatar_1", viewModel.currentAvatarKey.value)
     }
 }

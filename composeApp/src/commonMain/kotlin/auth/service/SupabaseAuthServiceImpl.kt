@@ -7,10 +7,13 @@ import auth.model.SupabaseRefreshRequest
 import auth.model.SupabaseSessionResponse
 import auth.model.SupabaseSignUpMetadata
 import auth.model.SupabaseSignUpRequest
+import auth.model.UserPreferencesDto
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.bearerAuth
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -112,6 +115,36 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
             }
         } catch (e: Exception) {
             AuthResult.Error(e.message ?: "Password reset failed")
+        }
+    }
+
+    override suspend fun fetchUserPreferences(
+        accessToken: String,
+        userId: String
+    ): AuthResult<List<UserPreferencesDto>> = safeCall {
+        client.get("rest/v1/user_preferences?user_id=eq.$userId&select=*") {
+            bearerAuth(accessToken)
+        }
+    }
+
+    override suspend fun upsertUserPreferences(
+        accessToken: String,
+        dto: UserPreferencesDto
+    ): AuthResult<Unit> {
+        return try {
+            val response = client.post("rest/v1/user_preferences") {
+                bearerAuth(accessToken)
+                header("Prefer", "resolution=merge-duplicates, return=minimal")
+                setBody(dto)
+            }
+            if (response.status.isSuccess()) {
+                AuthResult.Success(Unit)
+            } else {
+                val error = parseError(response.bodyAsText())
+                AuthResult.Error(error)
+            }
+        } catch (e: Exception) {
+            AuthResult.Error(e.message ?: "Failed to save preferences")
         }
     }
 

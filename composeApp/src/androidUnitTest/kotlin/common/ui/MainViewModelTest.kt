@@ -10,6 +10,7 @@ import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -25,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -187,5 +189,25 @@ class MainViewModelTest {
         verify { settingsRepository.setEngagementRemindersEnabled(true) }
         verify { AppNotifications.scheduleEngagementReminders() }
         assertFalse(viewModel.shouldShowNotificationDialog.value)
+    }
+
+    @Test
+    fun `init fetches preferences when user is logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+
+        createViewModel()
+        advanceUntilIdle()
+
+        coVerify { authRepository.fetchAndApplyPreferences() }
+    }
+
+    @Test
+    fun `init does not fetch preferences when user is logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+
+        createViewModel()
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.fetchAndApplyPreferences() }
     }
 }

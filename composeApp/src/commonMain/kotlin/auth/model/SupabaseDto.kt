@@ -56,6 +56,14 @@ data class SupabaseRefreshRequest(
 )
 
 @Serializable
+data class UserPreferencesDto(
+    @SerialName("user_id") val userId: String,
+    @SerialName("avatar_key") val avatarKey: String,
+    @SerialName("app_language") val appLanguage: String? = null,
+    @SerialName("app_region") val appRegion: String? = null
+)
+
+@Serializable
 data class SupabaseErrorResponse(
     val error: String? = null,
     @SerialName("error_description") val errorDescription: String? = null,

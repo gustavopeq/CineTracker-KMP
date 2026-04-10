@@ -198,6 +198,10 @@
     <string name="settings_notifications">Notifications</string>
     <string name="settings_language_picker_title">App Language</string>
     <string name="settings_region_picker_title">Region</string>
+    <string name="settings_avatar_picker_title">Choose Avatar</string>
+    <string name="avatar_category_critters">Critters</string>
+    <string name="avatar_category_heroes">Heroes</string>
+    <string name="avatar_category_heroines">Heroines</string>
     <string name="settings_version">Version</string>
 
     <!-- Auth -->

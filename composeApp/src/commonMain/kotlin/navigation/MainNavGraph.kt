@@ -24,6 +24,7 @@ import features.browse.ui.Browse
 import features.details.ui.Details
 import features.home.ui.Home
 import features.search.ui.Search
+import features.settings.ui.AvatarPickerScreen
 import features.settings.ui.LanguagePickerScreen
 import features.settings.ui.RegionPickerScreen
 import features.settings.ui.SettingsScreen
@@ -112,6 +113,7 @@ fun MainNavGraph(navController: NavHostController) {
                         SettingsScreen(
                             goToLanguagePicker = { navController.navigate(LanguagePickerRoute) },
                             goToRegionPicker = { navController.navigate(RegionPickerRoute) },
+                            goToAvatarPicker = { navController.navigate(AvatarPickerRoute) },
                             goToAuth = { navController.navigate(AuthGraphRoute) }
                         )
                     }
@@ -122,6 +124,11 @@ fun MainNavGraph(navController: NavHostController) {
                     }
                     composable<RegionPickerRoute> {
                         RegionPickerScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+                    composable<AvatarPickerRoute> {
+                        AvatarPickerScreen(
                             onBack = { navController.popBackStack() }
                         )
                     }

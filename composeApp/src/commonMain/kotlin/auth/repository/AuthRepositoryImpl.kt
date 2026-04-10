@@ -2,12 +2,17 @@ package auth.repository
 
 import auth.model.AuthState
 import auth.model.AuthTokens
-import auth.model.SupabaseSessionResponse
 import auth.model.SignInResult
+import auth.model.SupabaseSessionResponse
+import auth.model.UserPreferencesDto
 import auth.platform.PlatformSignInProvider
 import auth.platform.TokenStorage
 import auth.service.AuthResult
 import auth.service.SupabaseAuthService
+import co.touchlab.kermit.Logger
+import common.util.platform.PlatformUtils
+import database.repository.SettingsRepository
+import features.settings.ui.model.getRandomAvatar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,9 +20,11 @@ import kotlinx.coroutines.flow.asStateFlow
 class AuthRepositoryImpl(
     private val service: SupabaseAuthService,
     private val tokenStorage: TokenStorage,
-    private val signInProvider: PlatformSignInProvider
+    private val signInProvider: PlatformSignInProvider,
+    private val settingsRepository: SettingsRepository
 ) : AuthRepository {
 
+    private val log = Logger.withTag("AuthRepository")
     private val _authState = MutableStateFlow<AuthState>(AuthState.LoggedOut)
     override val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
@@ -40,7 +47,13 @@ class AuthRepositoryImpl(
     ): AuthResult<Unit> {
         return when (val result = service.signUpWithEmail(email, password, name)) {
             is AuthResult.Success -> {
-                saveSessionAndEmitLoggedIn(result.data)
+                saveSession(result.data)
+                createPreferencesOnSignUp(
+                    avatarKey = getRandomAvatar(),
+                    language = settingsRepository.getAppLanguage() ?: "en-US",
+                    region = settingsRepository.getAppRegion() ?: "US"
+                )
+                emitLoggedIn(result.data)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> result
@@ -50,7 +63,9 @@ class AuthRepositoryImpl(
     override suspend fun signInWithEmail(email: String, password: String): AuthResult<Unit> {
         return when (val result = service.signInWithEmail(email, password)) {
             is AuthResult.Success -> {
-                saveSessionAndEmitLoggedIn(result.data)
+                saveSession(result.data)
+                fetchAndApplyPreferences()
+                emitLoggedIn(result.data)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> result
@@ -77,6 +92,7 @@ class AuthRepositoryImpl(
         val accessToken = tokenStorage.getAccessToken() ?: ""
         val result = service.signOut(accessToken)
         tokenStorage.clearTokens()
+        settingsRepository.clearUserAvatar()
         _authState.value = AuthState.LoggedOut
         return result
     }
@@ -86,6 +102,7 @@ class AuthRepositoryImpl(
         val result = service.deleteAccount(accessToken)
         if (result is AuthResult.Success) {
             tokenStorage.clearTokens()
+            settingsRepository.clearUserAvatar()
             _authState.value = AuthState.LoggedOut
         }
         return result
@@ -106,6 +123,77 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun fetchAndApplyPreferences() {
+        val accessToken = tokenStorage.getAccessToken() ?: return
+        val userId = tokenStorage.getAuthTokens()?.userId ?: return
+        when (val result = service.fetchUserPreferences(accessToken, userId)) {
+            is AuthResult.Success -> {
+                val prefs = result.data.firstOrNull()
+                if (prefs != null) {
+                    settingsRepository.setUserAvatar(prefs.avatarKey)
+                    prefs.appLanguage?.let { language ->
+                        settingsRepository.setAppLanguage(language)
+                        PlatformUtils.applyAppLocale(language)
+                    }
+                    prefs.appRegion?.let { region ->
+                        settingsRepository.setAppRegion(region)
+                    }
+                } else {
+                    val currentAvatar = settingsRepository.getUserAvatar() ?: getRandomAvatar()
+                    val currentLanguage = settingsRepository.getAppLanguage()
+                    val currentRegion = settingsRepository.getAppRegion()
+                    createPreferencesOnSignUp(
+                        avatarKey = currentAvatar,
+                        language = currentLanguage ?: "en-US",
+                        region = currentRegion ?: "US"
+                    )
+                }
+            }
+            is AuthResult.Error -> {
+                log.e { "Failed to fetch preferences: ${result.message}" }
+            }
+        }
+    }
+
+    override suspend fun syncPreferenceToRemote(
+        avatarKey: String?,
+        language: String?,
+        region: String?
+    ) {
+        val accessToken = tokenStorage.getAccessToken() ?: return
+        val userId = tokenStorage.getAuthTokens()?.userId ?: return
+        val dto = UserPreferencesDto(
+            userId = userId,
+            avatarKey = avatarKey ?: settingsRepository.getUserAvatar() ?: "anonymous_avatar",
+            appLanguage = language ?: settingsRepository.getAppLanguage(),
+            appRegion = region ?: settingsRepository.getAppRegion()
+        )
+        when (val result = service.upsertUserPreferences(accessToken, dto)) {
+            is AuthResult.Success -> log.d { "Preferences synced to remote" }
+            is AuthResult.Error -> log.e { "Failed to sync preferences: ${result.message}" }
+        }
+    }
+
+    override suspend fun createPreferencesOnSignUp(
+        avatarKey: String,
+        language: String,
+        region: String
+    ) {
+        val accessToken = tokenStorage.getAccessToken() ?: return
+        val userId = tokenStorage.getAuthTokens()?.userId ?: return
+        settingsRepository.setUserAvatar(avatarKey)
+        val dto = UserPreferencesDto(
+            userId = userId,
+            avatarKey = avatarKey,
+            appLanguage = language,
+            appRegion = region
+        )
+        when (val result = service.upsertUserPreferences(accessToken, dto)) {
+            is AuthResult.Success -> log.d { "Preferences created on sign-up" }
+            is AuthResult.Error -> log.e { "Failed to create preferences: ${result.message}" }
+        }
+    }
+
     private suspend fun handlePlatformSignIn(signInResult: SignInResult): AuthResult<Unit> {
         val sessionResult = when (signInResult) {
             is SignInResult.IdToken -> {
@@ -117,15 +205,16 @@ class AuthRepositoryImpl(
         }
         return when (sessionResult) {
             is AuthResult.Success -> {
-                saveSessionAndEmitLoggedIn(sessionResult.data)
+                saveSession(sessionResult.data)
+                fetchAndApplyPreferences()
+                emitLoggedIn(sessionResult.data)
                 AuthResult.Success(Unit)
             }
             is AuthResult.Error -> sessionResult
         }
     }
 
-    private fun saveSessionAndEmitLoggedIn(session: SupabaseSessionResponse) {
-        saveSession(session)
+    private fun emitLoggedIn(session: SupabaseSessionResponse) {
         val displayName = session.user.userMetadata?.getDisplayName() ?: ""
         _authState.value = AuthState.LoggedIn(
             userId = session.user.id,

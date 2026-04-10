@@ -1,15 +1,23 @@
 package features.settings.domain
 
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 data class LanguageItem(val tag: String, val displayName: String)
 
 data class RegionItem(val code: String, val displayName: String)
 
-class SettingsInteractor(private val settingsRepository: SettingsRepository) {
+class SettingsInteractor(
+    private val settingsRepository: SettingsRepository,
+    private val authRepository: AuthRepository,
+    private val scope: CoroutineScope
+) {
 
     private val _settingsChanged = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val settingsChanged: SharedFlow<Unit> = _settingsChanged
@@ -35,6 +43,7 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
         if (previousLanguage != languageTag) {
             _settingsChanged.tryEmit(Unit)
             PlatformUtils.applyAppLocale(languageTag)
+            syncIfLoggedIn { authRepository.syncPreferenceToRemote(language = languageTag) }
         }
     }
 
@@ -51,6 +60,21 @@ class SettingsInteractor(private val settingsRepository: SettingsRepository) {
         settingsRepository.setAppRegion(regionCode)
         if (previousRegion != regionCode) {
             _settingsChanged.tryEmit(Unit)
+            syncIfLoggedIn { authRepository.syncPreferenceToRemote(region = regionCode) }
+        }
+    }
+
+    fun getUserAvatar(): String = settingsRepository.getUserAvatar() ?: "anonymous_avatar"
+
+    fun setUserAvatar(avatarKey: String) {
+        settingsRepository.setUserAvatar(avatarKey)
+        _settingsChanged.tryEmit(Unit)
+        syncIfLoggedIn { authRepository.syncPreferenceToRemote(avatarKey = avatarKey) }
+    }
+
+    private fun syncIfLoggedIn(action: suspend () -> Unit) {
+        if (authRepository.authState.value is AuthState.LoggedIn) {
+            scope.launch { action() }
         }
     }
 

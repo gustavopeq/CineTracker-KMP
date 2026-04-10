@@ -361,6 +361,9 @@ CineTracker-KMP/
 │   │       │   │       ├── SettingsViewModel.kt
 │   │       │   │       ├── LanguagePickerView.kt
 │   │       │   │       ├── RegionPickerView.kt
+│   │       │   │       ├── AvatarPickerView.kt
+│   │       │   │       ├── model/
+│   │       │   │       │   └── AvatarItem.kt
 │   │       │   │       └── components/
 │   │       │   │           ├── PickerItemRow.kt
 │   │       │   │           ├── PickerTopBar.kt

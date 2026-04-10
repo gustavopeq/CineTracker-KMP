@@ -34,11 +34,22 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         settings.putString(KEY_APP_REGION, regionCode)
     }
 
+    override fun getUserAvatar(): String? = settings.getStringOrNull(KEY_USER_AVATAR)
+
+    override fun setUserAvatar(avatarKey: String) {
+        settings.putString(KEY_USER_AVATAR, avatarKey)
+    }
+
+    override fun clearUserAvatar() {
+        settings.remove(KEY_USER_AVATAR)
+    }
+
     companion object {
         private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         private const val KEY_DETAILS_OVERLAY_SEEN = "details_overlay_seen"
         private const val KEY_ENGAGEMENT_REMINDERS_ENABLED = "engagement_reminders_enabled"
         private const val KEY_APP_LANGUAGE = "app_language"
         private const val KEY_APP_REGION = "app_region"
+        private const val KEY_USER_AVATAR = "user_avatar"
     }
 }

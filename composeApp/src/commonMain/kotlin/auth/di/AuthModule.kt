@@ -12,5 +12,5 @@ expect fun platformAuthModule(): Module
 
 val authModule = module {
     single<SupabaseAuthService> { SupabaseAuthServiceImpl(supabaseClient) }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get()) }
 }

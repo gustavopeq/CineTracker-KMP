@@ -31,12 +31,18 @@ class SettingsViewModel(
     private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled
 
+    private val _currentAvatarKey = MutableStateFlow("anonymous_avatar")
+    val currentAvatarKey: StateFlow<String> = _currentAvatarKey
+
     val authState: StateFlow<AuthState> = authRepository.authState
 
     init {
         refreshSettings()
         viewModelScope.launch {
             settingsInteractor.settingsChanged.collect { refreshSettings() }
+        }
+        viewModelScope.launch {
+            authRepository.authState.collect { refreshSettings() }
         }
     }
 
@@ -59,6 +65,7 @@ class SettingsViewModel(
             .find { it.code == currentRegion }?.displayName ?: currentRegion
 
         _notificationsEnabled.value = settingsInteractor.areNotificationsEnabled()
+        _currentAvatarKey.value = settingsInteractor.getUserAvatar()
     }
 
     private fun handlePermissionResult(granted: Boolean) {

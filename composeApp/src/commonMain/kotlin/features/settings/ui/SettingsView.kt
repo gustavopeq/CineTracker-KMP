@@ -62,6 +62,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SettingsScreen(
     goToLanguagePicker: () -> Unit,
     goToRegionPicker: () -> Unit,
+    goToAvatarPicker: () -> Unit,
     goToAuth: () -> Unit
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
@@ -70,6 +71,7 @@ fun SettingsScreen(
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
     val authState by viewModel.authState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val currentAvatarKey by viewModel.currentAvatarKey.collectAsState()
 
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -89,7 +91,11 @@ fun SettingsScreen(
             .padding(top = RETURN_TOP_BAR_HEIGHT.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ProfileAvatar()
+        ProfileAvatar(
+            avatarKey = currentAvatarKey,
+            showEditIcon = isLoggedIn,
+            onEditClick = goToAvatarPicker
+        )
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
         if (isLoggedIn && !displayName.isNullOrBlank()) {
             Text(

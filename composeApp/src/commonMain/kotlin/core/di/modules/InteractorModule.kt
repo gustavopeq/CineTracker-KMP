@@ -8,9 +8,15 @@ import features.search.domain.SearchInteractor
 import features.settings.domain.SettingsInteractor
 import features.watchlist.domain.ListInteractor
 import features.watchlist.domain.WatchlistInteractor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.SupervisorJob
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val interactorModule = module {
+    single(named("appScope")) { CoroutineScope(SupervisorJob() + Dispatchers.IO) }
     single<BrowseInteractor> { BrowseInteractor(get(), get(), get()) }
     single<DetailsInteractor> { DetailsInteractor(get(), get(), get(), get(), get(), get(), get()) }
     single<WatchlistInteractor> { WatchlistInteractor(get(), get()) }
@@ -18,5 +24,5 @@ val interactorModule = module {
     single { HomeInteractor(get(), get(), get()) }
     single { ListInteractor(get()) }
     single { CachedFieldsBackfill(get(), get(), get(), get()) }
-    single { SettingsInteractor(get()) }
+    single { SettingsInteractor(get(), get(), get(named("appScope"))) }
 }

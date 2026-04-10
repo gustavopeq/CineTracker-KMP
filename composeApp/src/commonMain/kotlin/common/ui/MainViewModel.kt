@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import auth.model.AuthState
 import auth.repository.AuthRepository
 import common.domain.models.util.MediaType
@@ -14,6 +15,7 @@ import database.repository.SettingsRepository
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
@@ -35,6 +37,9 @@ class MainViewModel(
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
         _shouldShowNotificationDialog.value = !settingsRepository.areEngagementRemindersEnabled()
         authRepository.restoreSession()
+        if (authRepository.authState.value is AuthState.LoggedIn) {
+            viewModelScope.launch { authRepository.fetchAndApplyPreferences() }
+        }
     }
 
     fun updateOnboardingUiState() {
