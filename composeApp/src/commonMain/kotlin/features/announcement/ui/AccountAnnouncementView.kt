@@ -1,6 +1,5 @@
 package features.announcement.ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,13 +23,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
@@ -44,8 +44,7 @@ import cinetracker_kmp.composeapp.generated.resources.announcement_tag
 import cinetracker_kmp.composeapp.generated.resources.announcement_title
 import cinetracker_kmp.composeapp.generated.resources.announcement_title_accent
 import cinetracker_kmp.composeapp.generated.resources.auth_create_account
-import cinetracker_kmp.composeapp.generated.resources.auth_sign_in
-import cinetracker_kmp.composeapp.generated.resources.ic_star
+import cinetracker_kmp.composeapp.generated.resources.ic_cloud
 import cinetracker_kmp.composeapp.generated.resources.space_bg
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
@@ -56,6 +55,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private const val BACKGROUND_ALPHA = 0.2f
+private const val GRADIENT_RADIUS = 800f
+private val GradientBlue = Color(0xFF1A3A5C)
 private const val TAG_ICON_SIZE = 16
 private const val TAG_CORNER_RADIUS = 16
 private const val TITLE_FONT_SIZE = 36
@@ -74,6 +75,18 @@ fun AccountAnnouncementView(
             contentDescription = null,
             modifier = Modifier.fillMaxSize().alpha(BACKGROUND_ALPHA),
             contentScale = ContentScale.Crop
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(GradientBlue.copy(alpha = 0.4f), Color.Transparent),
+                        center = Offset.Unspecified,
+                        radius = GRADIENT_RADIUS
+                    )
+                )
         )
 
         Column(
@@ -123,28 +136,7 @@ fun AccountAnnouncementView(
                 )
             ) {
                 Text(
-                    text = stringResource(Res.string.auth_create_account),
-                    fontSize = BUTTON_FONT_SIZE.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedButton(
-                onClick = onCreateAccount,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(BUTTON_HEIGHT.dp),
-                shape = RoundedCornerShape(BUTTON_CORNER_RADIUS.dp),
-                border = BorderStroke(1.dp, MainBarGreyColor),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MainBarGreyColor,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            ) {
-                Text(
-                    text = stringResource(Res.string.auth_sign_in).uppercase(),
+                    text = stringResource(Res.string.auth_create_account).uppercase(),
                     fontSize = BUTTON_FONT_SIZE.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -183,7 +175,7 @@ private fun SecuredStorageTag() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter = painterResource(Res.drawable.ic_star),
+            painter = painterResource(Res.drawable.ic_cloud),
             contentDescription = null,
             modifier = Modifier.size(TAG_ICON_SIZE.dp),
             tint = PrimaryYellowColor
