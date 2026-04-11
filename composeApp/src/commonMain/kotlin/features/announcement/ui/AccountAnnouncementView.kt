@@ -28,9 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
@@ -45,7 +42,7 @@ import cinetracker_kmp.composeapp.generated.resources.announcement_title
 import cinetracker_kmp.composeapp.generated.resources.announcement_title_accent
 import cinetracker_kmp.composeapp.generated.resources.auth_create_account
 import cinetracker_kmp.composeapp.generated.resources.ic_cloud
-import cinetracker_kmp.composeapp.generated.resources.space_bg
+import cinetracker_kmp.composeapp.generated.resources.login_onboarding_bg
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryGreyColor
@@ -54,9 +51,6 @@ import common.ui.theme.SecondaryGreyColor
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-private const val BACKGROUND_ALPHA = 0.2f
-private const val GRADIENT_RADIUS = 800f
-private val GradientBlue = Color(0xFF1A3A5C)
 private const val TAG_ICON_SIZE = 16
 private const val TAG_CORNER_RADIUS = 16
 private const val TITLE_FONT_SIZE = 36
@@ -71,29 +65,10 @@ fun AccountAnnouncementView(
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PrimaryBlackColor)) {
         Image(
-            painter = painterResource(Res.drawable.space_bg),
+            painter = painterResource(Res.drawable.login_onboarding_bg),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize().alpha(BACKGROUND_ALPHA),
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(GradientBlue.copy(alpha = 0.4f), Color.Transparent),
-                        center = Offset(0f, Float.MAX_VALUE),
-                        radius = GRADIENT_RADIUS
-                    )
-                )
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(GradientBlue.copy(alpha = 0.4f), Color.Transparent),
-                        center = Offset(Float.MAX_VALUE, 0f),
-                        radius = GRADIENT_RADIUS
-                    )
-                )
         )
 
         Column(
@@ -165,7 +140,7 @@ fun AccountAnnouncementView(
                     .padding(vertical = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(58.dp))
         }
     }
 }
