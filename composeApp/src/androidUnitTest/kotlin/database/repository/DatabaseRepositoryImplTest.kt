@@ -6,6 +6,7 @@ import common.util.fakeContentEntity
 import common.util.fakeListEntity
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
+import database.dao.PersonalRatingDao
 import io.mockk.MockKAnnotations
 import io.mockk.Ordering
 import io.mockk.coEvery
@@ -32,6 +33,7 @@ class DatabaseRepositoryImplTest {
 
     private val contentEntityDao: ContentEntityDao = mockk(relaxUnitFun = true)
     private val listEntityDao: ListEntityDao = mockk(relaxUnitFun = true)
+    private val personalRatingDao: PersonalRatingDao = mockk(relaxUnitFun = true)
     private val syncService: SyncService = mockk(relaxUnitFun = true)
 
     private lateinit var repository: DatabaseRepositoryImpl
@@ -39,7 +41,7 @@ class DatabaseRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        repository = DatabaseRepositoryImpl(contentEntityDao, listEntityDao, syncService)
+        repository = DatabaseRepositoryImpl(contentEntityDao, listEntityDao, personalRatingDao, syncService)
     }
 
     @After

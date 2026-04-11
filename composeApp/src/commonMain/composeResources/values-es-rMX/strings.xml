@@ -231,7 +231,6 @@
     <string name="settings_delete_account">Eliminar Cuenta</string>
     <string name="settings_sign_out_confirm">¿Cerrar sesión de tu cuenta?</string>
     <string name="settings_delete_confirm">¿Eliminar tu cuenta? Tus datos en la nube serán eliminados.</string>
-    <string name="settings_delete_keep_data">¿Mantener tus listas en este dispositivo?</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="dialog_keep">Mantener</string>
     <string name="dialog_remove">Eliminar</string>

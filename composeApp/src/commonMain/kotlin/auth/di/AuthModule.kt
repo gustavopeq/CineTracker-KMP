@@ -18,5 +18,5 @@ val authModule = module {
     single<SyncService> {
         SyncServiceImpl(get(), get(), get(), get(), get(), get(), get(named("appScope")))
     }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get(), get(), get()) }
 }

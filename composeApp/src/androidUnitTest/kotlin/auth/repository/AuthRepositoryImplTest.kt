@@ -13,6 +13,7 @@ import auth.service.AuthResult
 import auth.service.SupabaseAuthService
 import auth.service.SyncService
 import common.util.platform.PlatformUtils
+import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -41,6 +42,7 @@ class AuthRepositoryImplTest {
     private val signInProvider: PlatformSignInProvider = mockk()
     private val settingsRepository: SettingsRepository = mockk(relaxUnitFun = true)
     private val syncService: SyncService = mockk(relaxUnitFun = true)
+    private val databaseRepository: DatabaseRepository = mockk(relaxUnitFun = true)
 
     private lateinit var repository: AuthRepositoryImpl
 
@@ -64,7 +66,7 @@ class AuthRepositoryImplTest {
         coEvery { syncService.performUpload(any()) } returns AuthResult.Success(Unit)
         coEvery { syncService.hasCloudData(any(), any()) } returns false
         coEvery { syncService.performDownload(any(), any()) } returns AuthResult.Success(Unit)
-        repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository, syncService)
+        repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository, syncService, databaseRepository)
     }
 
     @After

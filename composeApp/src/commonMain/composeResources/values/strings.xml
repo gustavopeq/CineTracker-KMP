@@ -230,7 +230,6 @@
     <string name="settings_delete_account">Delete Account</string>
     <string name="settings_sign_out_confirm">Sign out of your account?</string>
     <string name="settings_delete_confirm">Delete your account? Your cloud data will be removed.</string>
-    <string name="settings_delete_keep_data">Keep your lists on this device?</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_keep">Keep</string>
     <string name="dialog_remove">Remove</string>

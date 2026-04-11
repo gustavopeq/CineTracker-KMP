@@ -26,12 +26,9 @@ import auth.model.AuthState
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.dialog_cancel
 import cinetracker_kmp.composeapp.generated.resources.dialog_delete
-import cinetracker_kmp.composeapp.generated.resources.dialog_keep
-import cinetracker_kmp.composeapp.generated.resources.dialog_remove
 import cinetracker_kmp.composeapp.generated.resources.settings_app_language
 import cinetracker_kmp.composeapp.generated.resources.settings_delete_account
 import cinetracker_kmp.composeapp.generated.resources.settings_delete_confirm
-import cinetracker_kmp.composeapp.generated.resources.settings_delete_keep_data
 import cinetracker_kmp.composeapp.generated.resources.settings_notifications
 import cinetracker_kmp.composeapp.generated.resources.settings_region
 import cinetracker_kmp.composeapp.generated.resources.settings_sign_in
@@ -75,7 +72,6 @@ fun SettingsScreen(
 
     var showSignOutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var showKeepDataDialog by remember { mutableStateOf(false) }
 
     val isLoggedIn = authState is AuthState.LoggedIn
     val displayName = (authState as? AuthState.LoggedIn)?.displayName
@@ -232,7 +228,7 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
-                    showKeepDataDialog = true
+                    viewModel.onEvent(SettingsEvent.DeleteAccount)
                 }) {
                     Text(stringResource(Res.string.dialog_delete), color = PrimaryRedColor)
                 }
@@ -240,32 +236,6 @@ fun SettingsScreen(
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
                     Text(stringResource(Res.string.dialog_cancel), color = SecondaryGreyColor)
-                }
-            },
-            containerColor = MainBarGreyColor,
-            titleContentColor = PrimaryWhiteColor,
-            textContentColor = PrimaryWhiteColor
-        )
-    }
-
-    if (showKeepDataDialog) {
-        AlertDialog(
-            onDismissRequest = { showKeepDataDialog = false },
-            title = { Text(stringResource(Res.string.settings_delete_keep_data)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.onEvent(SettingsEvent.DeleteAccount(keepLocalData = true))
-                    showKeepDataDialog = false
-                }) {
-                    Text(stringResource(Res.string.dialog_keep), color = PrimaryYellowColor)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    viewModel.onEvent(SettingsEvent.DeleteAccount(keepLocalData = false))
-                    showKeepDataDialog = false
-                }) {
-                    Text(stringResource(Res.string.dialog_remove), color = PrimaryRedColor)
                 }
             },
             containerColor = MainBarGreyColor,

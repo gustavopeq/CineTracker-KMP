@@ -1,16 +1,19 @@
 package database.repository
 
-import common.domain.models.util.MediaType
 import auth.service.SyncService
+import common.domain.models.util.MediaType
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
+import database.dao.PersonalRatingDao
 import database.model.ContentEntity
 import database.model.ListEntity
+import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.flow.Flow
 
 class DatabaseRepositoryImpl(
     private val contentEntityDao: ContentEntityDao,
     private val listEntityDao: ListEntityDao,
+    private val personalRatingDao: PersonalRatingDao,
     private val syncService: SyncService
 ) : DatabaseRepository {
 
@@ -110,6 +113,25 @@ class DatabaseRepositoryImpl(
     override suspend fun deleteList(listId: Int) {
         listEntityDao.deleteList(listId)
         syncService.requestUpload()
+    }
+
+    override suspend fun resetToDefaults() {
+        listEntityDao.deleteAll()
+        personalRatingDao.deleteAll()
+        listEntityDao.insertAll(
+            listOf(
+                ListEntity(
+                    listId = DefaultLists.WATCHLIST.listId,
+                    listName = DefaultLists.WATCHLIST.name.lowercase(),
+                    isDefault = true
+                ),
+                ListEntity(
+                    listId = DefaultLists.WATCHED.listId,
+                    listName = DefaultLists.WATCHED.name.lowercase(),
+                    isDefault = true
+                )
+            )
+        )
     }
 
     override suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity> =

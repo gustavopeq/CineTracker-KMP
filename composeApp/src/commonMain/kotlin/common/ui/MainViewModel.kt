@@ -57,6 +57,7 @@ class MainViewModel(
 
     fun updateOnboardingUiState() {
         _hasSeenOnboarding.value = true
+        _pendingAuthNavigation.value = true
     }
 
     fun enableEngagementReminders() {

@@ -12,6 +12,7 @@ import auth.service.SupabaseAuthService
 import auth.service.SyncService
 import co.touchlab.kermit.Logger
 import common.util.platform.PlatformUtils
+import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
 import features.settings.ui.model.getRandomAvatar
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ class AuthRepositoryImpl(
     private val tokenStorage: TokenStorage,
     private val signInProvider: PlatformSignInProvider,
     private val settingsRepository: SettingsRepository,
-    private val syncService: SyncService
+    private val syncService: SyncService,
+    private val databaseRepository: DatabaseRepository
 ) : AuthRepository {
 
     private val log = Logger.withTag("AuthRepository")
@@ -97,6 +99,7 @@ class AuthRepositoryImpl(
         val result = service.signOut(accessToken)
         tokenStorage.clearTokens()
         settingsRepository.clearUserAvatar()
+        databaseRepository.resetToDefaults()
         _authState.value = AuthState.LoggedOut
         return result
     }
@@ -107,6 +110,7 @@ class AuthRepositoryImpl(
         if (result is AuthResult.Success) {
             tokenStorage.clearTokens()
             settingsRepository.clearUserAvatar()
+            databaseRepository.resetToDefaults()
             _authState.value = AuthState.LoggedOut
         }
         return result

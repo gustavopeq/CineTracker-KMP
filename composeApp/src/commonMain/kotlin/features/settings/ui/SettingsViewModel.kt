@@ -5,18 +5,15 @@ import androidx.lifecycle.viewModelScope
 import auth.model.AuthState
 import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
-import database.repository.DatabaseRepository
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val settingsInteractor: SettingsInteractor,
-    private val authRepository: AuthRepository,
-    private val databaseRepository: DatabaseRepository
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -51,7 +48,7 @@ class SettingsViewModel(
             is SettingsEvent.NotificationPermissionResult -> handlePermissionResult(event.granted)
             SettingsEvent.DisableNotifications -> disableNotifications()
             SettingsEvent.SignOut -> signOut()
-            is SettingsEvent.DeleteAccount -> deleteAccount(event.keepLocalData)
+            is SettingsEvent.DeleteAccount -> deleteAccount()
         }
     }
 
@@ -90,19 +87,10 @@ class SettingsViewModel(
         }
     }
 
-    private fun deleteAccount(keepLocalData: Boolean) {
+    private fun deleteAccount() {
         viewModelScope.launch {
             _isLoading.value = true
             authRepository.deleteAccount()
-            if (!keepLocalData) {
-                databaseRepository.getAllLists().first().forEach { list ->
-                    if (list.isDefault) {
-                        databaseRepository.clearList(list.listId)
-                    } else {
-                        databaseRepository.deleteList(list.listId)
-                    }
-                }
-            }
             _isLoading.value = false
         }
     }
