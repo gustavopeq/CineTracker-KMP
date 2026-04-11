@@ -111,6 +111,7 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
     val currentDestination = currentBackStackEntry?.destination
 
     val isStandaloneScreen = currentDestination.isStandalone()
+    val isEdgeToEdgeScreen = currentDestination.isEdgeToEdge()
 
     var showSortBottomSheet by remember { mutableStateOf(false) }
 
@@ -119,10 +120,15 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
     }
 
     SystemBarsContainer(
-        currentDestination = currentDestination
+        currentDestination = currentDestination,
+        isEdgeToEdge = isEdgeToEdgeScreen
     ) {
         Scaffold(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+            modifier = if (isEdgeToEdgeScreen) {
+                Modifier
+            } else {
+                Modifier.windowInsetsPadding(WindowInsets.systemBars)
+            },
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 TopNavBar(
@@ -164,18 +170,23 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold: @Composable () -> Unit) {
+fun SystemBarsContainer(
+    currentDestination: NavDestination? = null,
+    isEdgeToEdge: Boolean = false,
+    appScaffold: @Composable () -> Unit
+) {
     val isStandaloneScreen = currentDestination.isStandalone()
 
     val statusBarColor = when {
+        isEdgeToEdge -> Color.Transparent
         currentDestination?.hasRoute<SearchRoute>() == true -> MainBarGreyColor
         else -> MaterialTheme.colorScheme.primary
     }
 
-    val navigationBarColor = if (isStandaloneScreen) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MainBarGreyColor
+    val navigationBarColor = when {
+        isEdgeToEdge -> Color.Transparent
+        isStandaloneScreen -> MaterialTheme.colorScheme.primary
+        else -> MainBarGreyColor
     }
 
     Box(
@@ -203,6 +214,9 @@ fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold:
 private fun NavDestination?.isStandalone(): Boolean = this?.hasRoute<DetailsRoute>() == true ||
     this?.hasRoute<ErrorRoute>() == true ||
     this?.hasRoute<AuthRoute>() == true ||
+    this?.hasRoute<EmailAuthRoute>() == true
+
+private fun NavDestination?.isEdgeToEdge(): Boolean = this?.hasRoute<AuthRoute>() == true ||
     this?.hasRoute<EmailAuthRoute>() == true
 
 val mainNavBarItems = listOf<MainNavBarItem>(

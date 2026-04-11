@@ -5,14 +5,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -84,37 +88,41 @@ fun AuthScreen(
         }
     }
 
-    Scaffold(
-        containerColor = Color.Transparent,
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { data ->
-                    Snackbar(
-                        snackbarData = data,
-                        containerColor = MainBarGreyColor,
-                        contentColor = PrimaryWhiteColor
-                    )
-                }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            PrimaryYellowColor.copy(alpha = 0.2f),
-                            PrimaryYellowColor.copy(alpha = 0.2f),
-                            PrimaryBlackColor
-                        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        PrimaryYellowColor.copy(alpha = 0.2f),
+                        PrimaryYellowColor.copy(alpha = 0.2f),
+                        PrimaryBlackColor
                     )
                 )
-                .padding(paddingValues)
-                .padding(horizontal = DEFAULT_MARGIN.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            )
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    snackbar = { data ->
+                        Snackbar(
+                            snackbarData = data,
+                            containerColor = MainBarGreyColor,
+                            contentColor = PrimaryWhiteColor
+                        )
+                    }
+                )
+            }
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.systemBars)
+                    .padding(horizontal = DEFAULT_MARGIN.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             Spacer(modifier = Modifier.weight(0.25f))
 
             Image(
@@ -181,6 +189,7 @@ fun AuthScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
+        }
         }
     }
 }
