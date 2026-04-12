@@ -37,6 +37,7 @@ import cinetracker_kmp.composeapp.generated.resources.settings_sign_out_confirm
 import cinetracker_kmp.composeapp.generated.resources.settings_version
 import com.projects.cinetracker.BuildKonfig
 import common.ui.components.ClassicLoadingIndicator
+import common.util.platform.PlatformUtils
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryWhiteColor
@@ -178,7 +179,7 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
-            text = "${stringResource(Res.string.settings_version)} v${BuildKonfig.VERSION_NAME}",
+            text = "${stringResource(Res.string.settings_version)} v${BuildKonfig.VERSION_NAME}${if (PlatformUtils.isDebugBuild) "-debug" else ""}",
             style = MaterialTheme.typography.bodySmall,
             color = SecondaryGreyColor
         )
