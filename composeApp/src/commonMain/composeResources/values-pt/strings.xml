@@ -206,7 +206,8 @@
     <string name="settings_version">Vers\u00e3o</string>
 
     <!-- Auth -->
-    <string name="auth_sign_in_title">Entre no CineTracker</string>
+    <string name="auth_sign_in_title">Entrar</string>
+    <string name="auth_sign_in_subtitle">Acompanhe cada filme e série que você assiste</string>
     <string name="auth_continue_google">Continuar com Google</string>
     <string name="auth_continue_email">Continuar com Email</string>
     <string name="auth_continue_without_account">Continuar sem conta</string>

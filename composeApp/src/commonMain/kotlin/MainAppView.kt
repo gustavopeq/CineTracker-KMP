@@ -25,7 +25,7 @@ import common.ui.theme.CineTrackerTheme
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
-import features.announcement.ui.AccountAnnouncementView
+import features.auth.ui.AccountAnnouncementView
 import features.onboarding.ui.OnboardingView
 import navigation.AuthGraphRoute
 import navigation.RootNavGraph

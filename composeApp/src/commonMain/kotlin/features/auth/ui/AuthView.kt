@@ -2,7 +2,6 @@ package features.auth.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -34,8 +33,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
@@ -43,11 +42,11 @@ import cinetracker_kmp.composeapp.generated.resources.app_logo_image_description
 import cinetracker_kmp.composeapp.generated.resources.auth_continue_email
 import cinetracker_kmp.composeapp.generated.resources.auth_continue_google
 import cinetracker_kmp.composeapp.generated.resources.auth_continue_without_account
+import cinetracker_kmp.composeapp.generated.resources.auth_sign_in_subtitle
 import cinetracker_kmp.composeapp.generated.resources.auth_sign_in_title
 import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
 import cinetracker_kmp.composeapp.generated.resources.ic_mail
 import common.ui.theme.MainBarGreyColor
-import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryWhiteColor
 import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
@@ -57,6 +56,7 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
 import features.auth.events.AuthEvent
+import features.auth.ui.components.AuthBackground
 import features.auth.ui.components.GoogleSignInButton
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -88,19 +88,7 @@ fun AuthScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        PrimaryYellowColor.copy(alpha = 0.2f),
-                        PrimaryYellowColor.copy(alpha = 0.2f),
-                        PrimaryBlackColor
-                    )
-                )
-            )
-    ) {
+    AuthBackground {
         Scaffold(
             containerColor = Color.Transparent,
             snackbarHost = {
@@ -135,8 +123,18 @@ fun AuthScreen(
 
             Text(
                 text = stringResource(Res.string.auth_sign_in_title),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Bold,
                 color = PrimaryWhiteColor,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
+
+            Text(
+                text = stringResource(Res.string.auth_sign_in_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = SecondaryGreyColor,
                 textAlign = TextAlign.Center
             )
 
@@ -174,7 +172,7 @@ fun AuthScreen(
                 onClick = { viewModel.onEvent(AuthEvent.SignInWithGoogle) }
             )
 
-            Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Text(
                 text = stringResource(Res.string.auth_continue_without_account),
@@ -188,7 +186,7 @@ fun AuthScreen(
                     .padding(DEFAULT_MARGIN.dp)
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
         }
         }
     }

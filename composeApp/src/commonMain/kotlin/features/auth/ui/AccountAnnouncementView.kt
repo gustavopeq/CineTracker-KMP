@@ -1,4 +1,4 @@
-package features.announcement.ui
+package features.auth.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
