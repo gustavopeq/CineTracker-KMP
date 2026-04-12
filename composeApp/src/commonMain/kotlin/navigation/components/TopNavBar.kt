@@ -33,34 +33,38 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
+fun TopNavBar(
+    currentDestination: NavDestination?,
+    mainViewModel: MainViewModel,
+    displaySortScreen: (Boolean) -> Unit
+) {
     val isHomeScreen = currentDestination?.hasRoute<HomeRoute>() == true
     val isBrowseScreen = currentDestination?.hasRoute<BrowseRoute>() == true
     val isWatchlistScreen = currentDestination?.hasRoute<WatchlistRoute>() == true
     val isSettingsScreen = currentDestination?.hasRoute<SettingsRoute>() == true
 
-    val showTopBar = isHomeScreen || isBrowseScreen || isWatchlistScreen || isSettingsScreen
     val showSortIcon = isBrowseScreen || isWatchlistScreen
 
     val title = when {
-        isHomeScreen -> null
         isBrowseScreen -> stringResource(resource = MainNavBarItem.Browse.labelResId)
         isWatchlistScreen -> stringResource(resource = MainNavBarItem.Watchlist.labelResId)
         isSettingsScreen -> stringResource(resource = MainNavBarItem.Settings.labelResId)
         else -> null
     }
 
-    val logoModifier = if (getScreenSizeInfo().widthDp < SMALLER_DEVICES_WIDTH.dp) {
-        Modifier.fillMaxWidth(0.5f)
-    } else {
-        Modifier
-    }
+    val showTopBar = isHomeScreen || isBrowseScreen || isWatchlistScreen || isSettingsScreen
 
     AnimatedVisibility(
         visible = showTopBar,
         enter = fadeIn(spring(stiffness = Spring.StiffnessHigh)),
         exit = ExitTransition.None
     ) {
+        val logoModifier = if (getScreenSizeInfo().widthDp < SMALLER_DEVICES_WIDTH.dp) {
+            Modifier.fillMaxWidth(0.5f)
+        } else {
+            Modifier
+        }
+
         TopAppBar(
             title = {
                 if (isHomeScreen) {
@@ -94,3 +98,4 @@ fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel,
         )
     }
 }
+

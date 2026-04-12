@@ -38,6 +38,9 @@ data object RegionPickerRoute
 data object AvatarPickerRoute
 
 @Serializable
+data object MainScaffoldRoute
+
+@Serializable
 data object ErrorRoute
 
 @Serializable
