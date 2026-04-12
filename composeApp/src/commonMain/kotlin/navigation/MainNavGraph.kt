@@ -41,6 +41,8 @@ import common.ui.theme.PrimaryWhiteColor
 import features.auth.ui.AuthScreen
 import features.auth.ui.AuthViewModel
 import features.auth.ui.EmailAuthScreen
+import features.auth.ui.ForgotPasswordScreen
+import features.auth.ui.NewPasswordScreen
 import features.browse.ui.Browse
 import features.details.ui.Details
 import features.home.ui.Home
@@ -152,9 +154,33 @@ fun RootNavGraph(rootNavController: NavHostController) {
                                     AuthGraphRoute,
                                     inclusive = true
                                 )
+                            },
+                            onForgotPassword = {
+                                rootNavController.navigate(ForgotPasswordRoute)
                             }
                         )
                     }
+                    composable<ForgotPasswordRoute> {
+                        val parentEntry = remember(it) {
+                            rootNavController.getBackStackEntry(AuthGraphRoute)
+                        }
+                        val authViewModel: AuthViewModel =
+                            koinViewModel(viewModelStoreOwner = parentEntry)
+                        ForgotPasswordScreen(
+                            viewModel = authViewModel,
+                            onBack = { rootNavController.popBackStack() }
+                        )
+                    }
+                }
+                composable<NewPasswordRoute> { backStackEntry ->
+                    val route = backStackEntry.toRoute<NewPasswordRoute>()
+                    NewPasswordScreen(
+                        accessToken = route.accessToken,
+                        onDone = {
+                            rootNavController.popBackStack()
+                            rootNavController.navigate(AuthGraphRoute)
+                        }
+                    )
                 }
                 composable<ErrorRoute> {
                     CompositionLocalProvider(LocalContentColor provides PrimaryWhiteColor) {

@@ -232,6 +232,7 @@ CineTracker-KMP/
 │   │       │   │   └── SupabaseClient.kt          # expect
 │   │       │   ├── platform/
 │   │       │   │   ├── PlatformSignInProvider.kt   # expect
+│   │       │   │   ├── RecoveryHandler.kt
 │   │       │   │   └── TokenStorage.kt             # expect
 │   │       │   ├── repository/
 │   │       │   │   ├── AuthRepository.kt
@@ -268,9 +269,20 @@ CineTracker-KMP/
 │   │       │       ├── SettingsRepository.kt
 │   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
-│   │       │   ├── announcement/
+│   │       │   ├── auth/
+│   │       │   │   ├── events/
+│   │       │   │   │   └── AuthEvent.kt
 │   │       │   │   └── ui/
-│   │       │   │       └── AccountAnnouncementView.kt
+│   │       │   │       ├── AccountAnnouncementView.kt
+│   │       │   │       ├── AuthView.kt
+│   │       │   │       ├── AuthViewModel.kt
+│   │       │   │       ├── EmailAuthView.kt
+│   │       │   │       ├── ForgotPasswordView.kt
+│   │       │   │       ├── NewPasswordView.kt
+│   │       │   │       └── components/
+│   │       │   │           ├── AuthBackground.kt
+│   │       │   │           ├── AuthTextField.kt
+│   │       │   │           └── GoogleSignInButton.kt
 │   │       │   ├── browse/
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── BrowseInteractor.kt

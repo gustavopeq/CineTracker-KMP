@@ -1,6 +1,7 @@
 package auth.platform
 
 import auth.model.SignInResult
+import auth.service.AUTH_CALLBACK_URL
 import com.projects.cinetracker.BuildKonfig
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -87,7 +88,7 @@ actual class PlatformSignInProvider {
     actual suspend fun signInWithGoogle(): SignInResult = suspendCancellableCoroutine { cont ->
         val authUrl = "${BuildKonfig.SUPABASE_URL}/auth/v1/authorize" +
             "?provider=google" +
-            "&redirect_to=com.projects.cinetracker://auth-callback"
+            "&redirect_to=$AUTH_CALLBACK_URL"
 
         val url = NSURL(string = authUrl)
         val callbackScheme = "com.projects.cinetracker"

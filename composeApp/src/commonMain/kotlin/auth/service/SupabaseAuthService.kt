@@ -33,6 +33,7 @@ interface SupabaseAuthService {
     suspend fun signOut(accessToken: String): AuthResult<Unit>
     suspend fun deleteAccount(accessToken: String): AuthResult<Unit>
     suspend fun resetPassword(email: String): AuthResult<Unit>
+    suspend fun updatePassword(accessToken: String, newPassword: String): AuthResult<Unit>
     suspend fun fetchUserPreferences(
         accessToken: String,
         userId: String

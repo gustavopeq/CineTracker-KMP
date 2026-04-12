@@ -6,6 +6,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import auth.model.SignInResult
+import auth.service.AUTH_CALLBACK_URL
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.projects.cinetracker.BuildKonfig
@@ -38,7 +39,7 @@ actual class PlatformSignInProvider(private val context: Context) {
 
         val authUrl = "${BuildKonfig.SUPABASE_URL}/auth/v1/authorize" +
             "?provider=apple" +
-            "&redirect_to=com.projects.cinetracker://auth-callback"
+            "&redirect_to=$AUTH_CALLBACK_URL"
 
         withContext(Dispatchers.Main) {
             val intent = CustomTabsIntent.Builder().build()

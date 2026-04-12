@@ -51,7 +51,8 @@ import org.jetbrains.compose.resources.stringResource
 fun EmailAuthScreen(
     viewModel: AuthViewModel,
     onBack: () -> Unit,
-    onAuthSuccess: () -> Unit
+    onAuthSuccess: () -> Unit,
+    onForgotPassword: () -> Unit
 ) {
     val isCreateMode by viewModel.isCreateMode.collectAsState()
     val name by viewModel.name.collectAsState()
@@ -184,7 +185,7 @@ fun EmailAuthScreen(
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { viewModel.onEvent(AuthEvent.ResetPassword) }
+                            ) { onForgotPassword() }
                             .padding(vertical = DEFAULT_MARGIN.dp)
                     )
                 }

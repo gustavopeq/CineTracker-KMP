@@ -13,6 +13,7 @@ interface AuthRepository {
     suspend fun signOut(): AuthResult<Unit>
     suspend fun deleteAccount(): AuthResult<Unit>
     suspend fun resetPassword(email: String): AuthResult<Unit>
+    suspend fun updatePassword(accessToken: String, newPassword: String): AuthResult<Unit>
     suspend fun refreshTokenIfNeeded(): Boolean
     fun restoreSession()
     suspend fun fetchAndApplyPreferences()

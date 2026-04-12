@@ -12,6 +12,7 @@ import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_up
 import cinetracker_kmp.composeapp.generated.resources.auth_error_incorrect_credentials
 import cinetracker_kmp.composeapp.generated.resources.auth_error_invalid_email
 import cinetracker_kmp.composeapp.generated.resources.auth_error_password_too_short
+import cinetracker_kmp.composeapp.generated.resources.auth_error_reset_password
 import features.auth.events.AuthEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,6 +49,9 @@ class AuthViewModel(
 
     private val _authSuccess = MutableStateFlow(false)
     val authSuccess: StateFlow<Boolean> = _authSuccess
+
+    private val _resetPasswordState = MutableStateFlow<ResetPasswordState>(ResetPasswordState.Idle)
+    val resetPasswordState: StateFlow<ResetPasswordState> = _resetPasswordState
 
     fun updateName(value: String) {
         _name.value = value
@@ -145,13 +149,39 @@ class AuthViewModel(
     }
 
     private fun resetPassword() {
-        viewModelScope.launch {
-            authRepository.resetPassword(_email.value)
+        val email = _email.value.trim()
+        if (email.isBlank() || !email.contains("@")) {
+            _resetPasswordState.value =
+                ResetPasswordState.Error(Res.string.auth_error_invalid_email)
+            return
         }
+        viewModelScope.launch {
+            _resetPasswordState.value = ResetPasswordState.Loading
+            when (authRepository.resetPassword(email)) {
+                is AuthResult.Success -> {
+                    _resetPasswordState.value = ResetPasswordState.Success
+                }
+                is AuthResult.Error -> {
+                    _resetPasswordState.value =
+                        ResetPasswordState.Error(Res.string.auth_error_reset_password)
+                }
+            }
+        }
+    }
+
+    fun clearResetPasswordState() {
+        _resetPasswordState.value = ResetPasswordState.Idle
     }
 
     private fun dismissError() {
         _snackbarError.value = null
         _formError.value = null
     }
+}
+
+sealed interface ResetPasswordState {
+    data object Idle : ResetPasswordState
+    data object Loading : ResetPasswordState
+    data object Success : ResetPasswordState
+    data class Error(val message: StringResource) : ResetPasswordState
 }

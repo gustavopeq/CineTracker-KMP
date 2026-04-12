@@ -18,7 +18,9 @@ import io.ktor.client.call.body
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -26,6 +28,8 @@ import io.ktor.http.isSuccess
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+
+internal const val AUTH_CALLBACK_URL = "com.projects.cinetracker://auth-callback"
 
 class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthService {
 
@@ -109,6 +113,7 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
     override suspend fun resetPassword(email: String): AuthResult<Unit> {
         return try {
             val response = client.post("auth/v1/recover") {
+                parameter("redirect_to", AUTH_CALLBACK_URL)
                 setBody(buildJsonObject { put("email", email) })
             }
             if (response.status.isSuccess()) {
@@ -119,6 +124,26 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
             }
         } catch (e: Exception) {
             AuthResult.Error(e.message ?: "Password reset failed")
+        }
+    }
+
+    override suspend fun updatePassword(
+        accessToken: String,
+        newPassword: String
+    ): AuthResult<Unit> {
+        return try {
+            val response = client.put("auth/v1/user") {
+                bearerAuth(accessToken)
+                setBody(buildJsonObject { put("password", newPassword) })
+            }
+            if (response.status.isSuccess()) {
+                AuthResult.Success(Unit)
+            } else {
+                val error = parseError(response.bodyAsText())
+                AuthResult.Error(error)
+            }
+        } catch (e: Exception) {
+            AuthResult.Error(e.message ?: "Password update failed")
         }
     }
 

@@ -25,9 +25,11 @@ import common.ui.theme.CineTrackerTheme
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
+import auth.platform.RecoveryHandler
 import features.auth.ui.AccountAnnouncementView
 import features.onboarding.ui.OnboardingView
 import navigation.AuthGraphRoute
+import navigation.NewPasswordRoute
 import navigation.RootNavGraph
 import navigation.SearchRoute
 import org.koin.compose.viewmodel.koinViewModel
@@ -80,6 +82,15 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
         if (pendingAuthNavigation) {
             rootNavController.navigate(AuthGraphRoute)
             mainViewModel.onAuthNavigationHandled()
+        }
+    }
+
+    val pendingRecoveryToken by RecoveryHandler.pendingRecoveryToken.collectAsState()
+    LaunchedEffect(pendingRecoveryToken) {
+        val token = pendingRecoveryToken
+        if (token != null) {
+            RecoveryHandler.consumeRecoveryToken()
+            rootNavController.navigate(NewPasswordRoute(accessToken = token))
         }
     }
 

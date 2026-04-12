@@ -553,4 +553,29 @@ class AuthRepositoryImplTest {
     }
 
     // endregion
+
+    // region updatePassword
+
+    @Test
+    fun `updatePassword delegates to service`() = runTest {
+        coEvery { service.updatePassword("token", "newpass") } returns AuthResult.Success(Unit)
+
+        val result = repository.updatePassword("token", "newpass")
+
+        assertIs<AuthResult.Success<Unit>>(result)
+        coVerify { service.updatePassword("token", "newpass") }
+    }
+
+    @Test
+    fun `updatePassword returns error on failure`() = runTest {
+        coEvery { service.updatePassword(any(), any()) } returns
+            AuthResult.Error("Password update failed")
+
+        val result = repository.updatePassword("token", "newpass")
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Password update failed", result.message)
+    }
+
+    // endregion
 }

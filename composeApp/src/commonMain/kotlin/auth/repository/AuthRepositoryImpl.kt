@@ -120,6 +120,13 @@ class AuthRepositoryImpl(
         return service.resetPassword(email)
     }
 
+    override suspend fun updatePassword(
+        accessToken: String,
+        newPassword: String
+    ): AuthResult<Unit> {
+        return service.updatePassword(accessToken, newPassword)
+    }
+
     override suspend fun refreshTokenIfNeeded(): Boolean {
         val refreshToken = tokenStorage.getRefreshToken() ?: return false
         return when (val result = service.refreshToken(refreshToken)) {

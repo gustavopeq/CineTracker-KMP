@@ -9,6 +9,7 @@ import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_up
 import cinetracker_kmp.composeapp.generated.resources.auth_error_incorrect_credentials
 import cinetracker_kmp.composeapp.generated.resources.auth_error_invalid_email
 import cinetracker_kmp.composeapp.generated.resources.auth_error_password_too_short
+import cinetracker_kmp.composeapp.generated.resources.auth_error_reset_password
 import features.auth.events.AuthEvent
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -16,6 +17,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertIs
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -289,7 +291,7 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `ResetPassword calls repository resetPassword with current email`() = runTest {
+    fun `ResetPassword calls repository and emits Success`() = runTest {
         coEvery { authRepository.resetPassword(any()) } returns AuthResult.Success(Unit)
         val viewModel = createViewModel()
         viewModel.updateEmail("john@example.com")
@@ -298,6 +300,81 @@ class AuthViewModelTest {
         advanceUntilIdle()
 
         coVerify { authRepository.resetPassword("john@example.com") }
+        assertIs<ResetPasswordState.Success>(viewModel.resetPasswordState.value)
+    }
+
+    @Test
+    fun `ResetPassword shows Loading while in progress`() = runTest {
+        coEvery { authRepository.resetPassword(any()) } coAnswers {
+            delay(1000)
+            AuthResult.Success(Unit)
+        }
+        val viewModel = createViewModel()
+        viewModel.updateEmail("john@example.com")
+
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        runCurrent()
+        assertIs<ResetPasswordState.Loading>(viewModel.resetPasswordState.value)
+
+        advanceUntilIdle()
+        assertIs<ResetPasswordState.Success>(viewModel.resetPasswordState.value)
+    }
+
+    @Test
+    fun `ResetPassword emits Error on API failure`() = runTest {
+        coEvery { authRepository.resetPassword(any()) } returns
+            AuthResult.Error("Rate limit exceeded")
+        val viewModel = createViewModel()
+        viewModel.updateEmail("john@example.com")
+
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        advanceUntilIdle()
+
+        val state = viewModel.resetPasswordState.value
+        assertIs<ResetPasswordState.Error>(state)
+        assertEquals(Res.string.auth_error_reset_password, state.message)
+    }
+
+    @Test
+    fun `ResetPassword emits Error for blank email without calling repository`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.updateEmail("")
+
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        advanceUntilIdle()
+
+        val state = viewModel.resetPasswordState.value
+        assertIs<ResetPasswordState.Error>(state)
+        assertEquals(Res.string.auth_error_invalid_email, state.message)
+        coVerify(exactly = 0) { authRepository.resetPassword(any()) }
+    }
+
+    @Test
+    fun `ResetPassword emits Error for email without at sign`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.updateEmail("notanemail")
+
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        advanceUntilIdle()
+
+        val state = viewModel.resetPasswordState.value
+        assertIs<ResetPasswordState.Error>(state)
+        assertEquals(Res.string.auth_error_invalid_email, state.message)
+        coVerify(exactly = 0) { authRepository.resetPassword(any()) }
+    }
+
+    @Test
+    fun `clearResetPasswordState resets to Idle`() = runTest {
+        coEvery { authRepository.resetPassword(any()) } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+        viewModel.updateEmail("john@example.com")
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        advanceUntilIdle()
+        assertIs<ResetPasswordState.Success>(viewModel.resetPasswordState.value)
+
+        viewModel.clearResetPasswordState()
+
+        assertIs<ResetPasswordState.Idle>(viewModel.resetPasswordState.value)
     }
 
     @Test

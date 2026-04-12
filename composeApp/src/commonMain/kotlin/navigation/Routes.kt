@@ -51,3 +51,9 @@ data object AuthRoute
 
 @Serializable
 data object EmailAuthRoute
+
+@Serializable
+data object ForgotPasswordRoute
+
+@Serializable
+data class NewPasswordRoute(val accessToken: String)
