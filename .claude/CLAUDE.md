@@ -638,9 +638,9 @@ CineTracker-KMP/
 └── iosApp/
     ├── Configuration/
     │   └── Config.xcconfig
+    ├── GoogleSignInHelper.swift
     └── iosApp/
         ├── ContentView.swift
-        ├── GoogleSignInHelper.swift
         ├── iOSApp.swift
         └── Info.plist
 ```
