@@ -29,6 +29,7 @@ import auth.platform.RecoveryHandler
 import features.auth.ui.AccountAnnouncementView
 import features.onboarding.ui.OnboardingView
 import navigation.AuthGraphRoute
+import navigation.MainScaffoldRoute
 import navigation.NewPasswordRoute
 import navigation.RootNavGraph
 import navigation.SearchRoute
@@ -88,7 +89,9 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
     val pendingRecoveryToken by RecoveryHandler.pendingRecoveryToken.collectAsState()
     LaunchedEffect(pendingRecoveryToken) {
         if (pendingRecoveryToken != null) {
-            rootNavController.navigate(NewPasswordRoute)
+            rootNavController.navigate(NewPasswordRoute) {
+                popUpTo(MainScaffoldRoute) { inclusive = false }
+            }
         }
     }
 
