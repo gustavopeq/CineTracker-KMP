@@ -1,15 +1,15 @@
 package navigation.components
 
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.ic_nav_account
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_browse
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_home
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_search
-import cinetracker_kmp.composeapp.generated.resources.ic_nav_account
 import cinetracker_kmp.composeapp.generated.resources.ic_nav_watchlist
+import cinetracker_kmp.composeapp.generated.resources.main_nav_account
 import cinetracker_kmp.composeapp.generated.resources.main_nav_browse
 import cinetracker_kmp.composeapp.generated.resources.main_nav_home
 import cinetracker_kmp.composeapp.generated.resources.main_nav_search
-import cinetracker_kmp.composeapp.generated.resources.main_nav_account
 import cinetracker_kmp.composeapp.generated.resources.main_nav_watchlist
 import navigation.BrowseRoute
 import navigation.HomeRoute
