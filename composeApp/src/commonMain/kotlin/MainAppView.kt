@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.rememberNavController
+import auth.platform.RecoveryHandler
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
 import common.ui.MainViewModel
@@ -25,7 +26,6 @@ import common.ui.theme.CineTrackerTheme
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import core.getAsyncImageLoader
-import auth.platform.RecoveryHandler
 import features.auth.ui.AccountAnnouncementView
 import features.onboarding.ui.OnboardingView
 import navigation.AuthGraphRoute
@@ -99,10 +99,7 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SystemBarsContainer(
-    currentDestination: NavDestination? = null,
-    appScaffold: @Composable () -> Unit
-) {
+fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold: @Composable () -> Unit) {
     val statusBarColor = when {
         currentDestination?.hasRoute<SearchRoute>() == true -> MainBarGreyColor
         else -> MaterialTheme.colorScheme.primary

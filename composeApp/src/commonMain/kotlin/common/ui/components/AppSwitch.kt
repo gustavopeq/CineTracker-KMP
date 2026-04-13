@@ -13,10 +13,7 @@ import common.ui.theme.SecondaryGreyColor
 private const val APP_SWITCH_SCALE = 0.8f
 
 @Composable
-fun AppSwitch(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
+fun AppSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Switch(
         checked = checked,
         onCheckedChange = onCheckedChange,

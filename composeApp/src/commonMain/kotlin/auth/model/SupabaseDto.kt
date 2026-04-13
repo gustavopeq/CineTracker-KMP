@@ -19,30 +19,18 @@ data class SupabaseUser(
 )
 
 @Serializable
-data class SupabaseUserMetadata(
-    @SerialName("full_name") val fullName: String? = null,
-    val name: String? = null
-) {
+data class SupabaseUserMetadata(@SerialName("full_name") val fullName: String? = null, val name: String? = null) {
     fun getDisplayName(): String = fullName ?: name ?: ""
 }
 
 @Serializable
-data class SupabaseSignUpRequest(
-    val email: String,
-    val password: String,
-    val data: SupabaseSignUpMetadata? = null
-)
+data class SupabaseSignUpRequest(val email: String, val password: String, val data: SupabaseSignUpMetadata? = null)
 
 @Serializable
-data class SupabaseSignUpMetadata(
-    @SerialName("full_name") val fullName: String
-)
+data class SupabaseSignUpMetadata(@SerialName("full_name") val fullName: String)
 
 @Serializable
-data class SupabaseEmailSignInRequest(
-    val email: String,
-    val password: String
-)
+data class SupabaseEmailSignInRequest(val email: String, val password: String)
 
 @Serializable
 data class SupabaseIdTokenRequest(
@@ -52,9 +40,7 @@ data class SupabaseIdTokenRequest(
 )
 
 @Serializable
-data class SupabaseRefreshRequest(
-    @SerialName("refresh_token") val refreshToken: String
-)
+data class SupabaseRefreshRequest(@SerialName("refresh_token") val refreshToken: String)
 
 @Serializable
 data class UserPreferencesDto(

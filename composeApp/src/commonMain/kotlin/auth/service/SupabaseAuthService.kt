@@ -13,16 +13,9 @@ sealed class AuthResult<out T> {
 }
 
 interface SupabaseAuthService {
-    suspend fun signUpWithEmail(
-        email: String,
-        password: String,
-        name: String
-    ): AuthResult<SupabaseSessionResponse>
+    suspend fun signUpWithEmail(email: String, password: String, name: String): AuthResult<SupabaseSessionResponse>
 
-    suspend fun signInWithEmail(
-        email: String,
-        password: String
-    ): AuthResult<SupabaseSessionResponse>
+    suspend fun signInWithEmail(email: String, password: String): AuthResult<SupabaseSessionResponse>
 
     suspend fun signInWithIdToken(
         provider: String,
@@ -35,32 +28,14 @@ interface SupabaseAuthService {
     suspend fun deleteAccount(accessToken: String): AuthResult<Unit>
     suspend fun resetPassword(email: String): AuthResult<Unit>
     suspend fun updatePassword(accessToken: String, newPassword: String): AuthResult<Unit>
-    suspend fun fetchUserPreferences(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<UserPreferencesDto>>
-    suspend fun upsertUserPreferences(
-        accessToken: String,
-        dto: UserPreferencesDto
-    ): AuthResult<Unit>
+    suspend fun fetchUserPreferences(accessToken: String, userId: String): AuthResult<List<UserPreferencesDto>>
+    suspend fun upsertUserPreferences(accessToken: String, dto: UserPreferencesDto): AuthResult<Unit>
 
-    suspend fun uploadSnapshot(
-        accessToken: String,
-        request: UploadSnapshotRequest
-    ): AuthResult<Unit>
+    suspend fun uploadSnapshot(accessToken: String, request: UploadSnapshotRequest): AuthResult<Unit>
 
-    suspend fun fetchCloudLists(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<CloudListDownload>>
+    suspend fun fetchCloudLists(accessToken: String, userId: String): AuthResult<List<CloudListDownload>>
 
-    suspend fun fetchCloudContent(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<CloudContentDownload>>
+    suspend fun fetchCloudContent(accessToken: String, userId: String): AuthResult<List<CloudContentDownload>>
 
-    suspend fun fetchCloudRatings(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<CloudRatingDownload>>
+    suspend fun fetchCloudRatings(accessToken: String, userId: String): AuthResult<List<CloudRatingDownload>>
 }

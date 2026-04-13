@@ -34,7 +34,10 @@ internal const val AUTH_CALLBACK_URL = "com.projects.cinetracker://auth-callback
 class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthService {
 
     private val log = Logger.withTag("SupabaseAuth")
-    private val lenientJson = Json { ignoreUnknownKeys = true; isLenient = true }
+    private val lenientJson = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
 
     override suspend fun signUpWithEmail(
         email: String,
@@ -52,14 +55,12 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
         }
     }
 
-    override suspend fun signInWithEmail(
-        email: String,
-        password: String
-    ): AuthResult<SupabaseSessionResponse> = safeCall {
-        client.post("auth/v1/token?grant_type=password") {
-            setBody(SupabaseEmailSignInRequest(email = email, password = password))
+    override suspend fun signInWithEmail(email: String, password: String): AuthResult<SupabaseSessionResponse> =
+        safeCall {
+            client.post("auth/v1/token?grant_type=password") {
+                setBody(SupabaseEmailSignInRequest(email = email, password = password))
+            }
         }
-    }
 
     override suspend fun signInWithIdToken(
         provider: String,
@@ -71,81 +72,68 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
         }
     }
 
-    override suspend fun refreshToken(
-        refreshToken: String
-    ): AuthResult<SupabaseSessionResponse> = safeCall {
+    override suspend fun refreshToken(refreshToken: String): AuthResult<SupabaseSessionResponse> = safeCall {
         client.post("auth/v1/token?grant_type=refresh_token") {
             setBody(SupabaseRefreshRequest(refreshToken = refreshToken))
         }
     }
 
-    override suspend fun signOut(accessToken: String): AuthResult<Unit> {
-        return try {
-            val response = client.post("auth/v1/logout") {
-                bearerAuth(accessToken)
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Sign out failed")
+    override suspend fun signOut(accessToken: String): AuthResult<Unit> = try {
+        val response = client.post("auth/v1/logout") {
+            bearerAuth(accessToken)
         }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Sign out failed")
     }
 
-    override suspend fun deleteAccount(accessToken: String): AuthResult<Unit> {
-        return try {
-            val response = client.post("rest/v1/rpc/delete_own_account") {
-                bearerAuth(accessToken)
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Account deletion failed")
+    override suspend fun deleteAccount(accessToken: String): AuthResult<Unit> = try {
+        val response = client.post("rest/v1/rpc/delete_own_account") {
+            bearerAuth(accessToken)
         }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Account deletion failed")
     }
 
-    override suspend fun resetPassword(email: String): AuthResult<Unit> {
-        return try {
-            val response = client.post("auth/v1/recover") {
-                parameter("redirect_to", AUTH_CALLBACK_URL)
-                setBody(buildJsonObject { put("email", email) })
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Password reset failed")
+    override suspend fun resetPassword(email: String): AuthResult<Unit> = try {
+        val response = client.post("auth/v1/recover") {
+            parameter("redirect_to", AUTH_CALLBACK_URL)
+            setBody(buildJsonObject { put("email", email) })
         }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Password reset failed")
     }
 
-    override suspend fun updatePassword(
-        accessToken: String,
-        newPassword: String
-    ): AuthResult<Unit> {
-        return try {
-            val response = client.put("auth/v1/user") {
-                bearerAuth(accessToken)
-                setBody(buildJsonObject { put("password", newPassword) })
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Password update failed")
+    override suspend fun updatePassword(accessToken: String, newPassword: String): AuthResult<Unit> = try {
+        val response = client.put("auth/v1/user") {
+            bearerAuth(accessToken)
+            setBody(buildJsonObject { put("password", newPassword) })
         }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Password update failed")
     }
 
     override suspend fun fetchUserPreferences(
@@ -157,55 +145,43 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
         }
     }
 
-    override suspend fun upsertUserPreferences(
-        accessToken: String,
-        dto: UserPreferencesDto
-    ): AuthResult<Unit> {
-        return try {
-            val response = client.post("rest/v1/user_preferences") {
-                bearerAuth(accessToken)
-                header("Prefer", "resolution=merge-duplicates, return=minimal")
-                setBody(dto)
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Failed to save preferences")
-        }
-    }
-
-    override suspend fun uploadSnapshot(
-        accessToken: String,
-        request: UploadSnapshotRequest
-    ): AuthResult<Unit> {
-        return try {
-            val response = client.post("rest/v1/rpc/upload_snapshot") {
-                bearerAuth(accessToken)
-                setBody(request)
-            }
-            if (response.status.isSuccess()) {
-                AuthResult.Success(Unit)
-            } else {
-                val error = parseError(response.bodyAsText())
-                AuthResult.Error(error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Upload snapshot failed")
-        }
-    }
-
-    override suspend fun fetchCloudLists(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<CloudListDownload>> = safeCall {
-        client.get("rest/v1/cloud_lists?user_id=eq.$userId&select=*") {
+    override suspend fun upsertUserPreferences(accessToken: String, dto: UserPreferencesDto): AuthResult<Unit> = try {
+        val response = client.post("rest/v1/user_preferences") {
             bearerAuth(accessToken)
+            header("Prefer", "resolution=merge-duplicates, return=minimal")
+            setBody(dto)
         }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Failed to save preferences")
     }
+
+    override suspend fun uploadSnapshot(accessToken: String, request: UploadSnapshotRequest): AuthResult<Unit> = try {
+        val response = client.post("rest/v1/rpc/upload_snapshot") {
+            bearerAuth(accessToken)
+            setBody(request)
+        }
+        if (response.status.isSuccess()) {
+            AuthResult.Success(Unit)
+        } else {
+            val error = parseError(response.bodyAsText())
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Upload snapshot failed")
+    }
+
+    override suspend fun fetchCloudLists(accessToken: String, userId: String): AuthResult<List<CloudListDownload>> =
+        safeCall {
+            client.get("rest/v1/cloud_lists?user_id=eq.$userId&select=*") {
+                bearerAuth(accessToken)
+            }
+        }
 
     override suspend fun fetchCloudContent(
         accessToken: String,
@@ -216,40 +192,32 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
         }
     }
 
-    override suspend fun fetchCloudRatings(
-        accessToken: String,
-        userId: String
-    ): AuthResult<List<CloudRatingDownload>> = safeCall {
-        client.get("rest/v1/cloud_ratings?user_id=eq.$userId&select=*") {
-            bearerAuth(accessToken)
-        }
-    }
-
-    private suspend inline fun <reified T> safeCall(
-        block: () -> HttpResponse
-    ): AuthResult<T> {
-        return try {
-            val response = block()
-            if (response.status.isSuccess()) {
-                log.d { "Auth request succeeded: ${response.status}" }
-                AuthResult.Success(response.body<T>())
-            } else {
-                val body = response.bodyAsText()
-                log.e { "Auth request failed: ${response.status} - $body" }
-                val error = parseError(body)
-                AuthResult.Error(error)
+    override suspend fun fetchCloudRatings(accessToken: String, userId: String): AuthResult<List<CloudRatingDownload>> =
+        safeCall {
+            client.get("rest/v1/cloud_ratings?user_id=eq.$userId&select=*") {
+                bearerAuth(accessToken)
             }
-        } catch (e: Exception) {
-            log.e(e) { "Auth request exception: ${e.message}" }
-            AuthResult.Error(e.message ?: "Unknown error")
         }
+
+    private suspend inline fun <reified T> safeCall(block: () -> HttpResponse): AuthResult<T> = try {
+        val response = block()
+        if (response.status.isSuccess()) {
+            log.d { "Auth request succeeded: ${response.status}" }
+            AuthResult.Success(response.body<T>())
+        } else {
+            val body = response.bodyAsText()
+            log.e { "Auth request failed: ${response.status} - $body" }
+            val error = parseError(body)
+            AuthResult.Error(error)
+        }
+    } catch (e: Exception) {
+        log.e(e) { "Auth request exception: ${e.message}" }
+        AuthResult.Error(e.message ?: "Unknown error")
     }
 
-    private fun parseError(body: String): String {
-        return try {
-            lenientJson.decodeFromString<SupabaseErrorResponse>(body).getErrorMessage()
-        } catch (e: Exception) {
-            body.ifEmpty { "Unknown error" }
-        }
+    private fun parseError(body: String): String = try {
+        lenientJson.decodeFromString<SupabaseErrorResponse>(body).getErrorMessage()
+    } catch (e: Exception) {
+        body.ifEmpty { "Unknown error" }
     }
 }

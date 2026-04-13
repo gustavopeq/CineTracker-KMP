@@ -66,7 +66,15 @@ class AuthRepositoryImplTest {
         coEvery { syncService.performUpload(any()) } returns AuthResult.Success(Unit)
         coEvery { syncService.hasCloudData(any(), any()) } returns false
         coEvery { syncService.performDownload(any(), any()) } returns AuthResult.Success(Unit)
-        repository = AuthRepositoryImpl(service, tokenStorage, signInProvider, settingsRepository, syncService, databaseRepository)
+        repository =
+            AuthRepositoryImpl(
+                service,
+                tokenStorage,
+                signInProvider,
+                settingsRepository,
+                syncService,
+                databaseRepository
+            )
     }
 
     @After
@@ -435,8 +443,10 @@ class AuthRepositoryImplTest {
                 "test-access",
                 match { dto ->
                     dto.userId == "user-123" &&
-                        (dto.avatarKey.startsWith("boy_avatar_") ||
-                            dto.avatarKey.startsWith("girl_avatar_")) &&
+                        (
+                            dto.avatarKey.startsWith("boy_avatar_") ||
+                                dto.avatarKey.startsWith("girl_avatar_")
+                            ) &&
                         dto.appLanguage == "pt-BR" &&
                         dto.appRegion == "BR"
                 }

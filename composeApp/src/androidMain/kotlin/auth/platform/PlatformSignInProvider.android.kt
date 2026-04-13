@@ -59,10 +59,8 @@ actual class PlatformSignInProvider(private val context: Context) {
         )
     }
 
-    private fun parseFragment(fragment: String): Map<String, String> {
-        return fragment.split("&").associate {
-            val parts = it.split("=", limit = 2)
-            parts[0] to (parts.getOrNull(1) ?: "")
-        }
+    private fun parseFragment(fragment: String): Map<String, String> = fragment.split("&").associate {
+        val parts = it.split("=", limit = 2)
+        parts[0] to (parts.getOrNull(1) ?: "")
     }
 }

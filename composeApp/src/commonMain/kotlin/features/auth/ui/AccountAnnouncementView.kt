@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,10 +64,7 @@ private const val BUTTON_FONT_SIZE = 18
 private const val TAG_FONT_SIZE = 11
 
 @Composable
-fun AccountAnnouncementView(
-    onCreateAccount: () -> Unit,
-    onDismiss: () -> Unit
-) {
+fun AccountAnnouncementView(onCreateAccount: () -> Unit, onDismiss: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize().background(PrimaryBlackColor)) {
         Image(
             painter = painterResource(Res.drawable.login_onboarding_bg),

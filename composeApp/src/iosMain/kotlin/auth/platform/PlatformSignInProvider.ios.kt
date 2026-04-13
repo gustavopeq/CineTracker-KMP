@@ -1,6 +1,8 @@
 package auth.platform
 
 import auth.model.SignInResult
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,8 +23,6 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIWindow
 import platform.UIKit.UIWindowScene
 import platform.darwin.NSObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual class PlatformSignInProvider {
@@ -36,7 +36,8 @@ actual class PlatformSignInProvider {
             requestedScopes = listOf(ASAuthorizationScopeFullName, ASAuthorizationScopeEmail)
         }
 
-        val delegate = object : NSObject(),
+        val delegate = object :
+            NSObject(),
             ASAuthorizationControllerDelegateProtocol,
             ASAuthorizationControllerPresentationContextProvidingProtocol {
 
@@ -64,10 +65,7 @@ actual class PlatformSignInProvider {
                 }
             }
 
-            override fun authorizationController(
-                controller: ASAuthorizationController,
-                didCompleteWithError: NSError
-            ) {
+            override fun authorizationController(controller: ASAuthorizationController, didCompleteWithError: NSError) {
                 activeAuthController = null
                 activeDelegate = null
                 cont.resumeWithException(Exception(didCompleteWithError.localizedDescription))
@@ -75,9 +73,7 @@ actual class PlatformSignInProvider {
 
             override fun presentationAnchorForAuthorizationController(
                 controller: ASAuthorizationController
-            ): ASPresentationAnchor {
-                return getKeyWindow()
-            }
+            ): ASPresentationAnchor = getKeyWindow()
         }
 
         activeDelegate = delegate

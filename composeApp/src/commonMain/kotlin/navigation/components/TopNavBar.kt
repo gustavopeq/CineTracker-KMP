@@ -33,11 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(
-    currentDestination: NavDestination?,
-    mainViewModel: MainViewModel,
-    displaySortScreen: (Boolean) -> Unit
-) {
+fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
     val isHomeScreen = currentDestination?.hasRoute<HomeRoute>() == true
     val isBrowseScreen = currentDestination?.hasRoute<BrowseRoute>() == true
     val isWatchlistScreen = currentDestination?.hasRoute<WatchlistRoute>() == true
@@ -98,4 +94,3 @@ fun TopNavBar(
         )
     }
 }
-

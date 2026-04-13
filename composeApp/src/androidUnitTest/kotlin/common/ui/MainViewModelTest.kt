@@ -1,10 +1,10 @@
 package common.ui
 
 import androidx.compose.ui.text.input.TextFieldValue
-import common.domain.models.util.MediaType
-import common.domain.models.util.SortTypeItem
 import auth.model.AuthState
 import auth.repository.AuthRepository
+import common.domain.models.util.MediaType
+import common.domain.models.util.SortTypeItem
 import common.util.platform.AppNotifications
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository

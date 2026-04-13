@@ -13,12 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -63,64 +63,64 @@ fun AuthTextField(
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
-    BasicTextField(
-        value = value,
-        onValueChange = { if (it.length <= maxLength) onValueChange(it) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        visualTransformation = if (isPassword && !isPasswordVisible) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        },
-        textStyle = MaterialTheme.typography.bodyMedium.copy(color = PrimaryWhiteColor),
-        cursorBrush = SolidColor(PrimaryYellowColor),
-        interactionSource = interactionSource,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(FORM_FIELD_HEIGHT.dp)
-            .background(MainBarGreyColor, shape)
-            .then(
-                if (isFocused) {
-                    Modifier.border(1.dp, PrimaryYellowColor, shape)
-                } else {
-                    Modifier
-                }
-            ),
-        decorationBox = { innerTextField ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = DEFAULT_MARGIN.dp)
-            ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    if (value.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            color = SecondaryGreyColor,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+        BasicTextField(
+            value = value,
+            onValueChange = { if (it.length <= maxLength) onValueChange(it) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            visualTransformation = if (isPassword && !isPasswordVisible) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            textStyle = MaterialTheme.typography.bodyMedium.copy(color = PrimaryWhiteColor),
+            cursorBrush = SolidColor(PrimaryYellowColor),
+            interactionSource = interactionSource,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(FORM_FIELD_HEIGHT.dp)
+                .background(MainBarGreyColor, shape)
+                .then(
+                    if (isFocused) {
+                        Modifier.border(1.dp, PrimaryYellowColor, shape)
+                    } else {
+                        Modifier
                     }
-                    innerTextField()
-                }
-                if (isPassword && onTogglePasswordVisibility != null) {
-                    IconButton(onClick = onTogglePasswordVisibility) {
-                        Icon(
-                            painter = painterResource(
-                                if (isPasswordVisible) {
-                                    Res.drawable.ic_visibility_off
-                                } else {
-                                    Res.drawable.ic_visibility
-                                }
-                            ),
-                            contentDescription = null,
-                            tint = SecondaryGreyColor
-                        )
+                ),
+            decorationBox = { innerTextField ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = DEFAULT_MARGIN.dp)
+                ) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = placeholder,
+                                color = SecondaryGreyColor,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        innerTextField()
+                    }
+                    if (isPassword && onTogglePasswordVisibility != null) {
+                        IconButton(onClick = onTogglePasswordVisibility) {
+                            Icon(
+                                painter = painterResource(
+                                    if (isPasswordVisible) {
+                                        Res.drawable.ic_visibility_off
+                                    } else {
+                                        Res.drawable.ic_visibility
+                                    }
+                                ),
+                                contentDescription = null,
+                                tint = SecondaryGreyColor
+                            )
+                        }
                     }
                 }
             }
-        }
-    )
+        )
     }
 }

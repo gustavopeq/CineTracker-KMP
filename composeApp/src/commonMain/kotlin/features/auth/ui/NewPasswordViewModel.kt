@@ -14,9 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
-class NewPasswordViewModel(
-    private val authRepository: AuthRepository
-) : ViewModel() {
+class NewPasswordViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val accessToken: String? = RecoveryHandler.consumeRecoveryToken()
 
@@ -75,8 +73,9 @@ class NewPasswordViewModel(
                     _isLoading.value = true
                     when (authRepository.updatePassword(token, currentPassword)) {
                         is AuthResult.Success -> _isSuccess.value = true
-                        is AuthResult.Error -> _error.value =
-                            Res.string.auth_error_update_password
+                        is AuthResult.Error ->
+                            _error.value =
+                                Res.string.auth_error_update_password
                     }
                     _isLoading.value = false
                 }

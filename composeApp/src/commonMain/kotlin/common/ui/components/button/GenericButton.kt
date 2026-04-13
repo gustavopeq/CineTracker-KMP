@@ -1,5 +1,6 @@
 package common.ui.components.button
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -10,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.size
 import common.ui.theme.PrimaryYellowColor
 import common.util.UiConstants.CLASSIC_BUTTON_BORDER_SIZE
 

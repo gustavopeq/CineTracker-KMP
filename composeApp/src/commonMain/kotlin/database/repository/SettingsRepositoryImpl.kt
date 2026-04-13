@@ -50,8 +50,7 @@ class SettingsRepositoryImpl(private val settings: Settings) : SettingsRepositor
         settings.putBoolean(KEY_HAS_LOCAL_CHANGES, value)
     }
 
-    override fun hasSeenAccountAnnouncement(): Boolean =
-        settings.getBoolean(KEY_ACCOUNT_ANNOUNCEMENT_SEEN, false)
+    override fun hasSeenAccountAnnouncement(): Boolean = settings.getBoolean(KEY_ACCOUNT_ANNOUNCEMENT_SEEN, false)
 
     override fun setAccountAnnouncementSeen() {
         settings.putBoolean(KEY_ACCOUNT_ANNOUNCEMENT_SEEN, true)

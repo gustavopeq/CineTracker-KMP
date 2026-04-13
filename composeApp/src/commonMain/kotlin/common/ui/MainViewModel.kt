@@ -47,9 +47,9 @@ class MainViewModel(
         if (authRepository.authState.value is AuthState.LoggedIn) {
             viewModelScope.launch { authRepository.fetchAndApplyPreferences() }
         }
-        if (settingsRepository.hasCompletedOnboarding()
-            && !settingsRepository.hasSeenAccountAnnouncement()
-            && authRepository.authState.value is AuthState.LoggedOut
+        if (settingsRepository.hasCompletedOnboarding() &&
+            !settingsRepository.hasSeenAccountAnnouncement() &&
+            authRepository.authState.value is AuthState.LoggedOut
         ) {
             _shouldShowAnnouncement.value = true
         }

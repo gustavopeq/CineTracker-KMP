@@ -11,17 +11,17 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 actual val supabaseClient: HttpClient = HttpClient(Darwin) {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                }
-            )
-        }
-        defaultRequest {
-            url(BuildKonfig.SUPABASE_URL)
-            headers.append("apikey", BuildKonfig.SUPABASE_ANON_KEY)
-            contentType(ContentType.Application.Json)
-        }
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
+        )
     }
+    defaultRequest {
+        url(BuildKonfig.SUPABASE_URL)
+        headers.append("apikey", BuildKonfig.SUPABASE_ANON_KEY)
+        contentType(ContentType.Application.Json)
+    }
+}

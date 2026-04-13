@@ -17,14 +17,6 @@ interface AuthRepository {
     suspend fun refreshTokenIfNeeded(): Boolean
     fun restoreSession()
     suspend fun fetchAndApplyPreferences()
-    suspend fun syncPreferenceToRemote(
-        avatarKey: String? = null,
-        language: String? = null,
-        region: String? = null
-    )
-    suspend fun createPreferencesOnSignUp(
-        avatarKey: String,
-        language: String,
-        region: String
-    )
+    suspend fun syncPreferenceToRemote(avatarKey: String? = null, language: String? = null, region: String? = null)
+    suspend fun createPreferencesOnSignUp(avatarKey: String, language: String, region: String)
 }

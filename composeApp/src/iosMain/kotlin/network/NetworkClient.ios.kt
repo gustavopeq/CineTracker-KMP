@@ -9,15 +9,15 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 actual val client: HttpClient = HttpClient(Darwin) {
-        defaultRequest {
-            url(BASE_URL_MOVIEDB)
-        }
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                }
-            )
-        }
+    defaultRequest {
+        url(BASE_URL_MOVIEDB)
     }
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
+        )
+    }
+}

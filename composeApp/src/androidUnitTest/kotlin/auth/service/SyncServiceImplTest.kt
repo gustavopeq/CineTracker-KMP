@@ -24,8 +24,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
-import org.junit.After
-import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -109,8 +107,13 @@ class SyncServiceImplTest {
         )
         val cloudContent = listOf(
             CloudContentDownload(
-                contentId = 100, mediaType = "MOVIE", listId = "uuid-1",
-                createdAt = 1000L, title = "Movie", posterPath = "/poster.jpg", voteAverage = 7.5f
+                contentId = 100,
+                mediaType = "MOVIE",
+                listId = "uuid-1",
+                createdAt = 1000L,
+                title = "Movie",
+                posterPath = "/poster.jpg",
+                voteAverage = 7.5f
             )
         )
         val cloudRatings = listOf(
@@ -148,8 +151,11 @@ class SyncServiceImplTest {
         )
         val cloudContent = listOf(
             CloudContentDownload(
-                contentId = 100, mediaType = "MOVIE", listId = "uuid-unknown",
-                createdAt = 1000L, title = "Orphan"
+                contentId = 100,
+                mediaType = "MOVIE",
+                listId = "uuid-unknown",
+                createdAt = 1000L,
+                title = "Orphan"
             )
         )
 
@@ -321,16 +327,25 @@ class SyncServiceImplTest {
         )
         val cloudContent = listOf(
             CloudContentDownload(
-                contentId = 100, mediaType = "MOVIE", listId = "uuid-1",
-                createdAt = 1000L, title = "Movie 1"
+                contentId = 100,
+                mediaType = "MOVIE",
+                listId = "uuid-1",
+                createdAt = 1000L,
+                title = "Movie 1"
             ),
             CloudContentDownload(
-                contentId = 200, mediaType = "SHOW", listId = "uuid-2",
-                createdAt = 2000L, title = "Show 1"
+                contentId = 200,
+                mediaType = "SHOW",
+                listId = "uuid-2",
+                createdAt = 2000L,
+                title = "Show 1"
             ),
             CloudContentDownload(
-                contentId = 300, mediaType = "MOVIE", listId = "uuid-3",
-                createdAt = 3000L, title = "Movie 2"
+                contentId = 300,
+                mediaType = "MOVIE",
+                listId = "uuid-3",
+                createdAt = 3000L,
+                title = "Movie 2"
             )
         )
 
@@ -346,12 +361,17 @@ class SyncServiceImplTest {
         syncService.performDownload("token", "user-1")
 
         coVerify {
-            contentEntityDao.insertAll(match { entities ->
-                entities.size == 3 &&
-                    entities[0].contentId == 100 && entities[0].listId == 1 &&
-                    entities[1].contentId == 200 && entities[1].listId == 2 &&
-                    entities[2].contentId == 300 && entities[2].listId == 3
-            })
+            contentEntityDao.insertAll(
+                match { entities ->
+                    entities.size == 3 &&
+                        entities[0].contentId == 100 &&
+                        entities[0].listId == 1 &&
+                        entities[1].contentId == 200 &&
+                        entities[1].listId == 2 &&
+                        entities[2].contentId == 300 &&
+                        entities[2].listId == 3
+                }
+            )
         }
     }
 

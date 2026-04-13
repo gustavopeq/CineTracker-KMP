@@ -45,12 +45,8 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun signUpWithEmail(
-        email: String,
-        password: String,
-        name: String
-    ): AuthResult<Unit> {
-        return when (val result = service.signUpWithEmail(email, password, name)) {
+    override suspend fun signUpWithEmail(email: String, password: String, name: String): AuthResult<Unit> =
+        when (val result = service.signUpWithEmail(email, password, name)) {
             is AuthResult.Success -> {
                 saveSession(result.data)
                 createPreferencesOnSignUp(
@@ -64,10 +60,9 @@ class AuthRepositoryImpl(
             }
             is AuthResult.Error -> result
         }
-    }
 
-    override suspend fun signInWithEmail(email: String, password: String): AuthResult<Unit> {
-        return when (val result = service.signInWithEmail(email, password)) {
+    override suspend fun signInWithEmail(email: String, password: String): AuthResult<Unit> =
+        when (val result = service.signInWithEmail(email, password)) {
             is AuthResult.Success -> {
                 saveSession(result.data)
                 fetchAndApplyPreferences()
@@ -77,22 +72,17 @@ class AuthRepositoryImpl(
             }
             is AuthResult.Error -> result
         }
+
+    override suspend fun signInWithGoogle(): AuthResult<Unit> = try {
+        handlePlatformSignIn(signInProvider.signInWithGoogle())
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Google sign-in failed")
     }
 
-    override suspend fun signInWithGoogle(): AuthResult<Unit> {
-        return try {
-            handlePlatformSignIn(signInProvider.signInWithGoogle())
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Google sign-in failed")
-        }
-    }
-
-    override suspend fun signInWithApple(): AuthResult<Unit> {
-        return try {
-            handlePlatformSignIn(signInProvider.signInWithApple())
-        } catch (e: Exception) {
-            AuthResult.Error(e.message ?: "Apple sign-in failed")
-        }
+    override suspend fun signInWithApple(): AuthResult<Unit> = try {
+        handlePlatformSignIn(signInProvider.signInWithApple())
+    } catch (e: Exception) {
+        AuthResult.Error(e.message ?: "Apple sign-in failed")
     }
 
     override suspend fun signOut(): AuthResult<Unit> {
@@ -119,16 +109,10 @@ class AuthRepositoryImpl(
         return result
     }
 
-    override suspend fun resetPassword(email: String): AuthResult<Unit> {
-        return service.resetPassword(email)
-    }
+    override suspend fun resetPassword(email: String): AuthResult<Unit> = service.resetPassword(email)
 
-    override suspend fun updatePassword(
-        accessToken: String,
-        newPassword: String
-    ): AuthResult<Unit> {
-        return service.updatePassword(accessToken, newPassword)
-    }
+    override suspend fun updatePassword(accessToken: String, newPassword: String): AuthResult<Unit> =
+        service.updatePassword(accessToken, newPassword)
 
     override suspend fun refreshTokenIfNeeded(): Boolean {
         val refreshToken = tokenStorage.getRefreshToken() ?: return false
@@ -173,11 +157,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun syncPreferenceToRemote(
-        avatarKey: String?,
-        language: String?,
-        region: String?
-    ) {
+    override suspend fun syncPreferenceToRemote(avatarKey: String?, language: String?, region: String?) {
         val accessToken = tokenStorage.getAccessToken() ?: return
         val userId = tokenStorage.getAuthTokens()?.userId ?: return
         val dto = UserPreferencesDto(
@@ -192,11 +172,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun createPreferencesOnSignUp(
-        avatarKey: String,
-        language: String,
-        region: String
-    ) {
+    override suspend fun createPreferencesOnSignUp(avatarKey: String, language: String, region: String) {
         val accessToken = tokenStorage.getAccessToken() ?: return
         val userId = tokenStorage.getAuthTokens()?.userId ?: return
         settingsRepository.setUserAvatar(avatarKey)

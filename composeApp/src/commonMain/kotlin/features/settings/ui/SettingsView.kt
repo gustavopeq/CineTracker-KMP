@@ -37,17 +37,15 @@ import cinetracker_kmp.composeapp.generated.resources.settings_sign_out_confirm
 import cinetracker_kmp.composeapp.generated.resources.settings_version
 import com.projects.cinetracker.BuildKonfig
 import common.ui.components.ClassicLoadingIndicator
-import common.util.platform.PlatformUtils
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryWhiteColor
 import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
-import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.RETURN_TOP_BAR_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
-import common.util.UiConstants.SETTINGS_AVATAR_BOTTOM_SPACING
+import common.util.platform.PlatformUtils
 import common.util.platform.rememberNotificationPermissionLauncher
 import features.settings.events.SettingsEvent
 import features.settings.ui.components.ProfileAvatar
@@ -82,121 +80,122 @@ fun SettingsScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = RETURN_TOP_BAR_HEIGHT.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        ProfileAvatar(
-            avatarKey = currentAvatarKey,
-            showEditIcon = isLoggedIn,
-            onEditClick = goToAvatarPicker
-        )
-        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
-        if (isLoggedIn && !displayName.isNullOrBlank()) {
-            Text(
-                text = displayName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = PrimaryWhiteColor,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-            )
-        } else {
-            Text(
-                text = stringResource(Res.string.settings_sign_in),
-                style = MaterialTheme.typography.bodyMedium,
-                color = PrimaryYellowColor,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .clickable(onClick = goToAuth)
-                    .padding(vertical = 14.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
-
-
-        HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
-
-        SettingsRow(
-            label = stringResource(Res.string.settings_app_language),
-            value = currentLanguage,
-            onClick = goToLanguagePicker
-        )
-
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.inverseSurface,
-            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-        )
-
-        SettingsRow(
-            label = stringResource(Res.string.settings_region),
-            value = currentRegion,
-            onClick = goToRegionPicker
-        )
-
-        HorizontalDivider(
-            color = MaterialTheme.colorScheme.inverseSurface,
-            modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-        )
-
-        SettingsToggleRow(
-            label = stringResource(Res.string.settings_notifications),
-            checked = notificationsEnabled,
-            onToggle = { isEnabling ->
-                if (isEnabling) {
-                    requestPermission()
-                } else {
-                    viewModel.onEvent(SettingsEvent.DisableNotifications)
-                }
-            }
-        )
-
-        HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
-
-        if (isLoggedIn) {
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.inverseSurface,
-                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-            )
-
-            SettingsRow(
-                label = stringResource(Res.string.settings_delete_account),
-                value = "",
-                onClick = { showDeleteDialog = true }
-            )
-
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.inverseSurface,
-                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
-            )
-
-            SettingsRow(
-                label = stringResource(Res.string.settings_sign_out),
-                value = "",
-                onClick = { showSignOutDialog = true }
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "${stringResource(Res.string.settings_version)} v${BuildKonfig.VERSION_NAME}${if (PlatformUtils.isDebugBuild) "-debug" else ""}",
-            style = MaterialTheme.typography.bodySmall,
-            color = SecondaryGreyColor
-        )
-
-        Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
-    }
-
-    if (isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = RETURN_TOP_BAR_HEIGHT.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ClassicLoadingIndicator()
+            ProfileAvatar(
+                avatarKey = currentAvatarKey,
+                showEditIcon = isLoggedIn,
+                onEditClick = goToAvatarPicker
+            )
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+            if (isLoggedIn && !displayName.isNullOrBlank()) {
+                Text(
+                    text = displayName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = PrimaryWhiteColor,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(Res.string.settings_sign_in),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = PrimaryYellowColor,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .clickable(onClick = goToAuth)
+                        .padding(vertical = 14.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
+
+            SettingsRow(
+                label = stringResource(Res.string.settings_app_language),
+                value = currentLanguage,
+                onClick = goToLanguagePicker
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.inverseSurface,
+                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+            )
+
+            SettingsRow(
+                label = stringResource(Res.string.settings_region),
+                value = currentRegion,
+                onClick = goToRegionPicker
+            )
+
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.inverseSurface,
+                modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+            )
+
+            SettingsToggleRow(
+                label = stringResource(Res.string.settings_notifications),
+                checked = notificationsEnabled,
+                onToggle = { isEnabling ->
+                    if (isEnabling) {
+                        requestPermission()
+                    } else {
+                        viewModel.onEvent(SettingsEvent.DisableNotifications)
+                    }
+                }
+            )
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.inverseSurface)
+
+            if (isLoggedIn) {
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+                )
+
+                SettingsRow(
+                    label = stringResource(Res.string.settings_delete_account),
+                    value = "",
+                    onClick = { showDeleteDialog = true }
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    modifier = Modifier.padding(horizontal = DEFAULT_MARGIN.dp)
+                )
+
+                SettingsRow(
+                    label = stringResource(Res.string.settings_sign_out),
+                    value = "",
+                    onClick = { showSignOutDialog = true }
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = "${stringResource(
+                    Res.string.settings_version
+                )} v${BuildKonfig.VERSION_NAME}${if (PlatformUtils.isDebugBuild) "-debug" else ""}",
+                style = MaterialTheme.typography.bodySmall,
+                color = SecondaryGreyColor
+            )
+
+            Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
         }
-    }
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                ClassicLoadingIndicator()
+            }
+        }
     } // Box
 
     if (showSignOutDialog) {

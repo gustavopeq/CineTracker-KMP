@@ -97,7 +97,9 @@ class SyncServiceImpl(
         personalRatingDao.insertAll(cloudRatings.map { it.toPersonalRatingEntity() })
 
         settingsRepository.setHasLocalChanges(false)
-        log.d { "Downloaded snapshot: ${cloudLists.size} lists, ${cloudContent.size} items, ${cloudRatings.size} ratings" }
+        log.d {
+            "Downloaded snapshot: ${cloudLists.size} lists, ${cloudContent.size} items, ${cloudRatings.size} ratings"
+        }
         return AuthResult.Success(Unit)
     }
 

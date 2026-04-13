@@ -8,7 +8,6 @@ import common.util.platform.initNotifications
 import core.di.KoinInitializer
 import database.repository.SettingsRepository
 import io.sentry.kotlin.multiplatform.Sentry
-import io.sentry.kotlin.multiplatform.log.SentryLogOptions
 import org.koin.mp.KoinPlatform
 
 class CoreApplication : Application() {

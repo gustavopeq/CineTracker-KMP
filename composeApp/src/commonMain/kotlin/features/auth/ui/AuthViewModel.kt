@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
-class AuthViewModel(
-    private val authRepository: AuthRepository
-) : ViewModel() {
+class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -82,8 +80,9 @@ class AuthViewModel(
             _isLoading.value = true
             when (val result = authRepository.signInWithGoogle()) {
                 is AuthResult.Success -> _authSuccess.value = true
-                is AuthResult.Error -> _snackbarError.value =
-                    Res.string.auth_error_generic_sign_in
+                is AuthResult.Error ->
+                    _snackbarError.value =
+                        Res.string.auth_error_generic_sign_in
             }
             _isLoading.value = false
         }

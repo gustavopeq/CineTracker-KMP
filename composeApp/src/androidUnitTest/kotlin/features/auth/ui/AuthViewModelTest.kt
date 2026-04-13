@@ -1,5 +1,6 @@
 package features.auth.ui
 
+import auth.model.AuthState
 import auth.repository.AuthRepository
 import auth.service.AuthResult
 import cinetracker_kmp.composeapp.generated.resources.Res
@@ -18,9 +19,9 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import kotlin.test.assertIs
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -34,7 +35,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import auth.model.AuthState
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

@@ -1,5 +1,6 @@
 package navigation
 
+import SystemBarsContainer
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionLayout
@@ -8,7 +9,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -57,7 +57,6 @@ import navigation.components.MainNavBar
 import navigation.components.MainNavBarItem
 import navigation.components.TopNavBar
 import navigation.components.navigateToTopLevelDestination
-import SystemBarsContainer
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -250,10 +249,7 @@ private fun MainScaffoldScreen(rootNavController: NavHostController) {
 }
 
 @Composable
-private fun NestedNavGraph(
-    nestedNavController: NavHostController,
-    rootNavController: NavHostController
-) {
+private fun NestedNavGraph(nestedNavController: NavHostController, rootNavController: NavHostController) {
     val goToDetails: (Int, MediaType, String, String) -> Unit =
         { contentId, mediaType, tag, posterPath ->
             rootNavController.navigate(

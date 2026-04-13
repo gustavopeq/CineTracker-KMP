@@ -27,12 +27,7 @@ import common.util.UiConstants.FORM_FIELD_HEIGHT
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun GoogleSignInButton(
-    text: String,
-    isLoading: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun GoogleSignInButton(text: String, isLoading: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         enabled = !isLoading,
