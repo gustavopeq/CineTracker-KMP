@@ -205,6 +205,7 @@
     <string name="settings_version">Version</string>
 
     <!-- Auth -->
+    <string name="auth_or_divider">or</string>
     <string name="auth_sign_in_title">Sign in</string>
     <string name="auth_sign_in_subtitle">Track every movie and show you watch</string>
     <string name="auth_continue_google">Continue with Google</string>

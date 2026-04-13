@@ -206,6 +206,7 @@
     <string name="settings_version">Versi\u00f3n</string>
 
     <!-- Auth -->
+    <string name="auth_or_divider">o</string>
     <string name="auth_sign_in_title">Iniciar sesión</string>
     <string name="auth_sign_in_subtitle">Lleva el registro de cada película y serie que ves</string>
     <string name="auth_continue_google">Continuar con Google</string>

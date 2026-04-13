@@ -5,6 +5,13 @@ object UiConstants {
     const val BUTTON_NAVIGATION_BAR_HEIGHT = 60
     const val FORM_FIELD_HEIGHT = 48
     const val AUTH_NAME_MAX_LENGTH = 50
+    const val AUTH_LOGO_WIDTH_FRACTION = 0.35f
+    const val AUTH_LOGO_MAX_SIZE = 160
+    const val AUTH_LOGO_MIN_SIZE = 80
+    const val AUTH_NAME_WIDTH_FRACTION = 0.65f
+    const val AUTH_NAME_MAX_WIDTH = 260
+    const val AUTH_LOGO_NAME_SPACING = 12
+    const val AUTH_DESCRIPTION_SPACING = 92
     const val SETTINGS_ROW_HEIGHT = 56
     const val SMALL_PADDING = 4
     const val DEFAULT_PADDING = 8
