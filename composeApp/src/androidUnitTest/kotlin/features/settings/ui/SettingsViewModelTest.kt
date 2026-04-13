@@ -1,11 +1,16 @@
 package features.settings.ui
 
+import auth.model.AuthState
+import auth.repository.AuthRepository
+import auth.service.AuthResult
 import common.util.platform.AppNotifications
 import features.settings.domain.LanguageItem
 import features.settings.domain.RegionItem
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -13,10 +18,12 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -31,6 +38,8 @@ class SettingsViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val settingsInteractor: SettingsInteractor = mockk(relaxUnitFun = true)
+    private val authRepository: AuthRepository = mockk(relaxUnitFun = true)
+    private val authStateFlow = MutableStateFlow<AuthState>(AuthState.LoggedOut)
 
     @Before
     fun setUp() {
@@ -39,6 +48,7 @@ class SettingsViewModelTest {
         mockkObject(AppNotifications)
         every { AppNotifications.scheduleEngagementReminders() } returns Unit
         every { AppNotifications.cancelEngagementReminders() } returns Unit
+        every { authRepository.authState } returns authStateFlow
     }
 
     @After
@@ -50,11 +60,13 @@ class SettingsViewModelTest {
     private fun setupDefaultMocks(
         language: String = "en-US",
         region: String = "US",
+        avatarKey: String = "anonymous_avatar",
         notificationsEnabled: Boolean = false,
         settingsChangedFlow: MutableSharedFlow<Unit> = MutableSharedFlow()
     ) {
         every { settingsInteractor.getAppLanguage() } returns language
         every { settingsInteractor.getAppRegion() } returns region
+        every { settingsInteractor.getUserAvatar() } returns avatarKey
         every { settingsInteractor.areNotificationsEnabled() } returns notificationsEnabled
         every { settingsInteractor.settingsChanged } returns settingsChangedFlow
         every { settingsInteractor.getSupportedLanguages() } returns listOf(
@@ -69,7 +81,10 @@ class SettingsViewModelTest {
         )
     }
 
-    private fun createViewModel(): SettingsViewModel = SettingsViewModel(settingsInteractor)
+    private fun createViewModel(): SettingsViewModel = SettingsViewModel(
+        settingsInteractor,
+        authRepository
+    )
 
     @Test
     fun `init loads current language display name`() {
@@ -163,5 +178,90 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals("Brazil", viewModel.currentRegionDisplay.value)
+    }
+
+    @Test
+    fun `DeleteAccount calls authRepository deleteAccount`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { authRepository.deleteAccount() }
+    }
+
+    @Test
+    fun `init loads avatar key`() {
+        setupDefaultMocks(avatarKey = "boy_avatar_2")
+
+        val viewModel = createViewModel()
+
+        assertEquals("boy_avatar_2", viewModel.currentAvatarKey.value)
+    }
+
+    @Test
+    fun `auth state change refreshes avatar`() = runTest {
+        setupDefaultMocks(avatarKey = "anonymous_avatar")
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals("anonymous_avatar", viewModel.currentAvatarKey.value)
+
+        every { settingsInteractor.getUserAvatar() } returns "girl_avatar_1"
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        advanceUntilIdle()
+
+        assertEquals("girl_avatar_1", viewModel.currentAvatarKey.value)
+    }
+
+    @Test
+    fun `SignOut calls authRepository signOut`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.signOut() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.SignOut)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { authRepository.signOut() }
+    }
+
+    @Test
+    fun `SignOut manages loading state`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.signOut() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.SignOut)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isLoading.value)
+    }
+
+    @Test
+    fun `authState is exposed from authRepository`() {
+        setupDefaultMocks()
+        val viewModel = createViewModel()
+
+        assertIs<AuthState.LoggedOut>(viewModel.authState.value)
+
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-1", displayName = "User")
+
+        assertIs<AuthState.LoggedIn>(viewModel.authState.value)
+        assertEquals("user-1", (viewModel.authState.value as AuthState.LoggedIn).userId)
+    }
+
+    @Test
+    fun `DeleteAccount manages loading state`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isLoading.value)
     }
 }

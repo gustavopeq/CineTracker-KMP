@@ -32,7 +32,7 @@ class CoreApplication : Application() {
             Sentry.init { options ->
                 options.dsn = dsn
                 options.environment = if (PlatformUtils.isDebugBuild) "debug" else "release"
-                options.debug = PlatformUtils.isDebugBuild
+                options.debug = false
             }
         }
     }

@@ -46,6 +46,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Never hardcode user-facing strings in code.** All strings must be defined in `composeResources/values/strings.xml`.
 - **Every new string added to `strings.xml` must also be added to all locale files:** `values-es-rES/strings.xml` (Spanish - Spain), `values-es-rMX/strings.xml` (Spanish - Mexico), and `values-pt/strings.xml` (Portuguese - Brazil). Provide best-effort translations for each.
+- **Never use backslash escapes for apostrophes** (`\'`) in Compose Resources string XML files. Compose Resources renders the backslash literally. Use the plain apostrophe character (`'`) directly.
 
 ## Formatting Rules
 
@@ -55,6 +56,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Prefer `Grep` over `Read`** when searching for a specific function, class, or pattern — only use `Read` when the full file context is needed.
 - **When using `Read` on a large file**, use `offset` + `limit` to read only the relevant section.
+
+## Platform UI Guidelines
+
+- **Always alert the user** when you spot a UI element that doesn't follow the platform touch target guidelines in `.claude/rules/style.md`.
 
 ## Kotlin Coding Rules
 
@@ -214,6 +219,29 @@ CineTracker-KMP/
 │   │       │           ├── PlatformUtils.kt       # expect
 │   │       │           ├── ScreenSizeInfo.kt      # expect
 │   │       │           └── StringFormat.kt        # expect
+│   │       ├── auth/
+│   │       │   ├── di/
+│   │       │   │   └── AuthModule.kt              # expect
+│   │       │   ├── model/
+│   │       │   │   ├── AuthState.kt
+│   │       │   │   ├── AuthTokens.kt
+│   │       │   │   ├── CloudSyncDto.kt
+│   │       │   │   ├── SignInResult.kt
+│   │       │   │   └── SupabaseDto.kt
+│   │       │   ├── network/
+│   │       │   │   └── SupabaseClient.kt          # expect
+│   │       │   ├── platform/
+│   │       │   │   ├── PlatformSignInProvider.kt   # expect
+│   │       │   │   ├── RecoveryHandler.kt
+│   │       │   │   └── TokenStorage.kt             # expect
+│   │       │   ├── repository/
+│   │       │   │   ├── AuthRepository.kt
+│   │       │   │   └── AuthRepositoryImpl.kt
+│   │       │   └── service/
+│   │       │       ├── SupabaseAuthService.kt
+│   │       │       ├── SupabaseAuthServiceImpl.kt
+│   │       │       ├── SyncService.kt
+│   │       │       └── SyncServiceImpl.kt
 │   │       ├── database/
 │   │       │   ├── AppDatabase.kt
 │   │       │   ├── backfill/
@@ -241,6 +269,20 @@ CineTracker-KMP/
 │   │       │       ├── SettingsRepository.kt
 │   │       │       └── SettingsRepositoryImpl.kt
 │   │       ├── features/
+│   │       │   ├── auth/
+│   │       │   │   ├── events/
+│   │       │   │   │   └── AuthEvent.kt
+│   │       │   │   └── ui/
+│   │       │   │       ├── AccountAnnouncementView.kt
+│   │       │   │       ├── AuthView.kt
+│   │       │   │       ├── AuthViewModel.kt
+│   │       │   │       ├── EmailAuthView.kt
+│   │       │   │       ├── ForgotPasswordView.kt
+│   │       │   │       ├── NewPasswordView.kt
+│   │       │   │       └── components/
+│   │       │   │           ├── AuthBackground.kt
+│   │       │   │           ├── AuthTextField.kt
+│   │       │   │           └── GoogleSignInButton.kt
 │   │       │   ├── browse/
 │   │       │   │   ├── domain/
 │   │       │   │   │   └── BrowseInteractor.kt
@@ -337,6 +379,9 @@ CineTracker-KMP/
 │   │       │   │       ├── SettingsViewModel.kt
 │   │       │   │       ├── LanguagePickerView.kt
 │   │       │   │       ├── RegionPickerView.kt
+│   │       │   │       ├── AvatarPickerView.kt
+│   │       │   │       ├── model/
+│   │       │   │       │   └── AvatarItem.kt
 │   │       │   │       └── components/
 │   │       │   │           ├── PickerItemRow.kt
 │   │       │   │           ├── PickerTopBar.kt
@@ -458,6 +503,15 @@ CineTracker-KMP/
 │   │   │   │   ├── PlatformUtils.kt
 │   │   │   │   ├── ScreenSizeInfo.android.kt
 │   │   │   │   └── StringFormat.kt
+│   │   │   ├── auth/
+│   │   │   │   ├── di/
+│   │   │   │   │   └── AuthModule.android.kt
+│   │   │   │   ├── network/
+│   │   │   │   │   └── SupabaseClient.android.kt
+│   │   │   │   └── platform/
+│   │   │   │       ├── AuthCallbackHandler.kt
+│   │   │   │       ├── PlatformSignInProvider.android.kt
+│   │   │   │       └── TokenStorage.android.kt
 │   │   │   ├── core/di/
 │   │   │   │   └── KoinInitializer.android.kt
 │   │   │   ├── database/
@@ -486,6 +540,15 @@ CineTracker-KMP/
 │   │   │   ├── PlatformUtils.kt
 │   │   │   ├── ScreenSizeInfo.ios.kt
 │   │   │   └── StringFormat.kt
+│   │   ├── auth/
+│   │   │   ├── di/
+│   │   │   │   └── AuthModule.ios.kt
+│   │   │   ├── network/
+│   │   │   │   └── SupabaseClient.ios.kt
+│   │   │   └── platform/
+│   │   │       ├── GoogleSignInBridge.kt
+│   │   │       ├── PlatformSignInProvider.ios.kt
+│   │   │       └── TokenStorage.ios.kt
 │   │   ├── core/di/
 │   │   │   └── KoinInitializer.ios.kt
 │   │   ├── database/
@@ -498,6 +561,15 @@ CineTracker-KMP/
 │   │       └── NetworkClient.ios.kt
 │   │
 │   ├── src/androidUnitTest/kotlin/
+│   │   ├── auth/
+│   │   │   ├── model/
+│   │   │   │   └── SupabaseDtoTest.kt
+│   │   │   ├── platform/
+│   │   │   │   └── RecoveryHandlerTest.kt
+│   │   │   ├── repository/
+│   │   │   │   └── AuthRepositoryImplTest.kt
+│   │   │   └── service/
+│   │   │       └── SyncServiceImplTest.kt
 │   │   ├── common/
 │   │   │   ├── domain/models/content/
 │   │   │   │   ├── GenericContentMapperTest.kt
@@ -570,6 +642,7 @@ CineTracker-KMP/
 └── iosApp/
     ├── Configuration/
     │   └── Config.xcconfig
+    ├── GoogleSignInHelper.swift
     └── iosApp/
         ├── ContentView.swift
         ├── iOSApp.swift

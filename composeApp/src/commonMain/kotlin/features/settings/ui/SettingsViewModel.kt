@@ -2,14 +2,23 @@ package features.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
+import features.settings.ui.model.DEFAULT_AVATAR_KEY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : ViewModel() {
+class SettingsViewModel(
+    private val settingsInteractor: SettingsInteractor,
+    private val authRepository: AuthRepository
+) : ViewModel() {
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _currentLanguageDisplay = MutableStateFlow("")
     val currentLanguageDisplay: StateFlow<String> = _currentLanguageDisplay
@@ -20,10 +29,18 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
     private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled
 
+    private val _currentAvatarKey = MutableStateFlow(DEFAULT_AVATAR_KEY)
+    val currentAvatarKey: StateFlow<String> = _currentAvatarKey
+
+    val authState: StateFlow<AuthState> = authRepository.authState
+
     init {
         refreshSettings()
         viewModelScope.launch {
             settingsInteractor.settingsChanged.collect { refreshSettings() }
+        }
+        viewModelScope.launch {
+            authRepository.authState.collect { refreshSettings() }
         }
     }
 
@@ -31,6 +48,8 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         when (event) {
             is SettingsEvent.NotificationPermissionResult -> handlePermissionResult(event.granted)
             SettingsEvent.DisableNotifications -> disableNotifications()
+            SettingsEvent.SignOut -> signOut()
+            is SettingsEvent.DeleteAccount -> deleteAccount()
         }
     }
 
@@ -44,6 +63,7 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
             .find { it.code == currentRegion }?.displayName ?: currentRegion
 
         _notificationsEnabled.value = settingsInteractor.areNotificationsEnabled()
+        _currentAvatarKey.value = settingsInteractor.getUserAvatar()
     }
 
     private fun handlePermissionResult(granted: Boolean) {
@@ -58,5 +78,21 @@ class SettingsViewModel(private val settingsInteractor: SettingsInteractor) : Vi
         settingsInteractor.setNotificationsEnabled(false)
         AppNotifications.cancelEngagementReminders()
         _notificationsEnabled.value = false
+    }
+
+    private fun signOut() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            authRepository.signOut()
+            _isLoading.value = false
+        }
+    }
+
+    private fun deleteAccount() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            authRepository.deleteAccount()
+            _isLoading.value = false
+        }
     }
 }

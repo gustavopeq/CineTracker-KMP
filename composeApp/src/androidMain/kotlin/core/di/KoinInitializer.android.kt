@@ -1,6 +1,8 @@
 package core.di
 
 import android.content.Context
+import auth.di.authModule
+import auth.di.platformAuthModule
 import core.di.modules.interactorModule
 import core.di.modules.viewModelModule
 import database.di.daoModule
@@ -26,7 +28,9 @@ actual class KoinInitializer(private val context: Context) {
                 settingsModule(),
                 apiModule,
                 serviceModule,
-                repositoryModule
+                repositoryModule,
+                platformAuthModule(),
+                authModule
             )
         }
     }

@@ -6,7 +6,7 @@
     <string name="main_nav_browse">Explorar</string>
     <string name="main_nav_watchlist">Listas</string>
     <string name="main_nav_search">Buscar</string>
-    <string name="main_nav_settings">Ajustes</string>
+    <string name="main_nav_account">Cuenta</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">Ver Detalles</string>
@@ -199,6 +199,64 @@
     <string name="settings_notifications">Notificaciones</string>
     <string name="settings_language_picker_title">Idioma de la App</string>
     <string name="settings_region_picker_title">Regi\u00f3n</string>
+    <string name="settings_avatar_picker_title">Elige Avatar</string>
+    <string name="avatar_category_critters">Criaturas</string>
+    <string name="avatar_category_heroes">H\u00e9roes</string>
+    <string name="avatar_category_heroines">Hero\u00ednas</string>
     <string name="settings_version">Versi\u00f3n</string>
+
+    <!-- Auth -->
+    <string name="auth_or_divider">o</string>
+    <string name="auth_sign_in_title">Iniciar sesión</string>
+    <string name="auth_sign_in_subtitle">Lleva el registro de cada película y serie que ves</string>
+    <string name="auth_continue_google">Continuar con Google</string>
+    <string name="auth_continue_email">Continuar con Email</string>
+    <string name="auth_continue_without_account">Continuar sin cuenta</string>
+    <string name="auth_create_account">Crear Cuenta</string>
+    <string name="auth_sign_in">Iniciar Sesión</string>
+    <string name="auth_name_hint">Nombre</string>
+    <string name="auth_email_hint">Email</string>
+    <string name="auth_password_hint">Contraseña</string>
+    <string name="auth_already_have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="auth_no_account">¿No tienes cuenta? Crea una</string>
+    <string name="auth_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="auth_reset_email_sent">Email de recuperación enviado</string>
+    <string name="auth_reset_email_sent_detail">Revisa tu bandeja de entrada y la carpeta de spam. Abre el enlace en este dispositivo para restablecer tu contraseña.</string>
+    <string name="auth_reset_password_title">Restablecer Contraseña</string>
+    <string name="auth_reset_password_subtitle">Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.</string>
+    <string name="auth_send_reset_link">Enviar Enlace</string>
+    <string name="auth_error_reset_password">No se pudo enviar el email de restablecimiento. Inténtalo de nuevo.</string>
+    <string name="auth_back_to_sign_in">Volver a Iniciar Sesión</string>
+    <string name="auth_new_password_title">Nueva Contraseña</string>
+    <string name="auth_new_password_subtitle">Ingresa tu nueva contraseña abajo.</string>
+    <string name="auth_new_password_hint">Nueva Contraseña</string>
+    <string name="auth_confirm_password_hint">Confirmar Contraseña</string>
+    <string name="auth_save_password">Guardar Contraseña</string>
+    <string name="auth_password_updated">Contraseña actualizada correctamente</string>
+    <string name="auth_error_passwords_dont_match">Las contraseñas no coinciden.</string>
+    <string name="auth_error_update_password">No se pudo actualizar la contraseña. Inténtalo de nuevo.</string>
+    <string name="auth_error_invalid_email">Ingresa una dirección de email válida.</string>
+    <string name="auth_error_password_too_short">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="auth_error_email_already_registered">Ya existe una cuenta con este email.</string>
+    <string name="auth_error_incorrect_credentials">Email o contraseña incorrectos.</string>
+    <string name="auth_error_email_not_confirmed">Revisa tu email para el enlace de verificación.</string>
+    <string name="auth_error_generic_sign_up">No se pudo crear la cuenta. Inténtalo de nuevo.</string>
+    <string name="auth_error_generic_sign_in">No se pudo iniciar sesión. Inténtalo de nuevo.</string>
+    <string name="settings_sign_in">Iniciar Sesión / Crear Cuenta</string>
+    <string name="settings_sign_out">Cerrar Sesión</string>
+    <string name="settings_delete_account">Eliminar Cuenta</string>
+    <string name="settings_sign_out_confirm">¿Cerrar sesión de tu cuenta?</string>
+    <string name="settings_delete_confirm">¿Eliminar tu cuenta? Tus datos en la nube serán eliminados.</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_keep">Mantener</string>
+    <string name="dialog_remove">Eliminar</string>
+    <string name="dialog_delete">Eliminar</string>
+
+    <!-- Account Announcement -->
+    <string name="announcement_tag">Almacenamiento seguro</string>
+    <string name="announcement_title">Tus listas,</string>
+    <string name="announcement_title_accent">preservadas.</string>
+    <string name="announcement_body">Guarda de forma segura tus listas y calificaciones en la nube. Tus colecciones se transferirán automáticamente, así nunca perderás ni un solo elemento.</string>
+    <string name="announcement_maybe_later">Quizás más tarde</string>
 
 </resources>

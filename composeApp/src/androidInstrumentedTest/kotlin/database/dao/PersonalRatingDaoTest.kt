@@ -11,6 +11,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -96,6 +97,47 @@ class PersonalRatingDaoTest {
 
         assertNull(dao.getRating(1).first())
         assertNotNull(dao.getRating(2).first())
+    }
+
+    // ── getAllRatings ─────────────────────────────────────────────────────────
+
+    // ── getAllSnapshot ─────────────────────────────────────────────────────────
+
+    @Test
+    fun getAllSnapshot_returnsAllRatings() = runBlocking {
+        dao.insertRating(PersonalRatingEntity(contentId = 100, mediaType = "MOVIE", rating = 8.5f))
+        dao.insertRating(PersonalRatingEntity(contentId = 200, mediaType = "SHOW", rating = 7.0f))
+
+        val snapshot = dao.getAllSnapshot()
+
+        assertEquals(2, snapshot.size)
+    }
+
+    // ── deleteAll ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun deleteAll_removesAllRatings() = runBlocking {
+        dao.insertRating(PersonalRatingEntity(contentId = 100, mediaType = "MOVIE", rating = 8.5f))
+
+        dao.deleteAll()
+
+        val snapshot = dao.getAllSnapshot()
+        assertTrue(snapshot.isEmpty())
+    }
+
+    // ── insertAll (bulk) ──────────────────────────────────────────────────────
+
+    @Test
+    fun insertAll_insertsMultipleRatings() = runBlocking {
+        val ratings = listOf(
+            PersonalRatingEntity(contentId = 100, mediaType = "MOVIE", rating = 8.5f),
+            PersonalRatingEntity(contentId = 200, mediaType = "SHOW", rating = 7.0f)
+        )
+
+        dao.insertAll(ratings)
+
+        val snapshot = dao.getAllSnapshot()
+        assertEquals(2, snapshot.size)
     }
 
     // ── getAllRatings ─────────────────────────────────────────────────────────

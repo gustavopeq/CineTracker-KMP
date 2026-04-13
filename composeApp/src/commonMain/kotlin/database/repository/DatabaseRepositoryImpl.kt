@@ -1,14 +1,21 @@
 package database.repository
 
+import auth.service.SyncService
 import common.domain.models.util.MediaType
 import database.dao.ContentEntityDao
 import database.dao.ListEntityDao
+import database.dao.PersonalRatingDao
 import database.model.ContentEntity
 import database.model.ListEntity
+import features.watchlist.ui.model.DefaultLists
 import kotlinx.coroutines.flow.Flow
 
-class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, private val listEntityDao: ListEntityDao) :
-    DatabaseRepository {
+class DatabaseRepositoryImpl(
+    private val contentEntityDao: ContentEntityDao,
+    private val listEntityDao: ListEntityDao,
+    private val personalRatingDao: PersonalRatingDao,
+    private val syncService: SyncService
+) : DatabaseRepository {
 
     override suspend fun insertItem(
         contentId: Int,
@@ -27,6 +34,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
             voteAverage = voteAverage
         )
         contentEntityDao.insert(item)
+        syncService.requestUpload()
     }
 
     override suspend fun deleteItem(contentId: Int, mediaType: MediaType, listId: Int): ContentEntity? {
@@ -41,6 +49,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
                 mediaType = mediaType.name,
                 listId = listId
             )
+            syncService.requestUpload()
         }
         return itemRemoved
     }
@@ -74,6 +83,7 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
 
     override suspend fun reinsertItem(contentEntity: ContentEntity) {
         contentEntityDao.insert(contentEntity)
+        syncService.requestUpload()
     }
 
     override fun getAllLists(): Flow<List<ListEntity>> = listEntityDao.getAllLists()
@@ -90,12 +100,38 @@ class DatabaseRepositoryImpl(private val contentEntityDao: ContentEntityDao, pri
                     listName = newListName
                 )
             )
+            syncService.requestUpload()
             true
         }
     }
 
+    override suspend fun clearList(listId: Int) {
+        contentEntityDao.deleteAllByListId(listId)
+        syncService.requestUpload()
+    }
+
     override suspend fun deleteList(listId: Int) {
         listEntityDao.deleteList(listId)
+        syncService.requestUpload()
+    }
+
+    override suspend fun resetToDefaults() {
+        listEntityDao.deleteAll()
+        personalRatingDao.deleteAll()
+        listEntityDao.insertAll(
+            listOf(
+                ListEntity(
+                    listId = DefaultLists.WATCHLIST.listId,
+                    listName = DefaultLists.WATCHLIST.name.lowercase(),
+                    isDefault = true
+                ),
+                ListEntity(
+                    listId = DefaultLists.WATCHED.listId,
+                    listName = DefaultLists.WATCHED.name.lowercase(),
+                    isDefault = true
+                )
+            )
+        )
     }
 
     override suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity> =

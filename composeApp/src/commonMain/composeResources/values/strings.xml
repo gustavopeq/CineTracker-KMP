@@ -7,7 +7,7 @@
     <string name="main_nav_browse">Browse</string>
     <string name="main_nav_watchlist">My Lists</string>
     <string name="main_nav_search">Search</string>
-    <string name="main_nav_settings">Settings</string>
+    <string name="main_nav_account">Account</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">See Details</string>
@@ -198,6 +198,64 @@
     <string name="settings_notifications">Notifications</string>
     <string name="settings_language_picker_title">App Language</string>
     <string name="settings_region_picker_title">Region</string>
+    <string name="settings_avatar_picker_title">Choose Avatar</string>
+    <string name="avatar_category_critters">Critters</string>
+    <string name="avatar_category_heroes">Heroes</string>
+    <string name="avatar_category_heroines">Heroines</string>
     <string name="settings_version">Version</string>
+
+    <!-- Auth -->
+    <string name="auth_or_divider">or</string>
+    <string name="auth_sign_in_title">Sign in</string>
+    <string name="auth_sign_in_subtitle">Track every movie and show you watch</string>
+    <string name="auth_continue_google">Continue with Google</string>
+    <string name="auth_continue_email">Continue with Email</string>
+    <string name="auth_continue_without_account">Continue without account</string>
+    <string name="auth_create_account">Create Account</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_name_hint">Name</string>
+    <string name="auth_email_hint">Email</string>
+    <string name="auth_password_hint">Password</string>
+    <string name="auth_already_have_account">Already have an account? Sign in</string>
+    <string name="auth_no_account">Don't have an account? Create one</string>
+    <string name="auth_forgot_password">Forgot Password?</string>
+    <string name="auth_reset_email_sent">Password reset email sent</string>
+    <string name="auth_reset_email_sent_detail">Check your inbox and junk folder. Open the link on this device to reset your password.</string>
+    <string name="auth_reset_password_title">Reset Password</string>
+    <string name="auth_reset_password_subtitle">Enter your email and we'll send you a link to reset your password.</string>
+    <string name="auth_send_reset_link">Send Reset Link</string>
+    <string name="auth_error_reset_password">Unable to send reset email. Please try again.</string>
+    <string name="auth_back_to_sign_in">Back to Sign In</string>
+    <string name="auth_new_password_title">New Password</string>
+    <string name="auth_new_password_subtitle">Enter your new password below.</string>
+    <string name="auth_new_password_hint">New Password</string>
+    <string name="auth_confirm_password_hint">Confirm Password</string>
+    <string name="auth_save_password">Save Password</string>
+    <string name="auth_password_updated">Password updated successfully</string>
+    <string name="auth_error_passwords_dont_match">Passwords don't match.</string>
+    <string name="auth_error_update_password">Unable to update password. Please try again.</string>
+    <string name="auth_error_invalid_email">Please enter a valid email address.</string>
+    <string name="auth_error_password_too_short">Password must be at least 6 characters.</string>
+    <string name="auth_error_email_already_registered">An account with this email already exists.</string>
+    <string name="auth_error_incorrect_credentials">Incorrect email or password.</string>
+    <string name="auth_error_email_not_confirmed">Please check your email for a verification link.</string>
+    <string name="auth_error_generic_sign_up">Unable to create account. Please try again.</string>
+    <string name="auth_error_generic_sign_in">Unable to sign in. Please try again.</string>
+    <string name="settings_sign_in">Sign In / Create Account</string>
+    <string name="settings_sign_out">Sign Out</string>
+    <string name="settings_delete_account">Delete Account</string>
+    <string name="settings_sign_out_confirm">Sign out of your account?</string>
+    <string name="settings_delete_confirm">Delete your account? Your cloud data will be removed.</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_keep">Keep</string>
+    <string name="dialog_remove">Remove</string>
+    <string name="dialog_delete">Delete</string>
+
+    <!-- Account Announcement -->
+    <string name="announcement_tag">Secured Storage</string>
+    <string name="announcement_title">Your lists,</string>
+    <string name="announcement_title_accent">preserved.</string>
+    <string name="announcement_body">Securely save your custom lists and ratings in the cloud. Your collections will be automatically transferred, so you'll never lose a single item.</string>
+    <string name="announcement_maybe_later">Maybe Later</string>
 
 </resources>

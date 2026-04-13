@@ -1,9 +1,12 @@
 package features.settings.domain
 
 import app.cash.turbine.test
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
 import io.mockk.MockKAnnotations
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -14,14 +17,22 @@ import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsInteractorTest {
 
     private val settingsRepository: SettingsRepository = mockk(relaxUnitFun = true)
+    private val authRepository: AuthRepository = mockk(relaxUnitFun = true)
+    private val authStateFlow = MutableStateFlow<AuthState>(AuthState.LoggedOut)
+    private val testScope = TestScope()
 
     private lateinit var interactor: SettingsInteractor
 
@@ -30,7 +41,8 @@ class SettingsInteractorTest {
         MockKAnnotations.init(this)
         mockkObject(PlatformUtils)
         every { PlatformUtils.applyAppLocale(any()) } just runs
-        interactor = SettingsInteractor(settingsRepository)
+        every { authRepository.authState } returns authStateFlow
+        interactor = SettingsInteractor(settingsRepository, authRepository, testScope)
     }
 
     @After
@@ -300,6 +312,144 @@ class SettingsInteractorTest {
         interactor.setNotificationsEnabled(false)
 
         verify { settingsRepository.setEngagementRemindersEnabled(false) }
+    }
+
+    // endregion
+
+    // region getUserAvatar
+
+    @Test
+    fun `getUserAvatar returns stored avatar when present`() {
+        every { settingsRepository.getUserAvatar() } returns "boy_avatar_2"
+
+        val result = interactor.getUserAvatar()
+
+        assertEquals("boy_avatar_2", result)
+    }
+
+    @Test
+    fun `getUserAvatar returns anonymous_avatar when no stored value`() {
+        every { settingsRepository.getUserAvatar() } returns null
+
+        val result = interactor.getUserAvatar()
+
+        assertEquals("anonymous_avatar", result)
+    }
+
+    // endregion
+
+    // region setUserAvatar
+
+    @Test
+    fun `setUserAvatar saves to repository`() {
+        interactor.setUserAvatar("girl_avatar_1")
+
+        verify { settingsRepository.setUserAvatar("girl_avatar_1") }
+    }
+
+    @Test
+    fun `setUserAvatar emits settingsChanged`() = runTest {
+        interactor.settingsChanged.test {
+            interactor.setUserAvatar("animal_avatar_3")
+            awaitItem()
+        }
+    }
+
+    @Test
+    fun `setUserAvatar syncs to remote when logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+
+        interactor.setUserAvatar("boy_avatar_1")
+        testScope.advanceUntilIdle()
+
+        coVerify { authRepository.syncPreferenceToRemote(avatarKey = "boy_avatar_1") }
+    }
+
+    @Test
+    fun `setUserAvatar does not sync when logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+
+        interactor.setUserAvatar("boy_avatar_1")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    // endregion
+
+    // region setAppLanguage remote sync
+
+    @Test
+    fun `setAppLanguage syncs to remote when logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify { authRepository.syncPreferenceToRemote(language = "pt-BR") }
+    }
+
+    @Test
+    fun `setAppLanguage does not sync when logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    @Test
+    fun `setAppLanguage does not sync when language unchanged`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppLanguage() } returns "pt-BR"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    // endregion
+
+    // region setAppRegion remote sync
+
+    @Test
+    fun `setAppRegion syncs to remote when logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify { authRepository.syncPreferenceToRemote(region = "BR") }
+    }
+
+    @Test
+    fun `setAppRegion does not sync when logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    @Test
+    fun `setAppRegion does not sync when region unchanged`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppRegion() } returns "BR"
+        every { PlatformUtils.getUserCountry() } returns "BR"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
     }
 
     // endregion

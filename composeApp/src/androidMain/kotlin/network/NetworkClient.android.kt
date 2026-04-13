@@ -8,17 +8,16 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-actual val client: HttpClient
-    get() = HttpClient(OkHttp) {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                }
-            )
-        }
-        defaultRequest {
-            url(BASE_URL_MOVIEDB)
-        }
+actual val client: HttpClient = HttpClient(OkHttp) {
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }
+        )
     }
+    defaultRequest {
+        url(BASE_URL_MOVIEDB)
+    }
+}

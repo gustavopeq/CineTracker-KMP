@@ -11,4 +11,11 @@ interface SettingsRepository {
     fun setAppLanguage(languageTag: String)
     fun getAppRegion(): String?
     fun setAppRegion(regionCode: String)
+    fun getUserAvatar(): String?
+    fun setUserAvatar(avatarKey: String)
+    fun clearUserAvatar()
+    fun hasLocalChanges(): Boolean
+    fun setHasLocalChanges(value: Boolean)
+    fun hasSeenAccountAnnouncement(): Boolean
+    fun setAccountAnnouncementSeen()
 }

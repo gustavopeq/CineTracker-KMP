@@ -9,7 +9,7 @@ import database.repository.SettingsRepositoryImpl
 import org.koin.dsl.module
 
 val databaseRepositoryModule = module {
-    single<DatabaseRepository> { DatabaseRepositoryImpl(get(), get()) }
-    single<PersonalRatingRepository> { PersonalRatingRepositoryImpl(get()) }
+    single<DatabaseRepository> { DatabaseRepositoryImpl(get(), get(), get(), get()) }
+    single<PersonalRatingRepository> { PersonalRatingRepositoryImpl(get(), get()) }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
 }

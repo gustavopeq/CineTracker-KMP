@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,11 +20,10 @@ import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.manage_other_lists_header
 import common.domain.models.list.ListItem
+import common.ui.components.AppSwitch
 import common.ui.components.SystemNavBarSpacer
 import common.ui.components.bottomsheet.GenericBottomSheet
 import common.ui.theme.DividerGrey
-import common.ui.theme.PrimaryYellowColor
-import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.LARGE_MARGIN
 import common.util.UiConstants.LARGE_PADDING
@@ -95,16 +92,9 @@ private fun ListToggleRow(isContentInList: Boolean, listName: String, onToggleLi
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
-        Switch(
+        AppSwitch(
             checked = isContentInList,
-            onCheckedChange = { onToggleList() },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = PrimaryYellowColor,
-                checkedTrackColor = PrimaryYellowColor.copy(alpha = 0.3f),
-                uncheckedThumbColor = SecondaryGreyColor,
-                uncheckedTrackColor = SecondaryGreyColor.copy(alpha = 0.2f),
-                uncheckedBorderColor = SecondaryGreyColor.copy(alpha = 0.3f)
-            )
+            onCheckedChange = { onToggleList() }
         )
     }
 }

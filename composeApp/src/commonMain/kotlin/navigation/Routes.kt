@@ -35,4 +35,25 @@ data object LanguagePickerRoute
 data object RegionPickerRoute
 
 @Serializable
+data object AvatarPickerRoute
+
+@Serializable
+data object MainScaffoldRoute
+
+@Serializable
 data object ErrorRoute
+
+@Serializable
+data object AuthGraphRoute
+
+@Serializable
+data object AuthRoute
+
+@Serializable
+data object EmailAuthRoute
+
+@Serializable
+data object ForgotPasswordRoute
+
+@Serializable
+data object NewPasswordRoute

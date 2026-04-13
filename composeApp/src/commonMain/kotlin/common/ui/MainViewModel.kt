@@ -4,6 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import auth.model.AuthState
+import auth.repository.AuthRepository
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import common.util.platform.AppNotifications
@@ -12,12 +15,15 @@ import database.repository.SettingsRepository
 import features.watchlist.ui.model.WatchlistRatingSort
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class WatchlistSort(val mediaType: MediaType? = null, val ratingSort: WatchlistRatingSort? = null)
 
 class MainViewModel(
     private val databaseRepository: DatabaseRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _hasSeenOnboarding = MutableStateFlow<Boolean?>(null)
@@ -26,13 +32,32 @@ class MainViewModel(
     private val _shouldShowNotificationDialog = MutableStateFlow(false)
     val shouldShowNotificationDialog: StateFlow<Boolean> get() = _shouldShowNotificationDialog
 
+    val authState: StateFlow<AuthState> = authRepository.authState
+
+    private val _shouldShowAnnouncement = MutableStateFlow(false)
+    val shouldShowAnnouncement: StateFlow<Boolean> = _shouldShowAnnouncement.asStateFlow()
+
+    private val _pendingAuthNavigation = MutableStateFlow(false)
+    val pendingAuthNavigation: StateFlow<Boolean> = _pendingAuthNavigation.asStateFlow()
+
     init {
         _hasSeenOnboarding.value = settingsRepository.hasCompletedOnboarding()
         _shouldShowNotificationDialog.value = !settingsRepository.areEngagementRemindersEnabled()
+        authRepository.restoreSession()
+        if (authRepository.authState.value is AuthState.LoggedIn) {
+            viewModelScope.launch { authRepository.fetchAndApplyPreferences() }
+        }
+        if (settingsRepository.hasCompletedOnboarding() &&
+            !settingsRepository.hasSeenAccountAnnouncement() &&
+            authRepository.authState.value is AuthState.LoggedOut
+        ) {
+            _shouldShowAnnouncement.value = true
+        }
     }
 
     fun updateOnboardingUiState() {
         _hasSeenOnboarding.value = true
+        _pendingAuthNavigation.value = true
     }
 
     fun enableEngagementReminders() {
@@ -110,5 +135,20 @@ class MainViewModel(
         } else {
             _isDuplicatedListName.value = true
         }
+    }
+
+    fun onAnnouncementCreateAccount() {
+        settingsRepository.setAccountAnnouncementSeen()
+        _shouldShowAnnouncement.value = false
+        _pendingAuthNavigation.value = true
+    }
+
+    fun onAnnouncementDismiss() {
+        settingsRepository.setAccountAnnouncementSeen()
+        _shouldShowAnnouncement.value = false
+    }
+
+    fun onAuthNavigationHandled() {
+        _pendingAuthNavigation.value = false
     }
 }

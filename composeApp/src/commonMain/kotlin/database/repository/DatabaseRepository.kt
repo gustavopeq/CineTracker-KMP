@@ -29,7 +29,11 @@ interface DatabaseRepository {
 
     suspend fun addNewList(listName: String): Boolean
 
+    suspend fun clearList(listId: Int)
+
     suspend fun deleteList(listId: Int)
+
+    suspend fun resetToDefaults()
 
     suspend fun getEntitiesWithMissingCachedFields(): List<ContentEntity>
 

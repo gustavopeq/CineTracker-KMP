@@ -136,6 +136,51 @@ class ListEntityDaoTest {
         assertFalse(result[0].isDefault)
     }
 
+    // ── getAllSnapshot ─────────────────────────────────────────────────────────
+
+    @Test
+    fun getAllSnapshot_returnsAllLists() = runBlocking {
+        dao.insertList(ListEntity(listId = 1, listName = "watchlist", isDefault = true))
+        dao.insertList(ListEntity(listId = 2, listName = "watched", isDefault = true))
+
+        val snapshot = dao.getAllSnapshot()
+
+        assertEquals(2, snapshot.size)
+    }
+
+    // ── deleteAll ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun deleteAll_removesAllListsAndCascadesToContent() = runBlocking {
+        dao.insertList(ListEntity(listId = 1, listName = "watchlist", isDefault = true))
+        val contentDao = database.contentEntityDao()
+        contentDao.insert(ContentEntity(contentId = 100, mediaType = "MOVIE", listId = 1))
+
+        dao.deleteAll()
+
+        val lists = dao.getAllSnapshot()
+        val content = contentDao.getAllSnapshot()
+        assertTrue(lists.isEmpty())
+        assertTrue(content.isEmpty())
+    }
+
+    // ── insertAll ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun insertAll_insertsMultipleLists() = runBlocking {
+        val lists = listOf(
+            ListEntity(listId = 1, listName = "watchlist", isDefault = true),
+            ListEntity(listId = 2, listName = "watched", isDefault = true)
+        )
+
+        dao.insertAll(lists)
+
+        val snapshot = dao.getAllSnapshot()
+        assertEquals(2, snapshot.size)
+    }
+
+    // ── deleteList (other lists unaffected) ───────────────────────────────────
+
     @Test
     fun deleteList_doesNotAffectContentInOtherLists() = runBlocking {
         dao.insertList(ListEntity(listId = 1, listName = "watchlist"))
