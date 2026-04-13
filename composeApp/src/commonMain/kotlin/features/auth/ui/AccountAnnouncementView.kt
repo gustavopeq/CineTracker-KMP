@@ -48,15 +48,21 @@ import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryGreyColor
 import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
+import common.util.UiConstants.DEFAULT_MARGIN
+import common.util.UiConstants.LARGE_PADDING
+import common.util.UiConstants.SYSTEM_BOTTOM_NAV_PADDING
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+private const val ANNOUNCEMENT_BOTTOM_SPACING = 58
 private const val TAG_ICON_SIZE = 16
+private const val TAG_INNER_SPACING = 6
 private const val TAG_CORNER_RADIUS = 16
 private const val TITLE_FONT_SIZE = 36
 private const val BUTTON_HEIGHT = 56
 private const val BUTTON_CORNER_RADIUS = 12
 private const val BUTTON_FONT_SIZE = 18
+private const val TAG_FONT_SIZE = 11
 
 @Composable
 fun AccountAnnouncementView(
@@ -75,12 +81,12 @@ fun AccountAnnouncementView(
             modifier = Modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.systemBars)
-                .padding(horizontal = 32.dp),
+                .padding(horizontal = SYSTEM_BOTTOM_NAV_PADDING.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
             SecuredStorageTag()
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
 
             Text(
                 text = stringResource(Res.string.announcement_title).uppercase(),
@@ -96,7 +102,7 @@ fun AccountAnnouncementView(
                 color = PrimaryYellowColor
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
 
             Text(
                 text = stringResource(Res.string.announcement_body),
@@ -104,7 +110,7 @@ fun AccountAnnouncementView(
                 color = SecondaryGreyColor
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(SYSTEM_BOTTOM_NAV_PADDING.dp))
 
             Button(
                 onClick = onCreateAccount,
@@ -124,7 +130,7 @@ fun AccountAnnouncementView(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
 
             Text(
                 text = stringResource(Res.string.announcement_maybe_later).uppercase(),
@@ -137,10 +143,10 @@ fun AccountAnnouncementView(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) { onDismiss() }
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = DEFAULT_MARGIN.dp)
             )
 
-            Spacer(modifier = Modifier.height(58.dp))
+            Spacer(modifier = Modifier.height(ANNOUNCEMENT_BOTTOM_SPACING.dp))
         }
     }
 }
@@ -153,7 +159,7 @@ private fun SecuredStorageTag() {
                 color = MainBarGreyColor,
                 shape = RoundedCornerShape(TAG_CORNER_RADIUS.dp)
             )
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(horizontal = LARGE_PADDING.dp, vertical = TAG_INNER_SPACING.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -162,10 +168,10 @@ private fun SecuredStorageTag() {
             modifier = Modifier.size(TAG_ICON_SIZE.dp),
             tint = PrimaryYellowColor
         )
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(TAG_INNER_SPACING.dp))
         Text(
             text = stringResource(Res.string.announcement_tag).uppercase(),
-            fontSize = 11.sp,
+            fontSize = TAG_FONT_SIZE.sp,
             fontWeight = FontWeight.SemiBold,
             color = PrimaryYellowColor,
             letterSpacing = 1.sp

@@ -172,10 +172,8 @@ fun RootNavGraph(rootNavController: NavHostController) {
                         )
                     }
                 }
-                composable<NewPasswordRoute> { backStackEntry ->
-                    val route = backStackEntry.toRoute<NewPasswordRoute>()
+                composable<NewPasswordRoute> {
                     NewPasswordScreen(
-                        accessToken = route.accessToken,
                         onDone = {
                             rootNavController.popBackStack()
                             rootNavController.navigate(AuthGraphRoute)

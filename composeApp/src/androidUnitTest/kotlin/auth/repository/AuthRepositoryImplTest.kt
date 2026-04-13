@@ -294,7 +294,7 @@ class AuthRepositoryImplTest {
     // region signOut
 
     @Test
-    fun `signOut clears tokens and avatar and emits LoggedOut`() = runTest {
+    fun `signOut clears tokens and avatar and resets database on success`() = runTest {
         every { tokenStorage.getAccessToken() } returns "test-access"
         coEvery { service.signOut("test-access") } returns AuthResult.Success(Unit)
 
@@ -303,11 +303,12 @@ class AuthRepositoryImplTest {
         assertIs<AuthResult.Success<Unit>>(result)
         verify { tokenStorage.clearTokens() }
         verify { settingsRepository.clearUserAvatar() }
+        coVerify { databaseRepository.resetToDefaults() }
         assertIs<AuthState.LoggedOut>(repository.authState.value)
     }
 
     @Test
-    fun `signOut clears tokens even on server error`() = runTest {
+    fun `signOut clears tokens but preserves database on server error`() = runTest {
         every { tokenStorage.getAccessToken() } returns "test-access"
         coEvery { service.signOut("test-access") } returns AuthResult.Error("Server error")
 
@@ -315,6 +316,7 @@ class AuthRepositoryImplTest {
 
         verify { tokenStorage.clearTokens() }
         assertIs<AuthState.LoggedOut>(repository.authState.value)
+        coVerify(exactly = 0) { databaseRepository.resetToDefaults() }
     }
 
     // endregion
@@ -433,8 +435,8 @@ class AuthRepositoryImplTest {
                 "test-access",
                 match { dto ->
                     dto.userId == "user-123" &&
-                        dto.avatarKey.startsWith("boy_avatar_") ||
-                        dto.avatarKey.startsWith("girl_avatar_") &&
+                        (dto.avatarKey.startsWith("boy_avatar_") ||
+                            dto.avatarKey.startsWith("girl_avatar_")) &&
                         dto.appLanguage == "pt-BR" &&
                         dto.appRegion == "BR"
                 }

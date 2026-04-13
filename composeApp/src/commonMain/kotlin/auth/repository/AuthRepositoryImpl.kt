@@ -14,6 +14,7 @@ import co.touchlab.kermit.Logger
 import common.util.platform.PlatformUtils
 import database.repository.DatabaseRepository
 import database.repository.SettingsRepository
+import features.settings.ui.model.DEFAULT_AVATAR_KEY
 import features.settings.ui.model.getRandomAvatar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -99,8 +100,10 @@ class AuthRepositoryImpl(
         val result = service.signOut(accessToken)
         tokenStorage.clearTokens()
         settingsRepository.clearUserAvatar()
-        databaseRepository.resetToDefaults()
         _authState.value = AuthState.LoggedOut
+        if (result is AuthResult.Success) {
+            databaseRepository.resetToDefaults()
+        }
         return result
     }
 
@@ -179,7 +182,7 @@ class AuthRepositoryImpl(
         val userId = tokenStorage.getAuthTokens()?.userId ?: return
         val dto = UserPreferencesDto(
             userId = userId,
-            avatarKey = avatarKey ?: settingsRepository.getUserAvatar() ?: "anonymous_avatar",
+            avatarKey = avatarKey ?: settingsRepository.getUserAvatar() ?: DEFAULT_AVATAR_KEY,
             appLanguage = language ?: settingsRepository.getAppLanguage(),
             appRegion = region ?: settingsRepository.getAppRegion()
         )

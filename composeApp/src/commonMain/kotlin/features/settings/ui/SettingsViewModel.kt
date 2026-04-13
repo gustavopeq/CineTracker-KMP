@@ -7,6 +7,7 @@ import auth.repository.AuthRepository
 import common.util.platform.AppNotifications
 import features.settings.domain.SettingsInteractor
 import features.settings.events.SettingsEvent
+import features.settings.ui.model.DEFAULT_AVATAR_KEY
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class SettingsViewModel(
     private val _notificationsEnabled = MutableStateFlow(false)
     val notificationsEnabled: StateFlow<Boolean> = _notificationsEnabled
 
-    private val _currentAvatarKey = MutableStateFlow("anonymous_avatar")
+    private val _currentAvatarKey = MutableStateFlow(DEFAULT_AVATAR_KEY)
     val currentAvatarKey: StateFlow<String> = _currentAvatarKey
 
     val authState: StateFlow<AuthState> = authRepository.authState

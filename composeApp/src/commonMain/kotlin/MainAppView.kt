@@ -87,10 +87,8 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 
     val pendingRecoveryToken by RecoveryHandler.pendingRecoveryToken.collectAsState()
     LaunchedEffect(pendingRecoveryToken) {
-        val token = pendingRecoveryToken
-        if (token != null) {
-            RecoveryHandler.consumeRecoveryToken()
-            rootNavController.navigate(NewPasswordRoute(accessToken = token))
+        if (pendingRecoveryToken != null) {
+            rootNavController.navigate(NewPasswordRoute)
         }
     }
 

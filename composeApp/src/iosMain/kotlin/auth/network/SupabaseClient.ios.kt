@@ -10,8 +10,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-actual val supabaseClient: HttpClient
-    get() = HttpClient(Darwin) {
+actual val supabaseClient: HttpClient = HttpClient(Darwin) {
         install(ContentNegotiation) {
             json(
                 Json {

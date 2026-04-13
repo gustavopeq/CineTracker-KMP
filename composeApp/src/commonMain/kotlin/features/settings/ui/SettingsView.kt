@@ -108,7 +108,9 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = PrimaryYellowColor,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.clickable(onClick = goToAuth)
+                modifier = Modifier
+                    .clickable(onClick = goToAuth)
+                    .padding(vertical = 14.dp)
             )
         }
         Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))

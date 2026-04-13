@@ -67,12 +67,23 @@ actual class TokenStorage {
         val valueData = NSString.create(string = value)
             .dataUsingEncoding(NSUTF8StringEncoding) ?: return
 
-        val query = CFDictionaryCreateMutable(null, 4, null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
-        CFDictionaryAddValue(query, kSecValueData, CFBridgingRetain(valueData))
-        SecItemAdd(query, null)
+        memScoped {
+            val query = CFDictionaryCreateMutable(null, 4, null, null)
+            val serviceRef = CFBridgingRetain(serviceName)
+            val keyRef = CFBridgingRetain(key)
+            val dataRef = CFBridgingRetain(valueData)
+            try {
+                CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+                CFDictionaryAddValue(query, kSecAttrService, serviceRef)
+                CFDictionaryAddValue(query, kSecAttrAccount, keyRef)
+                CFDictionaryAddValue(query, kSecValueData, dataRef)
+                SecItemAdd(query, null)
+            } finally {
+                CFBridgingRelease(serviceRef)
+                CFBridgingRelease(keyRef)
+                CFBridgingRelease(dataRef)
+            }
+        }
     }
 
     private fun read(key: String): String? {
@@ -96,11 +107,20 @@ actual class TokenStorage {
     }
 
     private fun delete(key: String) {
-        val query = CFDictionaryCreateMutable(null, 3, null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
-        SecItemDelete(query)
+        memScoped {
+            val query = CFDictionaryCreateMutable(null, 3, null, null)
+            val serviceRef = CFBridgingRetain(serviceName)
+            val keyRef = CFBridgingRetain(key)
+            try {
+                CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
+                CFDictionaryAddValue(query, kSecAttrService, serviceRef)
+                CFDictionaryAddValue(query, kSecAttrAccount, keyRef)
+                SecItemDelete(query)
+            } finally {
+                CFBridgingRelease(serviceRef)
+                CFBridgingRelease(keyRef)
+            }
+        }
     }
 
     companion object {

@@ -4,6 +4,7 @@ import auth.model.AuthState
 import auth.repository.AuthRepository
 import common.util.platform.PlatformUtils
 import database.repository.SettingsRepository
+import features.settings.ui.model.DEFAULT_AVATAR_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -64,7 +65,7 @@ class SettingsInteractor(
         }
     }
 
-    fun getUserAvatar(): String = settingsRepository.getUserAvatar() ?: "anonymous_avatar"
+    fun getUserAvatar(): String = settingsRepository.getUserAvatar() ?: DEFAULT_AVATAR_KEY
 
     fun setUserAvatar(avatarKey: String) {
         settingsRepository.setUserAvatar(avatarKey)

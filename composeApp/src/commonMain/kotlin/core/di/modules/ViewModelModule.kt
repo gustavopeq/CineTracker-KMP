@@ -3,6 +3,7 @@ package core.di.modules
 import common.domain.models.util.MediaType
 import common.ui.MainViewModel
 import features.auth.ui.AuthViewModel
+import features.auth.ui.NewPasswordViewModel
 import features.browse.ui.BrowseViewModel
 import features.details.ui.DetailsViewModel
 import features.home.ui.HomeViewModel
@@ -22,6 +23,7 @@ val viewModelModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { SettingsViewModel(get(), get()) }
     viewModel { AuthViewModel(get()) }
+    viewModel { NewPasswordViewModel(get()) }
     viewModel { (contentId: Int, mediaType: MediaType) ->
         DetailsViewModel(contentId, mediaType, get(), get())
     }

@@ -24,6 +24,8 @@ import cinetracker_kmp.composeapp.generated.resources.girl_avatar_6
 import cinetracker_kmp.composeapp.generated.resources.girl_avatar_7
 import org.jetbrains.compose.resources.DrawableResource
 
+const val DEFAULT_AVATAR_KEY = "anonymous_avatar"
+
 data class AvatarItem(val key: String, val drawableRes: DrawableResource)
 
 enum class AvatarCategory {

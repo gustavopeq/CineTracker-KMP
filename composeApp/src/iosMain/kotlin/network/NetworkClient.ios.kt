@@ -8,8 +8,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-actual val client: HttpClient
-    get() = HttpClient(Darwin) {
+actual val client: HttpClient = HttpClient(Darwin) {
         defaultRequest {
             url(BASE_URL_MOVIEDB)
         }
