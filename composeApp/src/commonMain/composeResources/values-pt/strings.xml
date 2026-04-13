@@ -6,7 +6,7 @@
     <string name="main_nav_browse">Explorar</string>
     <string name="main_nav_watchlist">Listas</string>
     <string name="main_nav_search">Busca</string>
-    <string name="main_nav_settings">Ajustes</string>
+    <string name="main_nav_account">Conta</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">Ver Detalhes</string>

@@ -7,7 +7,7 @@
     <string name="main_nav_browse">Browse</string>
     <string name="main_nav_watchlist">My Lists</string>
     <string name="main_nav_search">Search</string>
-    <string name="main_nav_settings">Settings</string>
+    <string name="main_nav_account">Account</string>
 
     <!-- Home screen -->
     <string name="see_details_button_text">See Details</string>
