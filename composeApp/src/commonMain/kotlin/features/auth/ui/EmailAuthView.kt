@@ -42,7 +42,6 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.LARGE_MARGIN
 import features.auth.events.AuthEvent
-import features.auth.ui.components.AuthBackground
 import features.auth.ui.components.AuthTextField
 import features.settings.ui.components.PickerTopBar
 import org.jetbrains.compose.resources.stringResource
@@ -63,7 +62,8 @@ fun EmailAuthScreen(
     val formError by viewModel.formError.collectAsState()
     val authSuccess by viewModel.authSuccess.collectAsState()
 
-    val isFormValid = email.isNotBlank() && password.isNotBlank() &&
+    val isFormValid = email.isNotBlank() &&
+        password.isNotBlank() &&
         (!isCreateMode || name.isNotBlank())
 
     LaunchedEffect(authSuccess) {
@@ -72,123 +72,121 @@ fun EmailAuthScreen(
         }
     }
 
-    AuthBackground {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        PickerTopBar(
+            title = if (isCreateMode) {
+                Res.string.auth_create_account
+            } else {
+                Res.string.auth_sign_in
+            },
+            onBack = onBack
+        )
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
+                .fillMaxWidth()
+                .padding(horizontal = DEFAULT_MARGIN.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PickerTopBar(
-                title = if (isCreateMode) {
-                    Res.string.auth_create_account
-                } else {
-                    Res.string.auth_sign_in
-                },
-                onBack = onBack
+            AnimatedVisibility(visible = isCreateMode) {
+                Column {
+                    AuthTextField(
+                        value = name,
+                        onValueChange = viewModel::updateName,
+                        placeholder = stringResource(Res.string.auth_name_hint),
+                        maxLength = AUTH_NAME_MAX_LENGTH
+                    )
+                    Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
+                }
+            }
+
+            AuthTextField(
+                value = email,
+                onValueChange = viewModel::updateEmail,
+                placeholder = stringResource(Res.string.auth_email_hint),
+                keyboardType = KeyboardType.Email
             )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = DEFAULT_MARGIN.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AnimatedVisibility(visible = isCreateMode) {
-                    Column {
-                        AuthTextField(
-                            value = name,
-                            onValueChange = viewModel::updateName,
-                            placeholder = stringResource(Res.string.auth_name_hint),
-                            maxLength = AUTH_NAME_MAX_LENGTH
-                        )
-                        Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
+            Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
+
+            AuthTextField(
+                value = password,
+                onValueChange = viewModel::updatePassword,
+                placeholder = stringResource(Res.string.auth_password_hint),
+                isPassword = true,
+                isPasswordVisible = isPasswordVisible,
+                onTogglePasswordVisibility = {
+                    viewModel.onEvent(AuthEvent.TogglePasswordVisibility)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
+
+            GenericButton(
+                modifier = Modifier.fillMaxWidth().height(FORM_FIELD_HEIGHT.dp),
+                buttonText = stringResource(
+                    if (isCreateMode) {
+                        Res.string.auth_create_account
+                    } else {
+                        Res.string.auth_sign_in
+                    }
+                ),
+                enabled = isFormValid,
+                isLoading = isLoading,
+                onClick = {
+                    if (isCreateMode) {
+                        viewModel.onEvent(AuthEvent.SignUpWithEmail)
+                    } else {
+                        viewModel.onEvent(AuthEvent.SignInWithEmail)
                     }
                 }
+            )
 
-                AuthTextField(
-                    value = email,
-                    onValueChange = viewModel::updateEmail,
-                    placeholder = stringResource(Res.string.auth_email_hint),
-                    keyboardType = KeyboardType.Email
-                )
-
+            formError?.let { error ->
                 Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
-
-                AuthTextField(
-                    value = password,
-                    onValueChange = viewModel::updatePassword,
-                    placeholder = stringResource(Res.string.auth_password_hint),
-                    isPassword = true,
-                    isPasswordVisible = isPasswordVisible,
-                    onTogglePasswordVisibility = {
-                        viewModel.onEvent(AuthEvent.TogglePasswordVisibility)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(LARGE_MARGIN.dp))
-
-                GenericButton(
-                    modifier = Modifier.fillMaxWidth().height(FORM_FIELD_HEIGHT.dp),
-                    buttonText = stringResource(
-                        if (isCreateMode) {
-                            Res.string.auth_create_account
-                        } else {
-                            Res.string.auth_sign_in
-                        }
-                    ),
-                    enabled = isFormValid,
-                    isLoading = isLoading,
-                    onClick = {
-                        if (isCreateMode) {
-                            viewModel.onEvent(AuthEvent.SignUpWithEmail)
-                        } else {
-                            viewModel.onEvent(AuthEvent.SignInWithEmail)
-                        }
-                    }
-                )
-
-                formError?.let { error ->
-                    Spacer(modifier = Modifier.height(DEFAULT_PADDING.dp))
-                    Text(
-                        text = stringResource(error),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = PrimaryRedColor
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
-
                 Text(
-                    text = stringResource(
-                        if (isCreateMode) {
-                            Res.string.auth_already_have_account
-                        } else {
-                            Res.string.auth_no_account
-                        }
-                    ),
+                    text = stringResource(error),
                     style = MaterialTheme.typography.bodySmall,
-                    color = PrimaryYellowColor,
+                    color = PrimaryRedColor
+                )
+            }
+
+            Spacer(modifier = Modifier.height(DEFAULT_MARGIN.dp))
+
+            Text(
+                text = stringResource(
+                    if (isCreateMode) {
+                        Res.string.auth_already_have_account
+                    } else {
+                        Res.string.auth_no_account
+                    }
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = PrimaryYellowColor,
+                modifier = Modifier
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { viewModel.onEvent(AuthEvent.ToggleMode) }
+                    .padding(vertical = DEFAULT_MARGIN.dp)
+            )
+
+            if (!isCreateMode) {
+                Text(
+                    text = stringResource(Res.string.auth_forgot_password),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = SecondaryGreyColor,
                     modifier = Modifier
                         .clickable(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
-                        ) { viewModel.onEvent(AuthEvent.ToggleMode) }
+                        ) { onForgotPassword() }
                         .padding(vertical = DEFAULT_MARGIN.dp)
                 )
-
-                if (!isCreateMode) {
-                    Text(
-                        text = stringResource(Res.string.auth_forgot_password),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = SecondaryGreyColor,
-                        modifier = Modifier
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { onForgotPassword() }
-                            .padding(vertical = DEFAULT_MARGIN.dp)
-                    )
-                }
             }
         }
     }

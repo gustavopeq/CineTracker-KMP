@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cinetracker_kmp.composeapp.generated.resources.Res
-import cinetracker_kmp.composeapp.generated.resources.auth_confirm_password_hint
 import cinetracker_kmp.composeapp.generated.resources.auth_back_to_sign_in
+import cinetracker_kmp.composeapp.generated.resources.auth_confirm_password_hint
 import cinetracker_kmp.composeapp.generated.resources.auth_new_password_hint
 import cinetracker_kmp.composeapp.generated.resources.auth_new_password_subtitle
 import cinetracker_kmp.composeapp.generated.resources.auth_new_password_title
@@ -35,7 +35,6 @@ import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.LARGE_MARGIN
-import features.auth.ui.components.AuthBackground
 import features.auth.ui.components.AuthTextField
 import features.settings.ui.components.PickerTopBar
 import org.jetbrains.compose.resources.StringResource
@@ -43,9 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun NewPasswordScreen(
-    onDone: () -> Unit
-) {
+fun NewPasswordScreen(onDone: () -> Unit) {
     val viewModel: NewPasswordViewModel = koinViewModel()
     val password by viewModel.password.collectAsState()
     val confirmPassword by viewModel.confirmPassword.collectAsState()
@@ -55,35 +52,33 @@ fun NewPasswordScreen(
     val error by viewModel.error.collectAsState()
     val isSuccess by viewModel.isSuccess.collectAsState()
 
-    AuthBackground {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
-        ) {
-            PickerTopBar(
-                title = Res.string.auth_new_password_title,
-                onBack = onDone
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        PickerTopBar(
+            title = Res.string.auth_new_password_title,
+            onBack = onDone
+        )
 
-            AnimatedContent(targetState = isSuccess) { success ->
-                if (success) {
-                    SuccessContent(onDone = onDone)
-                } else {
-                    FormContent(
-                        password = password,
-                        confirmPassword = confirmPassword,
-                        isPasswordVisible = isPasswordVisible,
-                        isConfirmPasswordVisible = isConfirmPasswordVisible,
-                        isLoading = isLoading,
-                        error = error,
-                        onPasswordChange = viewModel::updatePassword,
-                        onConfirmPasswordChange = viewModel::updateConfirmPassword,
-                        onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
-                        onToggleConfirmPasswordVisibility = viewModel::toggleConfirmPasswordVisibility,
-                        onSubmit = viewModel::submit
-                    )
-                }
+        AnimatedContent(targetState = isSuccess) { success ->
+            if (success) {
+                SuccessContent(onDone = onDone)
+            } else {
+                FormContent(
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    isPasswordVisible = isPasswordVisible,
+                    isConfirmPasswordVisible = isConfirmPasswordVisible,
+                    isLoading = isLoading,
+                    error = error,
+                    onPasswordChange = viewModel::updatePassword,
+                    onConfirmPasswordChange = viewModel::updateConfirmPassword,
+                    onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
+                    onToggleConfirmPasswordVisibility = viewModel::toggleConfirmPasswordVisibility,
+                    onSubmit = viewModel::submit
+                )
             }
         }
     }

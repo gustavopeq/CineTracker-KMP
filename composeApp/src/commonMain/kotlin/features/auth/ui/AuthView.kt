@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -48,7 +47,6 @@ import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
 import cinetracker_kmp.composeapp.generated.resources.ic_mail
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryWhiteColor
-import common.ui.theme.PrimaryYellowColor
 import common.ui.theme.SecondaryGreyColor
 import common.util.UiConstants.CARD_ROUND_CORNER
 import common.util.UiConstants.DEFAULT_MARGIN
@@ -56,18 +54,12 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.SECTION_PADDING
 import features.auth.events.AuthEvent
-import features.auth.ui.components.AuthBackground
 import features.auth.ui.components.GoogleSignInButton
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AuthScreen(
-    viewModel: AuthViewModel,
-    goToEmailAuth: () -> Unit,
-    onDismiss: () -> Unit,
-    onAuthSuccess: () -> Unit
-) {
+fun AuthScreen(viewModel: AuthViewModel, goToEmailAuth: () -> Unit, onDismiss: () -> Unit, onAuthSuccess: () -> Unit) {
     val isLoading by viewModel.isLoading.collectAsState()
     val snackbarError by viewModel.snackbarError.collectAsState()
     val authSuccess by viewModel.authSuccess.collectAsState()
@@ -88,35 +80,34 @@ fun AuthScreen(
         }
     }
 
-    AuthBackground {
-        Scaffold(
-            containerColor = Color.Transparent,
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    snackbar = { data ->
-                        Snackbar(
-                            snackbarData = data,
-                            containerColor = MainBarGreyColor,
-                            contentColor = PrimaryWhiteColor
-                        )
-                    }
-                )
-            }
+    Scaffold(
+        containerColor = Color.Transparent,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { data ->
+                    Snackbar(
+                        snackbarData = data,
+                        containerColor = MainBarGreyColor,
+                        contentColor = PrimaryWhiteColor
+                    )
+                }
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(horizontal = DEFAULT_MARGIN.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.systemBars)
-                    .padding(horizontal = DEFAULT_MARGIN.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
             Spacer(modifier = Modifier.weight(0.25f))
 
             Image(
                 painter = painterResource(Res.drawable.cinetracker_name_logo),
                 contentDescription = stringResource(Res.string.app_logo_image_description),
-                modifier = Modifier.size(275.dp)
+                modifier = Modifier.size(300.dp)
             )
 
             Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
@@ -187,7 +178,6 @@ fun AuthScreen(
             )
 
             Spacer(modifier = Modifier.height(SECTION_PADDING.dp))
-        }
         }
     }
 }

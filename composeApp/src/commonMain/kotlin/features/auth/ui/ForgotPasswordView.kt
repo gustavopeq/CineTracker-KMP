@@ -38,16 +38,12 @@ import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.FORM_FIELD_HEIGHT
 import common.util.UiConstants.LARGE_MARGIN
 import features.auth.events.AuthEvent
-import features.auth.ui.components.AuthBackground
 import features.auth.ui.components.AuthTextField
 import features.settings.ui.components.PickerTopBar
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ForgotPasswordScreen(
-    viewModel: AuthViewModel,
-    onBack: () -> Unit
-) {
+fun ForgotPasswordScreen(viewModel: AuthViewModel, onBack: () -> Unit) {
     val email by viewModel.email.collectAsState()
     val resetState by viewModel.resetPasswordState.collectAsState()
 
@@ -57,33 +53,31 @@ fun ForgotPasswordScreen(
         }
     }
 
-    AuthBackground {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.systemBars)
-        ) {
-            PickerTopBar(
-                title = Res.string.auth_reset_password_title,
-                onBack = onBack
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        PickerTopBar(
+            title = Res.string.auth_reset_password_title,
+            onBack = onBack
+        )
 
-            AnimatedContent(
-                targetState = resetState is ResetPasswordState.Success
-            ) { isSuccess ->
-                if (isSuccess) {
-                    SuccessContent(onBack = onBack)
-                } else {
-                    FormContent(
-                        email = email,
-                        onEmailChange = viewModel::updateEmail,
-                        isLoading = resetState is ResetPasswordState.Loading,
-                        error = resetState as? ResetPasswordState.Error,
-                        onSendResetLink = {
-                            viewModel.onEvent(AuthEvent.ResetPassword)
-                        }
-                    )
-                }
+        AnimatedContent(
+            targetState = resetState is ResetPasswordState.Success
+        ) { isSuccess ->
+            if (isSuccess) {
+                SuccessContent(onBack = onBack)
+            } else {
+                FormContent(
+                    email = email,
+                    onEmailChange = viewModel::updateEmail,
+                    isLoading = resetState is ResetPasswordState.Loading,
+                    error = resetState as? ResetPasswordState.Error,
+                    onSendResetLink = {
+                        viewModel.onEvent(AuthEvent.ResetPassword)
+                    }
+                )
             }
         }
     }
@@ -142,9 +136,7 @@ private fun FormContent(
 }
 
 @Composable
-private fun SuccessContent(
-    onBack: () -> Unit
-) {
+private fun SuccessContent(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
