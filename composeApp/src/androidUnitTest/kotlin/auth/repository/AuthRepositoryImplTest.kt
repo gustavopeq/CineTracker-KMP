@@ -580,4 +580,388 @@ class AuthRepositoryImplTest {
     }
 
     // endregion
+
+    // region signUpWithEmail additional
+
+    @Test
+    fun `signUpWithEmail returns error on service failure`() = runTest {
+        coEvery {
+            service.signUpWithEmail("test@test.com", "password", "Test")
+        } returns AuthResult.Error("Signup failed")
+
+        val result = repository.signUpWithEmail("test@test.com", "password", "Test")
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Signup failed", result.message)
+        assertIs<AuthState.LoggedOut>(repository.authState.value)
+    }
+
+    // endregion
+
+    // region signInWithApple additional
+
+    @Test
+    fun `signInWithApple exchanges id token with supabase on success`() = runTest {
+        coEvery {
+            signInProvider.signInWithApple()
+        } returns SignInResult.IdToken(token = "apple-id-token", provider = "apple", nonce = "abc")
+        coEvery {
+            service.signInWithIdToken("apple", "apple-id-token", "abc")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns null
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        val result = repository.signInWithApple()
+
+        assertIs<AuthResult.Success<Unit>>(result)
+        coVerify { service.signInWithIdToken("apple", "apple-id-token", "abc") }
+        val state = repository.authState.value
+        assertIs<AuthState.LoggedIn>(state)
+    }
+
+    @Test
+    fun `signInWithApple handles OAuth session by refreshing token`() = runTest {
+        coEvery {
+            signInProvider.signInWithApple()
+        } returns SignInResult.OAuthSession(
+            accessToken = "apple-access",
+            refreshToken = "apple-refresh"
+        )
+        coEvery {
+            service.refreshToken("apple-refresh")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns null
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        val result = repository.signInWithApple()
+
+        assertIs<AuthResult.Success<Unit>>(result)
+        coVerify { service.refreshToken("apple-refresh") }
+    }
+
+    // endregion
+
+    // region signOut additional
+
+    @Test
+    fun `signOut with null access token still clears tokens and emits LoggedOut`() = runTest {
+        every { tokenStorage.getAccessToken() } returns null
+        coEvery { service.signOut("") } returns AuthResult.Success(Unit)
+
+        repository.signOut()
+
+        verify { tokenStorage.clearTokens() }
+        verify { settingsRepository.clearUserAvatar() }
+        assertIs<AuthState.LoggedOut>(repository.authState.value)
+    }
+
+    // endregion
+
+    // region deleteAccount additional
+
+    @Test
+    fun `deleteAccount resets database on success`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        coEvery { service.deleteAccount("test-access") } returns AuthResult.Success(Unit)
+
+        repository.deleteAccount()
+
+        coVerify { databaseRepository.resetToDefaults() }
+    }
+
+    @Test
+    fun `deleteAccount does not reset database on failure`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        coEvery { service.deleteAccount("test-access") } returns AuthResult.Error("Forbidden")
+
+        repository.deleteAccount()
+
+        coVerify(exactly = 0) { databaseRepository.resetToDefaults() }
+    }
+
+    // endregion
+
+    // region resetPassword
+
+    @Test
+    fun `resetPassword delegates to service`() = runTest {
+        coEvery { service.resetPassword("test@test.com") } returns AuthResult.Success(Unit)
+
+        val result = repository.resetPassword("test@test.com")
+
+        assertIs<AuthResult.Success<Unit>>(result)
+        coVerify { service.resetPassword("test@test.com") }
+    }
+
+    @Test
+    fun `resetPassword returns error on failure`() = runTest {
+        coEvery { service.resetPassword("test@test.com") } returns AuthResult.Error("Rate limited")
+
+        val result = repository.resetPassword("test@test.com")
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Rate limited", result.message)
+    }
+
+    // endregion
+
+    // region refreshTokenIfNeeded additional
+
+    @Test
+    fun `refreshTokenIfNeeded returns false when refresh fails`() = runTest {
+        every { tokenStorage.getRefreshToken() } returns "old-refresh"
+        coEvery { service.refreshToken("old-refresh") } returns AuthResult.Error("Invalid token")
+
+        val result = repository.refreshTokenIfNeeded()
+
+        assertFalse(result)
+    }
+
+    // endregion
+
+    // region fetchAndApplyPreferences additional
+
+    @Test
+    fun `fetchAndApplyPreferences returns early with null access token`() = runTest {
+        every { tokenStorage.getAccessToken() } returns null
+
+        repository.fetchAndApplyPreferences()
+
+        coVerify(exactly = 0) { service.fetchUserPreferences(any(), any()) }
+    }
+
+    @Test
+    fun `fetchAndApplyPreferences returns early with null auth tokens`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns null
+
+        repository.fetchAndApplyPreferences()
+
+        coVerify(exactly = 0) { service.fetchUserPreferences(any(), any()) }
+    }
+
+    @Test
+    fun `fetchAndApplyPreferences does not crash on service error`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Error("Network error")
+
+        repository.fetchAndApplyPreferences()
+
+        verify(exactly = 0) { settingsRepository.setUserAvatar(any()) }
+    }
+
+    @Test
+    fun `fetchAndApplyPreferences uses existing avatar when prefs empty and avatar already set`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns "girl_avatar_2"
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        repository.fetchAndApplyPreferences()
+
+        coVerify {
+            service.upsertUserPreferences(
+                "test-access",
+                match { it.avatarKey == "girl_avatar_2" }
+            )
+        }
+    }
+
+    // endregion
+
+    // region syncPreferenceToRemote additional
+
+    @Test
+    fun `syncPreferenceToRemote returns early with null access token`() = runTest {
+        every { tokenStorage.getAccessToken() } returns null
+
+        repository.syncPreferenceToRemote(avatarKey = "test")
+
+        coVerify(exactly = 0) { service.upsertUserPreferences(any(), any()) }
+    }
+
+    @Test
+    fun `syncPreferenceToRemote returns early with null auth tokens`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns null
+
+        repository.syncPreferenceToRemote(language = "pt-BR")
+
+        coVerify(exactly = 0) { service.upsertUserPreferences(any(), any()) }
+    }
+
+    @Test
+    fun `syncPreferenceToRemote overrides only avatar when specified`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        every { settingsRepository.getUserAvatar() } returns "boy_avatar_1"
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        repository.syncPreferenceToRemote(avatarKey = "girl_avatar_3")
+
+        coVerify {
+            service.upsertUserPreferences(
+                "test-access",
+                UserPreferencesDto(
+                    userId = "user-123",
+                    avatarKey = "girl_avatar_3",
+                    appLanguage = "en-US",
+                    appRegion = "US"
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `syncPreferenceToRemote overrides only region when specified`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        every { settingsRepository.getUserAvatar() } returns "boy_avatar_1"
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        repository.syncPreferenceToRemote(region = "BR")
+
+        coVerify {
+            service.upsertUserPreferences(
+                "test-access",
+                UserPreferencesDto(
+                    userId = "user-123",
+                    avatarKey = "boy_avatar_1",
+                    appLanguage = "en-US",
+                    appRegion = "BR"
+                )
+            )
+        }
+    }
+
+    // endregion
+
+    // region createPreferencesOnSignUp additional
+
+    @Test
+    fun `createPreferencesOnSignUp returns early with null access token`() = runTest {
+        every { tokenStorage.getAccessToken() } returns null
+
+        repository.createPreferencesOnSignUp("avatar", "en-US", "US")
+
+        coVerify(exactly = 0) { service.upsertUserPreferences(any(), any()) }
+    }
+
+    @Test
+    fun `createPreferencesOnSignUp saves avatar locally and syncs to remote`() = runTest {
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+
+        repository.createPreferencesOnSignUp("boy_avatar_1", "pt-BR", "BR")
+
+        verify { settingsRepository.setUserAvatar("boy_avatar_1") }
+        coVerify {
+            service.upsertUserPreferences(
+                "test-access",
+                UserPreferencesDto(
+                    userId = "user-123",
+                    avatarKey = "boy_avatar_1",
+                    appLanguage = "pt-BR",
+                    appRegion = "BR"
+                )
+            )
+        }
+    }
+
+    // endregion
+
+    // region signInWithGoogle additional (sync)
+
+    @Test
+    fun `signInWithGoogle downloads when cloud data exists`() = runTest {
+        coEvery {
+            signInProvider.signInWithGoogle()
+        } returns SignInResult.IdToken(token = "google-id-token", provider = "google")
+        coEvery {
+            service.signInWithIdToken("google", "google-id-token")
+        } returns AuthResult.Success(testSession)
+        every { tokenStorage.getAccessToken() } returns "test-access"
+        every { tokenStorage.getAuthTokens() } returns AuthTokens(
+            accessToken = "test-access",
+            refreshToken = "test-refresh",
+            userId = "user-123",
+            displayName = "Test User"
+        )
+        coEvery {
+            service.fetchUserPreferences("test-access", "user-123")
+        } returns AuthResult.Success(emptyList())
+        every { settingsRepository.getUserAvatar() } returns null
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+        every { settingsRepository.getAppRegion() } returns "US"
+        coEvery { service.upsertUserPreferences(any(), any()) } returns AuthResult.Success(Unit)
+        coEvery { syncService.hasCloudData(testSession.accessToken, "user-123") } returns true
+
+        repository.signInWithGoogle()
+
+        coVerify { syncService.performDownload(testSession.accessToken, "user-123") }
+    }
+
+    // endregion
 }

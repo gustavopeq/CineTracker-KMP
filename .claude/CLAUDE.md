@@ -562,6 +562,10 @@ CineTracker-KMP/
 │   │
 │   ├── src/androidUnitTest/kotlin/
 │   │   ├── auth/
+│   │   │   ├── model/
+│   │   │   │   └── SupabaseDtoTest.kt
+│   │   │   ├── platform/
+│   │   │   │   └── RecoveryHandlerTest.kt
 │   │   │   ├── repository/
 │   │   │   │   └── AuthRepositoryImplTest.kt
 │   │   │   └── service/

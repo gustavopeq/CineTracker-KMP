@@ -4,6 +4,7 @@ import auth.repository.AuthRepository
 import auth.service.AuthResult
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.auth_error_email_already_registered
+import cinetracker_kmp.composeapp.generated.resources.auth_error_email_not_confirmed
 import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_in
 import cinetracker_kmp.composeapp.generated.resources.auth_error_generic_sign_up
 import cinetracker_kmp.composeapp.generated.resources.auth_error_incorrect_credentials
@@ -398,5 +399,74 @@ class AuthViewModelTest {
 
         assertNull(viewModel.snackbarError.value)
         assertNull(viewModel.formError.value)
+    }
+
+    @Test
+    fun `SignInWithEmail sets formError for email not confirmed`() = runTest {
+        coEvery { authRepository.signInWithEmail(any(), any()) } returns
+            AuthResult.Error("Email not confirmed")
+        val viewModel = createViewModel()
+        viewModel.updateEmail("john@example.com")
+        viewModel.updatePassword("password123")
+
+        viewModel.onEvent(AuthEvent.SignInWithEmail)
+        advanceUntilIdle()
+
+        assertEquals(Res.string.auth_error_email_not_confirmed, viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+    }
+
+    @Test
+    fun `ResetPassword trims whitespace from email`() = runTest {
+        coEvery { authRepository.resetPassword(any()) } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+        viewModel.updateEmail("  john@example.com  ")
+
+        viewModel.onEvent(AuthEvent.ResetPassword)
+        advanceUntilIdle()
+
+        coVerify { authRepository.resetPassword("john@example.com") }
+    }
+
+    @Test
+    fun `updateName updates state`() {
+        val viewModel = createViewModel()
+
+        viewModel.updateName("Jane")
+
+        assertEquals("Jane", viewModel.name.value)
+    }
+
+    @Test
+    fun `updateEmail updates state`() {
+        val viewModel = createViewModel()
+
+        viewModel.updateEmail("test@test.com")
+
+        assertEquals("test@test.com", viewModel.email.value)
+    }
+
+    @Test
+    fun `updatePassword updates state`() {
+        val viewModel = createViewModel()
+
+        viewModel.updatePassword("secret")
+
+        assertEquals("secret", viewModel.password.value)
+    }
+
+    @Test
+    fun `initial state has all defaults`() {
+        val viewModel = createViewModel()
+
+        assertFalse(viewModel.isLoading.value)
+        assertNull(viewModel.snackbarError.value)
+        assertEquals("", viewModel.name.value)
+        assertEquals("", viewModel.email.value)
+        assertEquals("", viewModel.password.value)
+        assertFalse(viewModel.isPasswordVisible.value)
+        assertNull(viewModel.formError.value)
+        assertFalse(viewModel.authSuccess.value)
+        assertIs<ResetPasswordState.Idle>(viewModel.resetPasswordState.value)
     }
 }

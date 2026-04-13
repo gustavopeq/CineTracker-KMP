@@ -18,6 +18,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -213,5 +214,54 @@ class SettingsViewModelTest {
         advanceUntilIdle()
 
         assertEquals("girl_avatar_1", viewModel.currentAvatarKey.value)
+    }
+
+    @Test
+    fun `SignOut calls authRepository signOut`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.signOut() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.SignOut)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { authRepository.signOut() }
+    }
+
+    @Test
+    fun `SignOut manages loading state`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.signOut() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.SignOut)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isLoading.value)
+    }
+
+    @Test
+    fun `authState is exposed from authRepository`() {
+        setupDefaultMocks()
+        val viewModel = createViewModel()
+
+        assertIs<AuthState.LoggedOut>(viewModel.authState.value)
+
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-1", displayName = "User")
+
+        assertIs<AuthState.LoggedIn>(viewModel.authState.value)
+        assertEquals("user-1", (viewModel.authState.value as AuthState.LoggedIn).userId)
+    }
+
+    @Test
+    fun `DeleteAccount manages loading state`() = runTest {
+        setupDefaultMocks()
+        coEvery { authRepository.deleteAccount() } returns AuthResult.Success(Unit)
+        val viewModel = createViewModel()
+
+        viewModel.onEvent(SettingsEvent.DeleteAccount)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.isLoading.value)
     }
 }

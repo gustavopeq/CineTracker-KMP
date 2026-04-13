@@ -376,4 +376,81 @@ class SettingsInteractorTest {
     }
 
     // endregion
+
+    // region setAppLanguage remote sync
+
+    @Test
+    fun `setAppLanguage syncs to remote when logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify { authRepository.syncPreferenceToRemote(language = "pt-BR") }
+    }
+
+    @Test
+    fun `setAppLanguage does not sync when logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+        every { settingsRepository.getAppLanguage() } returns "en-US"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    @Test
+    fun `setAppLanguage does not sync when language unchanged`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppLanguage() } returns "pt-BR"
+
+        interactor.setAppLanguage("pt-BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    // endregion
+
+    // region setAppRegion remote sync
+
+    @Test
+    fun `setAppRegion syncs to remote when logged in`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify { authRepository.syncPreferenceToRemote(region = "BR") }
+    }
+
+    @Test
+    fun `setAppRegion does not sync when logged out`() = runTest {
+        authStateFlow.value = AuthState.LoggedOut
+        every { settingsRepository.getAppRegion() } returns "US"
+        every { PlatformUtils.getUserCountry() } returns "US"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    @Test
+    fun `setAppRegion does not sync when region unchanged`() = runTest {
+        authStateFlow.value = AuthState.LoggedIn(userId = "user-123", displayName = "Test")
+        every { settingsRepository.getAppRegion() } returns "BR"
+        every { PlatformUtils.getUserCountry() } returns "BR"
+
+        interactor.setAppRegion("BR")
+        testScope.advanceUntilIdle()
+
+        coVerify(exactly = 0) { authRepository.syncPreferenceToRemote(any(), any(), any()) }
+    }
+
+    // endregion
 }

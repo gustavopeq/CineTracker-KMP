@@ -24,6 +24,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import org.junit.After
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -261,6 +263,129 @@ class SyncServiceImplTest {
         advanceUntilIdle()
 
         coVerify(exactly = 1) { authService.uploadSnapshot(any(), any()) }
+    }
+
+    // endregion
+
+    // region performDownload additional
+
+    @Test
+    fun `performDownload returns error when fetch content fails`() = runTest {
+        coEvery { authService.fetchCloudLists("token", "user-1") } returns AuthResult.Success(
+            listOf(CloudListDownload(id = "uuid-1", localListId = 1, listName = "watchlist", isDefault = true))
+        )
+        coEvery { authService.fetchCloudContent("token", "user-1") } returns AuthResult.Error("Content failed")
+
+        val result = syncService.performDownload("token", "user-1")
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Content failed", (result as AuthResult.Error).message)
+    }
+
+    @Test
+    fun `performDownload returns error when fetch ratings fails`() = runTest {
+        coEvery { authService.fetchCloudLists("token", "user-1") } returns AuthResult.Success(
+            listOf(CloudListDownload(id = "uuid-1", localListId = 1, listName = "watchlist", isDefault = true))
+        )
+        coEvery { authService.fetchCloudContent("token", "user-1") } returns AuthResult.Success(emptyList())
+        coEvery { authService.fetchCloudRatings("token", "user-1") } returns AuthResult.Error("Ratings failed")
+
+        val result = syncService.performDownload("token", "user-1")
+
+        assertIs<AuthResult.Error>(result)
+        assertEquals("Ratings failed", (result as AuthResult.Error).message)
+    }
+
+    @Test
+    fun `performDownload sets hasLocalChanges to false on success`() = runTest {
+        coEvery { authService.fetchCloudLists("token", "user-1") } returns AuthResult.Success(emptyList())
+        coEvery { authService.fetchCloudContent("token", "user-1") } returns AuthResult.Success(emptyList())
+        coEvery { authService.fetchCloudRatings("token", "user-1") } returns AuthResult.Success(emptyList())
+        coEvery { listEntityDao.deleteAll() } just runs
+        coEvery { personalRatingDao.deleteAll() } just runs
+        coEvery { listEntityDao.insertAll(any()) } just runs
+        coEvery { contentEntityDao.insertAll(any()) } just runs
+        coEvery { personalRatingDao.insertAll(any()) } just runs
+
+        syncService.performDownload("token", "user-1")
+
+        coVerify { settingsRepository.setHasLocalChanges(false) }
+    }
+
+    @Test
+    fun `performDownload maps multiple lists with correct IDs`() = runTest {
+        val cloudLists = listOf(
+            CloudListDownload(id = "uuid-1", localListId = 1, listName = "watchlist", isDefault = true),
+            CloudListDownload(id = "uuid-2", localListId = 2, listName = "watched", isDefault = true),
+            CloudListDownload(id = "uuid-3", localListId = 3, listName = "custom", isDefault = false)
+        )
+        val cloudContent = listOf(
+            CloudContentDownload(
+                contentId = 100, mediaType = "MOVIE", listId = "uuid-1",
+                createdAt = 1000L, title = "Movie 1"
+            ),
+            CloudContentDownload(
+                contentId = 200, mediaType = "SHOW", listId = "uuid-2",
+                createdAt = 2000L, title = "Show 1"
+            ),
+            CloudContentDownload(
+                contentId = 300, mediaType = "MOVIE", listId = "uuid-3",
+                createdAt = 3000L, title = "Movie 2"
+            )
+        )
+
+        coEvery { authService.fetchCloudLists("token", "user-1") } returns AuthResult.Success(cloudLists)
+        coEvery { authService.fetchCloudContent("token", "user-1") } returns AuthResult.Success(cloudContent)
+        coEvery { authService.fetchCloudRatings("token", "user-1") } returns AuthResult.Success(emptyList())
+        coEvery { listEntityDao.deleteAll() } just runs
+        coEvery { personalRatingDao.deleteAll() } just runs
+        coEvery { listEntityDao.insertAll(any()) } just runs
+        coEvery { contentEntityDao.insertAll(any()) } just runs
+        coEvery { personalRatingDao.insertAll(any()) } just runs
+
+        syncService.performDownload("token", "user-1")
+
+        coVerify {
+            contentEntityDao.insertAll(match { entities ->
+                entities.size == 3 &&
+                    entities[0].contentId == 100 && entities[0].listId == 1 &&
+                    entities[1].contentId == 200 && entities[1].listId == 2 &&
+                    entities[2].contentId == 300 && entities[2].listId == 3
+            })
+        }
+    }
+
+    @Test
+    fun `performUpload sends empty snapshot when no local data`() = runTest {
+        coEvery { listEntityDao.getAllSnapshot() } returns emptyList()
+        coEvery { contentEntityDao.getAllSnapshot() } returns emptyList()
+        coEvery { personalRatingDao.getAllSnapshot() } returns emptyList()
+        coEvery { authService.uploadSnapshot(any(), any()) } returns AuthResult.Success(Unit)
+
+        val result = syncService.performUpload("test-token")
+
+        assertIs<AuthResult.Success<Unit>>(result)
+        val requestSlot = slot<UploadSnapshotRequest>()
+        coVerify { authService.uploadSnapshot("test-token", capture(requestSlot)) }
+        assertTrue(requestSlot.captured.lists.isEmpty())
+        assertTrue(requestSlot.captured.content.isEmpty())
+        assertTrue(requestSlot.captured.ratings.isEmpty())
+    }
+
+    // endregion
+
+    // region requestUpload additional
+
+    @Test
+    fun `requestUpload handles exception without clearing flag`() = testScope.runTest {
+        every { tokenStorage.getAccessToken() } returns "test-token"
+        coEvery { listEntityDao.getAllSnapshot() } throws RuntimeException("DB error")
+
+        syncService.requestUpload()
+        advanceUntilIdle()
+
+        coVerify { settingsRepository.setHasLocalChanges(true) }
+        coVerify(exactly = 0) { settingsRepository.setHasLocalChanges(false) }
     }
 
     // endregion
