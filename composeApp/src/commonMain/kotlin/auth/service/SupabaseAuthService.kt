@@ -26,7 +26,8 @@ interface SupabaseAuthService {
 
     suspend fun signInWithIdToken(
         provider: String,
-        idToken: String
+        idToken: String,
+        nonce: String? = null
     ): AuthResult<SupabaseSessionResponse>
 
     suspend fun refreshToken(refreshToken: String): AuthResult<SupabaseSessionResponse>

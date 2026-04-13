@@ -546,6 +546,7 @@ CineTracker-KMP/
 │   │   │   ├── network/
 │   │   │   │   └── SupabaseClient.ios.kt
 │   │   │   └── platform/
+│   │   │       ├── GoogleSignInBridge.kt
 │   │   │       ├── PlatformSignInProvider.ios.kt
 │   │   │       └── TokenStorage.ios.kt
 │   │   ├── core/di/
@@ -639,6 +640,7 @@ CineTracker-KMP/
     │   └── Config.xcconfig
     └── iosApp/
         ├── ContentView.swift
+        ├── GoogleSignInHelper.swift
         ├── iOSApp.swift
         └── Info.plist
 ```

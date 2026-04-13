@@ -1,8 +1,6 @@
 package auth.platform
 
 import auth.model.SignInResult
-import auth.service.AUTH_CALLBACK_URL
-import com.projects.cinetracker.BuildKonfig
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -15,10 +13,8 @@ import platform.AuthenticationServices.ASAuthorizationControllerPresentationCont
 import platform.AuthenticationServices.ASAuthorizationScopeEmail
 import platform.AuthenticationServices.ASAuthorizationScopeFullName
 import platform.AuthenticationServices.ASPresentationAnchor
-import platform.AuthenticationServices.ASWebAuthenticationSession
 import platform.Foundation.NSError
 import platform.Foundation.NSString
-import platform.Foundation.NSURL
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.UIKit.UIApplication
@@ -30,6 +26,9 @@ import kotlin.coroutines.resumeWithException
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual class PlatformSignInProvider {
+
+    private var activeAuthController: ASAuthorizationController? = null
+    private var activeDelegate: NSObject? = null
 
     actual suspend fun signInWithApple(): SignInResult = suspendCancellableCoroutine { cont ->
         val provider = ASAuthorizationAppleIDProvider()
@@ -45,6 +44,8 @@ actual class PlatformSignInProvider {
                 controller: ASAuthorizationController,
                 didCompleteWithAuthorization: ASAuthorization
             ) {
+                activeAuthController = null
+                activeDelegate = null
                 val credential =
                     didCompleteWithAuthorization.credential as? ASAuthorizationAppleIDCredential
                 val tokenData = credential?.identityToken
@@ -67,6 +68,8 @@ actual class PlatformSignInProvider {
                 controller: ASAuthorizationController,
                 didCompleteWithError: NSError
             ) {
+                activeAuthController = null
+                activeDelegate = null
                 cont.resumeWithException(Exception(didCompleteWithError.localizedDescription))
             }
 
@@ -77,58 +80,39 @@ actual class PlatformSignInProvider {
             }
         }
 
+        activeDelegate = delegate
+
         val controller = ASAuthorizationController(
             authorizationRequests = listOf(request)
         )
         controller.delegate = delegate
         controller.presentationContextProvider = delegate
+        activeAuthController = controller
         controller.performRequests()
     }
 
     actual suspend fun signInWithGoogle(): SignInResult = suspendCancellableCoroutine { cont ->
-        val authUrl = "${BuildKonfig.SUPABASE_URL}/auth/v1/authorize" +
-            "?provider=google" +
-            "&redirect_to=$AUTH_CALLBACK_URL"
-
-        val url = NSURL(string = authUrl)
-        val callbackScheme = "com.projects.cinetracker"
-
-        val session = ASWebAuthenticationSession(
-            uRL = url,
-            callbackURLScheme = callbackScheme
-        ) { callbackUrl, error ->
+        val handler = GoogleSignInBridge.onSignInRequest
+        if (handler == null) {
+            cont.resumeWithException(Exception("Google Sign-In not configured"))
+            return@suspendCancellableCoroutine
+        }
+        GoogleSignInBridge.onSignInResult = { idToken, nonce, error ->
             if (error != null) {
-                cont.resumeWithException(Exception(error.localizedDescription))
-                return@ASWebAuthenticationSession
-            }
-            val fragment = callbackUrl?.fragment
-            if (fragment != null) {
-                val params = parseFragment(fragment)
-                val accessToken = params["access_token"]
-                val refreshToken = params["refresh_token"]
-                if (accessToken != null && refreshToken != null) {
-                    cont.resume(
-                        SignInResult.OAuthSession(
-                            accessToken = accessToken,
-                            refreshToken = refreshToken
-                        )
+                cont.resumeWithException(Exception(error))
+            } else if (idToken != null) {
+                cont.resume(
+                    SignInResult.IdToken(
+                        token = idToken,
+                        provider = "google",
+                        nonce = nonce
                     )
-                } else {
-                    cont.resumeWithException(Exception("Missing tokens in callback"))
-                }
+                )
             } else {
-                cont.resumeWithException(Exception("No callback data"))
+                cont.resumeWithException(Exception("No ID token returned from Google"))
             }
         }
-        session.prefersEphemeralWebBrowserSession = false
-        session.start()
-    }
-
-    private fun parseFragment(fragment: String): Map<String, String> {
-        return fragment.split("&").associate {
-            val parts = it.split("=", limit = 2)
-            parts[0] to (parts.getOrNull(1) ?: "")
-        }
+        handler()
     }
 
     private fun getKeyWindow(): UIWindow {

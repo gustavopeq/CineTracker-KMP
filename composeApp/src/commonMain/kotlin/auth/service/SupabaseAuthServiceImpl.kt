@@ -63,10 +63,11 @@ class SupabaseAuthServiceImpl(private val client: HttpClient) : SupabaseAuthServ
 
     override suspend fun signInWithIdToken(
         provider: String,
-        idToken: String
+        idToken: String,
+        nonce: String?
     ): AuthResult<SupabaseSessionResponse> = safeCall {
         client.post("auth/v1/token?grant_type=id_token") {
-            setBody(SupabaseIdTokenRequest(provider = provider, idToken = idToken))
+            setBody(SupabaseIdTokenRequest(provider = provider, idToken = idToken, nonce = nonce))
         }
     }
 

@@ -206,6 +206,7 @@ buildkonfig {
         buildConfigField(STRING, "SUPABASE_URL", getLocalProperty("SUPABASE_URL"))
         buildConfigField(STRING, "SUPABASE_ANON_KEY", getLocalProperty("SUPABASE_ANON_KEY"))
         buildConfigField(STRING, "GOOGLE_WEB_CLIENT_ID", getLocalProperty("GOOGLE_WEB_CLIENT_ID"))
+        buildConfigField(STRING, "GOOGLE_IOS_CLIENT_ID", getLocalProperty("GOOGLE_IOS_CLIENT_ID"))
     }
 }
 

@@ -47,7 +47,8 @@ data class SupabaseEmailSignInRequest(
 @Serializable
 data class SupabaseIdTokenRequest(
     val provider: String,
-    @SerialName("id_token") val idToken: String
+    @SerialName("id_token") val idToken: String,
+    val nonce: String? = null
 )
 
 @Serializable

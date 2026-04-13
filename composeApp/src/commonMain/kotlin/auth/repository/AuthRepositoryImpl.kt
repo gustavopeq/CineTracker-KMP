@@ -212,7 +212,11 @@ class AuthRepositoryImpl(
     private suspend fun handlePlatformSignIn(signInResult: SignInResult): AuthResult<Unit> {
         val sessionResult = when (signInResult) {
             is SignInResult.IdToken -> {
-                service.signInWithIdToken(signInResult.provider, signInResult.token)
+                service.signInWithIdToken(
+                    signInResult.provider,
+                    signInResult.token,
+                    signInResult.nonce
+                )
             }
             is SignInResult.OAuthSession -> {
                 service.refreshToken(signInResult.refreshToken)
