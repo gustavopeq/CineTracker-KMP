@@ -51,6 +51,10 @@ jobs:
           SENTRY_ORG=${SENTRY_ORG}
           SENTRY_PROJECT=${SENTRY_PROJECT}
           SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+          SUPABASE_URL=${SUPABASE_URL}
+          SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+          GOOGLE_WEB_CLIENT_ID=${GOOGLE_WEB_CLIENT_ID}
+          GOOGLE_IOS_CLIENT_ID=${GOOGLE_IOS_CLIENT_ID}
           EOF
         env:
           API_KEY: ${{ secrets.API_KEY }}
@@ -58,6 +62,10 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
