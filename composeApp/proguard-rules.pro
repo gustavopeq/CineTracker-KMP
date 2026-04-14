@@ -21,6 +21,8 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
 
 # With R8 full mode generic signatures are stripped for classes that are not
 # kept. Suspend functions are wrapped in continuations where the type argument
@@ -28,3 +30,7 @@
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
 -keep class network.models.** { *; }
+
+# Google Sign-In / Credential Manager
+-keep class com.google.android.libraries.identity.googleid.** { *; }
+-keep class androidx.credentials.** { *; }
