@@ -8,6 +8,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,6 +22,8 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import cinetracker_kmp.composeapp.generated.resources.Res
 import cinetracker_kmp.composeapp.generated.resources.app_logo_image_description
 import cinetracker_kmp.composeapp.generated.resources.cinetracker_name_logo
+import cinetracker_kmp.composeapp.generated.resources.ic_nav_search
+import cinetracker_kmp.composeapp.generated.resources.main_nav_search
 import common.ui.MainViewModel
 import common.ui.components.button.SortIconButton
 import common.util.UiConstants.SMALLER_DEVICES_WIDTH
@@ -33,13 +37,19 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel, displaySortScreen: (Boolean) -> Unit) {
+fun TopNavBar(
+    currentDestination: NavDestination?,
+    mainViewModel: MainViewModel,
+    displaySortScreen: (Boolean) -> Unit,
+    goToSearch: () -> Unit
+) {
     val isHomeScreen = currentDestination?.hasRoute<HomeRoute>() == true
     val isBrowseScreen = currentDestination?.hasRoute<BrowseRoute>() == true
     val isWatchlistScreen = currentDestination?.hasRoute<WatchlistRoute>() == true
     val isSettingsScreen = currentDestination?.hasRoute<SettingsRoute>() == true
 
     val showSortIcon = isBrowseScreen || isWatchlistScreen
+    val showSearchIcon = isHomeScreen || isBrowseScreen || isWatchlistScreen
 
     val title = when {
         isBrowseScreen -> stringResource(resource = MainNavBarItem.Browse.labelResId)
@@ -85,6 +95,15 @@ fun TopNavBar(currentDestination: NavDestination?, mainViewModel: MainViewModel,
                         isWatchlistScreen = isWatchlistScreen,
                         displaySortScreen = displaySortScreen
                     )
+                }
+                if (showSearchIcon) {
+                    IconButton(onClick = goToSearch) {
+                        Icon(
+                            painter = painterResource(resource = Res.drawable.ic_nav_search),
+                            contentDescription = stringResource(resource = Res.string.main_nav_search),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(

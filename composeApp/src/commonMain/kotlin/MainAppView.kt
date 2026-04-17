@@ -15,8 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.rememberNavController
 import auth.platform.RecoveryHandler
 import coil3.annotation.ExperimentalCoilApi
@@ -32,7 +30,6 @@ import navigation.AuthGraphRoute
 import navigation.MainScaffoldRoute
 import navigation.NewPasswordRoute
 import navigation.RootNavGraph
-import navigation.SearchRoute
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalCoilApi::class)
@@ -99,11 +96,8 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold: @Composable () -> Unit) {
-    val statusBarColor = when {
-        currentDestination?.hasRoute<SearchRoute>() == true -> MainBarGreyColor
-        else -> MaterialTheme.colorScheme.primary
-    }
+fun SystemBarsContainer(appScaffold: @Composable () -> Unit) {
+    val statusBarColor = MaterialTheme.colorScheme.primary
 
     Box(
         modifier = Modifier.fillMaxSize()

@@ -10,8 +10,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.LocalContentColor
@@ -22,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -36,6 +41,7 @@ import common.ui.LocalSharedTransitionScope
 import common.ui.MainViewModel
 import common.ui.components.bottomsheet.ModalComponents
 import common.ui.screen.ErrorScreen
+import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryBlackColor
 import common.ui.theme.PrimaryWhiteColor
 import features.auth.ui.AuthScreen
@@ -74,6 +80,39 @@ fun RootNavGraph(rootNavController: NavHostController) {
                 ) {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         MainScaffoldScreen(rootNavController = rootNavController)
+                    }
+                }
+                composable<SearchRoute>(
+                    enterTransition = { fadeIn() },
+                    exitTransition = { fadeOut() }
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+                                .background(MainBarGreyColor)
+                                .align(Alignment.TopCenter)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .windowInsetsPadding(WindowInsets.systemBars)
+                        ) {
+                            Search(
+                                onBackPress = { rootNavController.popBackStack() },
+                                goToDetails = { contentId, mediaType, tag, posterPath ->
+                                    rootNavController.navigate(
+                                        DetailsRoute(contentId, mediaType.name, tag, posterPath)
+                                    )
+                                },
+                                goToErrorScreen = {
+                                    rootNavController.navigate(ErrorRoute) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
                 composable<DetailsRoute>(
@@ -208,7 +247,7 @@ private fun MainScaffoldScreen(rootNavController: NavHostController) {
     var showSortBottomSheet by remember { mutableStateOf(false) }
     val displaySortScreen: (Boolean) -> Unit = { showSortBottomSheet = it }
 
-    SystemBarsContainer(currentDestination = currentDestination) {
+    SystemBarsContainer {
         Scaffold(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -216,7 +255,8 @@ private fun MainScaffoldScreen(rootNavController: NavHostController) {
                 TopNavBar(
                     currentDestination = currentDestination,
                     mainViewModel = mainViewModel,
-                    displaySortScreen = displaySortScreen
+                    displaySortScreen = displaySortScreen,
+                    goToSearch = { rootNavController.navigate(SearchRoute) }
                 )
             },
             bottomBar = {
@@ -290,12 +330,6 @@ private fun NestedNavGraph(nestedNavController: NavHostController, rootNavContro
                 goToErrorScreen = goToErrorScreen
             )
         }
-        composable<SearchRoute> {
-            Search(
-                goToDetails = goToDetails,
-                goToErrorScreen = goToErrorScreen
-            )
-        }
         navigation<SettingsGraphRoute>(startDestination = SettingsRoute) {
             composable<SettingsRoute> {
                 SettingsScreen(
@@ -328,6 +362,5 @@ private val mainNavBarItems = listOf(
     MainNavBarItem.Home,
     MainNavBarItem.Browse,
     MainNavBarItem.Watchlist,
-    MainNavBarItem.Search,
     MainNavBarItem.Settings
 )

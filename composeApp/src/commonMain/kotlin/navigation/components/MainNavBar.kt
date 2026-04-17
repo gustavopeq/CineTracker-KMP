@@ -24,7 +24,6 @@ import common.util.UiConstants.BUTTON_NAVIGATION_BAR_HEIGHT
 import common.util.platform.AppHaptics
 import navigation.BrowseRoute
 import navigation.HomeRoute
-import navigation.SearchRoute
 import navigation.SettingsGraphRoute
 import navigation.WatchlistRoute
 import org.jetbrains.compose.resources.painterResource
@@ -46,7 +45,6 @@ fun MainNavBar(navController: NavController, navBarItems: List<MainNavBarItem>) 
                 is MainNavBarItem.Home -> currentDestination?.hasRoute<HomeRoute>() == true
                 is MainNavBarItem.Browse -> currentDestination?.hasRoute<BrowseRoute>() == true
                 is MainNavBarItem.Watchlist -> currentDestination?.hasRoute<WatchlistRoute>() == true
-                is MainNavBarItem.Search -> currentDestination?.hasRoute<SearchRoute>() == true
                 is MainNavBarItem.Settings ->
                     currentDestination?.hierarchy
                         ?.any { it.hasRoute<SettingsGraphRoute>() } == true
