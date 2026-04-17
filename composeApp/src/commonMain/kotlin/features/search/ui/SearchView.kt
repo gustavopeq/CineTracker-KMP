@@ -37,11 +37,7 @@ import features.search.ui.components.SearchTypeFilterItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Search(
-    onBackPress: () -> Unit,
-    goToDetails: (Int, MediaType, String) -> Unit,
-    goToErrorScreen: () -> Unit
-) {
+fun Search(onBackPress: () -> Unit, goToDetails: (Int, MediaType, String) -> Unit, goToErrorScreen: () -> Unit) {
     Search(
         viewModel = koinViewModel(),
         onBackPress = onBackPress,
