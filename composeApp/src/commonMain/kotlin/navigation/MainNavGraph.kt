@@ -97,7 +97,6 @@ fun RootNavGraph(rootNavController: NavHostController) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(PrimaryBlackColor)
                                 .windowInsetsPadding(WindowInsets.systemBars)
                         ) {
                             Search(

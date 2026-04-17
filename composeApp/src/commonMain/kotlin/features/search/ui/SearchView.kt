@@ -21,7 +21,6 @@ import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.ui.MainViewModel
 import common.ui.components.ClassicLoadingIndicator
 import common.util.UiConstants.DEFAULT_PADDING
 import common.util.UiConstants.SEARCH_CARDS_WIDTH
@@ -45,7 +44,6 @@ fun Search(
 ) {
     Search(
         viewModel = koinViewModel(),
-        mainViewModel = koinViewModel(),
         onBackPress = onBackPress,
         goToDetails = goToDetails,
         goToErrorScreen = goToErrorScreen
@@ -55,7 +53,6 @@ fun Search(
 @Composable
 private fun Search(
     viewModel: SearchViewModel,
-    mainViewModel: MainViewModel,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType, String, String) -> Unit,
     goToErrorScreen: () -> Unit
