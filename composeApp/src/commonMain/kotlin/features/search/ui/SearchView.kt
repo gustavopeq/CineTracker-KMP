@@ -38,10 +38,15 @@ import features.search.ui.components.SearchTypeFilterItem
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Search(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScreen: () -> Unit) {
+fun Search(
+    onBackPress: () -> Unit,
+    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToErrorScreen: () -> Unit
+) {
     Search(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
+        onBackPress = onBackPress,
         goToDetails = goToDetails,
         goToErrorScreen = goToErrorScreen
     )
@@ -51,6 +56,7 @@ fun Search(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScree
 private fun Search(
     viewModel: SearchViewModel,
     mainViewModel: MainViewModel,
+    onBackPress: () -> Unit,
     goToDetails: (Int, MediaType, String, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
@@ -76,7 +82,8 @@ private fun Search(
         modifier = Modifier.fillMaxSize()
     ) {
         SearchBar(
-            viewModel = viewModel
+            viewModel = viewModel,
+            onBackPress = onBackPress
         )
         if (searchQuery.isNotEmpty()) {
             SearchFiltersRow(
