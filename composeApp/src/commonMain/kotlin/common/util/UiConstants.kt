@@ -32,7 +32,6 @@ object UiConstants {
     const val ERROR_ANIMATION_SIZE = 100
     const val DELAY_UPDATE_POPUP_TEXT_MS = 100L
     const val DELAY_TOGGLE_BOTTOM_SHEET_MS = 200L
-    const val SHARED_ELEMENT_ACTIVATION_DELAY_MS = 400L
     const val EMPTY_RATINGS = 0.0
     const val MEDIA_TYPE_TAG_CORNER_SIZE = 2
     const val TEXT_PLACEHOLDER_CORNER_PERCENTAGE = 30
@@ -57,7 +56,7 @@ object UiConstants {
     // Rating Slider
     const val RATING_SLIDER_THUMB_SIZE = 28
     const val RATING_SLIDER_THUMB_ELEVATION = 4
-    const val RATING_SLIDER_TRACK_HEIGHT = 12
+    const val RATING_SLIDER_TRACK_HEIGHT = 6
 
     // Details
     const val DETAILS_TITLE_IMAGE_OFFSET_PERCENT = 0.7f

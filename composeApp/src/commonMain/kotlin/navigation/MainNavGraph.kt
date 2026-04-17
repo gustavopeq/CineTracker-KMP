@@ -3,7 +3,6 @@ package navigation
 import SystemBarsContainer
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -36,8 +35,6 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import common.domain.models.util.MediaType
-import common.ui.LocalAnimatedVisibilityScope
-import common.ui.LocalSharedTransitionScope
 import common.ui.MainViewModel
 import common.ui.components.bottomsheet.ModalComponents
 import common.ui.screen.ErrorScreen
@@ -67,168 +64,158 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RootNavGraph(rootNavController: NavHostController) {
-    SharedTransitionLayout {
-        CompositionLocalProvider(LocalSharedTransitionScope provides this) {
-            NavHost(
-                navController = rootNavController,
-                startDestination = MainScaffoldRoute,
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None }
-            ) {
-                composable<MainScaffoldRoute>(
-                    popEnterTransition = { fadeIn(tween(100)) }
+    NavHost(
+        navController = rootNavController,
+        startDestination = MainScaffoldRoute,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
+    ) {
+        composable<MainScaffoldRoute>(
+            popEnterTransition = { fadeIn(tween(100)) }
+        ) {
+            MainScaffoldScreen(rootNavController = rootNavController)
+        }
+        composable<SearchRoute>(
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+                        .background(MainBarGreyColor)
+                        .align(Alignment.TopCenter)
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.systemBars)
                 ) {
-                    CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
-                        MainScaffoldScreen(rootNavController = rootNavController)
-                    }
-                }
-                composable<SearchRoute>(
-                    enterTransition = { fadeIn() },
-                    exitTransition = { fadeOut() }
-                ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
-                                .background(MainBarGreyColor)
-                                .align(Alignment.TopCenter)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .windowInsetsPadding(WindowInsets.systemBars)
-                        ) {
-                            Search(
-                                onBackPress = { rootNavController.popBackStack() },
-                                goToDetails = { contentId, mediaType, tag, posterPath ->
-                                    rootNavController.navigate(
-                                        DetailsRoute(contentId, mediaType.name, tag, posterPath)
-                                    )
-                                },
-                                goToErrorScreen = {
-                                    rootNavController.navigate(ErrorRoute) {
-                                        launchSingleTop = true
-                                    }
-                                }
+                    Search(
+                        onBackPress = { rootNavController.popBackStack() },
+                        goToDetails = { contentId, mediaType, posterPath ->
+                            rootNavController.navigate(
+                                DetailsRoute(contentId, mediaType.name, posterPath)
                             )
-                        }
-                    }
-                }
-                composable<DetailsRoute>(
-                    enterTransition = { fadeIn() },
-                    exitTransition = { fadeOut() },
-                    popEnterTransition = { fadeIn() },
-                    popExitTransition = { fadeOut() }
-                ) { backStackEntry ->
-                    val route = backStackEntry.toRoute<DetailsRoute>()
-                    CompositionLocalProvider(
-                        LocalAnimatedVisibilityScope provides this,
-                        LocalContentColor provides PrimaryWhiteColor
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(PrimaryBlackColor)
-                                .windowInsetsPadding(WindowInsets.systemBars)
-                        ) {
-                            Details(
-                                contentId = route.contentId,
-                                mediaType = route.mediaType,
-                                sharedElementTag = route.sharedElementTag,
-                                posterPath = route.posterPath,
-                                onBackPress = { rootNavController.popBackStack() },
-                                goToDetails = { contentId, mediaType ->
-                                    rootNavController.navigate(
-                                        DetailsRoute(contentId, mediaType.name)
-                                    )
-                                },
-                                goToErrorScreen = {
-                                    rootNavController.navigate(ErrorRoute) {
-                                        launchSingleTop = true
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-                navigation<AuthGraphRoute>(startDestination = AuthRoute) {
-                    composable<AuthRoute> {
-                        val parentEntry = remember(it) {
-                            rootNavController.getBackStackEntry(AuthGraphRoute)
-                        }
-                        val authViewModel: AuthViewModel =
-                            koinViewModel(viewModelStoreOwner = parentEntry)
-                        AuthScreen(
-                            viewModel = authViewModel,
-                            goToEmailAuth = {
-                                rootNavController.navigate(EmailAuthRoute)
-                            },
-                            onDismiss = {
-                                rootNavController.popBackStack(
-                                    AuthGraphRoute,
-                                    inclusive = true
-                                )
-                            },
-                            onAuthSuccess = {
-                                rootNavController.popBackStack(
-                                    AuthGraphRoute,
-                                    inclusive = true
-                                )
+                        },
+                        goToErrorScreen = {
+                            rootNavController.navigate(ErrorRoute) {
+                                launchSingleTop = true
                             }
-                        )
-                    }
-                    composable<EmailAuthRoute> {
-                        val parentEntry = remember(it) {
-                            rootNavController.getBackStackEntry(AuthGraphRoute)
-                        }
-                        val authViewModel: AuthViewModel =
-                            koinViewModel(viewModelStoreOwner = parentEntry)
-                        EmailAuthScreen(
-                            viewModel = authViewModel,
-                            onBack = { rootNavController.popBackStack() },
-                            onAuthSuccess = {
-                                rootNavController.popBackStack(
-                                    AuthGraphRoute,
-                                    inclusive = true
-                                )
-                            },
-                            onForgotPassword = {
-                                rootNavController.navigate(ForgotPasswordRoute)
-                            }
-                        )
-                    }
-                    composable<ForgotPasswordRoute> {
-                        val parentEntry = remember(it) {
-                            rootNavController.getBackStackEntry(AuthGraphRoute)
-                        }
-                        val authViewModel: AuthViewModel =
-                            koinViewModel(viewModelStoreOwner = parentEntry)
-                        ForgotPasswordScreen(
-                            viewModel = authViewModel,
-                            onBack = { rootNavController.popBackStack() }
-                        )
-                    }
-                }
-                composable<NewPasswordRoute> {
-                    NewPasswordScreen(
-                        onDone = {
-                            rootNavController.popBackStack()
-                            rootNavController.navigate(AuthGraphRoute)
                         }
                     )
                 }
-                composable<ErrorRoute> {
-                    CompositionLocalProvider(LocalContentColor provides PrimaryWhiteColor) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(PrimaryBlackColor)
-                                .windowInsetsPadding(WindowInsets.systemBars)
-                        ) {
-                            ErrorScreen(onTryAgain = { rootNavController.popBackStack() })
+            }
+        }
+        composable<DetailsRoute>(
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<DetailsRoute>()
+            CompositionLocalProvider(LocalContentColor provides PrimaryWhiteColor) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(PrimaryBlackColor)
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                ) {
+                    Details(
+                        contentId = route.contentId,
+                        mediaType = route.mediaType,
+                        posterPath = route.posterPath,
+                        onBackPress = { rootNavController.popBackStack() },
+                        goToDetails = { contentId, mediaType ->
+                            rootNavController.navigate(
+                                DetailsRoute(contentId, mediaType.name)
+                            )
+                        },
+                        goToErrorScreen = {
+                            rootNavController.navigate(ErrorRoute) {
+                                launchSingleTop = true
+                            }
                         }
+                    )
+                }
+            }
+        }
+        navigation<AuthGraphRoute>(startDestination = AuthRoute) {
+            composable<AuthRoute> {
+                val parentEntry = remember(it) {
+                    rootNavController.getBackStackEntry(AuthGraphRoute)
+                }
+                val authViewModel: AuthViewModel =
+                    koinViewModel(viewModelStoreOwner = parentEntry)
+                AuthScreen(
+                    viewModel = authViewModel,
+                    goToEmailAuth = {
+                        rootNavController.navigate(EmailAuthRoute)
+                    },
+                    onDismiss = {
+                        rootNavController.popBackStack(
+                            AuthGraphRoute,
+                            inclusive = true
+                        )
+                    },
+                    onAuthSuccess = {
+                        rootNavController.popBackStack(
+                            AuthGraphRoute,
+                            inclusive = true
+                        )
                     }
+                )
+            }
+            composable<EmailAuthRoute> {
+                val parentEntry = remember(it) {
+                    rootNavController.getBackStackEntry(AuthGraphRoute)
+                }
+                val authViewModel: AuthViewModel =
+                    koinViewModel(viewModelStoreOwner = parentEntry)
+                EmailAuthScreen(
+                    viewModel = authViewModel,
+                    onBack = { rootNavController.popBackStack() },
+                    onAuthSuccess = {
+                        rootNavController.popBackStack(
+                            AuthGraphRoute,
+                            inclusive = true
+                        )
+                    },
+                    onForgotPassword = {
+                        rootNavController.navigate(ForgotPasswordRoute)
+                    }
+                )
+            }
+            composable<ForgotPasswordRoute> {
+                val parentEntry = remember(it) {
+                    rootNavController.getBackStackEntry(AuthGraphRoute)
+                }
+                val authViewModel: AuthViewModel =
+                    koinViewModel(viewModelStoreOwner = parentEntry)
+                ForgotPasswordScreen(
+                    viewModel = authViewModel,
+                    onBack = { rootNavController.popBackStack() }
+                )
+            }
+        }
+        composable<NewPasswordRoute> {
+            NewPasswordScreen(
+                onDone = {
+                    rootNavController.popBackStack()
+                    rootNavController.navigate(AuthGraphRoute)
+                }
+            )
+        }
+        composable<ErrorRoute> {
+            CompositionLocalProvider(LocalContentColor provides PrimaryWhiteColor) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(PrimaryBlackColor)
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                ) {
+                    ErrorScreen(onTryAgain = { rootNavController.popBackStack() })
                 }
             }
         }
@@ -290,10 +277,10 @@ private fun MainScaffoldScreen(rootNavController: NavHostController) {
 
 @Composable
 private fun NestedNavGraph(nestedNavController: NavHostController, rootNavController: NavHostController) {
-    val goToDetails: (Int, MediaType, String, String) -> Unit =
-        { contentId, mediaType, tag, posterPath ->
+    val goToDetails: (Int, MediaType, String) -> Unit =
+        { contentId, mediaType, posterPath ->
             rootNavController.navigate(
-                DetailsRoute(contentId, mediaType.name, tag, posterPath)
+                DetailsRoute(contentId, mediaType.name, posterPath)
             )
         }
     val goToErrorScreen: () -> Unit = {

@@ -8,9 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.ui.SharedElementTag
 import common.ui.components.card.ImageContentCard
-import common.ui.sharedPosterKey
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
 import common.util.UiConstants.DEFAULT_PADDING
 import org.jetbrains.compose.resources.StringResource
@@ -20,7 +18,7 @@ fun ComingSoonCarousel(
     carouselHeaderRes: StringResource,
     comingSoonList: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType, String, String) -> Unit
+    goToDetails: (Int, MediaType, String) -> Unit
 ) {
     if (comingSoonList.isNotEmpty()) {
         ClassicCarousel(
@@ -37,9 +35,8 @@ fun ComingSoonCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = sharedPosterKey(SharedElementTag.COMING_SOON, item.id, item.mediaType),
                 goToDetails = { id, mediaType ->
-                    goToDetails(id, mediaType, SharedElementTag.COMING_SOON, item.posterPath)
+                    goToDetails(id, mediaType, item.posterPath)
                 }
             )
         }

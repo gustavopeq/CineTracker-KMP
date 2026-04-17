@@ -57,7 +57,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Home(
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     goToErrorScreen: () -> Unit
@@ -76,7 +76,7 @@ fun Home(
 private fun Home(
     viewModel: HomeViewModel,
     mainViewModel: MainViewModel,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     goToErrorScreen: () -> Unit
@@ -170,7 +170,7 @@ private fun HomeBody(
     trendingPersonList: List<PersonDetails>,
     moviesComingSoonList: List<GenericContent>,
     featuredContentInListStatus: Map<Int, Boolean>,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToWatchlist: () -> Unit,
     goToBrowse: () -> Unit,
     onMyListClick: () -> Unit
@@ -205,7 +205,7 @@ private fun HomeBody(
         }
     }
 
-    val goToDetailsNoTag: (Int, MediaType) -> Unit = { id, mt -> goToDetails(id, mt, "", "") }
+    val goToDetailsNoTag: (Int, MediaType) -> Unit = { id, mt -> goToDetails(id, mt, "") }
 
     Box {
         FeaturedBackgroundImage(
