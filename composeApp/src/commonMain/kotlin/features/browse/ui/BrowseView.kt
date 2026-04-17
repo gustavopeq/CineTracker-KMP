@@ -38,10 +38,8 @@ import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
 import common.domain.models.util.SortTypeItem
 import common.ui.MainViewModel
-import common.ui.SharedElementTag
 import common.ui.components.ComponentPlaceholder
 import common.ui.components.card.DefaultContentCard
-import common.ui.sharedPosterKey
 import common.ui.theme.RoundCornerShapes
 import common.util.UiConstants.BROWSE_CARD_PADDING_HORIZONTAL
 import common.util.UiConstants.BROWSE_CARD_PADDING_VERTICAL
@@ -61,7 +59,7 @@ import features.browse.ui.components.CollapsingTabRow
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Browse(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScreen: () -> Unit) {
+fun Browse(goToDetails: (Int, MediaType, String) -> Unit, goToErrorScreen: () -> Unit) {
     Browse(
         viewModel = koinViewModel(),
         mainViewModel = koinViewModel(),
@@ -75,7 +73,7 @@ fun Browse(goToDetails: (Int, MediaType, String, String) -> Unit, goToErrorScree
 private fun Browse(
     viewModel: BrowseViewModel,
     mainViewModel: MainViewModel,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -178,7 +176,7 @@ private fun BrowseBody(
     mediaType: MediaType,
     pagingData: LazyPagingItems<GenericContent>,
     sortTypeItem: SortTypeItem,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     LaunchedEffect(sortTypeItem) {
@@ -230,16 +228,10 @@ private fun BrowseBody(
                                 imageUrl = content.posterPath,
                                 title = content.name,
                                 rating = content.rating,
-                                sharedElementKey = sharedPosterKey(
-                                    SharedElementTag.BROWSE,
-                                    content.id,
-                                    content.mediaType
-                                ),
                                 goToDetails = {
                                     goToDetails(
                                         content.id,
                                         content.mediaType,
-                                        SharedElementTag.BROWSE,
                                         content.posterPath
                                     )
                                 }

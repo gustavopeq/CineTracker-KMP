@@ -45,8 +45,6 @@ import common.ui.MainViewModel
 import common.ui.components.NetworkImage
 import common.ui.components.bottomsheet.ManageListsBottomSheet
 import common.ui.components.popup.ClassicSnackbar
-import common.ui.rememberSharedElementModifier
-import common.ui.sharedPosterKey
 import common.ui.theme.RoundCornerShapes
 import common.util.Constants.BASE_500_IMAGE_URL
 import common.util.UiConstants.BACKGROUND_INDEX
@@ -57,7 +55,6 @@ import common.util.UiConstants.OVERLAY_BLUR_RADIUS
 import common.util.UiConstants.POSTER_ASPECT_RATIO
 import common.util.UiConstants.POSTER_ASPECT_RATIO_MULTIPLY
 import common.util.UiConstants.SECTION_PADDING
-import common.util.UiConstants.SHARED_ELEMENT_ACTIVATION_DELAY_MS
 import common.util.platform.AppHaptics
 import common.util.platform.PlatformUtils
 import common.util.platform.getScreenSizeInfo
@@ -85,7 +82,6 @@ import org.koin.core.parameter.parametersOf
 fun Details(
     contentId: Int,
     mediaType: String,
-    sharedElementTag: String = "",
     posterPath: String = "",
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
@@ -95,7 +91,6 @@ fun Details(
         Details(
             viewModel = koinViewModel { parametersOf(contentId, MediaType.getType(mediaType)) },
             mainViewModel = koinViewModel(),
-            sharedElementTag = sharedElementTag,
             posterPath = posterPath,
             onBackPress = onBackPress,
             goToDetails = goToDetails,
@@ -108,7 +103,6 @@ fun Details(
 private fun Details(
     viewModel: DetailsViewModel,
     mainViewModel: MainViewModel,
-    sharedElementTag: String,
     posterPath: String,
     onBackPress: () -> Unit,
     goToDetails: (Int, MediaType) -> Unit,
@@ -218,15 +212,6 @@ private fun Details(
         val titleScreenHeight = posterHeight * DETAILS_TITLE_IMAGE_OFFSET_PERCENT
         val effectivePosterPath = posterPath.ifEmpty { contentDetails?.posterPath.orEmpty() }
         val contentPosterUrl = if (effectivePosterPath.isNotEmpty()) BASE_500_IMAGE_URL + effectivePosterPath else ""
-        val sharedElementKey = sharedPosterKey(sharedElementTag, viewModel.contentId, viewModel.mediaType)
-
-        // Enable shared element only after enter transition completes,
-        // so it only animates on back navigation (not forward).
-        var enableSharedElement by remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            delay(SHARED_ELEMENT_ACTIVATION_DELAY_MS)
-            enableSharedElement = true
-        }
 
         Box(modifier = Modifier.fillMaxSize().blur(contentBlur)) {
             DetailsTopBar(
@@ -249,8 +234,7 @@ private fun Details(
                     posterHeight = posterHeight,
                     contentPosterUrl = contentPosterUrl,
                     titlePositionY = currentTitlePosY,
-                    initialTitlePosY = initialTitlePosY,
-                    sharedElementKey = if (enableSharedElement) sharedElementKey else null
+                    initialTitlePosY = initialTitlePosY
                 )
                 when (loadState) {
                     is DataLoadStatus.Loading -> {
@@ -418,16 +402,13 @@ private fun BackgroundPoster(
     posterHeight: Float,
     contentPosterUrl: String,
     titlePositionY: Float,
-    initialTitlePosY: Float?,
-    sharedElementKey: String?
+    initialTitlePosY: Float?
 ) {
     val alpha = if (initialTitlePosY != null) {
         titlePositionY.mapValueToRange(initialTitlePosY)
     } else {
         1f
     }
-
-    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     // Scale modifier needed for iOS as the user is able to keep scrolling on top of the screen.
     val scaleModifier = if (PlatformUtils.isIOS &&
@@ -453,7 +434,7 @@ private fun BackgroundPoster(
             .aspectRatio(POSTER_ASPECT_RATIO)
     }
 
-    Box(modifier = sharedModifier.then(scaleModifier).clip(RoundCornerShapes.small)) {
+    Box(modifier = scaleModifier.clip(RoundCornerShapes.small)) {
         NetworkImage(
             imageUrl = contentPosterUrl,
             modifier = Modifier.fillMaxSize(),

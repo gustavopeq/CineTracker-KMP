@@ -18,7 +18,6 @@ data object SearchRoute
 data class DetailsRoute(
     val contentId: Int,
     val mediaType: String,
-    val sharedElementTag: String = "",
     val posterPath: String = ""
 )
 

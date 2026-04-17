@@ -23,9 +23,7 @@ import cinetracker_kmp.composeapp.generated.resources.ic_chevron_right
 import cinetracker_kmp.composeapp.generated.resources.watchlist_carousel_empty_message
 import common.domain.models.content.GenericContent
 import common.domain.models.util.MediaType
-import common.ui.SharedElementTag
 import common.ui.components.card.ImageContentCard
-import common.ui.sharedPosterKey
 import common.util.UiConstants.CAROUSEL_CARDS_WIDTH
 import common.util.UiConstants.DEFAULT_MARGIN
 import common.util.UiConstants.DEFAULT_PADDING
@@ -40,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 fun WatchlistCarousel(
     watchlist: List<GenericContent>,
     currentScreenWidth: Float,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToWatchlist: () -> Unit
 ) {
     val carouselHeader = Res.string.home_my_watchlist_header
@@ -63,9 +61,8 @@ fun WatchlistCarousel(
                 ),
                 item = item,
                 adjustedCardSize = CAROUSEL_CARDS_WIDTH.dp,
-                sharedElementKey = sharedPosterKey(SharedElementTag.HOME_WATCHLIST, item.id, item.mediaType),
                 goToDetails = { id, mediaType ->
-                    goToDetails(id, mediaType, SharedElementTag.HOME_WATCHLIST, item.posterPath)
+                    goToDetails(id, mediaType, item.posterPath)
                 }
             )
         }

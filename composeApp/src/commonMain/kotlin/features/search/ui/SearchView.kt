@@ -39,7 +39,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun Search(
     onBackPress: () -> Unit,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     Search(
@@ -54,7 +54,7 @@ fun Search(
 private fun Search(
     viewModel: SearchViewModel,
     onBackPress: () -> Unit,
-    goToDetails: (Int, MediaType, String, String) -> Unit,
+    goToDetails: (Int, MediaType, String) -> Unit,
     goToErrorScreen: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -130,7 +130,7 @@ private fun SearchBody(
     searchResults: LazyPagingItems<GenericContent>,
     isDebounceActive: Boolean,
     keyboardController: SoftwareKeyboardController?,
-    goToDetails: (Int, MediaType, String, String) -> Unit
+    goToDetails: (Int, MediaType, String) -> Unit
 ) {
     val density = LocalDensity.current
     val screenWidth = density.run { getScreenSizeInfo().widthPx }

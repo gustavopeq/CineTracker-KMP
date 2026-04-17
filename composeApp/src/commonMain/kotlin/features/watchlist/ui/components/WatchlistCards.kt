@@ -45,7 +45,6 @@ import common.domain.models.util.MediaType
 import common.ui.components.NetworkImage
 import common.ui.components.PersonalRatingComponent
 import common.ui.components.RatingComponent
-import common.ui.rememberSharedElementModifier
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryRedColor
 import common.ui.theme.PrimaryYellowColor_90
@@ -72,7 +71,6 @@ fun WatchlistCard(
     mediaType: MediaType,
     selectedList: Int,
     allLists: List<WatchlistTabItem>,
-    sharedElementKey: String? = null,
     onCardClick: () -> Unit,
     onRemoveClick: () -> Unit,
     onMoveItemToList: (Int) -> Unit
@@ -80,7 +78,6 @@ fun WatchlistCard(
     val fullImageUrl = BASE_500_IMAGE_URL + posterUrl
     val imageWidth = WATCHLIST_IMAGE_WIDTH.dp
     val imageHeight = imageWidth * POSTER_ASPECT_RATIO_MULTIPLY
-    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     var showPopupMenu by remember { mutableStateOf(false) }
     val updatePopUpMenuVisibility: (Boolean) -> Unit = { isVisible ->
@@ -154,7 +151,6 @@ fun WatchlistCard(
                 modifier = Modifier.height(imageHeight)
             ) {
                 NetworkImage(
-                    modifier = sharedModifier,
                     imageUrl = fullImageUrl,
                     widthDp = imageWidth,
                     heightDp = imageHeight

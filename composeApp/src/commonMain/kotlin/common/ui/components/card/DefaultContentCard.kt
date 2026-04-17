@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import common.ui.components.NetworkImage
 import common.ui.components.RatingComponent
-import common.ui.rememberSharedElementModifier
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.RoundCornerShapes
 import common.util.Constants.BASE_500_IMAGE_URL
@@ -36,13 +35,10 @@ fun DefaultContentCard(
     rating: Double?,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
     ratingIconSize: Int? = null,
-    sharedElementKey: String? = null,
     goToDetails: () -> Unit
 ) {
     val fullImageUrl = BASE_500_IMAGE_URL + imageUrl
     val imageHeight = cardWidth * POSTER_ASPECT_RATIO_MULTIPLY
-
-    val sharedModifier = rememberSharedElementModifier(sharedElementKey)
 
     Card(
         modifier = modifier
@@ -62,7 +58,7 @@ fun DefaultContentCard(
             Spacer(modifier = Modifier.height(4.dp))
             NetworkImage(
                 imageUrl = fullImageUrl,
-                modifier = sharedModifier.clip(RoundCornerShapes.small),
+                modifier = Modifier.clip(RoundCornerShapes.small),
                 widthDp = cardWidth,
                 heightDp = imageHeight
             )
