@@ -18,8 +18,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.style.TextOverflow
 import cinetracker_kmp.composeapp.generated.resources.Res
+import cinetracker_kmp.composeapp.generated.resources.ic_back_arrow
 import cinetracker_kmp.composeapp.generated.resources.ic_close
-import cinetracker_kmp.composeapp.generated.resources.ic_nav_search
 import cinetracker_kmp.composeapp.generated.resources.search_bar_placeholder
 import common.ui.theme.MainBarGreyColor
 import common.ui.theme.PrimaryYellowColor_90
@@ -31,7 +31,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SearchBar(viewModel: SearchViewModel) {
+fun SearchBar(viewModel: SearchViewModel, onBackPress: () -> Unit) {
     val searchBarValue by viewModel.searchQuery
     val textFieldFocus = remember { FocusRequester() }
 
@@ -60,11 +60,13 @@ fun SearchBar(viewModel: SearchViewModel) {
             )
         },
         leadingIcon = {
-            Icon(
-                painter = painterResource(resource = Res.drawable.ic_nav_search),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+            IconButton(onClick = onBackPress) {
+                Icon(
+                    painter = painterResource(resource = Res.drawable.ic_back_arrow),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         },
         trailingIcon = {
             if (searchBarValue.isNotEmpty()) {
