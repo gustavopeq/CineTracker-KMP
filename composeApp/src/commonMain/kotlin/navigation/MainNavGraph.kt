@@ -248,7 +248,7 @@ private fun MainScaffoldScreen(rootNavController: NavHostController) {
     var showSortBottomSheet by remember { mutableStateOf(false) }
     val displaySortScreen: (Boolean) -> Unit = { showSortBottomSheet = it }
 
-    SystemBarsContainer(currentDestination = currentDestination) {
+    SystemBarsContainer {
         Scaffold(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             contentWindowInsets = WindowInsets(0, 0, 0, 0),

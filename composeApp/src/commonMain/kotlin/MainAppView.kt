@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavDestination
 import androidx.navigation.compose.rememberNavController
 import auth.platform.RecoveryHandler
 import coil3.annotation.ExperimentalCoilApi
@@ -97,7 +96,7 @@ private fun MainAppContent(mainViewModel: MainViewModel) {
 }
 
 @Composable
-fun SystemBarsContainer(currentDestination: NavDestination? = null, appScaffold: @Composable () -> Unit) {
+fun SystemBarsContainer(appScaffold: @Composable () -> Unit) {
     val statusBarColor = MaterialTheme.colorScheme.primary
 
     Box(
