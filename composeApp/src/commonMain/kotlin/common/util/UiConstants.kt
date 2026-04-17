@@ -56,7 +56,7 @@ object UiConstants {
     // Rating Slider
     const val RATING_SLIDER_THUMB_SIZE = 28
     const val RATING_SLIDER_THUMB_ELEVATION = 4
-    const val RATING_SLIDER_TRACK_HEIGHT = 12
+    const val RATING_SLIDER_TRACK_HEIGHT = 6
 
     // Details
     const val DETAILS_TITLE_IMAGE_OFFSET_PERCENT = 0.7f
